@@ -1,6 +1,6 @@
 ---
 name: Feature enhance
-about: Suggest an idea for this project
+about: Suggest how to improve something that already exists
 title: "[ENHANCEMENT]"
 labels: 'type: enhancement'
 assignees: Khalil09, maffei2443, Skalwalker
