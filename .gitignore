@@ -2,6 +2,7 @@
 
 # Arquivos do projeto
 data/*.pdf
+data/*/
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
