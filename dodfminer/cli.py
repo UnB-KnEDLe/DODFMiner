@@ -1,48 +1,41 @@
+"""."""
+
 from argparse import ArgumentParser
 
-parser = ArgumentParser(description='...')
 
-group = parser.add_argument_group('Download Configs')
+class CLI(object):
+    """."""
 
-group.add_argument('-i', '--mes-inicial', dest='start_year',
-                   default=DEFAULT_START_YEAR,
-                   choices=list(range(DEFAULT_START_YEAR,
-                                      DEFAULT_END_YEAR)),
-                   type=int, help='Select the first year of the data.')
-                   
-group.add_argument('-i', '--mes-final', dest='start_year',
-                   default=DEFAULT_START_YEAR,
-                   choices=list(range(DEFAULT_START_YEAR,
-                                      DEFAULT_END_YEAR)),
-                   type=int, help='Select the first year of the data.')
+    def __init__(self):
+        """."""
+        self.parser = ArgumentParser(prog="", usage='',
+                                     description="", epilog='')
+        self.def_start_date = '01/19'
+        self.def_end_date = '02/19'
+        self.def_single = False
 
-group.add_argument('-ey', '--end-year', dest='end_year',
-                   default=DEFAULT_END_YEAR,
-                   choices=list(range(DEFAULT_START_YEAR,
-                                      DEFAULT_END_YEAR)),
-                   type=int, help='Select the last year of the data.')
+    def _new_group(self, name):
+        group = self.parser.add_argument_group(name)
+        return group
 
-group = parser.add_argument_group('Tesseract Configs')
+    def _download_group(self):
+        group = self.new_group('Download Configs')
 
-# group.add_argument('-a', '--agent', dest='agent',
-#                    choices=['random'], default=DEFAULT_AGENT, type=str,
-#                    help="""Select the type of the agent
-#                    to run in the simulator""")
-#
-# group.add_argument('-A', '--actions', dest='actions',
-#                    choices=['all', 'nowait'], default=DEFAULT_ACTIONS,
-#                    type=str, help='Select the desired action vector')
-#
-# group.add_argument('-s', '--stock', dest='stock', default=DEFAULT_STOCK,
-#                    type=list, help='Select the stock to make transactions')
-#
-# group.add_argument('-i', '--insider', dest='insider',
-#                    default=DEFAULT_INSIDER, type=str, choices=['random'],
-#                    help='Select the type of the insider')
-#
-# group = parser.add_argument_group('Brokerage Setup')
-# group.add_argument('-f', '--fee', dest='fee',
-#                    default=DEFAULT_FEE, type=int,
-#                    help="""Select the ammount of the transactions fee""")
+        group.add_argument('-s', '--single', dest='single',
+                           default=self.def_single, type=bool,
+                           help='Download a single DODF pdf file.')
 
-    args = parser.parse_args()
+        group.add_argument('-sd', '--start_date', dest='start_date',
+                           default=self.def_start_date, type=str,
+                           help='Input the date in either mm/Y or mm-Y.')
+
+        group.add_argument('-ed', '--end_date', dest='end_date',
+                           default=self.def_end_date, type=str,
+                           help='Input the date in either mm/Y or mm-Y.')
+
+        return group
+
+    def parse(self):
+        """."""
+        self._download_group()
+        return self.parser.parse_args()
