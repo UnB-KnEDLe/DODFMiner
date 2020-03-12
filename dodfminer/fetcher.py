@@ -108,6 +108,16 @@ class Fetcher(object):
             pdf_file.write_bytes(response.content)
             self._log("Finished " + os.path.basename(path))
 
+    def _make_month_path(self, year, actual_date):
+        if year != actual_date.year:
+            year_path = os.path.join(self.download_path,
+                                     str(actual_date.year))
+            self._create_single_folder(year_path)
+        month_path = os.path.join(year_path,
+                                  MONTHS_STRING[actual_date.month])
+
+        return month_path
+
     def pull(self, start_date, end_date):
         """."""
         start_date = self._string_to_date(start_date)
@@ -121,15 +131,11 @@ class Fetcher(object):
             actual_date = start_date + relativedelta(months=+month)
             desc_bar = str(actual_date)
             self.prog_bar.set_description("Date %s" % desc_bar)
-            if year != actual_date.year:
-                year_path = os.path.join(self.download_path,
-                                         str(actual_date.year))
-                self._create_single_folder(year_path)
-            month_path = os.path.join(year_path,
-                                      MONTHS_STRING[actual_date.month])
+            month_path = self._make_month_path(year, actual_date)
             self._create_single_folder(month_path)
             url = self._make_url(actual_date)
             a_list = self._get_soup_link(url)
+            year = actual_date.year
 
             for a in a_list.find_all('a', href=True):
                 a_url = self._make_href_url(a['href'])
@@ -152,9 +158,7 @@ class Fetcher(object):
                                   + os.path.basename(dodf_name_path)
                                   + " jumping to the next")
 
-            year = actual_date.year
             self.prog_bar.update(1)
-            # print(MONTHS_STRING[actual_date.month])
 
     def _log(self, message):
         self.prog_bar.write("[FETCHER] " + str(message))
