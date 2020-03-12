@@ -16,7 +16,7 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
 
 
 class Fetcher(object):
-    """."""
+    """Responsible for download the DODF Pdfs"""
 
     def __init__(self, single=False):
         """."""
@@ -119,7 +119,22 @@ class Fetcher(object):
         return month_path
 
     def pull(self, start_date, end_date):
-        """."""
+        """Start the download of the DODF pdfs.
+
+        All dodfs are downloaded from start_date to end_date inclusively.
+        The Pdfs are saved in a folder called "data" inside the project folder.
+
+        Note:
+            The name or the path of the save folder are hard coded and can't
+            be changed due to some nonsense software engineer decision.
+
+        Args:
+            start_date (str): the start date in format mm/yy
+            end_date (str): the start date in format mm/yy
+
+        Returns:
+            None
+        """
         start_date = self._string_to_date(start_date)
         end_date = self._string_to_date(end_date)
         months_amt = ((end_date.year - start_date.year) * 12
