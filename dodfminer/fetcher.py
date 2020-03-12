@@ -77,11 +77,19 @@ class Fetcher(object):
 
         return download_url
 
+    def _fail_request_message(self, url, error):
+        self._log(error)
+        message = "Please check your internet connection, and " \
+        "check if the url is online via browser: {}".format(url)
+        self._log(message)
+
     def _get_soup_link(self, url):
         headers = {'User-Agent': 'Chrome/71.0.3578.80'}
-        response = requests.get(url, headers=headers)
-
-        return BeautifulSoup(response.text, "html.parser")
+        try:
+            response = requests.get(url, headers=headers)
+            return BeautifulSoup(response.text, "html.parser")
+        except requests.exceptions.RequestException as error:
+            self._fail_request_message(url, error)
 
     def _file_exist(self, path):
         if os.path.exists(path):
@@ -91,9 +99,14 @@ class Fetcher(object):
             return False
 
     def _download_pdf(self, url, path):
-        pdf_file = Path(path)
-        response = requests.get(url)
-        pdf_file.write_bytes(response.content)
+        try:
+            response = requests.get(url)
+        except requests.exceptions.RequestException as error:
+            self._fail_request_message(url, error)
+        else:
+            pdf_file = Path(path)
+            pdf_file.write_bytes(response.content)
+            self._log("Finished " + os.path.basename(path))
 
     def pull(self, start_date, end_date):
         """."""
@@ -131,9 +144,9 @@ class Fetcher(object):
                     download_url = self._make_download_url(a_href['href'])
                     dodf_name_path = os.path.join(dodf_path, a_href.text)
                     if not self._file_exist(dodf_name_path):
-                        self._download_pdf(download_url, dodf_name_path)
                         self._log("Downloding "
                                   + os.path.basename(dodf_name_path))
+                        self._download_pdf(download_url, dodf_name_path)
                     else:
                         self._log("File already exist "
                                   + os.path.basename(dodf_name_path)

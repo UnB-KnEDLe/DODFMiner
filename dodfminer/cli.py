@@ -19,7 +19,7 @@ class CLI(object):
         return group
 
     def _download_group(self):
-        group = self.new_group('Download Configs')
+        group = self._new_group('Download Configs')
 
         group.add_argument('-s', '--single', dest='single',
                            default=self.def_single, type=bool,
