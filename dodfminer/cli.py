@@ -7,7 +7,7 @@ class CLI(object):
     """."""
 
     def __init__(self):
-        """."""
+        """Eita."""
         self.parser = ArgumentParser(prog="", usage='',
                                      description="", epilog='')
         self.def_start_date = '01/19'
@@ -27,11 +27,11 @@ class CLI(object):
 
         group.add_argument('-sd', '--start_date', dest='start_date',
                            default=self.def_start_date, type=str,
-                           help='Input the date in either mm/Y or mm-Y.')
+                           help='Input the date in either mm/yy or mm-yy.')
 
         group.add_argument('-ed', '--end_date', dest='end_date',
                            default=self.def_end_date, type=str,
-                           help='Input the date in either mm/Y or mm-Y.')
+                           help='Input the date in either mm/yy or mm-yy.')
 
         return group
 

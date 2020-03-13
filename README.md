@@ -13,7 +13,10 @@ Will be opened:
 
 ```localhost:8888tree```
 
+## Docs and Code Guidelines
 
+http://google.github.io/styleguide/pyguide.html
 
+## Test
 
-
+https://docs.pytest.org/en/latest/
