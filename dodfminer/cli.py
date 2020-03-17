@@ -11,7 +11,7 @@ class CLI(object):
         self.parser = ArgumentParser(prog="", usage='',
                                      description="", epilog='')
         self.def_start_date = '01/19'
-        self.def_end_date = '02/19'
+        self.def_end_date = '01/19'
         self.def_single = False
 
     def _new_group(self, name):
@@ -19,7 +19,7 @@ class CLI(object):
         return group
 
     def _download_group(self):
-        group = self.new_group('Download Configs')
+        group = self._new_group('Download Configs')
 
         group.add_argument('-s', '--single', dest='single',
                            default=self.def_single, type=bool,
