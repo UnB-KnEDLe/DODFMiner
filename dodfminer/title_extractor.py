@@ -1,3 +1,5 @@
+"""Missing File Doc."""
+
 import re
 import json
 from functools import reduce
@@ -6,49 +8,60 @@ from collections import namedtuple
 import operator
 
 import fitz
-import Filter
+import title_filter
 
 Box = namedtuple("Box", ['x0', 'y0', 'x1', 'y1'])
 AuxT = namedtuple("Aux", "text type bbox page")
 
 
 def load_blocks_list(path):
-    """Returns list with page blocks, where each element is
-       a list with its according page blocks
-       da pagina correspondente."""
+    """Missing Summary.
+
+    Returns list with page blocks, where each element is
+    a list with its according page blocks
+    da pagina correspondente.
+    """
     doc = fitz.open(path)
     return [p.getTextPage().extractDICT()['blocks'] for p in doc]
 
+
 def extrai_negrito_pagina(page: fitz.fitz.Page):
-    """
-    Returns span list containing all bold (and simultaneously upper) content of a page.
+    """Missing Summary.
+
+    Returns span list containing all bold (and simultaneously upper)
+    content of a page.
     """
     lis = []
     for bl in page.getTextPage().extractDICT()['blocks']:
         for line in bl['lines']:
             for span in line['spans']:
-                ft = span['font']
                 flags = span['flags']
                 txt: str = span['text']
                 if flags in (16, 20) and txt == txt.upper():
-                    # Nao apagar as alturas para depois remontar os títulos quebrados
+                    # Nao apagar as alturas para depois
+                    # remontar os títulos quebrados
                     span['bbox'] = Box(*span['bbox'])
-                    span['page'] = page.number  # importante para nao concatenar errado títulos
+                    # importante para nao concatenar errado títulos
+                    span['page'] = page.number
                     del span['color']
                     del span['flags']
                     lis.append(span)
     return lis
 
-def extrai_negrito_pdf(path: str):
-    """
+
+def extrai_negrito_pdf(path):
+    """Missing Summary.
+
     Receives file's path.
     Returns list of list of bold span text.
     """
     doc = fitz.open(path)
     return [extrai_negrito_pagina(page) for page in doc]
 
-def group_by_page(lis: List[AuxT]):
-    """
+
+def group_by_page(lis):
+    """Missing Summary.
+
     Essentially a "groupby" where the key is the page number of each span.
     Returns a dict with spans of each page, being keys the page numbers.
     """
@@ -59,8 +72,10 @@ def group_by_page(lis: List[AuxT]):
         numbers[el.page].append(el)
     return numbers
 
-def sort_by_column(lis: List[AuxT], width=765, height=907):
-    """
+
+def sort_by_column(lis, width=765, height=907):
+    """Missing Summary.
+
     Assumes lis contains spans on the SAME PAGE and sorts it based:
     1. columns
     2. position on column
@@ -76,10 +91,12 @@ def sort_by_column(lis: List[AuxT], width=765, height=907):
     ordenado = map(lambda x: sorted(x, key=lambda x: x.bbox.y0), lr)
     return reduce(operator.add, ordenado)
 
-def sort_2column(lis: List[AuxT], width=765, height=907):
-    """
-    Sorts a list of AuxT objects, assuming a full 2-columns layout over whatever document
-    lis are extracted from.
+
+def sort_2column(lis, width=765, height=907):
+    """Missing Summary.
+
+    Sorts a list of AuxT objects, assuming a full 2-columns
+    layout over whatever document lis are extracted from.
     """
     by_page = group_by_page(lis)
     ordered_by_page = {idx: sort_by_column(lis) for idx, lis in
@@ -92,6 +109,7 @@ AuxT = namedtuple("Aux", "text type bbox page")
 
 
 class ExtratorTituloSubTitulo(object):
+    """Missing Doc."""
 
     TRASH_WORDS = [
       "SUMÁRIO",
@@ -102,16 +120,17 @@ class ExtratorTituloSubTitulo(object):
     TRASH_COMPILED = re.compile('|'.join(TRASH_WORDS))
 
     @staticmethod
-    def _get_titulos_subtitulos(lis: List[dict]) -> TitulosSubtitulos:
-        """
+    def _get_titulos_subtitulos(lis):
+        """Missing Summary.
+
         Receber lista com dictionários com chaves:
         Expect 'lis' to be a list of dict all of them having the keys:
           - size -> float
           - text -> str
           - bbox -> Height
           - page -> int
-        Returns TitulosSubtitulos(titulos=titulos, subtitulos=subtitulos), where
-        `titulos` and `subtitulos` are List[AuxT]
+        Returns TitulosSubtitulos(titulos=titulos, subtitulos=subtitulos),
+        where `titulos` and `subtitulos` are List[AuxT]
         Base on font size and heuristic.
         """
         # Ordenar pelo tamanho da fonte, pegar da maior ateh a menor
@@ -125,7 +144,9 @@ class ExtratorTituloSubTitulo(object):
         for i, v in enumerate(lis):
             if SZ == v['size']:
                 if titles:
-                    if abs(prev_el['bbox'].y1 - v['bbox'].y0) < 10 and prev_el['page'] == v['page']:
+                    cond1 = abs(prev_el['bbox'].y1 - v['bbox'].y0) < 10
+                    cond2 = prev_el['page'] == v['page']
+                    if cond1 and cond2:
                         titles[-1][0] = titles[-1][0] + " " + v['text']
                     else:
                         titles.append([v['text'], 'titulo',
@@ -138,10 +159,13 @@ class ExtratorTituloSubTitulo(object):
         titles = [AuxT(*i) for i in titles]
         sub_titles = []
         size = lis[i]['size']
-        for _, v in enumerate(lis[i:]): # PS: maioria dos subtitulos ocupa 1 linha só;
-        # TODO tratar outros casos como "DEPARTAMENTO DE ESTRADAS DE RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
+        # PS: maioria dos subtitulos ocupa 1 linha só;
+        for _, v in enumerate(lis[i:]):
+            # TODO tratar outros casos como "DEPARTAMENTO DE ESTRADAS DE
+            # RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
             if size == v['size']:
-                sub_titles.append((v['text'], 'subtitulo', v['bbox'], v['page']))
+                sub_titles.append((v['text'], 'subtitulo',
+                                   v['bbox'], v['page']))
             else:
                 break
         sub_titles = [AuxT(*i) for i in sub_titles]
@@ -149,12 +173,14 @@ class ExtratorTituloSubTitulo(object):
 
     @staticmethod
     def _get_titulos_subtitulos_smart(path):
-        """
+        """Missing Summary.
+
         Wrapper for _get_titulos_subtitulos, removing most of impurity
         (spans not which aren't titles/subtutles).
         """
         negrito_spans = reduce(operator.add, extrai_negrito_pdf(path))
-        filtrado1 = filter(Filter.NegritoCaixaAlta.dict_text, negrito_spans)
+        filtrado1 = filter(title_filter.NegritoCaixaAlta.dict_text,
+                           negrito_spans)
         filtrado2 = filter(lambda s: not re.search(ExtratorTituloSubTitulo.TRASH_COMPILED,
                   s['text']), filtrado1)
         ordenado1 = sorted(filtrado2,
@@ -184,8 +210,9 @@ class ExtratorTituloSubTitulo(object):
         self._json = dic
         return self._json
 
-    def _extract(self) -> List[AuxT]:
-        titulos_subtitulos = ExtratorTituloSubTitulo._get_titulos_subtitulos_smart(self._path)
+    def _extract(self):
+        a = ExtratorTituloSubTitulo._get_titulos_subtitulos_smart(self._path)
+        titulos_subtitulos = a
         by_page = sort_2column(reduce(operator.add, titulos_subtitulos))
         return reduce(operator.add, by_page.values())
 
@@ -199,6 +226,7 @@ class ExtratorTituloSubTitulo(object):
         self._cached = True
 
     def __init__(self, path):
+        """Missing Doc."""
         self._negrito = load_blocks_list(path)
         self._titulos_subtitulos = TitulosSubtitulos([], [])
         self._titulos = []
@@ -209,18 +237,21 @@ class ExtratorTituloSubTitulo(object):
 
     @property
     def titulos(self):
+        """Missing Doc."""
         if not self._cached:
             self._do_cache()
         return self._titulos
 
     @property
     def subtitulos(self):
+        """Missing Doc."""
         if not self._cached:
             self._do_cache()
         return self._subtitulos
 
     @property
     def json(self):
+        """Missing Doc."""
         if not self._json:
             if not self._cached:
                 self._do_cache()
@@ -228,16 +259,21 @@ class ExtratorTituloSubTitulo(object):
         return self._json
 
     def extract_all(self):
-        """
-        Retorna lista com títulos/subtítulos, ordenados segundo ordem de leitura.
-        Ignora o cache.
+        """Missing Summary.
+
+        Retorna lista com títulos/subtítulos, ordenados segundo
+        ordem de leitura. Ignora o cache.
         """
         return self._extract()
 
-    def dump_json(self, path: str):
-        """
-        Dumps the titulos and subtitulos according to the hierarchy verified on the document.
-        The outputfile should be specifiend and will be suffixed with the ".json" if its not.
+    def dump_json(self, path):
+        """Missing Summary.
+
+        Dumps the titulos and subtitulos according to the hierarchy verified
+        on the document.
+
+        The outputfile should be specifiend and will be suffixed with the
+        ".json" if its not.
         """
         json.dump(self.json,
                   open(path + ((not path.endswith(".json")) * ".json"), 'w'),
