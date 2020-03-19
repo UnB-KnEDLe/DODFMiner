@@ -4,8 +4,7 @@ import functools
 
 
 class NegritoCaixaAlta:
-    """Missing Summary.
-
+    """
     Static class to return filter functions useful
     for bold and upper case text.
     """
@@ -14,12 +13,20 @@ class NegritoCaixaAlta:
     TRASH_WORDS = [
         "SUMÁRIO",
         "DIÁRIO OFICIAL",
-        "SEÇÃO (I|II|III)"
+        "SEÇÃO (I|II|III)",
+    ]
+    BOLD_FLAGS = [
+      16,
+      20,
     ]
 
     @staticmethod
     def dict_text(d):
-        """Missing Summary."""
+        """Evaluates to true if d['text'] matches the following conditions:
+            - all letters are uppercase
+            - does not contain 4 or more consecutive spaces
+            - has a len greater than NegritoCaixaAlta.TEXT_MIN
+        ."""
         t = d['text'].strip().strip('.')
         cond1 = 4 * " " not in t
         cond2 = len(t) > NegritoCaixaAlta.TEXT_MIN
@@ -28,13 +35,16 @@ class NegritoCaixaAlta:
 
     @staticmethod
     def dict_bold(d):
-        """Missing Summary."""
+        """Evaluates do True if d['flags'] matches the following conditions:
+            - is one of the values in NegritoCaixaAlta.BOLD_FLAGS
+        ."""
         flags = d['flags']
-        return flags in (16, 20)
+        return flags in NegritoCaixaAlta.BOLD_FLAGS
 
     @staticmethod
     def params(params_sep_underscore):
-        """Missing Summary.
+        """Returns an function which evaluates a conjunction over the results
+        of all filters specified by params_sep_underscore.
 
         params_sep_underscore must be a compound string
         wich will be splited based on '_'. Each os these strings
