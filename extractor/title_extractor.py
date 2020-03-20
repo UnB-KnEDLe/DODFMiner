@@ -1,4 +1,4 @@
-"""Missing File Doc."""
+"""."""
 
 import re
 import json
@@ -8,9 +8,10 @@ from collections import namedtuple
 import operator
 
 import fitz
-import extractor.title_filter as title_filter
+import title_filter
 
-Box = namedtuple("Box", ['x0', 'y0', 'x1', 'y1'])
+Box = namedtuple("Box", 'x0 y0 x1 y1')
+TitlesSubtitles = namedtuple("TitlesSubtitles", "titles subtitles")
 AuxT = namedtuple("Aux", "text type bbox page")
 DODF_WIDTH = 765
 DODF_HEIGHT = 907
@@ -42,7 +43,8 @@ def extract_bold_upper_page(page: fitz.fitz.Page):
             for span in line['spans']:
                 flags = span['flags']
                 txt: str = span['text']
-                if flags in (16, 20) and txt == txt.upper():
+                cond1 = flags in title_filter.BoldUpperCase.BOLD_FLAGS
+                if cond1 and txt == txt.upper():
                     span['bbox'] = Box(*span['bbox'])
                     span['page'] = page.number
                     del span['color']
@@ -51,7 +53,7 @@ def extract_bold_upper_page(page: fitz.fitz.Page):
     return lis
 
 
-def extrai_bold_pdf(path):
+def extract_bold_pdf(path):
     """Extract bold content from DODF pdf.
     Args:
         path: an path to a DODF pdf file
@@ -114,19 +116,15 @@ def sort_2column(lis):
     return ordered_by_page
 
 
-TitulosSubtitulos = namedtuple("TitulosSubtitulos", "titulos subtitulos")
-AuxT = namedtuple("Aux", "text type bbox page")
-
-
-class ExtratorTituloSubTitulo(object):
+class ExtractorTitleSubtitle(object):
     """Use this class like that:
     >> path = "path_to_pdf"
-    >> extractor = ExtratorTituloSubTitulo(path)
-    >> # To extract titulos
-    >> titles = extractor.titulos
-    >> # To extract subtitulos
-    >> titles = extractor.subtitulos
-    >> # To dump titulos and subtitulos on a json file
+    >> extractor = ExtractorTitleSubtitle(path)
+    >> # To extract titles
+    >> titles = extractor.titles
+    >> # To extract subtitles
+    >> titles = extractor.subtitles
+    >> # To dump titles and subtitles on a json file
     >> json_path = "valid_file_name"
     >> extractor.dump_json(json_path)
     ."""
@@ -139,19 +137,22 @@ class ExtratorTituloSubTitulo(object):
 
     TRASH_COMPILED = re.compile('|'.join(TRASH_WORDS))
 
-    @staticmethod
-    def _get_titulos_subtitulos(lis):
-        """Missing Summary.
+    TYPE_TITLE, TYPE_SUBTITLE = "title", "subtitle"
 
-        Receber lista com dictionários com chaves:
-        Expect 'lis' to be a list of dict all of them having the keys:
-          - size -> float
-          - text -> str
-          - bbox -> Height
-          - page -> int
-        Returns TitulosSubtitulos(titulos=titulos, subtitulos=subtitulos),
-        where `titulos` and `subtitulos` are List[AuxT]
-        Base on font size and heuristic.
+    @staticmethod
+    def _get_titles_subtitles(lis):
+        """Extract titles and subtitles from a list.
+
+        Args:
+            lis: a list of dict all of them having the keys:
+                size -> float
+                text -> str
+                bbox -> Height
+                page -> int
+        Returns:
+            TitlesSubtitles(titles=titles, subtitles=subtitles),
+            where `titles` and `subtitles` are List[AuxT].
+            Based on font size and heuristic.
         """
         # Ordenar pelo tamanho da fonte, pegar da maior ateh a menor
         lis = sorted(lis, key=lambda d: d['size'], reverse=True)
@@ -169,59 +170,59 @@ class ExtratorTituloSubTitulo(object):
                     if cond1 and cond2:
                         titles[-1][0] = titles[-1][0] + " " + v['text']
                     else:
-                        titles.append([v['text'], 'titulo',
+                        titles.append([v['text'], ExtractorTitleSubtitle.TYPE_TITLE,
                                        v['bbox'], v['page']])
                 else:
-                    titles.append([v['text'], 'titulo', v['bbox'], v['page']])
+                    titles.append([v['text'], ExtractorTitleSubtitle.TYPE_TITLE, v['bbox'], v['page']])
             else:
                 break
             prev_el = v
         titles = [AuxT(*i) for i in titles]
         sub_titles = []
         size = lis[i]['size']
-        # PS: maioria dos subtitulos ocupa 1 linha só;
+        # PS: majority of subtitles uses only 1 line. Hard to distinguish
         for _, v in enumerate(lis[i:]):
-            # TODO tratar outros casos como "DEPARTAMENTO DE ESTRADAS DE
+            # TODO deal with cases like "DEPARTAMENTO DE ESTRADAS DE
             # RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
             if size == v['size']:
-                sub_titles.append((v['text'], 'subtitulo',
+                sub_titles.append((v['text'], ExtractorTitleSubtitle.TYPE_SUBTITLE,
                                    v['bbox'], v['page']))
             else:
                 break
         sub_titles = [AuxT(*i) for i in sub_titles]
-        return TitulosSubtitulos(titles, sub_titles)
+        return TitlesSubtitles(titles, sub_titles)
 
     @staticmethod
-    def _get_titulos_subtitulos_smart(path):
-        """Extract titulos and subtitulos, making use of heuristics.
+    def _get_titles_subtitles_smart(path):
+        """Extract titles and subtitles, making use of heuristics.
 
-        Wrapper for _get_titulos_subtitulos, removing most of impurity
+        Wrapper for _get_titles_subtitles, removing most of impurity
         (spans not which aren't titles/subtutles).
         """
-        negrito_spans = reduce(operator.add, extrai_bold_pdf(path))
-        filtrado1 = filter(title_filter.NegritoCaixaAlta.dict_text,
+        negrito_spans = reduce(operator.add, extract_bold_pdf(path))
+        filtered1 = filter(title_filter.BoldUpperCase.dict_text,
                            negrito_spans)
-        filtrado2 = filter(lambda s: not re.search(ExtratorTituloSubTitulo.TRASH_COMPILED,
-                                                   s['text']), filtrado1)
-        ordenado1 = sorted(filtrado2,
-                           key=lambda x: (-x['page'], x['size']),
-                           reverse=True)
-        return ExtratorTituloSubTitulo._get_titulos_subtitulos(ordenado1)
+        filtered2 = filter(lambda s: not re.search(ExtractorTitleSubtitle.TRASH_COMPILED,
+                                                   s['text']), filtered1)
+        ordered1 = sorted(filtered2,
+                          key=lambda x: (-x['page'], x['size']),
+                          reverse=True)
+        return ExtractorTitleSubtitle._get_titles_subtitles(ordered1)
 
     def _mount_json(self):
         i = 0
         dic = {}
-        aux = self._titulos_subtitulos
+        aux = self._titles_subtitles
         while i < len(aux):
             el = aux[i]
-            if el.type == 'titulo':
-                titulo = el.text
-                dic[titulo] = []
+            if el.type == ExtractorTitleSubtitle.TYPE_TITLE:
+                title = el.text
+                dic[title] = []
                 i += 1
                 while i < len(aux):
                     el = aux[i]
-                    if el.type == 'subtitulo':
-                        dic[titulo].append(el.text)
+                    if el.type == ExtractorTitleSubtitle.TYPE_SUBTITLE:
+                        dic[title].append(el.text)
                         i += 1
                     else:
                         break
@@ -231,47 +232,52 @@ class ExtratorTituloSubTitulo(object):
         return self._json
 
     def _extract(self):
-        a = ExtratorTituloSubTitulo._get_titulos_subtitulos_smart(self._path)
-        titulos_subtitulos = a
-        by_page = sort_2column(reduce(operator.add, titulos_subtitulos))
+        a = ExtractorTitleSubtitle._get_titles_subtitles_smart(self._path)
+        titles_subtitles = a
+        by_page = sort_2column(reduce(operator.add, titles_subtitles))
         return reduce(operator.add, by_page.values())
 
     def _do_cache(self):
-        self._titulos_subtitulos = self._extract()
-        self._titulos = list(filter(lambda x: x.type == 'titulo',
-                                    self._titulos_subtitulos))
-        self._subtitulos = list(filter(lambda x: x.type == 'subtitulo',
-                                       self._titulos_subtitulos))
+        self._titles_subtitles = self._extract()
+        self._titles = list(filter(lambda x: x.type == ExtractorTitleSubtitle.TYPE_TITLE,
+                                   self._titles_subtitles))
+        self._subtitles = list(filter(lambda x: x.type == ExtractorTitleSubtitle.TYPE_SUBTITLE,
+                                      self._titles_subtitles))
         self._mount_json()
         self._cached = True
 
     def __init__(self, path):
-        """Missing Doc."""
+        """.
+
+        Args:
+            path: str indicating the path for the pdf to have its
+                content extracted
+        """
         self._negrito = load_blocks_list(path)
-        self._titulos_subtitulos = TitulosSubtitulos([], [])
-        self._titulos = []
-        self._subtitulos = []
+        self._titles_subtitles = TitlesSubtitles([], [])
+        self._titles = []
+        self._subtitles = []
         self._path = path
         self._cached = False
         self._json = dict()
 
     @property
-    def titulos(self):
-        """All titulos extracted from the file speficied by self._path."""
+    def titles(self):
+        """All titles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
-        return self._titulos
+        return self._titles
 
     @property
-    def subtitulos(self):
-        """All subtitulos extracted from the file speficied by self._path."""
+    def subtitles(self):
+        """All subtitles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
-        return self._subtitulos
+        return self._subtitles
 
     @property
     def json(self):
-        """All titulos and subtitulos extracted from the file specified by
+        """All titles and subtitles extracted from the file specified by
         self._path, hierarchically organized."""
         if not self._json:
             if not self._cached:
@@ -280,21 +286,21 @@ class ExtratorTituloSubTitulo(object):
         return self._json
 
     def extract_all(self):
-        """Extract all titutos and subtitulos on the path passed while
+        """Extract all titles and subtitles on the path passed while
         instantiating that object. This function is not exepected to be
         needed.
 
         Ignores the cache.
 
         Returns:
-            A list with titulos and subtitulos, sorted according to its
+            A list with titles and subtitles, sorted according to its
             reading order.
         """
         return self._extract()
 
     def dump_json(self, path):
-        """Write on file specified by path the JSON representation of titulos and
-        subtitulos extracted.
+        """Write on file specified by path the JSON representation of titles
+        and subtitles extracted.
 
         Args:
             path: string containing path to .json file where the dump will
@@ -302,7 +308,7 @@ class ExtratorTituloSubTitulo(object):
         Returns:
             None.
 
-        Dumps the titulos and subtitulos according to the hierarchy verified
+        Dumps the titles and subtitles according to the hierarchy verified
         on the document.
 
         The outputfile should be specified and will be suffixed with the
