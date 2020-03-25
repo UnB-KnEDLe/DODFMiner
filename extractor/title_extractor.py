@@ -274,6 +274,29 @@ class ExtractorTitleSubtitle(object):
         return self._json
 
 
+    def _mount_hierarchy(self):
+        i = 0
+        hierarchy = []
+        aux = self._titles_subtitles
+        while i < len(aux):
+            el = aux[i]
+            if el.type == TYPE_TITLE:
+                title = el.text
+                hierarchy.append([title, []])
+                i += 1
+                while i < len(aux):
+                    el = aux[i]
+                    if el.type == TYPE_SUBTITLE:
+                        hierarchy[-1][1].append(el.text)
+                        i += 1
+                    else:
+                        break
+            else:
+                raise ValueError("Não começa com títulos")
+        self._hierarchy =  [TitlesSubtitles(*i) for i in hierarchy]
+        return self._hierarchy
+
+
     def _do_cache(self):
         self._titles_subtitles = extract(self._path)
         self._titles = list(filter(lambda x: x.type == TYPE_TITLE,
@@ -297,6 +320,7 @@ class ExtractorTitleSubtitle(object):
         self._path = path
         self._cached = False
         self._json = dict()
+        self._hierarchy = []
 
     @property
     def titles(self):
@@ -328,6 +352,14 @@ class ExtractorTitleSubtitle(object):
             self._mount_json()
         return self._json
 
+
+    @property
+    def title_subtitle(self):
+        if not self._hierarchy:
+            if not self._cached:
+                self._do_cache()            
+            self._mount_hierarchy()
+        return self._hierarchy
 
     # TODO: add property which ensures title/subtitle hierarchy are kept
     
