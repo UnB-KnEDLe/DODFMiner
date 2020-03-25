@@ -323,7 +323,7 @@ class ExtractorTitleSubtitle(object):
         self._hierarchy = []
 
     @property
-    def titles(self):
+    def titles(self) -> List[AuxT]:
         """All titles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
@@ -331,7 +331,7 @@ class ExtractorTitleSubtitle(object):
 
 
     @property
-    def subtitles(self):
+    def subtitles(self) -> List[AuxT]:
         """All subtitles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
@@ -339,12 +339,8 @@ class ExtractorTitleSubtitle(object):
 
 
     @property
-    def json(self):
-        """All titles and subtitles extracted from the file specified by
-        self._path, hierarchically organized.
-        
-        BUG: as the titles repeats over the document's sections, only
-            the subtitles related to the LAST appear os  a title  will remain.
+    def json(self) -> dict:
+        """All titles with its subtitles associated.
         """
         if not self._json:
             if not self._cached:
@@ -354,7 +350,14 @@ class ExtractorTitleSubtitle(object):
 
 
     @property
-    def title_subtitle(self):
+    def title_subtitle(self) -> TitlesSubtitles(str, List[str]):
+        """All titles and subtitles extracted from the file specified by
+        self._path, hierarchically organized.
+        
+        Returns:
+            list of TitlesSubtitles each of which containing
+                a title:str and subtitles:List[str]
+        """
         if not self._hierarchy:
             if not self._cached:
                 self._do_cache()            
@@ -364,7 +367,7 @@ class ExtractorTitleSubtitle(object):
     # TODO: add property which ensures title/subtitle hierarchy are kept
     
 
-    def extract_all(self):
+    def extract_all(self) -> List[AuxT]:
         """Extract all titles and subtitles on the path passed while
         instantiating that object. This function is not exepected to be
         needed.
@@ -375,7 +378,7 @@ class ExtractorTitleSubtitle(object):
             A list with titles and subtitles, sorted according to its
             reading order.
         """
-        return self._extract()
+        return extract(self._path)
 
 
     def dump_json(self, path):
