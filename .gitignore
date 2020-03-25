@@ -138,3 +138,6 @@ dmypy.json
 
 # vscode
 .vscode/
+
+# temporary local files
+tmp/
