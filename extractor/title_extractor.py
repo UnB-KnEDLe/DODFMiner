@@ -16,6 +16,28 @@ AuxT = namedtuple("Aux", "text type bbox page")
 DODF_WIDTH = 765
 DODF_HEIGHT = 907
 
+TRASH_WORDS = [
+    "SUMÁRIO",
+    "DIÁRIO OFICIAL",
+    "SEÇÃO (I|II|III)",
+]
+
+TRASH_COMPILED = re.compile('|'.join(TRASH_WORDS))
+
+TYPE_TITLE, TYPE_SUBTITLE = "title", "subtitle"
+
+def invert_auxt(aux: AuxT):
+    """Reverse the type between TYPE_TITLE and TYPE_SUBTITLE.
+    
+    Args:
+        aux: an instance of AuxT
+    
+    Returns:
+        an copy of aux with its type field reversed
+    """
+    a1, _, a2, a3 = aux 
+    return AuxT(a1, TYPE_TITLE if _ is TYPE_SUBTITLE else TYPE_SUBTITLE , a2, a3) 
+
 
 def load_blocks_list(path):
     """Loads list of blocks list from the file specified.
@@ -116,6 +138,105 @@ def sort_2column(lis):
     return ordered_by_page
 
 
+def get_titles_subtitles(lis):
+    """Extract titles and subtitles from a list.
+
+    Args:
+        lis: a list of dict all of them having the keys:
+            size -> float
+            text -> str
+            bbox -> Height
+            page -> int
+    Returns:
+        TitlesSubtitles(titles=titles, subtitles=subtitles),
+        where `titles` and `subtitles` are List[AuxT].
+        Based on font size and heuristic.
+    """
+    # Sort by font size; take from biggest to smallest
+    lis = sorted(lis, key=lambda d: d['size'], reverse=True)
+
+    # Usually part of "Diário Oficial do DISTRITO FEDERAL"
+    if "DISTRITO FEDERAL" in lis[0]['text']:
+        del lis[0]
+    # heuristic part: which font is the one use by titles?
+    SZ = lis[min(2, len(lis) - 1)]['size']
+    titles = []
+    prev_el = lis[0]
+    
+    while lis:
+        v = lis[0]        
+    # for idx, v in enumerate(lis):
+        if SZ == v['size']:
+            if titles:
+                cond1 = abs(prev_el['bbox'].y1 - v['bbox'].y0) < 10
+                cond2 = prev_el['page'] == v['page']
+                if cond1 and cond2:
+                    titles[-1][0] = titles[-1][0] + "\n" + v['text']
+                else:
+                    titles.append([v['text'], TYPE_TITLE,
+                                    v['bbox'], v['page']])
+            else:
+                titles.append([v['text'], TYPE_TITLE, v['bbox'], v['page']])
+            lis = lis[1:]
+        else:
+            break
+        prev_el = v
+    titles = [AuxT(*i) for i in titles]
+    sub_titles = []
+    # if the list is over, there are no subtitles
+    # if idx < len(lis):
+    if lis:
+        size = lis[0]['size']
+        # PS: majority of subtitles uses only 1 line. Hard to distinguish
+        # for _, v in enumerate(lis[idx:]):
+        while lis:
+            v = lis[0]
+            # TODO deal with cases like "DEPARTAMENTO DE ESTRADAS DE
+            # RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
+            if size == v['size']:
+                sub_titles.append((v['text'], TYPE_SUBTITLE,
+                                    v['bbox'], v['page']))
+            else:   # this and next elements has others font sizes
+                break
+            lis = lis[1:]
+        sub_titles = [AuxT(*i) for i in sub_titles]
+    if not titles and sub_titles:
+        return TitlesSubtitles( [invert_auxt(i) for i in sub_titles], titles )
+    return TitlesSubtitles(titles, sub_titles)
+
+
+def get_titles_subtitles_smart(path):
+    """Extract titles and subtitles, making use of heuristics.
+
+    Wrapper for _get_titles_subtitles, removing most of impurity
+    (spans not which aren't titles/subtutles).
+    """
+    negrito_spans = reduce(operator.add, extract_bold_pdf(path))
+    filtered1 = filter(title_filter.BoldUpperCase.dict_text,
+                        negrito_spans)
+    filtered2 = filter(lambda s: not re.search(TRASH_COMPILED,
+                                                s['text']), filtered1)
+    # 'calibri' as font apears as an noise
+    filtered3 = filter(lambda x: 'calibri' not in x['font'].lower(), filtered2)
+    ordered1 = sorted(filtered3,
+                      key=lambda x: (-x['page'], x['size']),
+                      reverse=True)
+    return get_titles_subtitles(ordered1)
+    
+
+def extract(path: str) -> List[AuxT]:
+    """Extract titles and subtitles from DODF pdf.
+    Args:
+        path: str indicating the path for the pdf to have its
+            content extracted
+    Returns:
+        List[AuxT] containing all titles ans subtitles
+    """
+    titles_subtitles = get_titles_subtitles_smart(path)
+    by_page = sort_2column(reduce(operator.add, titles_subtitles))
+    return reduce(operator.add, by_page.values())
+
+
 class ExtractorTitleSubtitle(object):
     """Use this class like that:
     >> path = "path_to_pdf"
@@ -129,85 +250,6 @@ class ExtractorTitleSubtitle(object):
     >> extractor.dump_json(json_path)
     ."""
 
-    TRASH_WORDS = [
-        "SUMÁRIO",
-        "DIÁRIO OFICIAL",
-        "SEÇÃO (I|II|III)"
-    ]
-
-    TRASH_COMPILED = re.compile('|'.join(TRASH_WORDS))
-
-    TYPE_TITLE, TYPE_SUBTITLE = "title", "subtitle"
-
-    @staticmethod
-    def _get_titles_subtitles(lis):
-        """Extract titles and subtitles from a list.
-
-        Args:
-            lis: a list of dict all of them having the keys:
-                size -> float
-                text -> str
-                bbox -> Height
-                page -> int
-        Returns:
-            TitlesSubtitles(titles=titles, subtitles=subtitles),
-            where `titles` and `subtitles` are List[AuxT].
-            Based on font size and heuristic.
-        """
-        # Ordenar pelo tamanho da fonte, pegar da maior ateh a menor
-        lis = sorted(lis, key=lambda d: d['size'], reverse=True)
-
-        if "DISTRITO FEDERAL" in lis[0]['text']:
-            del lis[0]
-        SZ = lis[min(2, len(lis))]['size']
-        titles = []
-        prev_el = lis[0]
-        for i, v in enumerate(lis):
-            if SZ == v['size']:
-                if titles:
-                    cond1 = abs(prev_el['bbox'].y1 - v['bbox'].y0) < 10
-                    cond2 = prev_el['page'] == v['page']
-                    if cond1 and cond2:
-                        titles[-1][0] = titles[-1][0] + " " + v['text']
-                    else:
-                        titles.append([v['text'], ExtractorTitleSubtitle.TYPE_TITLE,
-                                       v['bbox'], v['page']])
-                else:
-                    titles.append([v['text'], ExtractorTitleSubtitle.TYPE_TITLE, v['bbox'], v['page']])
-            else:
-                break
-            prev_el = v
-        titles = [AuxT(*i) for i in titles]
-        sub_titles = []
-        size = lis[i]['size']
-        # PS: majority of subtitles uses only 1 line. Hard to distinguish
-        for _, v in enumerate(lis[i:]):
-            # TODO deal with cases like "DEPARTAMENTO DE ESTRADAS DE
-            # RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
-            if size == v['size']:
-                sub_titles.append((v['text'], ExtractorTitleSubtitle.TYPE_SUBTITLE,
-                                   v['bbox'], v['page']))
-            else:
-                break
-        sub_titles = [AuxT(*i) for i in sub_titles]
-        return TitlesSubtitles(titles, sub_titles)
-
-    @staticmethod
-    def _get_titles_subtitles_smart(path):
-        """Extract titles and subtitles, making use of heuristics.
-
-        Wrapper for _get_titles_subtitles, removing most of impurity
-        (spans not which aren't titles/subtutles).
-        """
-        negrito_spans = reduce(operator.add, extract_bold_pdf(path))
-        filtered1 = filter(title_filter.BoldUpperCase.dict_text,
-                           negrito_spans)
-        filtered2 = filter(lambda s: not re.search(ExtractorTitleSubtitle.TRASH_COMPILED,
-                                                   s['text']), filtered1)
-        ordered1 = sorted(filtered2,
-                          key=lambda x: (-x['page'], x['size']),
-                          reverse=True)
-        return ExtractorTitleSubtitle._get_titles_subtitles(ordered1)
 
     def _mount_json(self):
         i = 0
@@ -215,36 +257,55 @@ class ExtractorTitleSubtitle(object):
         aux = self._titles_subtitles
         while i < len(aux):
             el = aux[i]
-            if el.type == ExtractorTitleSubtitle.TYPE_TITLE:
+            if el.type == TYPE_TITLE:
                 title = el.text
-                dic[title] = []
+                dic[title] = dic.get(title, [])
                 i += 1
                 while i < len(aux):
                     el = aux[i]
-                    if el.type == ExtractorTitleSubtitle.TYPE_SUBTITLE:
+                    if el.type == TYPE_SUBTITLE:
                         dic[title].append(el.text)
                         i += 1
                     else:
                         break
             else:
-                raise ValueError("Não começa com títulos")
+                raise ValueError("Does not begin with a title")
         self._json = dic
         return self._json
 
-    def _extract(self):
-        a = ExtractorTitleSubtitle._get_titles_subtitles_smart(self._path)
-        titles_subtitles = a
-        by_page = sort_2column(reduce(operator.add, titles_subtitles))
-        return reduce(operator.add, by_page.values())
+
+    def _mount_hierarchy(self):
+        i = 0
+        hierarchy = []
+        aux = self._titles_subtitles
+        while i < len(aux):
+            el = aux[i]
+            if el.type == TYPE_TITLE:
+                title = el.text
+                hierarchy.append([title, []])
+                i += 1
+                while i < len(aux):
+                    el = aux[i]
+                    if el.type == TYPE_SUBTITLE:
+                        hierarchy[-1][1].append(el.text)
+                        i += 1
+                    else:
+                        break
+            else:
+                raise ValueError("Não começa com títulos")
+        self._hierarchy =  [TitlesSubtitles(*i) for i in hierarchy]
+        return self._hierarchy
+
 
     def _do_cache(self):
-        self._titles_subtitles = self._extract()
-        self._titles = list(filter(lambda x: x.type == ExtractorTitleSubtitle.TYPE_TITLE,
+        self._titles_subtitles = extract(self._path)
+        self._titles = list(filter(lambda x: x.type == TYPE_TITLE,
                                    self._titles_subtitles))
-        self._subtitles = list(filter(lambda x: x.type == ExtractorTitleSubtitle.TYPE_SUBTITLE,
+        self._subtitles = list(filter(lambda x: x.type == TYPE_SUBTITLE,
                                       self._titles_subtitles))
         self._mount_json()
         self._cached = True
+
 
     def __init__(self, path):
         """.
@@ -253,39 +314,60 @@ class ExtractorTitleSubtitle(object):
             path: str indicating the path for the pdf to have its
                 content extracted
         """
-        self._negrito = load_blocks_list(path)
         self._titles_subtitles = TitlesSubtitles([], [])
         self._titles = []
         self._subtitles = []
         self._path = path
         self._cached = False
         self._json = dict()
+        self._hierarchy = []
 
     @property
-    def titles(self):
+    def titles(self) -> List[AuxT]:
         """All titles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
         return self._titles
 
+
     @property
-    def subtitles(self):
+    def subtitles(self) -> List[AuxT]:
         """All subtitles extracted from the file speficied by self._path."""
         if not self._cached:
             self._do_cache()
         return self._subtitles
 
+
     @property
-    def json(self):
-        """All titles and subtitles extracted from the file specified by
-        self._path, hierarchically organized."""
+    def json(self) -> dict:
+        """All titles with its subtitles associated.
+        """
         if not self._json:
             if not self._cached:
                 self._do_cache()
             self._mount_json()
         return self._json
 
-    def extract_all(self):
+
+    @property
+    def title_subtitle(self) -> TitlesSubtitles(str, List[str]):
+        """All titles and subtitles extracted from the file specified by
+        self._path, hierarchically organized.
+        
+        Returns:
+            list of TitlesSubtitles each of which containing
+                a title:str and subtitles:List[str]
+        """
+        if not self._hierarchy:
+            if not self._cached:
+                self._do_cache()            
+            self._mount_hierarchy()
+        return self._hierarchy
+
+    # TODO: add property which ensures title/subtitle hierarchy are kept
+    
+
+    def extract_all(self) -> List[AuxT]:
         """Extract all titles and subtitles on the path passed while
         instantiating that object. This function is not exepected to be
         needed.
@@ -296,7 +378,8 @@ class ExtractorTitleSubtitle(object):
             A list with titles and subtitles, sorted according to its
             reading order.
         """
-        return self._extract()
+        return extract(self._path)
+
 
     def dump_json(self, path):
         """Write on file specified by path the JSON representation of titles
@@ -317,3 +400,4 @@ class ExtractorTitleSubtitle(object):
         json.dump(self.json,
                   open(path + ((not path.endswith(".json")) * ".json"), 'w'),
                   ensure_ascii=False, indent='  ')
+
