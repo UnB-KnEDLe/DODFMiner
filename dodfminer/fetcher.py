@@ -109,9 +109,9 @@ class Fetcher(object):
             self._log("Finished " + os.path.basename(path))
 
     def _make_month_path(self, year, actual_date):
+        year_path = os.path.join(self.download_path,
+                                 str(actual_date.year))
         if year != actual_date.year:
-            year_path = os.path.join(self.download_path,
-                                     str(actual_date.year))
             self._create_single_folder(year_path)
         month_path = os.path.join(year_path,
                                   MONTHS_STRING[actual_date.month])
