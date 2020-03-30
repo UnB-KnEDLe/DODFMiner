@@ -4,6 +4,7 @@ import os
 import tqdm
 import requests
 import urllib.parse
+
 from pathlib import Path
 from bs4 import BeautifulSoup
 from datetime import datetime
