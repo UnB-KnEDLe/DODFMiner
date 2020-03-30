@@ -133,8 +133,6 @@ class Fetcher(object):
             start_date (str): the start date in format mm/yy
             end_date (str): the start date in format mm/yy
 
-        Returns:
-            None
         """
         start_date = self._string_to_date(start_date)
         end_date = self._string_to_date(end_date)
