@@ -23,14 +23,21 @@ class ContentExtractor:
 
     @classmethod
     def _process_text(cls, text, titles):
-        """.
+        """Search through the text the titles and subtitles.
+
+        This function uses a library called flashtext which is responsible
+        to search through the text for titles and subtitles from the database.
+        In this function will be placed the title rules.
 
         Args:
             text: The full dodf text as string.
             titles: An json property from ExtractorTitleSubtitle object.
 
         Returns:
-            
+            A list of keywords to be searched through text with the tuple
+            format of (keyword, start, end). Where start and end are indexes
+            of the full string.
+
         """
         keyword_processor = KeywordProcessor(case_sensitive=True)
         titles_list = [key for key in titles.keys()]
@@ -38,10 +45,15 @@ class ContentExtractor:
             keyword_processor.add_keyword('\n'+title+'\n')
             keyword_processor.add_keyword('\n'+title+' Í\n')
 
-        found = keyword_processor.extract_keywords(text, span_info=True)
-        found.append(("", len(text), None))
+        # The extract keywords return an array of tupples (keyword, start, end)
+        # Where the keyword is the title, and the start and end is the indexes
+        # of the string, where the keyword is contained
+        keywords = keyword_processor.extract_keywords(text, span_info=True)
+        # This last keyword is added to indicate the the last title is
+        # non existent
+        keywords.append(("", len(text), None))
 
-        return found
+        return keywords
 
     @classmethod
     def _extract_titles(cls, file):
@@ -276,9 +288,10 @@ class ContentExtractor:
                                     + 'tmp_tesseract_text.txt', 'r').read()
             # Escrever algo aqui
             cls._write_tesseract_text(tesseract_result)
+            
             terms_found = cls._process_text(tesseract_result, title_base.json)
             content_dict = cls._extract_content(tesseract_result,
-                                                terms_found, ext)
+                                                terms_found, title_base.json)
             j_path = cls._struct_json_subfolders(file)
             json.dump(content_dict, open(TMP_PATH_JSON + '/' + j_path, "w",
                                          encoding="utf-8"))
