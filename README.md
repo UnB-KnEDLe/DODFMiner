@@ -1,5 +1,11 @@
 # KnEDLe - DODFMiner
 
+## Requirements
+
+Tesseract
+MuPDF
+pdfinfo
+
 ## Usage
 Run the following in the command line:
 
@@ -12,6 +18,7 @@ To run Jupyter, use the command line:
 Will be opened:
 
 ```localhost:8888tree```
+
 
 ## Docs and Code Guidelines
 

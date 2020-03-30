@@ -15,10 +15,8 @@ class BoldUpperCase:
         "DIÁRIO OFICIAL",
         "SEÇÃO (I|II|III)",
     ]
-    BOLD_FLAGS = [
-      16,
-      20,
-    ]
+
+    BOLD_FLAGS = [16, 20]
 
     @staticmethod
     def dict_text(d):

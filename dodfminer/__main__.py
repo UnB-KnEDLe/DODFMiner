@@ -1,8 +1,8 @@
 """."""
 
 from cli import CLI
-from fetcher import Fetcher
-from content_extractor import ContentExtractor
+from downloader.fetcher import Fetcher
+from extract.content_extractor import ContentExtractor
 
 class Miner(object):
     """."""
@@ -26,6 +26,7 @@ class Miner(object):
 
 
 if __name__ == '__main__':
+
     miner = Miner()
     if miner.ext_content:
         miner.extract_content()
