@@ -165,11 +165,25 @@ class ContentExtractor:
 
     @classmethod
     def _extract_content(cls, text, terms_found, ext):
+        """Populate a dict with the dodf content.
+
+        The dictionary have the title as key and the content as value.
+
+        Args:
+            text: The whole DODF pdf text as string
+            terms_found: the titles and subtitles found in the txt
+            ext: all titles and subtitles from the base
+
+        Returns:
+            Dictionary where the key is a title and the description
+            its content
+
+        """
         content_dict = {}
 
         for i in range(len(terms_found)-1):
             interval_text = text[terms_found[i][2]+1:terms_found[i+1][1]]
-            for key in ext.json.keys():
+            for key in ext.keys():
                 if SequenceMatcher(None, key, terms_found[i][0]).ratio() > 0.8:
                     if key in content_dict:
                         content_dict[key].append(interval_text)
@@ -288,8 +302,10 @@ class ContentExtractor:
                                     + 'tmp_tesseract_text.txt', 'r').read()
             # Escrever algo aqui
             cls._write_tesseract_text(tesseract_result)
-            
+            # List all titles found through the role text
             terms_found = cls._process_text(tesseract_result, title_base.json)
+            # Populate a dictionary with title and subtitle as keys and
+            # the content as value
             content_dict = cls._extract_content(tesseract_result,
                                                 terms_found, title_base.json)
             j_path = cls._struct_json_subfolders(file)
@@ -309,7 +325,6 @@ class ContentExtractor:
         # Get list of existing json to not repeat work
         json_path_list = cls._get_json_list()
 
-        cls._log(pdfs_path_list)
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             # We do not want the system to repeat itself doing the same work
