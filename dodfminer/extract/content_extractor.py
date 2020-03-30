@@ -1,4 +1,12 @@
-"""."""
+"""Extract content from DODFS and export to JSON.
+
+Contains class ContentExtractor which have to public functions
+avaiable to extract the DODF to JSON
+
+Typical usage example:
+    ContentExtractor.extract_to_json()
+    ContentExtractor.extract_content(file)
+"""
 
 import os
 import time
@@ -19,7 +27,83 @@ TMP_PATH_JSON = "./data/tmp/json"
 
 
 class ContentExtractor:
-    """."""
+    """Extract content from DODFs and export to JSON.
+
+    Extracts content from DODF using as suport the title and subtitle
+    databases (which runs using MuPDF) and the Tesseract OCR library. All the
+    contents are exported to a JSON in which it's keys are DODFs titles or
+    subtitles, and its values are the correspondent content.
+
+    Note:
+        This class is not constructable, it cannot generate objects.
+
+    """
+
+    @classmethod
+    def extract_content(cls, file):
+        """Extract content from a pdf file to JSON.
+
+        Args:
+            file: The DODF pdf file to extract the content
+
+        Raises:
+            Exception: Error in case of the title/subtitle pre-extractions
+            fails
+
+        """
+        # Remove images that might still there from previous exec
+        cls._remove_images()
+        try:
+            # Gather all the titles and sub from the dodf to be extracted
+            # The titles are used as a database of keys, so the tesseract
+            # can easly find all the sections desired
+            title_base = cls._extract_titles(file)
+        except Exception as e:
+            cls._log(f"Exception error: {e}")
+        else:
+            # The tesseract library does not work with pdfs, for that the
+            # DODF is converted in between multiple lines
+            pil_images = cls._convert_image(file)
+            cls._save_images(pil_images)
+            # Calls Tesseract Backend to process the image and convert to text
+            # TODO: This sould be allowed in to change in future versions
+            tesseract_result = cls._tesseract_processing()
+            # Write on file to log
+            cls._write_tesseract_text(tesseract_result)
+            # List all titles found through the role text
+            terms_found = cls._process_text(tesseract_result, title_base.json)
+            # Populate a dictionary with title and subtitle as keys and
+            # the content as value
+            content_dict = cls._extract_content(tesseract_result,
+                                                terms_found, title_base.json)
+            # Dump the JSON to a file
+            j_path = cls._struct_json_subfolders(file)
+            json.dump(content_dict, open(TMP_PATH_JSON + '/' + j_path, "w",
+                                         encoding="utf-8"))
+
+    @classmethod
+    def extract_to_json(cls):
+        """Extract information from DODF to JSON.
+
+        For each pdf file in data/dodfs, extract information from the
+        pdf and output it to json.
+
+        """
+        # Get list of all downloaded pdfs
+        pdfs_path_list = cls._get_pdfs_list()
+        # Get list of existing json to not repeat work
+        json_path_list = cls._get_json_list()
+
+        for file in pdfs_path_list:
+            pdf_name = os.path.splitext(os.path.basename(file))[0]
+            # We do not want the system to repeat itself doing the same work
+            if pdf_name not in json_path_list:
+                # TODO(Khalil009) Include a CLI Flag to make only
+                # low cost extractions
+                if os.path.getsize(file) < 30000000:  # Remove in future.
+                    cls.extract_content(file)
+            else:
+                cls._log("JSON already exists")
 
     @classmethod
     def _process_text(cls, text, titles):
@@ -268,73 +352,6 @@ class ContentExtractor:
             except Exception as e:
                 cls._log("Failed with:", e.strerror)
                 cls._log("Error code:", e.code)
-
-    @classmethod
-    def extract_content(cls, file):
-        """.
-
-        Args:
-            file: The DODF pdf file to extract the content
-
-        Raises:
-            Exception: Error in case of the title/subtitle pre-extractions
-            fails
-
-        """
-        # Remove images that might still there from previous exec
-        cls._remove_images()
-        try:
-            # Gather all the titles and sub from the dodf to be extracted
-            # The titles are used as a database of keys, so the tesseract
-            # can easly find all the sections desired
-            title_base = cls._extract_titles(file)
-        except Exception as e:
-            cls._log(f"Exception error: {e}")
-        else:
-            # The tesseract library does not work with pdfs, for that the
-            # DODF is converted in between multiple lines
-            pil_images = cls._convert_image(file)
-            cls._save_images(pil_images)
-            # Calls Tesseract Backend to process the image and convert to text
-            # TODO: This sould be allowed in to change in future versions
-            tesseract_result = cls._tesseract_processing()
-            tesseract_result = open(TMP_PATH
-                                    + 'tmp_tesseract_text.txt', 'r').read()
-            # Escrever algo aqui
-            cls._write_tesseract_text(tesseract_result)
-            # List all titles found through the role text
-            terms_found = cls._process_text(tesseract_result, title_base.json)
-            # Populate a dictionary with title and subtitle as keys and
-            # the content as value
-            content_dict = cls._extract_content(tesseract_result,
-                                                terms_found, title_base.json)
-            j_path = cls._struct_json_subfolders(file)
-            json.dump(content_dict, open(TMP_PATH_JSON + '/' + j_path, "w",
-                                         encoding="utf-8"))
-
-    @classmethod
-    def extract_to_json(cls):
-        """Extract information from DODF to JSON.
-
-        For each pdf file in data/dodfs, extract information from the
-        pdf and output it to json.
-
-        """
-        # Get list of all downloaded pdfs
-        pdfs_path_list = cls._get_pdfs_list()
-        # Get list of existing json to not repeat work
-        json_path_list = cls._get_json_list()
-
-        for file in pdfs_path_list:
-            pdf_name = os.path.splitext(os.path.basename(file))[0]
-            # We do not want the system to repeat itself doing the same work
-            if pdf_name not in json_path_list:
-                # TODO(Khalil009) Include a CLI Flag to make only
-                # low cost extractions
-                if os.path.getsize(file) < 30000000:  # Remove in future.
-                    cls.extract_content(file)
-            else:
-                cls._log("JSON already exists")
 
     @classmethod
     def _log(cls, msg):
