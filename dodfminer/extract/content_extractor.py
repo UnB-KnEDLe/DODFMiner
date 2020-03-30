@@ -23,6 +23,15 @@ class ContentExtractor:
 
     @classmethod
     def _process_text(cls, text, titles):
+        """.
+
+        Args:
+            text: The full dodf text as string.
+            titles: An json property from ExtractorTitleSubtitle object.
+
+        Returns:
+            
+        """
         keyword_processor = KeywordProcessor(case_sensitive=True)
         titles_list = [key for key in titles.keys()]
         for title in titles_list:
@@ -214,8 +223,8 @@ class ContentExtractor:
         path = Path(TMP_PATH_JSON + '/' + '/'.join(splited[:-1]))
         try:
             path.mkdir(parents=True)
-        except FileExistsError as e:
-            cls._log(f'Folder Already Exist: {e}')
+        except FileExistsError:
+            pass
 
         return final_path
 
@@ -252,7 +261,7 @@ class ContentExtractor:
             # Gather all the titles and sub from the dodf to be extracted
             # The titles are used as a database of keys, so the tesseract
             # can easly find all the sections desired
-            ext = cls._extract_titles(file)
+            title_base = cls._extract_titles(file)
         except Exception as e:
             cls._log(f"Exception error: {e}")
         else:
@@ -267,7 +276,7 @@ class ContentExtractor:
                                     + 'tmp_tesseract_text.txt', 'r').read()
             # Escrever algo aqui
             cls._write_tesseract_text(tesseract_result)
-            terms_found = cls._process_text(tesseract_result, ext.json)
+            terms_found = cls._process_text(tesseract_result, title_base.json)
             content_dict = cls._extract_content(tesseract_result,
                                                 terms_found, ext)
             j_path = cls._struct_json_subfolders(file)
