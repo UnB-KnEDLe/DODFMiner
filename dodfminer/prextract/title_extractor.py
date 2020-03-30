@@ -8,7 +8,7 @@ from collections import namedtuple
 import operator
 
 import fitz
-import title_filter
+import prextract.title_filter as tf
 
 Box = namedtuple("Box", 'x0 y0 x1 y1')
 TitlesSubtitles = namedtuple("TitlesSubtitles", "titles subtitles")
@@ -28,15 +28,15 @@ TYPE_TITLE, TYPE_SUBTITLE = "title", "subtitle"
 
 def invert_auxt(aux: AuxT):
     """Reverse the type between TYPE_TITLE and TYPE_SUBTITLE.
-    
+
     Args:
         aux: an instance of AuxT
-    
+
     Returns:
         an copy of aux with its type field reversed
     """
-    a1, _, a2, a3 = aux 
-    return AuxT(a1, TYPE_TITLE if _ is TYPE_SUBTITLE else TYPE_SUBTITLE , a2, a3) 
+    a1, _, a2, a3 = aux
+    return AuxT(a1, TYPE_TITLE if _ is TYPE_SUBTITLE else TYPE_SUBTITLE , a2, a3)
 
 
 def load_blocks_list(path):
@@ -65,7 +65,7 @@ def extract_bold_upper_page(page: fitz.fitz.Page):
             for span in line['spans']:
                 flags = span['flags']
                 txt: str = span['text']
-                cond1 = flags in title_filter.BoldUpperCase.BOLD_FLAGS
+                cond1 = flags in tf.BoldUpperCase.BOLD_FLAGS
                 if cond1 and txt == txt.upper():
                     span['bbox'] = Box(*span['bbox'])
                     span['page'] = page.number
@@ -162,9 +162,9 @@ def get_titles_subtitles(lis):
     SZ = lis[min(2, len(lis) - 1)]['size']
     titles = []
     prev_el = lis[0]
-    
+
     while lis:
-        v = lis[0]        
+        v = lis[0]
     # for idx, v in enumerate(lis):
         if SZ == v['size']:
             if titles:
@@ -212,7 +212,7 @@ def get_titles_subtitles_smart(path):
     (spans not which aren't titles/subtutles).
     """
     negrito_spans = reduce(operator.add, extract_bold_pdf(path))
-    filtered1 = filter(title_filter.BoldUpperCase.dict_text,
+    filtered1 = filter(tf.BoldUpperCase.dict_text,
                         negrito_spans)
     filtered2 = filter(lambda s: not re.search(TRASH_COMPILED,
                                                 s['text']), filtered1)
@@ -222,7 +222,7 @@ def get_titles_subtitles_smart(path):
                       key=lambda x: (-x['page'], x['size']),
                       reverse=True)
     return get_titles_subtitles(ordered1)
-    
+
 
 def extract(path: str) -> List[AuxT]:
     """Extract titles and subtitles from DODF pdf.
@@ -353,19 +353,19 @@ class ExtractorTitleSubtitle(object):
     def title_subtitle(self) -> TitlesSubtitles(str, List[str]):
         """All titles and subtitles extracted from the file specified by
         self._path, hierarchically organized.
-        
+
         Returns:
             list of TitlesSubtitles each of which containing
                 a title:str and subtitles:List[str]
         """
         if not self._hierarchy:
             if not self._cached:
-                self._do_cache()            
+                self._do_cache()
             self._mount_hierarchy()
         return self._hierarchy
 
     # TODO: add property which ensures title/subtitle hierarchy are kept
-    
+
 
     def extract_all(self) -> List[AuxT]:
         """Extract all titles and subtitles on the path passed while
@@ -400,4 +400,3 @@ class ExtractorTitleSubtitle(object):
         json.dump(self.json,
                   open(path + ((not path.endswith(".json")) * ".json"), 'w'),
                   ensure_ascii=False, indent='  ')
-

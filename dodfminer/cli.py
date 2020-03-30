@@ -14,6 +14,7 @@ class CLI(object):
         self.def_end_date = '01/19'
         self.def_single = False
         self.def_extract_content = False
+        self.update_base = False
 
     def _new_group(self, name):
         group = self.parser.add_argument_group(name)
@@ -37,13 +38,23 @@ class CLI(object):
         return group
 
     def _extract_content_group(self):
-        group = self._new_group('Exctract content configs')
+        group = self._new_group('Extract Configs')
 
         group.add_argument('-ext', '--extract_content', dest='extract_content',
                            default=self.def_extract_content, type=bool,
                            help='Extract contents to json')
 
         return group
+
+    def _prextract_group(self):
+        group = self._new_group('Prextract Configs')
+
+        group.add_argument('-u', '--update_base', dest='update_base',
+                           default=self.def_extract_content, type=bool,
+                           help='Extract Titles and Subtitles to JSON')
+
+        return group
+
     def parse(self):
         """."""
         self._download_group()

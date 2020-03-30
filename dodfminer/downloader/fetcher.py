@@ -16,7 +16,7 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
 
 
 class Fetcher(object):
-    """Responsible for download the DODF Pdfs"""
+    """Responsible for download the DODF Pdfs."""
 
     def __init__(self, single=False):
         """."""
@@ -80,7 +80,7 @@ class Fetcher(object):
     def _fail_request_message(self, url, error):
         self._log(error)
         message = "Please check your internet connection, and " \
-        "check if the url is online via browser: {}".format(url)
+                  "check if the url is online via browser: {}".format(url)
         self._log(message)
 
     def _get_soup_link(self, url):
