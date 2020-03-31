@@ -41,6 +41,7 @@ class Fetcher(object):
             single: Boolean indicating to download one or more DODFs
 
         """
+        # TODO: implement single feature
         self.save_path = './data'
         self.download_path = os.path.join(self.save_path, 'dodfs')
         self.prog_bar = None
