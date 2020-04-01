@@ -1,12 +1,17 @@
 """Missing Doc."""
 
+# TODO: Improve Doc
+# TODO: Should this be a filter class?
+
 import functools
 
 
 class BoldUpperCase:
-    """
-    Static class to return filter functions useful
-    for bold and upper case text.
+    """Filter functions useful for bold and upper case text.
+
+    Note:
+        This class is static and should not be instanciated.
+
     """
 
     TEXT_MIN = 4
