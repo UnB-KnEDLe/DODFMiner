@@ -5,15 +5,18 @@
 
 import re
 import json
-import fitz
 import operator
-import prextract.title_filter as title_filter
-
 from functools import reduce
 from typing import List, Iterable
 from collections import namedtuple
+import os
+import json
+
+import fitz
+import prextract.title_filter as title_filter
 
 Box = namedtuple("Box", "x0 y0 x1 y1")
+BBox = namedtuple("BBox", "bbox")
 TitlesSubtitles = namedtuple("TitlesSubtitles", "titles subtitles")
 TextTypeBboxPageTuple = namedtuple(
     "TextTypeBboxPageTuple", "text type bbox page")
@@ -45,6 +48,48 @@ def load_blocks_list(path):
     doc = fitz.open(path)
     return [p.getTextPage().extractDICT()['blocks'] for p in doc]
 
+def group_by_page(elements):
+    """Groups elements by page number.
+
+    Essentially a "groupby" where the key is the page number of each span.
+
+    Args:
+        elements: Iterable[TextTypeBboxPageTuple] sorted by its page number to be grouped.
+
+    Returns:
+        A dict with spans of each page, being keys the page numbers.
+
+    """
+    page_elements = {}
+    for page_num in set(map(lambda x: x.page, elements)):
+        page_elements[page_num] = []
+    for el in elements:
+        page_elements[el.page].append(el)
+    return page_elements
+
+
+def group_by_column(elements, width=_DODF_WIDTH):
+    """Groups elements by its culumns.
+    The sorting assumes they are on the same page
+    and on a 2-column layout.
+
+    Essentially a "groupby" where the key is the page number of each span.
+
+    Args:
+        elements: Iterable[TextTypeBboxPageTuple] sorted by its page number to be grouped.
+
+    Returns:
+        A dict with spans of each page, being keys the page numbers.
+
+    """
+    left_right = [[], []]
+    MID_W = width / 2
+    for i in elements:
+        if i.bbox.x0 <= MID_W:
+            left_right[0].append(i)
+        else:
+            left_right[1].append(i)
+    return left_right
 
 def group_by_page(elements):
     """Groups elements by page number.
@@ -69,9 +114,6 @@ def group_by_page(elements):
 def sort_by_column(elements, width=_DODF_WIDTH):
     """Sorts list elements by columns.
 
-    The sorting assumes they are on the same page
-    and on a 2-column layout.
-
     Args:
         elements: Iterable[TextTypeBboxPageTuple].
         width: the page width (the context in which all list elements
@@ -86,14 +128,7 @@ def sort_by_column(elements, width=_DODF_WIDTH):
         reading order is espected to be kept.
 
     """
-    left_right = [[], []]
-    MID_W = width / 2
-    for i in elements:
-        if i.bbox.x0 < MID_W:
-            left_right[0].append(i)
-        else:
-            left_right[1].append(i)
-    # ordenado = map(lambda x: sorted(x, key=lambda x: x.bbox.y0), left_right)
+    left_right = group_by_column(elements, width)
 
     # Sort by height
     ordenado = (sorted(i, key=lambda x: x.bbox.y0) for i in left_right)
@@ -211,7 +246,12 @@ def _get_titles_subtitles(elements):
                 cond1 = abs(
                     previous_element['bbox'].y1 - current_element['bbox'].y0) < _TITLE_MULTILINE_THRESHOLD
                 cond2 = previous_element['page'] == current_element['page']
-                if cond1 and cond2:
+                
+                # Titles must be algo in the same column
+
+                column_grouped = group_by_column( ( BBox(previous_element['bbox']), BBox(current_element['bbox']) ))
+                cond3 = not (column_grouped[0] and column_grouped[1])
+                if cond1 and cond2 and cond3:
                     titles[-1][0].append(current_element['text'])
                 else:
                     titles.append([[current_element['text']], _TYPE_TITLE,
@@ -496,3 +536,28 @@ class ExtractorTitleSubtitle(object):
         self._hierarchy = []
         self._cache = False
 
+
+def gen_title_base(dir_path=None, base_name="titles"):
+    """Generates titles base from all PDFs immediately under dir_path directory.
+
+    Args:
+        dir_path: path so folder containing PDFs
+        base_name: titles' base file name
+    Returns:
+        dict containing "titles" as key and a list of titles,
+            the same stored at base_name[.json]
+    """
+    if dir_path is None:
+        dir_path = os.getcwd()
+    titles = set()
+    for file in filter(lambda x: x.endswith('.pdf'), os.listdir(dir_path)):
+        et = ExtractorTitleSubtitle(file)
+        titles_text = map(lambda x: x.text, et.titles)
+        titles.update(titles_text)
+    js = {"titles" : list(titles)}
+    json.dump(js,
+              open("{}{}".format(
+                  base_name, (not base_name.endswith(".json")) * ".json"), 'w'),
+              ensure_ascii=False, indent='  ')
+
+    return js
