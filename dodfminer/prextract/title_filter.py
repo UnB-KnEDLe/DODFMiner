@@ -23,8 +23,8 @@ class BoldUpperCase:
 
     BOLD_FLAGS = [16, 20]
 
-    @staticmethod
-    def dict_text(d):
+    @classmethod
+    def dict_text(cls, d):
         """Evaluates to true if d['text'] matches the following conditions:
             - all letters are uppercase
             - does not contain 4 or more consecutive spaces
@@ -32,20 +32,20 @@ class BoldUpperCase:
         ."""
         t = d['text'].strip().strip('.')
         cond1 = 4 * " " not in t
-        cond2 = len(t) > BoldUpperCase.TEXT_MIN
+        cond2 = len(t) > cls.TEXT_MIN
         cond3 = t == t.upper()
         return cond1 and cond2 and cond3
 
-    @staticmethod
-    def dict_bold(d):
+    @classmethod
+    def dict_bold(cls, d):
         """Evaluates do True if d['flags'] matches the following conditions:
             - is one of the values in BoldUpperCase.BOLD_FLAGS
         ."""
         flags = d['flags']
-        return flags in BoldUpperCase.BOLD_FLAGS
+        return flags in cls.BOLD_FLAGS
 
-    @staticmethod
-    def params(params_sep_underscore):
+    @classmethod
+    def params(cls, params_sep_underscore):
         """Returns an function which evaluates a conjunction over the results
         of all filters specified by params_sep_underscore.
 
@@ -59,7 +59,7 @@ class BoldUpperCase:
         """
         func_lis: list = []
         for criteria in params_sep_underscore.split('_'):
-            func_lis.append(eval("BoldUpperCase.dict_{}".format(criteria)))
+            func_lis.append(eval("cls.dict_{}".format(criteria)))
 
         def and_funcs(arg):
             return functools.reduce(lambda a, b: a and b,
