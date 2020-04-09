@@ -1,11 +1,10 @@
-version: '2.0'
+version: '3.1'
 services:
-  app:
+  dodfminer:
       build: .
-      ports:
-      - "8080:8080"
-      command:
-      - python3
-      - dodfminer
+      entrypoint:
+        - python3
+        - dodfminer
       volumes:
       - .:/home/App
+      - ${DATA_PATH}:/home/App/data/
