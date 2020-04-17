@@ -69,7 +69,8 @@ class ContentExtractor:
             # TODO: This sould be allowed in to change in future versions
             tesseract_result = cls._tesseract_processing()
             # Write on file to log
-            cls._write_tesseract_text(tesseract_result)
+            # Only foe debbuging
+            # cls._write_tesseract_text(tesseract_result)
             # List all titles found through the role text
             terms_found = cls._process_text(tesseract_result, title_base.json)
             # Populate a dictionary with title and subtitle as keys and
@@ -94,6 +95,9 @@ class ContentExtractor:
         # Get list of existing json to not repeat work
         json_path_list = cls._get_json_list()
 
+        cls._create_single_folder(TMP_PATH)
+        cls._create_single_folder(TMP_PATH_IMAGES)
+        cls._create_single_folder(TMP_PATH_JSON)
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             # We do not want the system to repeat itself doing the same work
@@ -245,7 +249,7 @@ class ContentExtractor:
 
         """
         text_file = open(TMP_PATH + "tmp_tesseract_text.txt", "w")
-        text_file.write(text)
+        text_file.write(text.encode('utf8'))
 
     @classmethod
     def _extract_content(cls, text, terms_found, ext):
@@ -352,6 +356,32 @@ class ContentExtractor:
             except Exception as e:
                 cls._log("Failed with:", e.strerror)
                 cls._log("Error code:", e.code)
+
+    @classmethod
+    def _create_single_folder(cls, path):
+        """Create a single folder given the directory path.
+
+        This function might create a folder, observe that the folder already
+        exists, or raise an error if the folder cannot be created.
+
+        Args:
+            path: The path to be created
+
+        Raises:
+            OSError: Error creating the directory.
+
+        """
+        if os.path.exists(path):
+            cls._log(os.path.basename(path) + " folder already exist")
+        else:
+            try:
+                os.mkdir(path)
+            except OSError as error:
+                cls._log("Exception during the directory creation")
+                cls._log(str(error))
+            else:
+                basename = os.path.basename(path)
+                cls._log(basename + " directory successful created")
 
     @classmethod
     def _log(cls, msg):
