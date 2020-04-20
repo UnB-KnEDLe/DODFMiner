@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  dodfminer:
+      build: .
+      entrypoint:
+        - python3
+        - dodfminer
+      volumes:
+      - .:/home/App
+      - ${DATA_PATH}:/home/App/data/
