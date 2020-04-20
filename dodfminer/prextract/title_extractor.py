@@ -125,7 +125,7 @@ def sort_by_column(elements, width=_DODF_WIDTH):
             2. position on column
         Assumes a 2-column page layout. All elements on the left column will
         be placed first of any element on the right one. Inside each columns,
-        reading order is espected to be kept.
+        reading order is expected to be kept.
 
     """
     left_right = group_by_column(elements, width)
@@ -438,7 +438,7 @@ class ExtractorTitleSubtitle(object):
             - _titles
             - _subtitles
         """
-        self._titles_subtitles = tuple(extract_title_subtitle(self._path))
+        self._titles_subtitles = tuple(extract_titles_subtitles(self._path))
         self._titles = tuple(filter(lambda x: x.type == _TYPE_TITLE,
                                    self._titles_subtitles))
         self._subtitles = tuple(filter(lambda x: x.type == _TYPE_SUBTITLE,
@@ -537,27 +537,89 @@ class ExtractorTitleSubtitle(object):
         self._cache = False
 
 
-def gen_title_base(dir_path=None, base_name="titles"):
+def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
     """Generates titles base from all PDFs immediately under dir_path directory.
-
+    The base is generated under dir_path directory.
     Args:
-        dir_path: path so folder containing PDFs
+        dir_path: path so base_name will contain all titles
+            from PDFs under dir_path
         base_name: titles' base file name
+        indent: how many spaces used will be used for indent
     Returns:
         dict containing "titles" as key and a list of titles,
             the same stored at base_name[.json]
     """
-    if dir_path is None:
-        dir_path = os.getcwd()
+    base_name = "{}/{}".format(
+        dir_path, base_name + (not base_name.endswith(".json")) * ".json")
+    if os.path.exists(base_name) and not forced:
+        print("Error: {} already exists".format(base_name))
+        return None
+    elif os.path.isdir(base_name):
+        print("Error: {} ir a directory".format(base_name))
+        return None
+
     titles = set()
-    for file in filter(lambda x: x.endswith('.pdf'), os.listdir(dir_path)):
+    for file in filter(lambda x: not os.path.isdir(x) and x.endswith('.pdf'), os.listdir(dir_path)):
         et = ExtractorTitleSubtitle(file)
         titles_text = map(lambda x: x.text, et.titles)
         titles.update(titles_text)
     js = {"titles" : list(titles)}
-    json.dump(js,
-              open("{}{}".format(
-                  base_name, (not base_name.endswith(".json")) * ".json"), 'w'),
-              ensure_ascii=False, indent='  ')
+    json.dump(js, open("{}".format(base_name), 'w'),
+              ensure_ascii=False, indent=indent*' ')
 
     return js
+
+def gen_hierarchy_base(dir_path=".", folder="hierarchy", indent=4, forced=False):
+    """Generates json base from all PDFs immediately under dir_path directory.
+    The hiearchy files are generated under dir_path directory.
+    Args:
+        dir_path: path so folder containing PDFs
+        base_name: titles' base file name
+        forced: proceed even if folder `base_name` already exists
+        indent: how many spaces used will be used for indent
+    Returns:
+        List[Dict[str, List[Dict[str, List[Dict[str, str]]]]]]
+        e.g:
+        [
+           { "22012019": [
+                {
+                  "PODER EXECUTIVO": []
+                },
+                {
+                    "SECRETARIA DE ESTADO DE FAZENDA,\nPLANEJAMENTO, ORÇAMENTO E GESTÃO": [
+                        {
+                            "SUBSECRETARIA DA RECEITA": ""
+                        }
+                    ]
+                }
+            }
+        ]
+        In case of error trying to create `base_name` folder,
+        returns None.
+    """
+    folder = "{}/{}".format(dir_path, folder)
+    if not dir_path:
+        dir_path = "."
+    try:
+        os.makedirs(folder, exist_ok=forced)
+    except Exception as error:
+        print(error)
+        return None
+
+    hierarchies = []
+    for file in filter(lambda x: x.endswith('.pdf'), os.listdir(dir_path)):
+        et = ExtractorTitleSubtitle("{}/{}".format(dir_path, file))
+        hierarchy = et.titles_subtitles_hierarchy
+        hierarchy = [
+            ({ d[0]: [ dict([(i, '')]) for i in d[1] ] })
+            for d in hierarchy
+        ]
+        hierarchy = {file.rstrip('.pdf'): hierarchy}
+        hierarchies.append(hierarchy)
+
+        json.dump(hierarchy,
+            open("{}/{}.json".format(
+                folder, file.rstrip('.pdf')), 'w'),
+            ensure_ascii=False, indent=indent*' ')
+
+    return hierarchies
