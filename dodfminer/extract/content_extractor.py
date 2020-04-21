@@ -14,16 +14,20 @@ import json
 import pdf2image
 import pytesseract
 
+
 from PIL import Image
 from pathlib import Path
 from difflib import SequenceMatcher
 from flashtext import KeywordProcessor
 
+from cli import GLOBAL_ARGS
+from extract.spellcheck import SpellChecker
 from prextract.title_extractor import ExtractorTitleSubtitle
 
 TMP_PATH = "./data/tmp/"
+RESULTS_PATH = "./data/results/"
 TMP_PATH_IMAGES = "./data/tmp/images"
-TMP_PATH_JSON = "./data/tmp/json"
+RESULTS_PATH_JSON = "./data/results/json"
 
 
 class ContentExtractor:
@@ -67,7 +71,9 @@ class ContentExtractor:
             cls._save_images(pil_images)
             # Calls Tesseract Backend to process the image and convert to text
             # TODO: This sould be allowed in to change in future versions
-            tesseract_result = cls._tesseract_processing()
+
+            callback = GLOBAL_ARGS.cb_type
+            tesseract_result = cls._tesseract_processing(SpellChecker().text_correction)
             # Write on file to log
             # Only foe debbuging
             # cls._write_tesseract_text(tesseract_result)
@@ -79,7 +85,7 @@ class ContentExtractor:
                                                 terms_found, title_base.json)
             # Dump the JSON to a file
             j_path = cls._struct_json_subfolders(file)
-            json.dump(content_dict, open(TMP_PATH_JSON + '/' + j_path, "w",
+            json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
                                          encoding="utf-8"))
 
     @classmethod
@@ -96,8 +102,9 @@ class ContentExtractor:
         json_path_list = cls._get_json_list()
 
         cls._create_single_folder(TMP_PATH)
+        cls._create_single_folder(RESULTS_PATH)
         cls._create_single_folder(TMP_PATH_IMAGES)
-        cls._create_single_folder(TMP_PATH_JSON)
+        cls._create_single_folder(RESULTS_PATH_JSON)
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             # We do not want the system to repeat itself doing the same work
@@ -184,9 +191,10 @@ class ContentExtractor:
 
         """
         # TODO: Use CLI to choose this parameters
-        return pdf2image.convert_from_path(file, dpi=200, fmt='jpg',
-                                           thread_count=8, use_cropbox=False,
-                                           strict=False)
+        return pdf2image.convert_from_path(file, dpi=GLOBAL_ARGS.dpi,
+                                           fmt=GLOBAL_ARGS.file_format,
+                                           thread_count=8, strict=False,
+                                           use_cropbox=False)
 
     @classmethod
     def _save_images(cls, images_array):
@@ -211,7 +219,7 @@ class ContentExtractor:
                       key=lambda x: int(x.split("_")[2].split('.')[0]))
 
     @classmethod
-    def _tesseract_processing(cls):
+    def _tesseract_processing(cls, callback=None):
         """Use tesseract to extract content from images.
 
         Returns:
@@ -231,13 +239,20 @@ class ContentExtractor:
             # TODO: Configs should be passed through CLI
             text = pytesseract.image_to_string(image_r,
                                                config='--oem 1',
-                                               lang='por')
+                                               lang=GLOBAL_ARGS.tesseract_lang)
             end = time.time()
             cls._log(image + " Tempo: " + str(end-start))
             tesseract_result += text
 
         # TODO: Return string from section, index with title and subtitle
         # go to next string
+        if callback:
+            try:
+                tesseract_result = callback(tesseract_result)
+            except:
+                error = "Callback must be a function with one str parameter"
+                raise Exception(error)
+
         return tesseract_result
 
     @classmethod
@@ -304,7 +319,7 @@ class ContentExtractor:
 
         """
         aux = []
-        for dp, _, fn in os.walk(os.path.expanduser(TMP_PATH_JSON)):
+        for dp, _, fn in os.walk(os.path.expanduser(RESULTS_PATH_JSON)):
             for f in fn:
                 aux.append(os.path.join(dp, f))
 
@@ -334,7 +349,7 @@ class ContentExtractor:
         basename = basename[0] + '.json'
         splited[-1] = basename
         final_path = '/'.join(splited)
-        path = Path(TMP_PATH_JSON + '/' + '/'.join(splited[:-1]))
+        path = Path(RESULTS_PATH_JSON + '/' + '/'.join(splited[:-1]))
         try:
             path.mkdir(parents=True)
         except FileExistsError:
