@@ -46,9 +46,11 @@ class Miner(object):
 
 if __name__ == '__main__':
     miner = Miner()
-    if miner.args.subparser_name == 'download':
+    if miner.args.subparser_name == 'fetch':
         miner.download()
     elif miner.args.subparser_name == 'prextract':
         miner._log("Prextract usage not Implemented")
     elif miner.args.subparser_name == 'extract':
         miner.extract_content()
+    else:
+        miner._log("Program mode not recognized")

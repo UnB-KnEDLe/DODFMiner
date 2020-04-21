@@ -36,7 +36,7 @@ class CLI(object):
         self.def_file_format = 'jpg'
 
         self.def_language = 'por'
-        self.def_callback = None
+        self.def_callback = 'None'
 
     def _new_group(self, name, subparser):
         """Create new argument group.
@@ -90,6 +90,7 @@ class CLI(object):
 
         group.add_argument('--callback', dest='cb_type',
                            default=self.def_callback, type=str,
+                           choices=['spellcheck', 'None'],
                            help='Callback to the extraction function')
 
     def _prextract_parser(self):
