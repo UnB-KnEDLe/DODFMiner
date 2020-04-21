@@ -72,9 +72,13 @@ class ContentExtractor:
             # Calls Tesseract Backend to process the image and convert to text
             # TODO: This sould be allowed in to change in future versions
 
-            callback = GLOBAL_ARGS.cb_type
-            tesseract_result = cls._tesseract_processing(SpellChecker().text_correction)
-            # Write on file to log
+            callback_name = GLOBAL_ARGS.cb_type
+            if callback_name == 'spellcheck':
+                callback = SpellChecker().text_correction
+            else:
+                callback = None
+            tesseract_result = cls._tesseract_processing(callback)
+            # Write on file to logc
             # Only foe debbuging
             # cls._write_tesseract_text(tesseract_result)
             # List all titles found through the role text
