@@ -13,12 +13,16 @@ class CLI(object):
 
     Attributes:
         parser: An ArgumentParser object.
+        subparsers: Adds subparser to the parser, each one is like a
+                    standalone aplication.
         def_start_date: Default start date to download 01/19.
         def_end_date: Default end date to download 01/19.
         def_single: Download a single PDF if True.
-        def_extract_content: Extract content from downloaded pdfs if True.
         update_base: Update title and subtitle database if true.
-
+        def_dpi: Default dpi for the pdf2image.
+        def_file_format: Default file format output for pdf2image.
+        def_language:  Default language for tesseract
+        def_callback: Default callback to the extraction process
     """
 
     def __init__(self):
@@ -29,12 +33,9 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.def_single = False
-        self.def_extract_content = False
         self.update_base = False
-
         self.def_dpi = 300
         self.def_file_format = 'jpg'
-
         self.def_language = 'por'
         self.def_callback = 'None'
 
@@ -52,7 +53,7 @@ class CLI(object):
         return group
 
     def _download_parser(self):
-        """Create group for download configs."""
+        """Create parser for download configs."""
         download_parser = self.subparsers.add_parser("fetch")
 
         download_parser.add_argument('-s', '--single', dest='single',
@@ -70,7 +71,7 @@ class CLI(object):
                                      help=help_text)
 
     def _extract_content_parser(self):
-        """Create group for extraction configs."""
+        """Create parser for extraction configs."""
         download_parser = self.subparsers.add_parser("extract")
 
         group = self._new_group('PDF2Image Configs', download_parser)
@@ -94,7 +95,7 @@ class CLI(object):
                            help='Callback to the extraction function')
 
     def _prextract_parser(self):
-        """Create group for pre-extraction configs."""
+        """Create parser for pre-extraction configs."""
         preextract_parser = self.subparsers.add_parser("prextract")
 
         preextract_parser.add_argument('-u', '--update_base', type=bool,
@@ -103,7 +104,7 @@ class CLI(object):
                                        help='Extract Titles and Subtitles')
 
     def parse(self):
-        """Create groups and parse the arguments.
+        """Create parsers, groups and parse the arguments.
 
         Returns:
             The cli arguments parsed.
