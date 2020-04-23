@@ -96,15 +96,10 @@ class CLI(object):
 
     def _prextract_parser(self):
         """Create parser for pre-extraction configs."""
-        preextract_parser = self.subparsers.add_parser("prextract")
-
-        preextract_parser.add_argument('-u', '--update_base', type=bool,
-                                       dest='update_base',
-                                       default=self.def_extract_content,
-                                       help='Extract Titles and Subtitles')
+        _ = self.subparsers.add_parser("prextract")
 
     def parse(self):
-        """Create parsers, groups and parse the arguments.
+        """Create parser and parse the arguments.
 
         Returns:
             The cli arguments parsed.
