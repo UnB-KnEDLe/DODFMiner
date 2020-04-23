@@ -103,7 +103,7 @@ def _recover_words(words, rect, thresh_divisor=5):
 
 
 
-def drawBoxes(doc, **kargs):
+def drawBoxes(doc, img=True, txt=True, word=True, line=True, **kargs):
     """
     Draws rectangles using the bounding boxes of images, text blocks, text lines and text words.
     Usage example:
@@ -119,7 +119,7 @@ def drawBoxes(doc, **kargs):
                 default values are used. They are repectively:
                 [COLOR['GREEN'], 3, COLOR['BLACK'], 2, COLOR['YELLOW', 1, COLOR['RED'], 1]
     Returns:
-        None. Modify `doc` inplace.
+        The `doc` with the drawn rects. Modify is modified inplace.
 
     """
 
@@ -133,15 +133,19 @@ def drawBoxes(doc, **kargs):
     width_word = kargs.get('width_word', WIDTH['word'])
     width_line = kargs.get('width_line', WIDTH['line'])
 
-    for page in doc:    	
-    	for img in page.getImageList(full=True):
-    		page.drawRect(page.getImageBbox(img), color=color_img, width=width_img)
+    for page in doc:
+        if img:
+        	for img in page.getImageList(full=True):
+        		page.drawRect(page.getImageBbox(img), color=color_img, width=width_img)
+        if txt:
+        	for textBlock in page.getTextBlocks():
+        		page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
+        if word:
+        	for word in _recover_words(page.getTextWords(), page.rect):
+        		page.drawRect(word[:4], color=color_word, width=width_word)
+        if line:
+        	for line in extract_page_lines(page):
+        		page.drawRect(line[:4], color=color_line, width=width_line)
+    return doc
 
-    	for textBlock in page.getTextBlocks():
-    		page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
 
-    	for word in _recover_words(page.getTextWords(), page.rect):
-    		page.drawRect(word[:4], color=color_word, width=width_word)
-
-    	for line in extract_page_lines(page):
-    		page.drawRect(line[:4], color=color_line, width=width_line)
