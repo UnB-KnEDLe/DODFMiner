@@ -44,7 +44,7 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_content(cls, file):
+    def extract_content(cls, file, callback=[]):
         """Extract content from a pdf file to JSON.
 
         Args:
@@ -74,9 +74,8 @@ class ContentExtractor:
 
             callback_name = GLOBAL_ARGS.cb_type
             if callback_name == 'spellcheck':
-                callback = SpellChecker().text_correction
-            else:
-                callback = None
+                callback.append(SpellChecker().text_correction)
+
             tesseract_result = cls._tesseract_processing(callback)
             # Write on file to logc
             # Only foe debbuging
@@ -252,7 +251,8 @@ class ContentExtractor:
         # go to next string
         if callback:
             try:
-                tesseract_result = callback(tesseract_result)
+                for method in callback:
+                    tesseract_result = method(tesseract_result)
             except:
                 error = "Callback must be a function with one str parameter"
                 raise Exception(error)
