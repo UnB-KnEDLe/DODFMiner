@@ -90,7 +90,7 @@ class ContentExtractor:
             # Dump the JSON to a file
             j_path = cls._struct_json_subfolders(file)
             json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
-                                         encoding="utf-8"))
+                                         encoding="utf-8"), ensure_ascii=False)
 
     @classmethod
     def extract_to_json(cls):
@@ -256,7 +256,7 @@ class ContentExtractor:
             except:
                 error = "Callback must be a function with one str parameter"
                 raise Exception(error)
-
+        print(tesseract_result)
         return tesseract_result
 
     @classmethod
