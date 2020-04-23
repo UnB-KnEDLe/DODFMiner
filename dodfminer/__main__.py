@@ -41,7 +41,7 @@ class Miner(object):
         ContentExtractor.extract_to_json()
 
     def _log(self, msg):
-        print(f'[DODFMiner] {msg}')
+        print(f"[DODFMiner] {msg}")
 
 
 if __name__ == '__main__':
