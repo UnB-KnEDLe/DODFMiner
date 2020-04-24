@@ -103,7 +103,7 @@ def _recover_words(words, rect, thresh_divisor=5):
 
 
 
-def drawBoxes(doc, img=True, txt=True, word=True, line=True, **kargs):
+def drawBoxes(doc, img=True, txt=True, line=True, word=False, **kargs):
     """
     Draws rectangles using the bounding boxes of images, text blocks, text lines and text words.
     Usage example:
@@ -114,12 +114,16 @@ def drawBoxes(doc, img=True, txt=True, word=True, line=True, **kargs):
     >>> d.save(d.name.replace('.pdf', '_drawBoxes.pdf'))
 
     Args:
+        img: wheter images bounding boxes should be marked
+        txt: wheter text blocks bounding boxes should be marked
+        line: wheter text lines bounding boxes should be marked
+        word: wheter words bounding boxes should be marked
         kargs: keys in ['color_img', 'width_img', 'color_txt', 'width_txt',
                 'color_word', 'width_word', 'color_line', 'width_line'] are used. In absence of them,
                 default values are used. They are repectively:
                 [COLOR['GREEN'], 3, COLOR['BLACK'], 2, COLOR['YELLOW', 1, COLOR['RED'], 1]
     Returns:
-        The `doc` with the drawn rects. Modify is modified inplace.
+        The `doc` with the drawn rects. `doc` is modified  (marked) inplace.
 
     """
 
@@ -140,12 +144,12 @@ def drawBoxes(doc, img=True, txt=True, word=True, line=True, **kargs):
         if txt:
         	for textBlock in page.getTextBlocks():
         		page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
-        if word:
-        	for word in _recover_words(page.getTextWords(), page.rect):
-        		page.drawRect(word[:4], color=color_word, width=width_word)
         if line:
         	for line in extract_page_lines(page):
         		page.drawRect(line[:4], color=color_line, width=width_line)
+        if word:
+        	for word in _recover_words(page.getTextWords(), page.rect):
+        		page.drawRect(word[:4], color=color_word, width=width_word)
     return doc
 
 
