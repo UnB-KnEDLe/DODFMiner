@@ -267,7 +267,7 @@ class Fetcher(object):
         months_amt = ((end_date.year - start_date.year) * 12
                       + (end_date.month - start_date.month))
         # Creates progress bar
-        self.prog_bar = tqdm.tqdm(total=0)
+        self.prog_bar = tqdm.tqdm(total=months_amt)
         # Creates the project folder structure
         self._create_download_folder()
         year = 0
@@ -284,9 +284,8 @@ class Fetcher(object):
             url = self._make_url(actual_date)
             a_list = self._get_soup_link(url)
             year = actual_date.year
-            amt = len(a_list.find_all('a', href=True))
+            # amt = len(a_list.find_all('a', href=True))
             # self.prog_bar.total = amt
-            self.prog_bar.reset(amt)
             for a in a_list.find_all('a', href=True):
                 a_url = self._make_href_url(a['href'])
                 download_page = self._get_soup_link(a_url)
@@ -307,7 +306,7 @@ class Fetcher(object):
                         self._log("Jumping to the next")
 
             # TODO: For some reason this crashes, FIXME
-                self.prog_bar.update(1)
+            self.prog_bar.update(1)
 
     def _log(self, message):
         self.prog_bar.write("[FETCHER] " + str(message))
