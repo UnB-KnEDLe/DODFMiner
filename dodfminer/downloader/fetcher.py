@@ -18,7 +18,6 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "05_Maio", "06_Junho", "07_Julho", "08_Agosto",
                  "09_Setembro", "10_Outubro", "11_Novembro", "12_Dezembro"]
@@ -82,6 +81,8 @@ class Fetcher(object):
             OSError: Error creating the directory.
 
         """
+        path = path.encode('utf-8')
+        path = path.decode('utf-8')
         if os.path.exists(path):
             self._log(os.path.basename(path) + " folder already exist")
         else:
