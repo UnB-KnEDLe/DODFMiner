@@ -256,7 +256,7 @@ class ContentExtractor:
             except:
                 error = "Callback must be a function with one str parameter"
                 raise Exception(error)
-        print(tesseract_result)
+                
         return tesseract_result
 
     @classmethod
