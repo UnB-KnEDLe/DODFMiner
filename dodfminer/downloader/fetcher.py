@@ -94,7 +94,7 @@ class Fetcher(object):
                 self._log(str(error))
             else:
                 basename = os.path.basename(path)
-                self._log(basename + " directory successful created")
+                self._log(basename + b" directory successful created")
 
     def _create_download_folder(self):
         """Create Downloaded DODFs Structures."""
