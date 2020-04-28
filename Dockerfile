@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get update -y \
     && apt-get install tesseract-ocr -y \
     && apt-get install software-properties-common -y \
-    && apt-get install -y poppler-utils \
+    && apt-get install -y poppler-utils
 
 RUN add-apt-repository ppa:ubuntuhandbook1/apps -y \
     && apt-get update -y \
