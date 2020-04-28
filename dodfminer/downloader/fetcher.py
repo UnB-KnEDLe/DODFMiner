@@ -1,4 +1,4 @@
-# coding=utf-8
+# coding=latin-1
 
 """Download DODFs from the Buriti Website and save on proper directory.
 
@@ -83,8 +83,9 @@ class Fetcher(object):
             OSError: Error creating the directory.
 
         """
+        path = path.encode('utf-8')
         if os.path.exists(path):
-            self._log(os.path.basename(path) + " folder already exist")
+            self._log(os.path.basename(path) + b" folder already exist")
         else:
             try:
                 os.mkdir(path)
