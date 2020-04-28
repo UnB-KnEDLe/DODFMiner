@@ -1,3 +1,5 @@
+# coding=utf-8
+
 """Extract content from DODFS and export to JSON.
 
 Contains class ContentExtractor which have to public functions
@@ -256,7 +258,7 @@ class ContentExtractor:
             except:
                 error = "Callback must be a function with one str parameter"
                 raise Exception(error)
-                
+
         return tesseract_result
 
     @classmethod

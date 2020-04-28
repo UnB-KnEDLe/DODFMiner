@@ -1,4 +1,4 @@
-# coding=latin-1
+# coding=utf-8
 
 """Download DODFs from the Buriti Website and save on proper directory.
 
@@ -116,6 +116,7 @@ class Fetcher(object):
         url_string += "&mes=" + str(MONTHS_STRING[date.month])
         url = urllib.parse.quote(url_string, safe=':/?=&')
         url = url.replace('%C3%A7', '%E7')  # Replace ç for %E7
+        print(url)
 
         return url
 
