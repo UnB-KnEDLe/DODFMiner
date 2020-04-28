@@ -83,15 +83,19 @@ class ContentExtractor:
             # Only foe debbuging
             # cls._write_tesseract_text(tesseract_result)
             # List all titles found through the role text
-            terms_found = cls._process_text(tesseract_result, title_base.json)
-            # Populate a dictionary with title and subtitle as keys and
-            # the content as value
-            content_dict = cls._extract_content(tesseract_result,
+            try:
+                terms_found = cls._process_text(tesseract_result, title_base.json)
+                # Populate a dictionary with title and subtitle as keys and
+                # the content as value
+                content_dict = cls._extract_content(tesseract_result,
                                                 terms_found, title_base.json)
-            # Dump the JSON to a file
-            j_path = cls._struct_json_subfolders(file)
-            json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
-                                         encoding="utf-8"), ensure_ascii=False)
+            except Exception as e:
+                cls._log(f"Exception error: {e}")
+            else:
+                # Dump the JSON to a file
+                j_path = cls._struct_json_subfolders(file)
+                json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
+                                             encoding="utf-8"), ensure_ascii=False)
 
     @classmethod
     def extract_to_json(cls):
