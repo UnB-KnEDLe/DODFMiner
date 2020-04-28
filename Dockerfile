@@ -3,8 +3,8 @@ FROM ubuntu:18.04
 RUN apt-get update -y \
     && apt-get install tesseract-ocr -y \
     && apt-get install software-properties-common -y \
-    && apt-get install -y poppler-utils
-    && apt-get install -y locales && locale-gen en_US.UTF-8
+    && apt-get install -y poppler-utils \
+    && apt-get install -y locales && locale-gen en_US.UTF-8 \
     && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
 
 RUN add-apt-repository ppa:ubuntuhandbook1/apps -y \
