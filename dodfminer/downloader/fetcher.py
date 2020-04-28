@@ -83,9 +83,8 @@ class Fetcher(object):
             OSError: Error creating the directory.
 
         """
-        path = path.encode('utf-8')
         if os.path.exists(path):
-            self._log(os.path.basename(path) + b" folder already exist")
+            self._log(os.path.basename(path) + " folder already exist")
         else:
             try:
                 os.mkdir(path)
@@ -94,7 +93,7 @@ class Fetcher(object):
                 self._log(str(error))
             else:
                 basename = os.path.basename(path)
-                self._log(basename + b" directory successful created")
+                self._log(basename + " directory successful created")
 
     def _create_download_folder(self):
         """Create Downloaded DODFs Structures."""
