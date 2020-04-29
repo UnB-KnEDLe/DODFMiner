@@ -1,3 +1,5 @@
+# coding=utf-8
+
 """Extract content from DODFS and export to JSON.
 
 Contains class ContentExtractor which have to public functions
@@ -54,6 +56,9 @@ class ContentExtractor:
             Exception: Error in case of the title/subtitle pre-extractions
             fails
 
+        Returns:
+            Return a dictionary with titles and subtitles and your contents
+
         """
         # Remove images that might still there from previous exec
         cls._remove_images()
@@ -81,15 +86,17 @@ class ContentExtractor:
             # Only foe debbuging
             # cls._write_tesseract_text(tesseract_result)
             # List all titles found through the role text
-            terms_found = cls._process_text(tesseract_result, title_base.json)
-            # Populate a dictionary with title and subtitle as keys and
-            # the content as value
-            content_dict = cls._extract_content(tesseract_result,
+            try:
+                terms_found = cls._process_text(tesseract_result, title_base.json)
+                # Populate a dictionary with title and subtitle as keys and
+                # the content as value
+                content_dict = cls._extract_content(tesseract_result,
                                                 terms_found, title_base.json)
-            # Dump the JSON to a file
-            j_path = cls._struct_json_subfolders(file)
-            json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
-                                         encoding="utf-8"), ensure_ascii=False)
+            except Exception as e:
+                cls._log(f"Exception error: {e}")
+            else:
+                # Dump the JSON to a file
+                return content_dict
 
     @classmethod
     def extract_to_json(cls):
@@ -115,7 +122,10 @@ class ContentExtractor:
                 # TODO(Khalil009) Include a CLI Flag to make only
                 # low cost extractions
                 if os.path.getsize(file) < 30000000:  # Remove in future.
-                    cls.extract_content(file)
+                    content_dict = cls.extract_content(file)
+                    j_path = cls._struct_json_subfolders(file)
+                    json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
+                                                 encoding="utf-8"), ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
 
@@ -256,7 +266,7 @@ class ContentExtractor:
             except:
                 error = "Callback must be a function with one str parameter"
                 raise Exception(error)
-        print(tesseract_result)
+
         return tesseract_result
 
     @classmethod
