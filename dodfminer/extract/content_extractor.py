@@ -56,6 +56,9 @@ class ContentExtractor:
             Exception: Error in case of the title/subtitle pre-extractions
             fails
 
+        Returns:
+            Return a dictionary with titles and subtitles and your contents
+
         """
         # Remove images that might still there from previous exec
         cls._remove_images()
@@ -93,9 +96,7 @@ class ContentExtractor:
                 cls._log(f"Exception error: {e}")
             else:
                 # Dump the JSON to a file
-                j_path = cls._struct_json_subfolders(file)
-                json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
-                                             encoding="utf-8"), ensure_ascii=False)
+                return content_dict
 
     @classmethod
     def extract_to_json(cls):
@@ -121,7 +122,10 @@ class ContentExtractor:
                 # TODO(Khalil009) Include a CLI Flag to make only
                 # low cost extractions
                 if os.path.getsize(file) < 30000000:  # Remove in future.
-                    cls.extract_content(file)
+                    content_dict = cls.extract_content(file)
+                    j_path = cls._struct_json_subfolders(file)
+                    json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
+                                                 encoding="utf-8"), ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
 
