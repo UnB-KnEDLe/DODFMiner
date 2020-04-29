@@ -51,7 +51,8 @@ class ContentExtractor:
 
         Args:
             file: The DODF pdf file to extract the content
-
+            callback: A list of callbacks to modify the Tesseract output
+            tmp_folder
         Raises:
             Exception: Error in case of the title/subtitle pre-extractions
             fails
@@ -60,8 +61,6 @@ class ContentExtractor:
             Return a dictionary with titles and subtitles and your contents
 
         """
-        # Remove images that might still there from previous exec
-        cls._remove_images()
         try:
             # Gather all the titles and sub from the dodf to be extracted
             # The titles are used as a database of keys, so the tesseract
@@ -73,7 +72,7 @@ class ContentExtractor:
             # The tesseract library does not work with pdfs, for that the
             # DODF is converted in between multiple lines
             pil_images = cls._convert_image(file)
-            cls._save_images(pil_images)
+            # cls._save_images(pil_images)
             # Calls Tesseract Backend to process the image and convert to text
             # TODO: This sould be allowed in to change in future versions
 
@@ -81,7 +80,7 @@ class ContentExtractor:
             if callback_name == 'spellcheck':
                 callback.append(SpellChecker().text_correction)
 
-            tesseract_result = cls._tesseract_processing(callback)
+            tesseract_result = cls._tesseract_processing(pil_images, callback)
             # Write on file to logc
             # Only foe debbuging
             # cls._write_tesseract_text(tesseract_result)
@@ -113,7 +112,7 @@ class ContentExtractor:
 
         cls._create_single_folder(TMP_PATH)
         cls._create_single_folder(RESULTS_PATH)
-        cls._create_single_folder(TMP_PATH_IMAGES)
+        # cls._create_single_folder(TMP_PATH_IMAGES)
         cls._create_single_folder(RESULTS_PATH_JSON)
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
@@ -122,6 +121,8 @@ class ContentExtractor:
                 # TODO(Khalil009) Include a CLI Flag to make only
                 # low cost extractions
                 if os.path.getsize(file) < 30000000:  # Remove in future.
+                    # Remove images that might still there from previous exec
+                    cls._remove_images()
                     content_dict = cls.extract_content(file)
                     j_path = cls._struct_json_subfolders(file)
                     json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
@@ -232,7 +233,7 @@ class ContentExtractor:
                       key=lambda x: int(x.split("_")[2].split('.')[0]))
 
     @classmethod
-    def _tesseract_processing(cls, callback=None):
+    def _tesseract_processing(cls, images, callback=None):
         """Use tesseract to extract content from images.
 
         Returns:
@@ -243,18 +244,19 @@ class ContentExtractor:
         # Images in directory would be read by alphabetical order. In which
         # would cause page 11 to be processed before page 2. For that, the
         # images are sorted through page number.
-        sorted_images = cls._sort_images()
-        for image in sorted_images:
-            image_r = Image.open(os.path.join(TMP_PATH_IMAGES, image))
+        # sorted_images = cls._sort_images()
+        sorted_images = images
+        for i, image in enumerate(images):
+            # image_r = Image.open(os.path.join(TMP_PATH_IMAGES, image))
             # Time is used only for profiling purposes
             start = time.time()
             # Convert the image to strinc using tesseract
             # TODO: Configs should be passed through CLI
-            text = pytesseract.image_to_string(image_r,
+            text = pytesseract.image_to_string(image,
                                                config='--oem 1',
                                                lang=GLOBAL_ARGS.tesseract_lang)
             end = time.time()
-            cls._log(image + " Tempo: " + str(end-start))
+            cls._log('Page ' + str(i+1) + " Time: " + str(end-start))
             tesseract_result += text
 
         # TODO: Return string from section, index with title and subtitle
