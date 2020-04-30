@@ -75,11 +75,6 @@ class ContentExtractor:
             # cls._save_images(pil_images)
             # Calls Tesseract Backend to process the image and convert to text
             # TODO: This sould be allowed in to change in future versions
-
-            callback_name = GLOBAL_ARGS.cb_type
-            if callback_name == 'spellcheck':
-                callback.append(SpellChecker().text_correction)
-
             tesseract_result = cls._tesseract_processing(pil_images, callback)
             # Write on file to logc
             # Only foe debbuging
@@ -114,6 +109,12 @@ class ContentExtractor:
         cls._create_single_folder(RESULTS_PATH)
         # cls._create_single_folder(TMP_PATH_IMAGES)
         cls._create_single_folder(RESULTS_PATH_JSON)
+
+        callback = []
+        callback_name = GLOBAL_ARGS.cb_type
+        if callback_name == 'spellcheck':
+            callback.append(SpellChecker().text_correction)
+
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             # We do not want the system to repeat itself doing the same work
@@ -123,7 +124,7 @@ class ContentExtractor:
                 if os.path.getsize(file) < 30000000:  # Remove in future.
                     # Remove images that might still there from previous exec
                     cls._remove_images()
-                    content_dict = cls.extract_content(file)
+                    content_dict = cls.extract_content(file, callback)
                     j_path = cls._struct_json_subfolders(file)
                     json.dump(content_dict, open(RESULTS_PATH_JSON + '/' + j_path, "w",
                                                  encoding="utf-8"), ensure_ascii=False)
