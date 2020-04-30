@@ -130,10 +130,10 @@ def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_
 	# check perfomed by `CheckColors` (`colors` is expected to be an instance of `list` or `tuple`)
 
 
-	color_img = color_schema.get('img', ELEMENT_COLOR['img'])
-	color_txt = color_schema.get('txt', ELEMENT_COLOR['txt'])
-	color_word = color_schema.get('word', ELEMENT_COLOR['word'])
-	color_line = color_schema.get('line', ELEMENT_COLOR['line'])
+	color_img = color_schema.get('img', tuple(ELEMENT_COLOR['img']))
+	color_txt = color_schema.get('txt', tuple(ELEMENT_COLOR['txt']))
+	color_word = color_schema.get('word', tuple(ELEMENT_COLOR['word']))
+	color_line = color_schema.get('line', tuple(ELEMENT_COLOR['line']))
 
 	width_img = width_schema.get('img', LINE_WIDTH['img'])
 	width_txt = width_schema.get('txt', LINE_WIDTH['txt'])
@@ -199,7 +199,7 @@ class DrawBoxes:
 		"""
 		if color_schema: self._color_schema.update(color_schema)
 		if width_schema: self._color_schema.update(width_schema)
-		return draw(self._fp if inplace else self._fp.copy(),
+		return draw(self._fp if inplace else fitz.open(self._fp.name)
 			img=img, txt=txt, line=line, word=word,
 			color_schema=self._color_schema, width_schema=self._width_schema)
 
