@@ -31,10 +31,9 @@ def get_doc_text_boxes(doc: fitz.Document):
 	Returns:
 		List[List[tuple(float, float, float, float, str, int, int)]]
 	"""
-	blocks_by_page = []
-	for page in doc:
-		blocks_by_page.append( page.getTextBlocks() )
-	return blocks_by_page
+
+	return [page.getTextBlocks() for page in doc]
+
 
 def get_doc_text_lines(doc: fitz.Document):
 	"""Returns list o list of extracted text lines.
@@ -45,10 +44,9 @@ def get_doc_text_lines(doc: fitz.Document):
 	Returns:
 		List[List[tuple(float, float, float, float, str, int, int)]]
 	"""
-	lines_by_page = []
-	for page in doc:
-		lines_by_page.append( _extract_page_lines(page) )
-	return lines_by_page
+
+	return [_extract_page_lines(page) for page in doc]
+
 
 def get_doc_img_boxes(doc: fitz.Document):
 	"""Returns list o list of extracted image blocks.
@@ -59,7 +57,5 @@ def get_doc_img_boxes(doc: fitz.Document):
 	Returns:
 		List[List[tuple(float, float, float, float, str, int, int)]]
 	"""
-	img_boxes_by_page = []
-	for page in doc:
-		img_boxes_by_page.append( page.getImageList(full=True) )
-	return img_boxes_by_page
+
+	return [page.getImageList(full=True) for page in doc]
