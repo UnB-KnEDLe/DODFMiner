@@ -3,7 +3,7 @@ from itertools import groupby
 
 import fitz
 
-from drawBoxes.utils import MetaDataClass, RGB
+from drawBoxes.utils import MetaDataClass, RGB, extract_page_lines
 
 
 
@@ -97,28 +97,6 @@ def _recover_words(words, rect, thresh_divisor=5):
 		words_out.append([x0, y0, x1, y1, word])
 
 	return words_out
-
-
-def extract_page_lines(page):
-	"""Extracts page lines;
-
-	Args:
-		page: fitz.fitz.Page object to have its bold content extracted.
-
-	Returns:
-		A list containing lines content at the page.
-
-	"""
-	lis = []
-	for bl in page.getTextPage().extractDICT()['blocks']:
-		for line in bl['lines']:
-			for span in line['spans']:
-				del span['color']
-				del span['flags']
-				lis.append(( *span['bbox'], span['text'] ))
-				# lis.append(span)
-	return lis
-
 
 
 def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_schema={}):
@@ -227,4 +205,5 @@ class DrawBoxes:
 
 	def save(self, path):
 		self._fp.save(path)
+
 
