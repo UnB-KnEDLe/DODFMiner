@@ -206,8 +206,8 @@ class ContentExtractor:
 
         """
         # TODO: Use CLI to choose this parameters
-        return pdf2image.convert_from_path(file, dpi=GLOBAL_ARGS.dpi,
-                                           fmt=GLOBAL_ARGS.file_format,
+        return pdf2image.convert_from_path(file, dpi=200,
+                                           fmt='jpg',
                                            thread_count=8, strict=False,
                                            use_cropbox=False)
 
@@ -255,7 +255,7 @@ class ContentExtractor:
             # TODO: Configs should be passed through CLI
             text = pytesseract.image_to_string(image,
                                                config='--oem 1',
-                                               lang=GLOBAL_ARGS.tesseract_lang)
+                                               lang='por')
             end = time.time()
             cls._log('Page ' + str(i+1) + " Time: " + str(end-start))
             tesseract_result += text

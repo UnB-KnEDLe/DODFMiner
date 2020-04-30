@@ -37,7 +37,7 @@ class CLI(object):
         self.def_dpi = 300
         self.def_file_format = 'jpg'
         self.def_language = 'por'
-        self.def_callback = 'None'
+        self.def_callback = []
 
     def _new_group(self, name, subparser):
         """Create new argument group.
