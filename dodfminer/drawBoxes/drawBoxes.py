@@ -199,7 +199,7 @@ class DrawBoxes:
 		"""
 		if color_schema: self._color_schema.update(color_schema)
 		if width_schema: self._color_schema.update(width_schema)
-		return draw(self._fp if inplace else fitz.open(self._fp.name)
+		return draw(self._fp if inplace else fitz.open(self._fp.name),
 			img=img, txt=txt, line=line, word=word,
 			color_schema=self._color_schema, width_schema=self._width_schema)
 
