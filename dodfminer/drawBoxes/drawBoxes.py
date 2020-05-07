@@ -3,22 +3,10 @@ from itertools import groupby
 
 import fitz
 
-from drawBoxes.utils import MetaDataClass, RGB, extract_page_lines
 
+from drawBoxes.utils import MetaDataClass, extract_page_lines
+from fitz.utils import getColor, getColorList
 
-
-class COLORS(MetaDataClass, metaclass=MetaDataClass):
-
-	_values = {
-		'RED' : RGB(*(1, 0, 0)),
-		'GREEN' : RGB(*(0, 1, 0)),
-		'BLUE' : RGB(*(0, 0, 1)),
-		'WHITE' : RGB(*(1, 1, 1)),
-		'BLACK' : RGB(*(0, 0, 0)),
-		'YELLOW' : RGB(*tuple([i/255 for i in (252, 236, 3)])),
-		'PURPLE' : RGB(*tuple([i/255 for i in (123, 22, 188)])),
-		'PURPLE_2' : RGB(*(.77, .156, .9)),
-	}
 
 class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
 	_values = {
@@ -30,10 +18,10 @@ class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
 
 class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
 	_values = {
-		'img': COLORS['GREEN'],
-		'txt': COLORS['BLACK'],
-		'word': COLORS['YELLOW'],
-		'line': COLORS['RED'],
+		'img': getColor('GREEN'),
+		'txt': getColor('BLACK'),
+		'word': getColor('YELLOW'),
+		'line': getColor('RED'),
 	}
 
 
@@ -126,25 +114,26 @@ def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_
 	
 	"""
 
-	# Obs: `tuple` conversion must be done.Because the way fitz internal consistency
-	# check perfomed by `CheckColors` (`colors` is expected to be an instance of `list` or `tuple`)
 
-
-	color_img = color_schema.get('img', tuple(ELEMENT_COLOR['img']))
-	color_txt = color_schema.get('txt', tuple(ELEMENT_COLOR['txt']))
-	color_word = color_schema.get('word', tuple(ELEMENT_COLOR['word']))
-	color_line = color_schema.get('line', tuple(ELEMENT_COLOR['line']))
+	color_img = color_schema.get('img', ELEMENT_COLOR['img'])
+	color_txt = color_schema.get('txt', ELEMENT_COLOR['txt'])
+	color_word = color_schema.get('word', ELEMENT_COLOR['word'])
+	color_line = color_schema.get('line', ELEMENT_COLOR['line'])
 
 	width_img = width_schema.get('img', LINE_WIDTH['img'])
 	width_txt = width_schema.get('txt', LINE_WIDTH['txt'])
 	width_word = width_schema.get('word', LINE_WIDTH['word'])
 	width_line = width_schema.get('line', LINE_WIDTH['line'])
 
+	# `if`s are  to implement the flag control wheter to draw or not text block, words,
+	# images or lines bounding boxes.
 	for page in doc:
 		if img:
 			for img in page.getImageList(full=True):
 				page.drawRect(page.getImageBbox(img), color=color_img, width=width_img)
 		if txt:
+			# Iterating over blocks of text of a page. It is represented by a 7-uple
+			# which first 4 elements are the bounding boxes limit (x0, y0, x1, y1).
 			for textBlock in page.getTextBlocks():
 				page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
 		if line:
