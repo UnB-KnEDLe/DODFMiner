@@ -1,18 +1,21 @@
 from collections import namedtuple
 
-RGB = namedtuple("RGB", "R G B")
-
 class MetaDataClass(type):
-	"""
+	"""Adds dict-like behavior to the class while avoi
+
 	This class is expected to be inherited and used as a metaclass
 	at the same time.
 
-	Is provides an access to _colors values through index-syntax.
-	The class is intended to be read-only and only return 3-uples
-	(RGB) Which conatains numbers in range [0, 1].
+	It provides access to `_values` values through index-syntax.
+	The class is intended to be read-only. `_values` is expected
+	to remain constant (the user is not expected to modify it).
+
+	Usage example: please check `drawBoxes.py` and look at class 
+		`LINE_WITDH` or `ELEMENT_COLOR`. These are examples oh how
+		to use that class.
 
 	Methods:
-		values: returns copy of dict '_values' -> RGB
+		values: returns copy of dict '_values'
 		items: returns list with `_values` values
 		keys: returns list with `values` keys
 	"""
@@ -21,40 +24,49 @@ class MetaDataClass(type):
 	
 	@classmethod
 	def items(cls):
-		return list(cls._values.items())
+		"""Gets class internal items.
+
+		Returns:
+			Returns iterable with keys and values present in the class,
+			just like `dict.items`.
+		"""
+		return cls._values.items()
 
 
 	@classmethod
 	def values(cls):
+		"""Gets class internal values.
+
+		Returns:
+			values inside `_values`, just like `dict.value`
+
+		"""
 		return cls._values.copy()
 
 	@classmethod
 	def keys(cls):
+		"""Gets class internal keys.
+
+		Returns:
+			keys of `_values`, just like `dict.keys`
+
+		"""
 		return list(cls._values.keys())
 
 
-	def __getitem__(self, color):
-		"""Returns RGB tuple corresponding to color.
+	def __getitem__(self, key):
+		"""Returns value mapped by `key`.
 
 		Args:
 			color: string to be used as key of self.values
 		Returns:
-			RGB tuple if color in self.values. None otherwise
+			Content of _values[key] if key is present. `None` otherwise
 		"""
-		return self._values.get(color)
+		return self._values.get(key)
 
 
-	def __setitem__(self, color, val):
+	def __setitem__(self, key, val):
 		raise TypeError("{} types does not support item assignment.".format(type(self)))
-
-
-class Dogs(MetaDataClass, metaclass=MetaDataClass):
-
-	# Just for testing.
-	_values = {
-		'dog': 'kelly',
-		'cat': 'garfield',
-	}
 
 
 def extract_page_lines(page):
@@ -74,7 +86,6 @@ def extract_page_lines(page):
 				del span['color']
 				del span['flags']
 				lis.append(( *span['bbox'], span['text'] ))
-				# lis.append(span)
 	return lis
 
 
