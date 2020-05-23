@@ -8,7 +8,17 @@ from itertools import chain
 from typing import List, Iterable, Tuple
 
 import fitz
-import title_filter
+import prextract.title_filter as title_filter
+
+_TYPE_TITLE, _TYPE_SUBTITLE = "title", "subtitle"
+_TITLE_MULTILINE_THRESHOLD = 10
+_TRASH_EXPRESSIONS = [
+    "SUMÁRIO",
+    "DIÁRIO OFICIAL",
+    "SEÇÃO (I|II|III)",
+]
+_TRASH_COMPILED = re.compile('|'.join(_TRASH_EXPRESSIONS))
+
 
 def BlockToDict(block):
     """Converts pymupdf `block` tuple to dictionary.
@@ -23,50 +33,37 @@ def BlockToDict(block):
     d['block_no'] = block[-1]
     return d
 
-def flags_decomposer(flags):
-    """Make font flags human readable."""
-    l = []
-    if flags & 2 ** 0:
-        l.append("superscript")
-    if flags & 2 ** 1:
-        l.append("italic")
-    if flags & 2 ** 2:
-        l.append("serifed")
-    else:
-        l.append("sans")
-    if flags & 2 ** 3:
-        l.append("monospaced")
-    else:
-        l.append("proportional")
-    if flags & 2 ** 4:
-        l.append("bold")
-    return ", ".join(l)
-
 
 def is_bold(flags):
     return flags & 2 ** 4
 
-_TRASH_EXPRESSIONS = [
-    "SUMÁRIO",
-    "DIÁRIO OFICIAL",
-    "SEÇÃO (I|II|III)",
-]
 
-_TRASH_COMPILED = re.compile('|'.join(_TRASH_EXPRESSIONS))
+def reading_sort(lis):
+    """Returns `lis` sorted according to reading order.
 
-_TYPE_TITLE, _TYPE_SUBTITLE = "title", "subtitle"
-_TITLE_MULTILINE_THRESHOLD = 10
+    Assumes `lis` elements are disposed on a 1-column layout and sort them according
+    to page number and vertical coordinate. Therefore, tries to resemble natural
+    reading order.
+
+    Args:
+        lis: List[Dict], each dict gaving at least `page` and `bbox` keys.
+            `page` should have an positive integer as value and `page` tuple
+            whose second element refers to vertical location on page
+            (assuming bottom having BIGGER values.)
+    Returns:
+        the list of elements received, now in natural reading order.  
+    """
+    return sorted(lis, key=lambda x: (x['page'], int(x['bbox'][1]), x['bbox'][0]))
 
 
-def get_text_spans(path):
+def get_spans_by_page(doc):
     """ Extracts text spans ("lines) inside file on `path`.
     
     Returns:
-        List[Dict[bbox, color, flags, font, page, size, text]]
+        List[List[[bbox, color, flags, font, page, size, text]]]
         (list of all spans extracted from file of path each of which
         as SimpleNamespace instead of dict instances)
     """
-    doc = fitz.open(path)
     blist = [p.getTextPage().extractDICT()['blocks'] for p in doc]
 
     blocos = []
@@ -78,7 +75,7 @@ def get_text_spans(path):
                 for sp in line['spans']: 
                     tmp.append( dict(**sp, page=page, page_width=page_width) )
         blocos.append(tmp) 
-    return list(chain(*blocos))
+    return blocos
 
 
 def page_transform(blocks, keep_page_width=True, inplace=False):
@@ -107,6 +104,7 @@ def page_transform(blocks, keep_page_width=True, inplace=False):
                     not keep_page_width else d['page_width']
         p_num *= 2
         x0, y0, x1, y1 = d['bbox']
+        # Is top-left corner on left [horizontal] half of the page?
         p_num += int(x0 >( p_width / 2))
         # p_num = p_num + int(((x0 > p_width/2) and (x1 > p_width/2) ))
         # p_num = p_num + int(x0 > (p_width * .4) and x1 > (p_width / 2))
@@ -123,51 +121,77 @@ def group_by(lis, key):
     return grouped
 
 
-def get_pdf_spans(path):
-    """
-  
-    Returns:
-        Dict[int -> List]
-    """
-    return group_by(
-      page_transform(
-        get_text_spans(path)),
-        key='page'
-      )
+def remove_header_footer(lis):
+    y0l = [ x['bbox'][1] for x in lis ]
+    mi, ma = min(y0l), max(y0l)
+    idx_mi, idx_ma = y0l.index(mi), y0l.index(ma)
+    left, right = min(idx_mi, idx_ma), max(idx_mi, idx_ma)
+    del lis[left]
+    del lis[right-1]
+    return lis
 
 class DocumentDODF(fitz.Document):
     """Specialized class of fitz.Document designed to be used on DODF files.
     """
     def __init__(self, filename=None, stream=None, filetype=None, rect=None, width=0, height=0, fontsize=11):
         super().__init__(filename, stream, filetype, rect, width, height, fontsize)
-        _ = list(chain(*self.getTextBlocks()))
-        # Turning left columns into even and right ones into odd
-        _ = page_transform(_, keep_page_width=False, inplace=True)
-        # Attempt to do it stay in natural reading order
-        _ = sorted(_, key=lambda x: (x['page'], x['bbox'][1]))
-        self._text_blocks = _
-        _ = list(chain(*get_pdf_spans(filename).values()))
-        _ = page_transform(_, keep_page_width=False, inplace=True)
-        _ = sorted(_, key=lambda x: (x['page'], x['bbox'][1]))
-        self._spans = _
+        # Turning left columns into even and right ones into odd before
+        # sorting to natural reading order
+        # self._spans = reading_sort(page_transform(get_spans_by_page(self)))
+        # self._spans = [reading_sort(ii) for ii in \
+        #     (page_transform(i) for i in get_spans_by_page(self))            
+        # ]
+
+        self._spans = [reading_sort(ii) for ii in \
+            (page_transform( remove_header_footer(i) ) for i in get_spans_by_page(self))            
+        ]
+        self._text_blocks = self.getTextBlocksNoFooter()
     
+    def __repr__(self):
+        m = "closed " if self.isClosed else ""
+        if self.stream is None:
+            if self.name == "":
+                return m + "DocumentDODF[fitz.Document](<new PDF, doc# %i>)" % self._graft_id
+            return m + "DocumentDODF[fitz.Document]('%s')" % (self.name,)
+        return m + "DocumentDODF[fitz.Document]('%s', <memory, doc# %i>)" % (self.name, self._graft_id)
+
     def getTextBlocks(self):
-        """
+        """Convenivence function to get all text blocks from a document.
         Returns:
             a list of tuples with the following format:
                 (x0, y0, x1, y1, "lines in blocks", block_type, block_no, page_no, page_width)
         """
         l = []
         for idx, p in enumerate(self):
-            tmp = p.getTextBlocks()
-            tmp = [{**BlockToDict(bl), 'page_width': p.MediaBox[2], 'page': idx } for bl in tmp]
-            l.append( tmp )
+            l.append(
+                [{**BlockToDict(bl), 'page_width': p.MediaBox[2], 'page': idx } for bl in p.getTextBlocks()]
+            )
         return l
 
+    def getTextBlocksNoFooter(self):
+        """Convenivence function to get all text blocks from a document, except by footers and headers.
+        Returns:
+            a list of tuples with the following format:
+                (x0, y0, x1, y1, "lines in blocks", block_type, block_no, page_no, page_width)
+        """
+        l = []
+        for idx, p in enumerate(self):
+            l.append( reading_sort(page_transform(remove_header_footer(
+                [{**BlockToDict(bl), 'page_width': p.MediaBox[2], 'page': idx } for bl in p.getTextBlocks()]
+            ))))
+        return l
 
     @property
     def spans(self, idx=None):
-        return self._spans if idx is None else self._spans[idx]
+        if idx == None:
+            return self._spans
+        else:
+            return self._spans[idx]
+        # return [dic.copy() for dic in self._spans] if idx0 is None else self._spans[idx0].copy()
+
+    @property
+    def text_blocks(self, idx=None):
+        return [dic.copy() for dic in self._text_blocks] if idx is None else self._text_blocks[idx].copy()
 
 
 def get_titles_subtitles_smart(path):
@@ -191,37 +215,34 @@ def get_titles_subtitles_smart(path):
     return list(filtered4)
 
 
-doc = DocumentDODF(path)
+
+# if __name__ == '__main__':
+#     pass
+
+#     doc = DocumentDODF(path)
 
 
+#     text_blocks = DocumentExt(path).getTextBlocks()
+#     text_spans = get_pdf_spans(path)
 
+#     list_blocks = list(chain(*text_blocks))
 
-text_blocks = DocumentExt(path).getTextBlocks()
-text_spans = get_pdf_spans(path)
+#     list_spans = list(chain(*text_spans.values()))
+#     list_spans = sorted(list_spans, key=lambda x: (x['page'], x['bbox'][1]))
 
-list_blocks = list(chain(*text_blocks))
+#     passed=0
 
-list_spans = list(chain(*text_spans.values()))
-list_spans = sorted(list_spans, key=lambda x: (x['page'], x['bbox'][1]))
-
-passed=0
-
-lim=len(text_spans)
-idx_spans = 0
-ll = []
-for block in list_blocks:
-    l = []
-    block_rect = fitz.Rect(block[:4])
-    while fitz.Rect( list_spans[idx_spans]['bbox'] ) in block_rect:
-      l.append(list_spans[idx_spans]['text'])
-      idx_spans += 1
-    if not l:
-        print("SEM SPAN : ", block[4])
-        input()
-    ll.append(l)
-    
-
-
-
-if __name__ == '__main__':
-  pass
+#     lim=len(text_spans)
+#     idx_spans = 0
+#     ll = []
+#     for block in list_blocks:
+#         l = []
+#         block_rect = fitz.Rect(block[:4])
+#         while fitz.Rect( list_spans[idx_spans]['bbox'] ) in block_rect:
+#         l.append(list_spans[idx_spans]['text'])
+#         idx_spans += 1
+#         if not l:
+#             print("SEM SPAN : ", block[4])
+#             input()
+#         ll.append(l)
+        

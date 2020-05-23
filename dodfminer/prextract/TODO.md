@@ -6,5 +6,7 @@
 - [] match spans/blocos
 - [] encapsular tudo em uma classe com interface similar ao
 antigo extrator
+- [x] spans e blocos de texto em ordem de leitura
+
 
 
