@@ -130,6 +130,7 @@ def remove_header_footer(lis):
     del lis[right-1]
     return lis
 
+
 class DocumentDODF(fitz.Document):
     """Specialized class of fitz.Document designed to be used on DODF files.
     """
@@ -194,6 +195,19 @@ class DocumentDODF(fitz.Document):
         return [dic.copy() for dic in self._text_blocks] if idx is None else self._text_blocks[idx].copy()
 
 
+
+def is_title_subtitle(span):
+    return ((title_filter.BoldUpperCase.dict_text(span))
+            and is_bold(span['flags'])
+            and not re.search(_TRASH_COMPILED, span['text'])
+            and 'calibri' not in span['font'].lower()
+        )
+
+
+def are_title_subtitle(span_list):
+    return [is_title_subtitle(span) for span in span_list]
+
+
 def get_titles_subtitles_smart(path):
     """Extracts titles and subtitles. Makes use of heuristics.
 
@@ -214,6 +228,68 @@ def get_titles_subtitles_smart(path):
     filtered4 = filter(lambda x:  is_bold(x['flags']), filtered3)
     return list(filtered4)
 
+
+def get_block_spans(block): 
+    span_lis = [] 
+    for line in block['lines']: 
+        for span in line['spans']: 
+            span_lis.append(span) 
+    return span_lis
+
+
+def get_titles_candidates(span_lis):
+    cand = []
+    for idx, span in enumerate(span_lis):
+        t = span['text']
+        if not re.search(_TRASH_COMPILED, t) and t.upper() == t:
+            span.append(idx)
+    return cand
+
+
+def get_title_boxes_candidates(block_tuple_list):
+    return [i for i in block_tuple_list if i[4] == i[4].upper()]
+
+def get_upper_text_blocks(text_blocks):
+    return [i for i in text_blocks if i[4] == i[4].upper()]
+
+
+def get_span_title_candidates(page: fitz.Page = None):
+    """Returns list of indexes of `page.getTextBlocks` [sub]title candidates.
+    """
+    doc=fitz.open('2.pdf')
+    text_blocks = page.getTextBlocks()
+    page_blocks = page.getTextPage().extractDICT()['blocks']  
+    block_and_idx = [] 
+    for tup in text_blocks:
+        idx = tup[5]
+        block = page_blocks[idx] 
+        block_and_idx.append((block, idx)) 
+    block_upper_id = []
+    for block, block_idx in block_and_idx:
+        if are_title_subtitle(get_block_spans(block)): 
+            block_upper_id.append(block_idx) 
+    ret = []
+    for idx in block_upper_id:
+        spans = get_block_spans( page_blocks[idx]) 
+        if all(are_title_subtitle(span_list=spans)): 
+            # print('Block: {}', idx, spans, sep='  ')
+            ret.append(idx)
+    return ret
+
+
+def show_page_text_blocks_title_candidates(page: fitz.Page, cand_idx):
+    text_blocks = page.getTextBlocks()
+    for idx in cand_idx:
+        print('>', text_blocks[idx])
+    
+
+def show_page_spans_title_candidates(page: fitz.Page, cand_idx):
+    text_blocks = page.getTextPage().extractDICT()['blocks']
+    for idx in cand_idx:
+        print('>', text_blocks[idx])
+    
+
+# def mount_hierarchy():
 
 
 # if __name__ == '__main__':
@@ -246,3 +322,10 @@ def get_titles_subtitles_smart(path):
 #             input()
 #         ll.append(l)
         
+# upper_by_page=[get_upper_text_blocks(j.getTextBlocks()) for j in doc] 
+# page_blocks = doc[0].getTextPage().extractDICT()['blocks']
+# for tup in upper_by_page[0]: 
+#     print(page_blocks[tup[5]]) 
+#     print('-------------------------') 
+     
+ 
