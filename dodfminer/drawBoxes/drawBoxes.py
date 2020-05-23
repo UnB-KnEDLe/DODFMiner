@@ -19,7 +19,7 @@ class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
 class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
 	_values = {
 		'img': getColor('GREEN'),
-		'txt': getColor('BLACK'),
+		'txt': getColor('PURPLE'),
 		'word': getColor('YELLOW'),
 		'line': getColor('RED'),
 	}
