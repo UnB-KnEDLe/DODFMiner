@@ -16,7 +16,9 @@ _TRASH_EXPRESSIONS = [
     "SUMÁRIO",
     "DIÁRIO OFICIAL",
     "SEÇÃO (I|II|III)",
+    "SEÇÃO",
 ]
+
 _TRASH_COMPILED = re.compile('|'.join(_TRASH_EXPRESSIONS))
 
 
@@ -36,6 +38,9 @@ def BlockToDict(block):
 
 def is_bold(flags):
     return flags & 2 ** 4
+
+# def is_bold(flags):
+#     return flags in [16, 20]
 
 
 def reading_sort(lis):
@@ -123,6 +128,15 @@ def group_by(lis, key):
 
 def remove_header_footer(lis):
     y0l = [ x['bbox'][1] for x in lis ]
+    mi, ma = min(y0l), max(y0l)
+    idx_mi, idx_ma = y0l.index(mi), y0l.index(ma)
+    left, right = min(idx_mi, idx_ma), max(idx_mi, idx_ma)
+    del lis[left]
+    del lis[right-1]
+    return lis
+
+def drop_header_footer(lis: List[tuple]):
+    y0l = [ x.y0 for x in lis ]
     mi, ma = min(y0l), max(y0l)
     idx_mi, idx_ma = y0l.index(mi), y0l.index(ma)
     left, right = min(idx_mi, idx_ma), max(idx_mi, idx_ma)
