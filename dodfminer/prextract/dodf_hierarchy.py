@@ -60,6 +60,24 @@ def reading_sort(lis):
     """
     return sorted(lis, key=lambda x: (x['page'], int(x['bbox'][1]), x['bbox'][0]))
 
+def reading_sort2(lis):
+    """Returns `lis` sorted according to reading order.
+
+    Assumes `lis` elements are disposed on a 1-column layout and sort them according
+    to page number and vertical coordinate. Therefore, tries to resemble natural
+    reading order.
+
+    Args:
+        lis: List[Dict], each dict gaving at least `page` and `bbox` keys.
+            `page` should have an positive integer as value and `page` tuple
+            whose second element refers to vertical location on page
+            (assuming bottom having BIGGER values.)
+    Returns:
+        the list of elements received, now in natural reading order.  
+    """
+    return sorted(lis, key=lambda x: (x['page'], int(x['y0']), x['x0']))
+
+
 
 def get_spans_by_page(doc):
     """ Extracts text spans ("lines) inside file on `path`.
@@ -128,15 +146,6 @@ def group_by(lis, key):
 
 def remove_header_footer(lis):
     y0l = [ x['bbox'][1] for x in lis ]
-    mi, ma = min(y0l), max(y0l)
-    idx_mi, idx_ma = y0l.index(mi), y0l.index(ma)
-    left, right = min(idx_mi, idx_ma), max(idx_mi, idx_ma)
-    del lis[left]
-    del lis[right-1]
-    return lis
-
-def drop_header_footer(lis: List[tuple]):
-    y0l = [ x.y0 for x in lis ]
     mi, ma = min(y0l), max(y0l)
     idx_mi, idx_ma = y0l.index(mi), y0l.index(ma)
     left, right = min(idx_mi, idx_ma), max(idx_mi, idx_ma)
