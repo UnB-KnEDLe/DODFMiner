@@ -235,7 +235,6 @@ def init_hier(doc: fitz.Document):
 
     return current_section, hier, title_size
 
-
 def mount_doc_hierarchy3(doc: fitz.Document):
     """Improved version of `mount_doc_hierarchy2`, now taking into account
     subtitles in hierarchy.
@@ -277,8 +276,7 @@ def mount_doc_hierarchy3(doc: fitz.Document):
             for sp in spans:
                 sp['page'] = p_num
                 sp['page_width'] = doc[p_num].MediaBox[2]
-            
-            # `reading_sorts`espera que haja chave `page`, além de `bbox`
+            # `reading_sort`espera que haja chave `page`, além de `bbox`
             spans = reading_sort_dict(page_transform(spans))
 
             first = spans[0]
@@ -286,7 +284,8 @@ def mount_doc_hierarchy3(doc: fitz.Document):
             first_text = first['text'] 
             if first_text.startswith('SEÇÃO I') \
                 and first_text.endswith('I') and is_bold(first['flags']):
-                print('SEÇÃO: \n\t"{}"'.format(first))
+                print("SEÇÃO I[...] ?")
+                print(first)
                 current_section = first_text
                 hier[current_section] = []
                 continue
@@ -309,128 +308,8 @@ def mount_doc_hierarchy3(doc: fitz.Document):
                         last = old_lis[-1]
                         old_lis[-1] = ('\n'.join(last[0]), last[1])
                     old_lis.append( ([text_block.text], []) )                
-            
-            else:   # another block inside a title. Check if `first` has bold font
-                if is_bold(first['font']):  
-                    for sp in spans:
-
-                else:
-                    old_lis[-1][1].append(text_block)
-                
-            # If there are multiples
-            prev_font_size = spans[-1]['size']
-            prev_spans = spans.copy()
-
-    aux = hier[current_section]
-    aux[-1] = ('\n'.join(aux[-1][0]), aux[-1][1])
-    return hier
-
-
-def init_hier_final(doc: fitz.Document):
-
-    spans, candidates = get_first_title_cands(
-        extracted_blocks=doc[0].getTextPage().extractDICT()['blocks'],
-        page_width=doc[0].MediaBox[2],
-    )
-    sp = spans[candidates[0][0] + 1]
-    title_size = sp['size']
-    print("\t[init_hier] first_title of {}: {} - Size: {}".format(
-        doc.name, sp['text'], title_size
-    ))
-    current_section = 'SEÇÃO 0'
-    hier = {
-        current_section: [
-            (
-                'preambulo',
-                []
-            )
-        ]
-    }
-
-    return current_section, hier, title_size
-
-
-def mount_doc_hierarchy_final(doc: fitz.Document):
-    """Improved version of `mount_doc_hierarchy2`, now taking into account
-    subtitles in hierarchy.
-
-    Returns:
-        Dict[str, List[Dict[str, List[str]]]]
-
-    """
-    current_section, hier, TITLE_SIZE = init_hier(doc)
-
-    prev_font_size = 0
-    prev_spans = []
-    for p_num, page in enumerate(doc):
-        p_width = page.MediaBox[2]
-
-        text_blocks = page.getTextBlocks()
-        extracted_blocks = page.getTextPage().extractDICT()['blocks']
-
-        tb_paged = textBlock_to_textblocktrans(text_blocks, p_width, p_num)    
-        tb_trans = text_blocks_transform(tb_paged, keep_page_width=False)
-
-        # cleaned_and_sorted = drop_header_footer(
-        cleaned_and_sorted = drop_header_footer_smart(
-            reading_sort_tuple(
-            drop_dup_tbt(
-                tb_trans
-            )),
-            page_height=page.MediaBox[3],
-            page_width=page.MediaBox[2]
-        )
-
-        for text_block in cleaned_and_sorted:
-
-            spans = get_block_spans(extracted_blocks[text_block.block_no])            
-            if not spans:
-                raise ValueError("Empty spans list: This message should never be shown.")
-
-            # `page_transform` espera que as chaves `page` e `page_width` existam.
-            for sp in spans:
-                sp['page'] = p_num
-                sp['page_width'] = doc[p_num].MediaBox[2]
-            
-            # `reading_sorts`espera que haja chave `page`, além de `bbox`
-            spans = reading_sort_dict(page_transform(spans))
-
-            first = spans[0]
-            first_size = first['size']         
-            first_text = first['text'] 
-            if first_text.startswith('SEÇÃO I') \
-                and first_text.endswith('I') and is_bold(first['flags']):
-                print('SEÇÃO: \n\t"{}"'.format(first))
-                current_section = first_text
-                hier[current_section] = []
-                continue
-
-            # TODO: use condition in nested if, so that subtitles
-            # are not treated as simple text
-            cond3 = first_size == TITLE_SIZE
-
-            not_fake = [ not re.match(_TRASH_COMPILED, sp['text']) for sp in spans]
-
-            old_lis = hier[current_section]
-            if all(are_title_subtitle(spans)) and cond3 and all(not_fake):
-                # verificar se não estende o anterior (múltiplas linhas)
-                if first_size == prev_font_size and old_lis[-1][0][0] != 'preambulo':
-                    # Multi-line titles
-                    print("EXTENDING {} BY {}".format(old_lis[-1][0], text_block.text))
-                    old_lis[-1][0].extend([text_block.text])
-                else:   # Title doesn't extend the previous one  
-                    if old_lis:
-                        last = old_lis[-1]
-                        old_lis[-1] = ('\n'.join(last[0]), last[1])
-                    old_lis.append( ([text_block.text], []) )                
-            
-            else:   # another block inside a title. Check if `first` has bold font
-                if is_bold(first['font']):  
-                    for sp in spans:
-                        if sp['text'] ==
-                else:
-                    old_lis[-1][1].append(text_block)
-                
+            else:  # another block inside a title
+                old_lis[-1][1].append(text_block)
             # If there are multiples
             prev_font_size = spans[-1]['size']
             prev_spans = spans.copy()
