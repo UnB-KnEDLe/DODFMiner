@@ -219,7 +219,8 @@ def get_first_title_cands(extracted_blocks, page_width):
     cands = sorted(cands, key=lambda x: x[1]['size'], reverse=True)
     return sps, cands
 
-def init_hier(doc: fitz.Document):
+
+def init_hier_final(doc: fitz.Document):
 
     spans, candidates = get_first_title_cands(
         extracted_blocks=doc[0].getTextPage().extractDICT()['blocks'],
@@ -231,11 +232,19 @@ def init_hier(doc: fitz.Document):
         doc.name, sp['text'], title_size
     ))
     current_section = 'SEÇÃO 0'
-    hier = {current_section: [('preambulo', [])]}
+    hier = {
+        current_section: [
+            [
+                ['preambulo'],
+                []
+            ]
+        ]
+    }
 
     return current_section, hier, title_size
 
-def mount_doc_hierarchy3(doc: fitz.Document):
+
+def mount_doc_hierarchy_3(doc: fitz.Document):
     """Improved version of `mount_doc_hierarchy2`, now taking into account
     subtitles in hierarchy.
 
@@ -243,7 +252,7 @@ def mount_doc_hierarchy3(doc: fitz.Document):
         Dict[str, List[Dict[str, List[str]]]]
 
     """
-    current_section, hier, TITLE_SIZE = init_hier(doc)
+    current_section, hier, TITLE_SIZE = init_hier_final(doc)
 
     prev_font_size = 0
     prev_spans = []
@@ -276,60 +285,178 @@ def mount_doc_hierarchy3(doc: fitz.Document):
             for sp in spans:
                 sp['page'] = p_num
                 sp['page_width'] = doc[p_num].MediaBox[2]
-            # `reading_sort`espera que haja chave `page`, além de `bbox`
+            
+            # `reading_sorts`espera que haja chave `page`, além de `bbox`
             spans = reading_sort_dict(page_transform(spans))
 
             first = spans[0]
             first_size = first['size']         
             first_text = first['text'] 
-            if first_text.startswith('SEÇÃO I') \
-                and first_text.endswith('I') and is_bold(first['flags']):
-                print("SEÇÃO I[...] ?")
-                print(first)
+            if is_bold(first['flags']) \
+                and first_text.endswith('I') and first_text.startswith('SEÇÃO I'):
+                print('SEÇÃO: \n\t"{}"'.format(first))
                 current_section = first_text
                 hier[current_section] = []
                 continue
 
-            # TODO: use condition in nested if, so that subtitles
-            # are not treated as simple text
-            cond3 = first_size == TITLE_SIZE
-
             not_fake = [ not re.match(_TRASH_COMPILED, sp['text']) for sp in spans]
-            old_lis = hier[current_section]
 
-            if all(are_title_subtitle(spans)) and cond3 and all(not_fake):
-                # verificar se não estende o anterior (múltiplas linhas)
-                if first_size == prev_font_size and hier[current_section][-1][0][0] != 'preambulo':
-                    # Multi-line titles
-                    print("EXTENDING {} BY {}".format(hier[current_section][-1][0], text_block.text))
-                    hier[current_section][-1][0].extend([text_block.text])
-                else:          
-                    if old_lis:
-                        last = old_lis[-1]
-                        old_lis[-1] = ('\n'.join(last[0]), last[1])
-                    old_lis.append( ([text_block.text], []) )                
-            else:  # another block inside a title
-                old_lis[-1][1].append(text_block)
+            section_hier = hier[current_section]
+            if all(are_title_subtitle(spans)) and first_size == TITLE_SIZE and all(not_fake):  # 
+                if first_size == prev_font_size:                    
+                    print("[TITLE] EXTENDING {} BY {}".format(section_hier[-1][0], text_block.text))
+                    section_hier[-1][0].extend([text_block.text])
+                else:   # Title doesn't extend the previous one  
+                    section_hier.append( [[text_block.text], []] )                
+            
+            else:   # another block inside a title. Check if `first` has bold font
+                if is_bold(first['flags']):
+                    for sp in spans:
+                        txt = sp['text']
+                        if txt == txt.upper(): # subtitle
+                            if prev_font_size == sp['size']:
+                                pass
+                                # section_hier[-1][]
+
+                else:
+                    section_hier[-1][1].append(text_block)
+                
             # If there are multiples
             prev_font_size = spans[-1]['size']
             prev_spans = spans.copy()
 
     aux = hier[current_section]
-    aux[-1] = ('\n'.join(aux[-1][0]), aux[-1][1])
     return hier
 
 
+def new_subtitle(text=''):
+    return (
+        [
+            [text],         # subtitles (text)
+            []              # text blocks (TextBlockTrans)
+        ]
+    )
 
 
+def new_title(text=''):
+    return    [ 
+        [text],  # titles (text)
+        [
+            # subtitles (text)
+            # text blocks (TextBlockTrans)
+        ]
+    ]
 
 
+def mount_doc_hierarchy_final(doc: fitz.Document, title_debug=False, subtitle_debug=False):
+    """Improved version of `mount_doc_hierarchy2`, now taking into account
+    subtitles in hierarchy.
+
+    Returns:
+        Dict[str, List[Dict[str, List[str]]]]
+
+    """
+    current_section_idx, hier, TITLE_SIZE = init_hier_final(doc)
+
+    prev_font_size = 0
+    prev_spans = []
+    for p_num, page in enumerate(doc):
+        p_width = page.MediaBox[2]
+
+        text_blocks = page.getTextBlocks()
+        extracted_blocks = page.getTextPage().extractDICT()['blocks']
+
+        tb_paged = textBlock_to_textblocktrans(text_blocks, p_width, p_num)    
+        tb_trans = text_blocks_transform(tb_paged, keep_page_width=False)
+
+        # cleaned_and_sorted = drop_header_footer(
+        cleaned_and_sorted = drop_header_footer_smart(
+            reading_sort_tuple(
+            drop_dup_tbt(
+                tb_trans
+            )),
+            page_height=page.MediaBox[3],
+            page_width=page.MediaBox[2]
+        )
+
+        for text_block in cleaned_and_sorted:
+
+            spans = get_block_spans(extracted_blocks[text_block.block_no])            
+            if not spans:
+                raise ValueError("Empty spans list: This message should never be shown.")
+
+            # `page_transform` espera que as chaves `page` e `page_width` existam.
+            for sp in spans:
+                sp['page'] = p_num
+                sp['page_width'] = doc[p_num].MediaBox[2]
+            
+            # `reading_sorts`espera que haja chave `page`, além de `bbox`
+            spans = reading_sort_dict(page_transform(spans))
+
+            first = spans[0]
+            first_size = first['size']         
+            first_text = first['text'] 
+            if is_bold(first['flags']) \
+                and first_text.endswith('I') and first_text.startswith('SEÇÃO I'):
+                # print('SEÇÃO: \n\t"{}"'.format(first))
+                current_section_idx = first_text
+                hier[current_section_idx] = []
+                continue
+
+            not_fake = [ not re.match(_TRASH_COMPILED, sp['text']) for sp in spans]
+
+            section = hier[current_section_idx]
+            if all(are_title_subtitle(spans)) and first_size == TITLE_SIZE and all(not_fake):  # 
+                if first_size == prev_font_size:                    
+                    if title_debug:
+                        print("[TITLE] EXTENDING {} BY {}".format(section[-1][0], text_block.text))
+                    section[-1][0].append(text_block.text)
+                else:   # Title doesn't extend the previous one  
+                    section.append(new_title(text_block.text))                
+            
+            else:   # another block inside a title. Check if `first` has bold font.
+                    # If is has then a subtitle is assumed.
+                if is_bold(first['flags']):
+                    for sp in spans:
+                        txt = sp['text']
+                        if txt == txt.upper() and sp['size'] < TITLE_SIZE: # subtitle
+                            if prev_font_size != first['size']:
+                                section[-1][1].append(new_subtitle())                        
+                            if subtitle_debug:
+                                print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], text_block.text))
+                            section[-1][1][-1][0].append(txt)
+                        else:   # remaining spans are [expected to be] ordinary ones
+                            break
+                if not section[-1][1]:
+                    section[-1][1].append(new_subtitle())
+                section[-1][1][-1][1].append(text_block.text);# section[-1][1][1].append(text_block)
+            # If there are multiples
+            prev_font_size = spans[-1]['size']
+            prev_spans = spans.copy()
+    return hier
 
 
+def post_process_hierarchy(hierarchy: dict):
+    for k, v in hierarchy.items():
+        for (idx, (title_parts, rest)) in enumerate(v):
+            v[idx][0] = '\n'.join((i for i in v[idx][0] if i))
+            for (idx2, (subtitle_parts, text_blocks)) in enumerate(rest):
+                rest[idx2][0] = '\n'.join((i for i in rest[idx2][0] if i))
+    return hierarchy
 
 
-
-
-
+def show_post_hier(hierarchy: dict):
+    for k, v in hierarchy.items(): 
+        print('\033[1m', k, ' ------>\n') 
+        for title, rest in v: 
+            print('\033[94m\t',title.replace('\n', ' ')) 
+            for subtitle, blocks in rest: 
+                if subtitle: 
+                    print('\033[92m\t\t', subtitle.replace('\n', ' ')) 
+                else:
+                    print('\033[92m\t\t<no-subtitle>')
+            print() 
+        print('\033[0m')    
 
 
 
