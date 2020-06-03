@@ -38,6 +38,9 @@ class CLI(object):
         self.def_file_format = 'jpg'
         self.def_language = 'por'
         self.def_callback = []
+        self.backend = 'tesseract'
+        self.pure_text = False
+        self.titles_with_boxes = False
 
     def _new_group(self, name, subparser):
         """Create new argument group.
@@ -88,6 +91,18 @@ class CLI(object):
         group.add_argument('-lang', '--language', dest='tesseract_lang',
                            default=self.def_language, type=str,
                            help='Tesseract Default Language')
+
+        group.add_argument('-be', '--backend', dest='backend',
+                           default=self.backend, type=str,
+                           help='Backend for extraction (tesseract/drawboxes)')
+
+        group.add_argument('-p', '--pure', dest='pure_text',
+                           default=self.pure_text, type=bool,
+                           help='Extract pure text in txt format')
+        
+        group.add_argument('-tb', '--titles-with-boxes', dest='titles_with_boxes',
+                           default=self.titles_with_boxes, type=bool,
+                           help='Extract titles and your text boxes from dodf')
 
         group.add_argument('--callback', dest='cb_type',
                            default=self.def_callback, type=str,
