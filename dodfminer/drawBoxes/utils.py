@@ -32,10 +32,6 @@ class MetaDataClass(type):
 		"""
 		return cls._values.items()
 
-    @classmethod
-    def items(cls):
-        return list(cls._values.items())
-
 	@classmethod
 	def values(cls):
 		"""Gets class internal values.
@@ -56,10 +52,6 @@ class MetaDataClass(type):
 		"""
 		return list(cls._values.keys())
 
-    @classmethod
-    def keys(cls):
-        return list(cls._values.keys())
-
 	def __getitem__(self, key):
 		"""Returns value mapped by `key`.
 
@@ -69,14 +61,7 @@ class MetaDataClass(type):
 			Content of _values[key] if key is present. `None` otherwise
 		"""
 		return self._values.get(key)
-
-        Args:
-            color: string to be used as key of self.values
-        Returns:
-            RGB tuple if color in self.values. None otherwise
-        """
-        return self._values.get(color)
-
+		
 	def __setitem__(self, key, val):
 		raise TypeError("{} types does not support item assignment.".format(type(self)))
 
