@@ -285,19 +285,16 @@ def new_title(text=''):
     ]
 
 
-def mount_doc_hierarchy_final(doc: fitz.Document,
-    title_debug=False,
-    subtitle_debug=False,
-    possile_section_debug=False,
-    section_debug=False):
-    """Mount DODF document hierarchy (secao, titulo, subtitulo and textblocks)
+def mount_hierarchy(doc: fitz.Document, possile_section_debug=False, section_debug=False):
+    """Mounts DODF document hierarchy (secao, titulo, subtitulo and textblocks).
 
+    Receives an `fitz.Document` instance, `doc`. Then that function will try to 
+        re-assembly the original hierarchy w.r.t (secao, titulo, subtitulo, textblocks)
     Returns:
-        Dict[str, List[Dict[str, List[str]]]]
+        Dict[str, List[List[str, List[str]]]]
 
     """
     current_section_idx, hier, TITLE_SIZE = init_hier_final(doc)
-
     prev_font_size = 0
     prev_spans = []
     for p_num, page in enumerate(doc):
@@ -324,12 +321,10 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
             spans = [sp for sp in get_block_spans(extracted_blocks[text_block.block_no]) if len(sp['text']) > 1]
             if not spans:
                 continue
-
             # `page_transform` espera que as chaves `page` e `page_width` existam.
             for sp in spans:
                 sp['page'] = p_num
                 sp['page_width'] = doc[p_num].MediaBox[2]
-            
             # `reading_sorts`espera que haja chave `page`, além de `bbox`
             spans = reading_sort_dict(page_transform(spans))
             first = spans[0]
@@ -338,8 +333,7 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
             if possile_section_debug and first_text.startswith('SEÇÃO'):    print("\033[92m possivel seção: ", first_text, "\033[0m")
 
             if is_bold(first['flags']) \
-                and text_block.text.startswith('SEÇÃO I') \
-                and text_block.text.endswith('I'):
+                and text_block.text.startswith('SEÇÃO I') and text_block.text.endswith('I'):
                 if section_debug:   print('SEÇÃO: \n\t"{}"'.format(first))
                 current_section_idx = first_text
                 hier[current_section_idx] = []
@@ -350,41 +344,25 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
 
             if all(are_title_subtitle(spans)) and first_size == TITLE_SIZE and all(not_fake):  # 
                 if first_size == prev_font_size:                    
-                    # if title_debug:
-                    print("[TITLE] EXTENDING {} BY {}".format(section[-1][0], text_block.text))
                     section[-1][0].append(text_block.text)
                 else:   # Title doesn't extend the previous one
-                    print('\033[45m\tTITLE:', text_block.text.replace('\n', '_'))
-                    print('\033[0m', end='')
                     section.append(new_title(text_block.text))                
             
             else:   # another block inside a title. Check if `first` has bold font.
                     # If is has then a subtitle is assumed.
-                has_sub = False
                 for sp in spans:
                     txt = sp['text']
                     if is_bold(sp['flags']) and not re.match(_TRASH_COMPILED, sp['text'])\
                         and sp['size'] < TITLE_SIZE and txt == txt.upper() : # subtitle
-                        has_sub = True
-                        print('\033[79m\t[DEBUG] SUBTITLE:', txt)
-                        # if prev_font_size != first['size']:
                         if prev_font_size != sp['size']:
                             section[-1][1].append(new_subtitle())
                             prev_font_size = sp['size']
-                        else:
-                            print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], sp['text']))
-                            # return
-                        # if subtitle_debug:
-                        #     print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], text_block.text))
-                        #     print('\033[0m', end='')
                         section[-1][1][-1][0].append(txt)
-                    else:   # remaining spans are [expected to be] ordinary ones
+                    else:   # remaining spans are [assumed to be] ordinary ones. TODO: elaborate.
                         break
-                if has_sub: print('                          ')
                 if not section[-1][1]:
                     section[-1][1].append(new_subtitle())
-                section[-1][1][-1][1].append(text_block.text);# section[-1][1][1].append(text_block)
-            # If there are multiples
+                section[-1][1][-1][1].append(text_block.text)
             prev_font_size = spans[-1]['size']
             prev_spans = spans.copy()
     return hier
@@ -413,9 +391,6 @@ def show_post_hier(hierarchy: dict):
         print('\033[0m')    
 
 
-
-
-# In[38]:
 if __name__ == '__main__':
     TEST_PATH = Path('PDF_TITLES/')
     TEST_FILES = [TEST_PATH/Path(path) for path in os.listdir(TEST_PATH) if path.endswith('.pdf')]
@@ -443,7 +418,7 @@ if __name__ == '__main__':
     for filename in TEST_FILES:
         # try:
         # h, dbg = mount_doc_hierarchy2(fitz.open(filename))
-        h = mount_doc_hierarchy_final(fitz.open(filename))
+        h = mount_hiearchy(fitz.open(filename))
         ph = post_process_hierarchy(h)
         json.dump(
             ph, open(str(filename)[:-4]+'_hierarchy_full.json' ,'w'),
