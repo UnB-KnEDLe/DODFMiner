@@ -38,7 +38,13 @@ class Miner(object):
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        ContentExtractor.extract_to_json()
+        extract_backend = self.args.backend
+        if self.args.pure_text:
+            ContentExtractor.extract_to_txt(extract_backend)
+        elif self.args.titles_with_boxes:
+            ContentExtractor.extract_to_json(extract_backend, titles_with_boxes=True)
+        else:
+            ContentExtractor.extract_to_json(extract_backend)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
