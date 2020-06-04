@@ -321,8 +321,7 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
 
         for text_block in cleaned_and_sorted:
 
-            spans = get_block_spans(extracted_blocks[text_block.block_no])
-            spans = [sp for sp in spans if len(sp['text']) > 1]      
+            spans = [sp for sp in get_block_spans(extracted_blocks[text_block.block_no]) if len(sp['text']) > 1]
             if not spans:
                 continue
 
@@ -333,21 +332,15 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
             
             # `reading_sorts`espera que haja chave `page`, além de `bbox`
             spans = reading_sort_dict(page_transform(spans))
-
-            
-
             first = spans[0]
             first_size = first['size']         
             first_text = first['text']
-            if possile_section_debug:
-                if first_text.startswith('SEÇÃO'):
-                    print("\033[92m possivel seção: ", first_text, "\033[0m")
-
+            if possile_section_debug and first_text.startswith('SEÇÃO'):    print("\033[92m possivel seção: ", first_text, "\033[0m")
 
             if is_bold(first['flags']) \
-                and text_block.text.startswith('SEÇÃO I') and text_block.text.endswith('I'):
-                if section_debug:
-                    print('SEÇÃO: \n\t"{}"'.format(first))
+                and text_block.text.startswith('SEÇÃO I') \
+                and text_block.text.endswith('I'):
+                if section_debug:   print('SEÇÃO: \n\t"{}"'.format(first))
                 current_section_idx = first_text
                 hier[current_section_idx] = []
                 continue
@@ -367,12 +360,6 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
             
             else:   # another block inside a title. Check if `first` has bold font.
                     # If is has then a subtitle is assumed.
-                # 
-                # if is_bold(first['flags']) and not re.match(_TRASH_COMPILED, first['text']):
-                #     # print('HUUUUUUU: ',first)
-                #     # if 'SUBSECRETARIA DA' in first['text']:
-                #     #     return first, spans
-                #     # #
                 has_sub = False
                 for sp in spans:
                     txt = sp['text']
@@ -380,11 +367,16 @@ def mount_doc_hierarchy_final(doc: fitz.Document,
                         and sp['size'] < TITLE_SIZE and txt == txt.upper() : # subtitle
                         has_sub = True
                         print('\033[79m\t[DEBUG] SUBTITLE:', txt)
-                        if prev_font_size != first['size']:
-                            section[-1][1].append(new_subtitle())                        
-                        if subtitle_debug:
-                            print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], text_block.text))
-                            print('\033[0m', end='')
+                        # if prev_font_size != first['size']:
+                        if prev_font_size != sp['size']:
+                            section[-1][1].append(new_subtitle())
+                            prev_font_size = sp['size']
+                        else:
+                            print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], sp['text']))
+                            # return
+                        # if subtitle_debug:
+                        #     print("\t[SUB-TITLE] EXTENDING {} BY {}".format(section[-1][1][-1][0], text_block.text))
+                        #     print('\033[0m', end='')
                         section[-1][1][-1][0].append(txt)
                     else:   # remaining spans are [expected to be] ordinary ones
                         break
