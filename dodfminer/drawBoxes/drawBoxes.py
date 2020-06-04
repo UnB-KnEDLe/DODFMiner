@@ -19,7 +19,7 @@ class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
 class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
 	_values = {
 		'img': getColor('GREEN'),
-		'txt': getColor('BLACK'),
+		'txt': getColor('PURPLE'),
 		'word': getColor('YELLOW'),
 		'line': getColor('RED'),
 	}
@@ -111,7 +111,8 @@ def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_
 				_BOX_COLOR_MAP['RED'], 1] LINE_WIDTH['RED'],
 	Returns:
 		The `doc` with the drawn rects. `doc` is modified  (marked) inplace.
-	
+    Note: `lines` are detected through `fitz.utils.extractpage_lines`
+    Noe: DEPRECATED. Please use `draw2`.
 	"""
 
 
@@ -143,6 +144,63 @@ def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_
 			for word in _recover_words(page.getTextWords(), page.rect):
 				page.drawRect(word[:4], color=color_word, width=width_word)
 	return doc
+
+
+def draw2(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_schema={}):
+    """
+    Draws rectangles using the bounding boxes of images, text blocks, text lines and text words.
+    Usage example:
+
+    >>> p = '22012019.pdf'
+    >>> d = fitz.open(p)
+    >>> drawBoxes(d)
+    >>> d.save(d.name.replace('.pdf', '_drawBoxes.pdf'))
+
+    Args:
+        img: wheter images bounding boxes should be marked
+        txt: wheter text blocks bounding boxes should be marked
+        line: wheter text lines bounding boxes should be marked
+        word: wheter words bounding boxes should be marked
+        color_width_schema: keys in ['color_img', 'width_img', 'color_txt', 'width_txt',
+                'color_word', 'width_word', 'color_line', 'width_line'] are used. In absence of them,
+                default values are used. They are repectively:
+                [_BOX_COLOR_MAP['GREEN'], 3, LINE_WIDTH['GREEN'],
+                _BOX_COLOR_MAP['BLACK'], 2, LINE_WIDTH['BLACK'],
+                _BOX_COLOR_MAP['YELLOW', 1, LINE_WIDTH['YELLOW'],
+                _BOX_COLOR_MAP['RED'], 1] LINE_WIDTH['RED'],
+    Returns:
+        The `doc` with the drawn rects. `doc` is modified  (marked) inplace.
+    Note: `lines` are detected through iteration on `fitz.TextPage.extractDICT`
+    """
+
+
+    color_img = color_schema.get('img', ELEMENT_COLOR['img'])
+    color_txt = color_schema.get('txt', ELEMENT_COLOR['txt'])
+    color_word = color_schema.get('word', ELEMENT_COLOR['word'])
+    color_line = color_schema.get('line', ELEMENT_COLOR['line'])
+
+    width_img = width_schema.get('img', LINE_WIDTH['img'])
+    width_txt = width_schema.get('txt', LINE_WIDTH['txt'])
+    width_word = width_schema.get('word', LINE_WIDTH['word'])
+    width_line = width_schema.get('line', LINE_WIDTH['line'])
+
+    # `if`s are  to implement the flag control wheter to draw or not text block, words,
+    # images or lines bounding boxes.
+    for page in doc:
+        for bl in page.getTextPage().extractDICT()['blocks']:
+            if txt: page.drawRect(bl['bbox'], color=color_txt, width=width_txt)
+            if line:
+                for line in bl['lines']:
+                    page.drawRect(line['bbox'], color=color_line, width=width_line)
+            if word:
+                for word in _recover_words(page.getTextWords(), page.rect):
+                    page.drawRect(word[:4], color=color_word, width=width_word)
+            if img:
+                for image in page.getImageList(full=True):
+                    page.drawRect(page.getImageBbox(image), color=color_img, width=width_img)
+
+    return doc
+
 
 
 class DrawBoxes:
