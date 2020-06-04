@@ -3,20 +3,10 @@ from itertools import groupby
 
 import fitz
 
-from drawBoxes.utils import MetaDataClass, RGB, extract_page_lines
 
-class COLORS(MetaDataClass, metaclass=MetaDataClass):
+from drawBoxes.utils import MetaDataClass, extract_page_lines
+from fitz.utils import getColor, getColorList
 
-    _values = {
-        'RED' : RGB(*(1, 0, 0)),
-        'GREEN' : RGB(*(0, 1, 0)),
-        'BLUE' : RGB(*(0, 0, 1)),
-        'WHITE' : RGB(*(1, 1, 1)),
-        'BLACK' : RGB(*(0, 0, 0)),
-        'YELLOW' : RGB(*tuple([i/255 for i in (252, 236, 3)])),
-        'PURPLE' : RGB(*tuple([i/255 for i in (123, 22, 188)])),
-        'PURPLE_2' : RGB(*(.77, .156, .9)),
-    }
 
 class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
     _values = {
@@ -27,12 +17,12 @@ class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
     }
 
 class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
-    _values = {
-        'img': COLORS['GREEN'],
-        'txt': COLORS['BLACK'],
-        'word': COLORS['YELLOW'],
-        'line': COLORS['RED'],
-    }
+	_values = {
+		'img': getColor('GREEN'),
+		'txt': getColor('BLACK'),
+		'word': getColor('YELLOW'),
+		'line': getColor('RED'),
+	}
 
 
 
@@ -98,60 +88,61 @@ def _recover_words(words, rect, thresh_divisor=5):
 
 
 def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_schema={}):
-    """
-    Draws rectangles using the bounding boxes of images, text blocks, text lines and text words.
-    Usage example:
+	"""
+	Draws rectangles using the bounding boxes of images, text blocks, text lines and text words.
+	Usage example:
+	
+	>>> p = '22012019.pdf'
+	>>> d = fitz.open(p)
+	>>> drawBoxes(d)
+	>>> d.save(d.name.replace('.pdf', '_drawBoxes.pdf'))
 
-    >>> p = '22012019.pdf'
-    >>> d = fitz.open(p)
-    >>> drawBoxes(d)
-    >>> d.save(d.name.replace('.pdf', '_drawBoxes.pdf'))
-
-    Args:
-        img: wheter images bounding boxes should be marked
-        txt: wheter text blocks bounding boxes should be marked
-        line: wheter text lines bounding boxes should be marked
-        word: wheter words bounding boxes should be marked
-        color_width_schema: keys in ['color_img', 'width_img', 'color_txt', 'width_txt',
-                'color_word', 'width_word', 'color_line', 'width_line'] are used. In absence of them,
-                default values are used. They are repectively:
-                [_BOX_COLOR_MAP['GREEN'], 3, LINE_WIDTH['GREEN'],
-                _BOX_COLOR_MAP['BLACK'], 2, LINE_WIDTH['BLACK'],
-                _BOX_COLOR_MAP['YELLOW', 1, LINE_WIDTH['YELLOW'],
-                _BOX_COLOR_MAP['RED'], 1] LINE_WIDTH['RED'],
-    Returns:
-        The `doc` with the drawn rects. `doc` is modified  (marked) inplace.
-
-    """
-
-    # Obs: `tuple` conversion must be done.Because the way fitz internal consistency
-    # check perfomed by `CheckColors` (`colors` is expected to be an instance of `list` or `tuple`)
+	Args:
+		img: wheter images bounding boxes should be marked
+		txt: wheter text blocks bounding boxes should be marked
+		line: wheter text lines bounding boxes should be marked
+		word: wheter words bounding boxes should be marked
+		color_width_schema: keys in ['color_img', 'width_img', 'color_txt', 'width_txt',
+				'color_word', 'width_word', 'color_line', 'width_line'] are used. In absence of them,
+				default values are used. They are repectively:
+				[_BOX_COLOR_MAP['GREEN'], 3, LINE_WIDTH['GREEN'],
+				_BOX_COLOR_MAP['BLACK'], 2, LINE_WIDTH['BLACK'],
+				_BOX_COLOR_MAP['YELLOW', 1, LINE_WIDTH['YELLOW'],
+				_BOX_COLOR_MAP['RED'], 1] LINE_WIDTH['RED'],
+	Returns:
+		The `doc` with the drawn rects. `doc` is modified  (marked) inplace.
+	
+	"""
 
 
-    color_img = color_schema.get('img', tuple(ELEMENT_COLOR['img']))
-    color_txt = color_schema.get('txt', tuple(ELEMENT_COLOR['txt']))
-    color_word = color_schema.get('word', tuple(ELEMENT_COLOR['word']))
-    color_line = color_schema.get('line', tuple(ELEMENT_COLOR['line']))
+	color_img = color_schema.get('img', ELEMENT_COLOR['img'])
+	color_txt = color_schema.get('txt', ELEMENT_COLOR['txt'])
+	color_word = color_schema.get('word', ELEMENT_COLOR['word'])
+	color_line = color_schema.get('line', ELEMENT_COLOR['line'])
 
-    width_img = width_schema.get('img', LINE_WIDTH['img'])
-    width_txt = width_schema.get('txt', LINE_WIDTH['txt'])
-    width_word = width_schema.get('word', LINE_WIDTH['word'])
-    width_line = width_schema.get('line', LINE_WIDTH['line'])
+	width_img = width_schema.get('img', LINE_WIDTH['img'])
+	width_txt = width_schema.get('txt', LINE_WIDTH['txt'])
+	width_word = width_schema.get('word', LINE_WIDTH['word'])
+	width_line = width_schema.get('line', LINE_WIDTH['line'])
 
-    for page in doc:
-        if img:
-            for img in page.getImageList(full=True):
-                page.drawRect(page.getImageBbox(img), color=color_img, width=width_img)
-        if txt:
-            for textBlock in page.getTextBlocks():
-                page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
-        if line:
-            for line in extract_page_lines(page):
-                page.drawRect(line[:4], color=color_line, width=width_line)
-        if word:
-            for word in _recover_words(page.getTextWords(), page.rect):
-                page.drawRect(word[:4], color=color_word, width=width_word)
-    return doc
+	# `if`s are  to implement the flag control wheter to draw or not text block, words,
+	# images or lines bounding boxes.
+	for page in doc:
+		if img:
+			for img in page.getImageList(full=True):
+				page.drawRect(page.getImageBbox(img), color=color_img, width=width_img)
+		if txt:
+			# Iterating over blocks of text of a page. It is represented by a 7-uple
+			# which first 4 elements are the bounding boxes limit (x0, y0, x1, y1).
+			for textBlock in page.getTextBlocks():
+				page.drawRect(textBlock[:4], color=color_txt, width=width_txt)
+		if line:
+			for line in extract_page_lines(page):
+				page.drawRect(line[:4], color=color_line, width=width_line)
+		if word:
+			for word in _recover_words(page.getTextWords(), page.rect):
+				page.drawRect(word[:4], color=color_word, width=width_word)
+	return doc
 
 
 class DrawBoxes:
