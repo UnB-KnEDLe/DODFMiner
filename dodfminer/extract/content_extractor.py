@@ -211,7 +211,6 @@ class ContentExtractor:
                 if int(text[1]) != 55 and int(text[1]) != 881:
                     drawboxes_text += (text[4] + ' ')
 
-        open('./data/drawboxes_text.txt', 'w').write(drawboxes_text)
         return drawboxes_text
 
     @classmethod
