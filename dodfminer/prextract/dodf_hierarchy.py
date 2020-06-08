@@ -8,7 +8,7 @@ from itertools import chain
 from typing import List, Iterable, Tuple
 
 import fitz
-import prextract.title_filter as title_filter
+import dodfminer.prextract.title_filter as title_filter
 
 _TYPE_TITLE, _TYPE_SUBTITLE = "title", "subtitle"
 _TITLE_MULTILINE_THRESHOLD = 10
