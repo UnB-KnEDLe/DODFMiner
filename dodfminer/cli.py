@@ -33,13 +33,8 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.def_single = False
-        self.update_base = False
-        self.def_dpi = 300
-        self.def_file_format = 'jpg'
-        self.def_language = 'por'
-        self.def_callback = []
-        self.backend = 'tesseract'
-        self.pure_text = False
+        self.pure_text = True
+        self.block = False
         self.titles_with_boxes = False
 
     def _new_group(self, name, subparser):
@@ -77,37 +72,19 @@ class CLI(object):
         """Create parser for extraction configs."""
         download_parser = self.subparsers.add_parser("extract")
 
-        group = self._new_group('PDF2Image Configs', download_parser)
-
-        group.add_argument('-dpi', dest='dpi', default=self.def_dpi, type=int,
-                           help='The DPI to transform the pdf to image')
-
-        group.add_argument('-fmt', '--file_format', dest='file_format',
-                           default=self.def_file_format, type=str,
-                           help='The output format of the image created')
-
         group = self._new_group('Tesseract Configs', download_parser)
 
-        group.add_argument('-lang', '--language', dest='tesseract_lang',
-                           default=self.def_language, type=str,
-                           help='Tesseract Default Language')
-
-        group.add_argument('-be', '--backend', dest='backend',
-                           default=self.backend, type=str,
-                           help='Backend for extraction (tesseract/drawboxes)')
-
-        group.add_argument('-p', '--pure', dest='pure_text',
+        group.add_argument('-b', '--block', dest='block',
                            default=self.pure_text, type=bool,
-                           help='Extract pure text in txt format')
+                           help='Extract pure text in blocks of text')
+
+        group.add_argument('-p', '--pure-text', dest='pure_text',
+                          default=self.pure_text, type=bool,
+                          help='Extract pure text in txt format')
         
         group.add_argument('-tb', '--titles-with-boxes', dest='titles_with_boxes',
                            default=self.titles_with_boxes, type=bool,
-                           help='Extract titles and your text boxes from dodf')
-
-        group.add_argument('--callback', dest='cb_type',
-                           default=self.def_callback, type=str,
-                           choices=['spellcheck', 'None'],
-                           help='Callback to the extraction function')
+                           help='Extract text separated by titles')
 
     def _prextract_parser(self):
         """Create parser for pre-extraction configs."""
