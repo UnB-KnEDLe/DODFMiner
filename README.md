@@ -11,7 +11,7 @@ DODFMiner is the software that is being developed for the extraction of data fro
 
 If you want to contribute to our project, it's simple! We have a [Contribution Guide](CONTRIBUTING.md) where all the steps to contribute are explained.
 Don't forget to also read our [Code of Conduct](CODE_OF_CONDUCT.md).   
-If you have any questions you can also contact us by creating an issue or by asking.knedle@googlegroups.com
+If you have any questions you can also contact us by creating an issue or by ask.knedle@googlegroups.com
 
 ### Installation
 
