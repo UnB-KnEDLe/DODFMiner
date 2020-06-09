@@ -13,7 +13,7 @@ import os
 import json
 
 import fitz
-import prextract.title_filter as title_filter
+import dodfminer.prextract.title_filter as title_filter
 
 Box = namedtuple("Box", "x0 y0 x1 y1")
 BBox = namedtuple("BBox", "bbox")

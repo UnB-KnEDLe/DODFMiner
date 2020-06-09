@@ -15,7 +15,7 @@ from typing import List, Dict, Union, NamedTuple, Tuple
 from pathlib import Path
 
 import fitz
-import prextract.title_filter as title_filter
+import dodfminer.prextract.title_filter as title_filter
 
 # In[30]:
 class TextBlockTrans(NamedTuple):
