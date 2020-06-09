@@ -1,57 +1,46 @@
-# Guia de Contribuição  
+# Contributing Guide  
 
-## Como contribuir?
+## How to contribute?
 
-Para contribuir com o projeto é muito fácil e cada pouquinho conta! Basta seguir os seguintes passos:
-
-* *Fork* do repositório (apenas para usuários externos)
-* Criar [*branchs*](CONTRIBUTING.md#política-de-branches)
-* Seguir a política de [*commits*](CONTRIBUTING.md#política-de-commits)
-* Submeter [*Pull Request*](CONTRIBUTING.md#política-de-merges-e-pull-requests)
+To contribute with this project, you just need to follow the steps up next
 
 
-### Política de Branches  
+* *Fork* of the repository (for external users only)
+* Create [branchs] (CONTRIBUTING.md#branch-policy)
+* Follow the [commits] policy (CONTRIBUTING.md#commits-policy)
+* Submit [Pull Request] (CONTRIBUTING.md#merges-policy-and-pull-requests)
 
-#### *master*
 
-A branch *master* é a branch de produção, onde ficará a versão estável do projeto. Ela estará bloqueada para commits e para pushs.
-Veja a política de merges no tópico [Merges para *master*](CONTRIBUTING.md#merges-para-master).
+### Branch Policy  
 
-#### *development*
+#### **master**
 
-A branch *development* é a branch de desenvolvimento, onde o trabalho das outras branchs será unificado e onde será criada uma versão estável para mesclar com a *master*.
-Assim como a *master* ela está bloqueada para commits e pushs.
-Veja a política de merges no tópico [Merges para development](CONTRIBUTING.md#merges-para-development)
-merges para *development*</a>.
+The **master** branch is the production branch, where the stable version of the project will be. It will be blocked for commits and pushs.
+See the merges policy in the topic [Merges to **master**] (CONTRIBUTING.md#merges-to-master).
+
+#### **development**
+
+The **development** branch is where the work of the other branches will be unified and where a stable version will be created to merge with **master**.
+Like **master** it is blocked for commits and pushs.
+See the merges policy in the topic [Merges for development] (CONTRIBUTING.md#merges-for-development) merges to **development** </a>.
 
 #### Nome das Branches  
 
-As branchs de desenvolvimento de features serão criadas a partir da branch *development* com a nomenclatura padrão `x_nome_da_issue`, onde o `x` representa o código de rastreio da issue.
+As branchs de desenvolvimento de features serão criadas a partir da branch *development* com a nomenclatura padrão `nome_alteracao`.
 
-### Política de Commits
+### Commits Policy
 
-Os commits devem ser feitos usando o parâmetro `-s` para indicar sua assinatura no commit.
-
-```
-git commit -s
-```
-A issue em questão deve ser citada no commit, para isso, basta adicionar `#<numero_da_issue>`.
-
-```
- #5 Fazendo guia de contribuição
-```
-
-** \*\*Por padrão, o caracter `#` define uma linha de comentário no arquivo da mensagem do commit. Para resolver este problema, use o commando:**
-```
-git config --local core.commentChar '!'
-```
-
-Igualmente, para commits em dupla deve ser usado o comando `-s` , e deve ser adicionado a assinatura da sua dupla.
+Commits must be made using the `-s` parameter to indicate your signature on the commit.
 
 ```
 git commit -s
 ```
-Comentário do commit:
+
+Also, for double commits the `-s` command must be used, and the signature of your pair must be added.
+
+The commit comment must show the action taken, or the change made.
+
+Comment of commit:
 ```
 Making contribution guide
 
@@ -59,7 +48,7 @@ Signed-off-by: Isaque Alves <isaquealvesdl@gmail.com>
 Signed-off-by: Felipe Campos <fepas.unb@gmail.com>
 ```
 
-Para que ambos envolvidos no commit sejam incluidos como contribuintes no gráfico de commits do GitHub, basta incluir a instrução `Co-authored-by:` na mensagem:
+In order for both involved in the commit to be included as contributors in the GitHub commits graph, just include the statement `Co-authored-by:` in the message:
 
 ```
 Making contribution guide
@@ -72,71 +61,57 @@ Co-authored-by: Felipe Campos <fepas.unb@gmail.com>
 
 ```
 
+For commits that include a small change that has already been resolved, start the commit message with `HOTFIX <message>`
 
-Para commits que encerram a resolução de uma issue, deve-se iniciar a mensagem do commit com `Fix #<numero_da_issue> <mensagem>`, para que a issue seja [encerrada automaticamente](https://help.github.com/articles/closing-issues-using-keywords/) quando mesclada na `master`.
+Example of a commit comment:
 
-Exemplo de comentário do commit:
 ```
-Fix #5 Finalizando guia de contribuição do projeto
-```
-
-Para commits que incluem uma pequena mudança em uma issue que já teve sua resolução encerrada, deve-se iniciar a mensagem do commit com `HOTFIX #<numero_da_issue> <mensagem>`
-
-Exemplo de comentário do commit:
-```
-HOTFIX #5 Atualizando guia de contribuição do projeto
+HOTFIX Updating project contribution guide
 ```
 
-### Política de Merges e Pull Requests
+### Merges and Pull Requests Policy
 
 #### Pull Requests
 
-Pull requests devem ser feitos para a branch *master* seguindo as regras e os passos do tópico [*Merges para master*](CONTRIBUTING.md#merges-para-master). No conteúdo do pull request deve haver uma descrição clara do que foi feito.
+Pull requests must be made to the **master** branch following the rules and steps in the topic [**Merges to master**] (CONTRIBUTING.md#merges-to-master). In the pull request content there should be a clear description of what was done.
 
-Deve ser seguido o [template Pull Request](docs/pull_request_template.md).
 
 ##### Work in Progress
 
-Caso haja a necessidade de atualizar a branch *master* antes de concluir a issue, o nome do pull request deve conter WIP:<X_nome_da_branch> para que a branch não seja deletada.
+If there is a need to update the * master * branch before completing the issue, the name of the pull request must contain WIP: <ran_name_name> so that the branch is not deleted.
 
-#### Merges para *master*
-Os merges para *master* deverão ser feitos quando a funcionalidade ou refatoração estiverem de acordo com os seguintes aspectos:  
-- Funcionalidade ou refatoração concluída;
-- *Build* do Travis passando;
-- Progredir ou manter a porcentagem de cobertura de teste;
-- Funcionalidade revisada por algum outro membro.
+#### Merges to **master**
+Merges to **master** should be made when the functionality or refactoring is in accordance with the following aspects:
+- Functionality or refactoring completed;
+- **Build** of Travis passing;
+- Progress or maintain the percentage of test coverage;
+- Functionality reviewed by some other member.
 
-Para fazer um merge para *master* os passos a serem seguidos são:  
+To merge into **master** the steps to be followed are:
 - `git checkout branch_de_trabalho`;
 - `git pull --rebase origin master`;
-- `git push origin branch_de_trabalho`;
-- Abrir pull request via interface GitHub;
-- Aguardar Code Review
+- `git push origin branch_de_work`;
+- Open pull request via GitHub interface;
+- Wait for Code Review
 
 
 ##### Code Review
-O code review deve ser feito por um ou mais membros da equipe que não participaram das modificações.
-Após pelo menos uma aprovação de Code Review, Status Check (Travis, CodeClimate) o PullRequest poderá ser aceito;
+The code review must be done by one or more team members who did not participate in the changes.
+After at least a Code Review, Status Check (Travis, CodeClimate) approval, PullRequest can be accepted;
 
-Para aceitar o PullRequest, deve-se usar a opção *merge* no Github.
+To accept PullRequest, you must use the **merge** option on Github.
 
-![Merge](/docs/assets/img/merges.png)
 
-##### Cobertura de testes
-A Cobertura de código é avaliada constantemente e o objetivo é que a mesma nunca diminua. "Código testado gera menos retrabalho e mais qualidade de vida".
+##### Test Coverage
 
-OBS: linhas de `console.log()` costumam não ser contabilizadas na cobertura de código. E geralmente não devem. Para resolver este problema, você pode adicionar o seguinte comentário na linha anterior ao `console.log()`:
+Code coverage is constantly evaluated and the goal is that it never decreases. "Tested code generates less rework and more quality of life".
 
-```
-/* istanbul ignore next */
-```
 
 Exemplo:
-```nodejs
-/* istanbul ignore next */
-console.log("Mensagem de Checkpoint");
+```python
+
 ```
 
 #### Tag's
 
-<!-- Explicar tag's -->
+<!-- Explain tag's -->
