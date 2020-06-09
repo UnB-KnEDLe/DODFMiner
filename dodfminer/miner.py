@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Main application module.
 
 Contains class miner which is an interface to handle all extraction tasks.
@@ -8,9 +10,9 @@ Typical usage example:
 
 """
 
-from cli import GLOBAL_ARGS
-from downloader.fetcher import Fetcher
-from extract.content_extractor import ContentExtractor
+from dodfminer.cli import GLOBAL_ARGS
+from dodfminer.downloader.fetcher import Fetcher
+from dodfminer.extract.content_extractor import ContentExtractor
 
 
 class Miner(object):
@@ -49,7 +51,7 @@ class Miner(object):
         print(f"[DODFMiner] {msg}")
 
 
-if __name__ == '__main__':
+def run():
     miner = Miner()
     if miner.args.subparser_name == 'fetch':
         miner.download()
