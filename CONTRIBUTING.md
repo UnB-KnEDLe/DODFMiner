@@ -6,9 +6,9 @@ To contribute with this project, you just need to follow the steps up next
 
 
 * *Fork* of the repository (for external users only)
-* Create [branchs] (CONTRIBUTING.md#branch-policy)
-* Follow the [commits] policy (CONTRIBUTING.md#commits-policy)
-* Submit [Pull Request] (CONTRIBUTING.md#merges-policy-and-pull-requests)
+* Create [branchs](CONTRIBUTING.md#branch-policy)
+* Follow the [commits policy](CONTRIBUTING.md#commits-policy)
+* Submit [Pull Request](CONTRIBUTING.md#merges-policy-and-pull-requests)
 
 
 ### Branch Policy  
@@ -38,11 +38,13 @@ git commit -s
 
 Also, for double commits the `-s` command must be used, and the signature of your pair must be added.
 
-The commit comment must show the action taken, or the change made.
+The commit comment must be in english and show the action taken, or the change made.
 
 Comment of commit:
 ```
 Making contribution guide
+
+Change 
 
 Signed-off-by: Isaque Alves <isaquealvesdl@gmail.com>
 Signed-off-by: Felipe Campos <fepas.unb@gmail.com>
@@ -88,9 +90,9 @@ Merges to **master** should be made when the functionality or refactoring is in 
 - Functionality reviewed by some other member.
 
 To merge into **master** the steps to be followed are:
-- `git checkout branch_de_trabalho`;
+- `git checkout branch_of_work`;
 - `git pull --rebase origin master`;
-- `git push origin branch_de_work`;
+- `git push origin branch_of_work`;
 - Open pull request via GitHub interface;
 - Wait for Code Review
 
@@ -111,7 +113,3 @@ Exemplo:
 ```python
 
 ```
-
-#### Tag's
-
-<!-- Explain tag's -->
