@@ -1,55 +1,51 @@
-# Código de conduta da comunidade KnEDLe
+# KnEDLe community code of conduct
 
 ## Propósito
-<p align="justify">&emsp;&emsp;Um dos objetivos do KnEDLe é ser inclusivo, promovendo o crescimento individual e coletivo dos seus colaboradores por meio da convivência com as diferenças. Como tal, estamos empenhados em proporcionar um ambiente amigável, seguro e acolhedor para todos, independentemente de gênero, orientação sexual, etnia, status socioeconômico, religião ou quaisquer outros atributos e habilidades.</p>
+<p align="justify">&emsp;&emsp;One of KnEDLe's goals is to be inclusive, promoting the individual and collective growth of its employees through living with differences. As such, we are committed to providing a friendly, safe and welcoming environment for everyone, regardless of gender, sexual orientation, ethnicity, socioeconomic status, religion or any other attributes and skills.</p>
 
 
-<p align="justify">&emsp;&emsp;Este código de conduta descreve as expectativas para todos aqueles que participam da nossa comunidade, bem como as consequências diante comportamentos inaceitáveis. </p>
+<p align="justify">&emsp;&emsp;This code of conduct describes the expectations for all those who participate in our community, as well as the consequences for unacceptable behavior.</p>
 
 
-<p align="justify">&emsp;&emsp;Convidamos todos aqueles que participam do KnEDLe a nos ajudar a criar experiências seguras e positivas para todos.</p>
+<p align="justify">&emsp;&emsp;We invite all those who participate in KnEDLe to help us create safe and positive experiences for everyone.</p>
 
-## Nossas normas
-### Comportamento esperado
-<p align="justify">&emsp;&emsp;Os seguintes comportamentos são esperados e solicitados a todos os membros da comunidade:</p>
+## Our standards
+### Expected behavior
+<p align="justify">&emsp;&emsp;The following behaviors are expected and requested from all members of the community:</p>
 
-- Participe de forma autêntica e ativa. Ao fazê-lo, você contribui para a saúde e longevidade desta comunidade.
-- Considere o respeito no seu discurso e ações.
-- Tente colaborar antes do conflito.
-- Abstenha-se de comportamento degradante, discriminatório ou assediador.
-- Esteja atento ao seu entorno e aos colegas participantes. Alerte os líderes da comunidade se você notar uma situação perigosa, alguém em perigo ou violações deste Código de Conduta.
-- Lembre-se de que os locais de eventos da comunidade podem ser compartilhados com outras pessoas. Seja respeitoso com todos os frequentadores ou clientes.
-
-
-### Comportamento inaceitável
-<p align="justify">&emsp;&emsp;Os seguintes comportamentos são inaceitáveis em nossa comunidade:</p>
-
-- Violência, ameaças de violência ou linguagem agressiva dirigida contra outra pessoa.
-- Discursos sexistas, racistas, LGBTfóbicos, ou de outra forma discriminatórios.
-- Publicação ou exibição de material sexualmente explícito ou violento.
-- Publicação ou ameaça de publicação de informações de identificação pessoal.
-- Insultos pessoais, particularmente aqueles relacionados ao gênero, orientação sexual, etnia, religião ou deficiência.
-- Fotografia ou gravação inadequada.
-- Contato físico inapropriado. Você deve ter o consentimento de alguém antes de tocá-lo.
-- Assédio moral. Exposição de alguém a situações humilhantes e constrangedoras, repetitivas. Violência psicológica, intimidação, perseguição (on-line ou pessoalmente).
-- Assédio sexual. Isso inclui comentários sexuais ou piadas; movimentos inapropriados, tentativas e avanços sexuais não favorecidos.
-- Advogar ou encorajar qualquer comportamento acima.
-- Interrupção contínua dos eventos da comunidade, incluindo palestras e apresentações.
+- Participate in an authentic and active way. In doing so, you contribute to the health and longevity of this community.
+- Consider respect in your speech and actions.
+- Try to collaborate before the conflict.
+- Refrain from degrading, discriminatory or harassing behavior.
+- Be aware of your surroundings and fellow participants. Alert community leaders if you notice a dangerous situation, someone in danger or violations of this Code of Conduct.
+- Remember that community event venues can be shared with others. Be respectful to all regulars or customers.
 
 
-## Nossas responsabilidades
+### Unacceptable behavior
+<p align="justify">&emsp;&emsp;The following behaviors are unacceptable in our community:</p>
 
-<p align="justify">&emsp;&emsp;Os responsáveis pelos projetos são encarregados por esclarecer os padrões de
-comportamento e são esperados para tomar medidas corretivas apropriadas e justas em
-resposta a qualquer instância de comportamento inaceitável.</p>
+- Violence, threats of violence or aggressive language directed against another person.
+- Sexist, racist, LGBTphobic, or otherwise discriminatory speeches.
+- Publication or exhibition of sexually explicit or violent material.
+- Publication or threat of publication of personally identifiable information.
+- Personal insults, particularly those related to gender, sexual orientation, ethnicity, religion or disability.
+- Inadequate photography or recording.
+- Inappropriate physical contact. You must have someone's consent before touching it.
+- Bullying. Exposing someone to humiliating and embarrassing, repetitive situations. Psychological violence, intimidation, harassment (online or in person).
+- Sexual harassment. This includes sexual comments or jokes; inappropriate movements, unsuccessful attempts and sexual advances.
+- Advocate or encourage any of the above behaviors.
+- Continuous interruption of community events, including lectures and presentations.
 
-<p align="justify">&emsp;&emsp;Os mantenedores do projeto têm o direito e a responsabilidade de remover, editar ou
-rejeitar comentários e contribuições que não estão alinhados com este Código de Conduta, ou para proibir temporariamente ou permanentemente qualquer colaborador diante comportamentos que julgarem inapropriados, ameaçadores, ofensivos ou prejudiciais.</p>
+
+## Our Responsibilities
+
+<p align="justify">&emsp;&emsp;Project managers are tasked with clarifying standards of behavior and are expected to take appropriate and fair corrective action in response to any instance of unacceptable behavior.</p>
+
+<p align="justify">&emsp;&emsp;Project maintainers have the right and responsibility to remove, edit or reject comments and contributions that are not in line with this Code of Conduct, or to temporarily or permanently prohibit any employee in the face of behavior that they deem inappropriate, threatening, offensive or harmful.</p>
 
 
 ## Cumprimento
 
-<p align="justify">&emsp;&emsp;Instâncias de comportamento abusivo, assediador ou de outra forma inaceitável podem ser
-relatadas à equipe do projeto pelo e-mail ask.knedle@googlegroups.com. A equipe é obrigada a manter a confidencialidade diante a denúncia de um incidente. Todas as queixas serão revistas e investigadas, resultando em uma resposta considerada apropriada às circunstâncias.</p>
+<p align="justify">&emsp;&emsp;Instances of abusive, harassing or otherwise unacceptable behavior can be reported to the project team by email ask.knedle@googlegroups.com. The team is obliged to maintain confidentiality when reporting an incident. All complaints will be reviewed and investigated, resulting in a response deemed appropriate to the circumstances.</p>
 
-<p align="justify">&emsp;&emsp;Os mantenedores do projeto que não acompanham ou aplicam o Código de Conduta em boas condições também podem enfrentar consequências temporárias ou permanentes conforme determinado por outros membros da liderança do projeto.</p>
+<p align="justify">&emsp;&emsp;Project maintainers who do not follow or apply the Code of Conduct in good condition may also face temporary or permanent consequences as determined by other members of the project leadership.</p>
