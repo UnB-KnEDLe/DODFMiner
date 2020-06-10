@@ -1,6 +1,7 @@
 [<img src="assets/img/knedle.jpg" width="1300" title="">](https://unb-knedle.github.io/)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Maintainability](https://api.codeclimate.com/v1/badges/a8ab63922f34a63be4cb/maintainability)](https://codeclimate.com/github/UnB-KnEDLe/DODFMiner/maintainability)
 
 ### DODFMiner
 
