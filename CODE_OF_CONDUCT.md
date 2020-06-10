@@ -1,6 +1,6 @@
 # KnEDLe community code of conduct
 
-## Propósito
+## Purpose
 <p align="justify">&emsp;&emsp;One of KnEDLe's goals is to be inclusive, promoting the individual and collective growth of its employees through living with differences. As such, we are committed to providing a friendly, safe and welcoming environment for everyone, regardless of gender, sexual orientation, ethnicity, socioeconomic status, religion or any other attributes and skills.</p>
 
 
@@ -46,6 +46,6 @@
 
 ## Cumprimento
 
-<p align="justify">&emsp;&emsp;Instances of abusive, harassing or otherwise unacceptable behavior can be reported to the project team by email ask.knedle@googlegroups.com. The team is obliged to maintain confidentiality when reporting an incident. All complaints will be reviewed and investigated, resulting in a response deemed appropriate to the circumstances.</p>
+<p align="justify">&emsp;&emsp;Instances of abusive, harassing or otherwise unacceptable behavior can be reported to the project team by email ask_knedle@googlegroups.com. The team is obliged to maintain confidentiality when reporting an incident. All complaints will be reviewed and investigated, resulting in a response deemed appropriate to the circumstances.</p>
 
 <p align="justify">&emsp;&emsp;Project maintainers who do not follow or apply the Code of Conduct in good condition may also face temporary or permanent consequences as determined by other members of the project leadership.</p>
