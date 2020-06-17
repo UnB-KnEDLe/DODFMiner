@@ -33,7 +33,7 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.def_single = False
-        self.pure_text = True
+        self.pure_text = False
         self.block = False
         self.titles_with_boxes = False
 
