@@ -1,4 +1,4 @@
-from atos.base import Atos
+from dodfminer.extract.regex.atos.base import Atos
 
 class NomeacaoComissionados(Atos):
     
