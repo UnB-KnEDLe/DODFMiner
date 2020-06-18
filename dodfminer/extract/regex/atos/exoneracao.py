@@ -1,4 +1,4 @@
-from dodfminer.extract.regex.atos.base import Atos
+from atos.base import Atos
 
 class Exoneracao(Atos):
     

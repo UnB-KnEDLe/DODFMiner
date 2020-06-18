@@ -55,7 +55,7 @@ class Atos:
     def _find_props(self, rule, act):
         match = re.search(rule, act, flags=self._flags) 
         if match:
-            return match.groups()
+            return tuple(x for x in match.groups() if x != None)
         return "nan"
     
     def _act_props(self, act_raw):

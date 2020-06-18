@@ -1,24 +1,28 @@
-from dodfminer.extract.regex.atos.base import Atos
+import re
+from atos.base import Atos
 
 class AbonoPermanencia(Atos):    
 
     def __init__(self, file):
         super().__init__(file)
 
+    def _regex_flags(self):
+        return re.IGNORECASE
+
     def _act_name(self):
         return "Abono de Permanência"
 
     def _props_names(self):
-        return ["Nome do Servidor", "Matrícula", "Cargo Efetivo", "Classe", 
+        return ["Tipo do Ato", "Nome do Servidor", "Matrícula", "Cargo Efetivo", "Classe", 
                 "Padrão", "Quadro pessoal permanente ou Suplementar",
-                "Fundamento Legal do abono de permanência", "Órgão" 
-                "Processo GDF/SEI", "Vigencia","Matricula SIAPE"]
+                "Fundamento Legal do abono de permanência", "Órgão",
+                "Processo GDF/SEI", "Vigencia", "Matricula SIAPE"]
         
         
     def _rule_for_inst(self):
-        start = "(Abono DE PERMANENCIA (ao|equiva)[\s\S]*?)\s"
-        body = "([\s\S]*?)"
-        end = "(\.\n)"
+        start = "(Abono\sDE\sPERMANENCIA\s[(ao|equiva)][\s\S]*?)\s"
+        body = "([\s\S]*?"
+        end = "\.\n)"
         return start + body + end
     
     def _prop_rules(self):
@@ -30,7 +34,7 @@ class AbonoPermanencia(Atos):
                  "quadro": "d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
                  "fundamento": "nos\stermos\sdo\s([\s\S]*?),\sa?\s",
                  "orgao": "Lotacao: ([\s\S]*?)[.]",
-                 "processo": "Processo SEI: [\s\S]*?\.\n",
-                 "vigencia": "a contar de [\s\S]*?\,",
+                 "sei": "Processo SEI: ([\s\S]*?)\.\n",
+                 "vigencia": "a contar de ([\s\S]*?)\,",
                  "siape": "[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]"}
         return rules
