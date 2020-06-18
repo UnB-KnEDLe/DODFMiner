@@ -33,7 +33,7 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.def_single = False
-        self.pure_text = True
+        self.pure_text = False
         self.block = False
         self.titles_with_boxes = False
 
@@ -75,7 +75,7 @@ class CLI(object):
         group = self._new_group('Tesseract Configs', download_parser)
 
         group.add_argument('-b', '--block', dest='block',
-                           default=self.pure_text, type=bool,
+                           default=self.block, type=bool,
                            help='Extract pure text in blocks of text')
 
         group.add_argument('-p', '--pure-text', dest='pure_text',
