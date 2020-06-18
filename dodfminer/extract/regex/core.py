@@ -1,14 +1,14 @@
-from dodfminer.extract.regex.atos.aposentadoria import Retirements
-from dodfminer.extract.regex.atos.reversoes import Revertions
-from dodfminer.extract.regex.atos.nomeacao import NomeacaoComissionados
-from dodfminer.extract.regex.atos.exoneracao import Exoneracao
-from dodfminer.extract.regex.atos.abono import AbonoPermanencia
-from dodfminer.extract.regex.atos.retificacoes import RetAposentadoria
-from dodfminer.extract.regex.atos.substituicao import Substituicao
+from atos.aposentadoria import Retirements
+from atos.reversoes import Revertions
+from atos.nomeacao import NomeacaoComissionados
+from atos.exoneracao import Exoneracao
+from atos.abono import AbonoPermanencia
+from atos.retificacoes import RetAposentadoria
+from atos.substituicao import Substituicao
 
 _dict = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
-         "exoneracao": Exoneracao, "abono": AbonoPermanencia}  #, "retificacoes": RetAposentadoria,
-        # "substituicao": Substituicao}
+         "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
+         "substituicao": Substituicao}
 
 class Regex:
 
