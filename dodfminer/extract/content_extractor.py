@@ -68,7 +68,6 @@ class ContentExtractor:
                 cls._log(pdf_name)
                 text = cls.extract_text(file)
                 t_path = cls._struct_txt_subfolders(file)
-                text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf8')
                 f = open(RESULTS_PATH_TXT + '/' + t_path, "w")
                 f.write(text)
             else:
@@ -158,7 +157,8 @@ class ContentExtractor:
 
         if block:
             return list_of_boxes
-        else:   
+        else:
+            drawboxes_text = unicodedata.normalize('NFKD', drawboxes_text).encode('ascii', 'ignore').decode('utf8')
             return drawboxes_text
 
     @classmethod
