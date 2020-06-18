@@ -5,10 +5,13 @@ from atos.exoneracao import Exoneracao
 from atos.abono import AbonoPermanencia
 from atos.retificacoes import RetAposentadoria
 from atos.substituicao import Substituicao
+from atos.sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from atos.cessoes import Cessoes
 
 _dict = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
          "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
-         "substituicao": Substituicao}
+         "substituicao": Substituicao, "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+         "cessoes": Cessoes}
 
 class Regex:
 
