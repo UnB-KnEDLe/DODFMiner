@@ -1,5 +1,5 @@
 import re
-from atos.base import Atos
+from dodfminer.extract.regex.atos.base import Atos
 
 class Substituicao(Atos):
     
