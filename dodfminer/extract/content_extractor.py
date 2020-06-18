@@ -120,7 +120,7 @@ class ContentExtractor:
         except Exception as e:  
             cls._log(e)
         else:
-            boxes = cls._drawboxes_extraction(cls, file, block=True)
+            boxes = cls._drawboxes_extraction(file, block=True)
             first_title = False
             is_title = False
             actual_title = ''
