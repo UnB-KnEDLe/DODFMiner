@@ -10,8 +10,9 @@ from dodfminer.extract.regex.atos.cessoes import Cessoes
 
 _dict = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
          "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
-         "substituicao": Substituicao, "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-         "cessoes": Cessoes}
+         "substituicao": Substituicao }
+         # "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+         # "cessoes": Cessoes}
 
 class Regex:
 
