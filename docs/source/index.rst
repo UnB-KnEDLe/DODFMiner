@@ -1,42 +1,36 @@
 Welcome to DODFMiner's documentation!
 =====================================
 
-.. automodule:: cli
-  :members:
-
-.. automodule:: __main__
-  :members:
-
-Downloader Module
-=====================================
-
-.. automodule:: downloader.fetcher
-  :members:
-
-Extraction Module
-=====================================
-
-.. automodule:: extract.content_extractor
-  :members:
-
-Pre-Extraction Module
-=====================================
-
-.. automodule:: prextract.title_extractor
-  :members:
-
-.. automodule:: prextract.title_filter
-  :members:
-
-
+.. image:: _static/knedle.jpg
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+  :maxdepth: 2
+  :caption: User Documentation
 
-Indices and tables
-==================
+  user/intro
+  user/install
+  user/usage
+  user/CODE_OF_CONDUCT.md
+  user/CONTRIBUTING.md
+ 
+.. toctree::
+  :maxdepth: 2
+  :caption: Downloader Module
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+  down/core
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Extractor Module
+
+  extract/core
+  extract/regex
+
+.. toctree::
+  :maxdepth: 2
+  :caption: ETC
+
+  etc/ack
+  etc/about
+  
+  
