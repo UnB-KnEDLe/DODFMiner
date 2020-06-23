@@ -6,27 +6,24 @@ Contains class ContentExtractor which have to public functions
 avaiable to extract the DODF to JSON
 
 Typical usage example:
-    ContentExtractor.extract_to_json()
-    ContentExtractor.extract_content(file)
+    ContentExtractor.extract_text(file)
+    ContentExtractor.extract_to_txt(file)
 """
 
 import os
-import time
 import json
-import fitz
 import unicodedata
 
 from pathlib import Path
-from difflib import SequenceMatcher
 
-from dodfminer.prextract.title_extractor import ExtractorTitleSubtitle
-from dodfminer.prextract.box_extractor import get_doc_text_boxes
+import fitz
 
-TMP_PATH = "./data/tmp/"
-RESULTS_PATH = "./data/results/"
-TMP_PATH_IMAGES = "./data/tmp/images"
-RESULTS_PATH_JSON = "./data/results/json"
-RESULTS_PATH_TXT = "./data/results/txt"
+from dodfminer.extract.utils.title_extractor import ExtractorTitleSubtitle
+from dodfminer.extract.utils.box_extractor import get_doc_text_boxes
+
+RESULTS_PATH = "results/"
+RESULTS_PATH_JSON = "results/json"
+RESULTS_PATH_TXT = "results/txt"
 
 class ContentExtractor:
     """Extract content from DODFs and export to JSON.
@@ -42,84 +39,72 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_text(cls, file, block=False, sep=' '):
-        return cls._drawboxes_extraction(file, block=block, sep=sep)
+    def extract_text(cls, file, block=False, sep=' ', norm='NFKD'):
+        """Extract block of text from file
 
-    @classmethod
-    def extract_structure(cls, file):
-        return cls._extract_boxes_with_title(file)
+        Args:
+            file: The DODF to extract the titles.
+            block: Extract the text as a list of text blocks
 
-    @classmethod
-    def extract_to_txt(cls):
-        """Extract information from DODF to TXT.
+        Returns:
+            A list of arrays if block is True or strign otherwise.
+            Each array in the list have 5 values: the first four
+            are the coordinates of the box (x0, y0, x1, y1) end the last
+            is the text from the box.
 
-        For each pdf file in data/dodfs, extract information from the
-        pdf and output it to txt.
-
-        """
-        pdfs_path_list = cls._get_pdfs_list()
-        cls._create_single_folder(RESULTS_PATH)
-        cls._create_single_folder(RESULTS_PATH_TXT)
-        txt_path_list = cls._get_txt_list()
-
-        for file in pdfs_path_list:
-            pdf_name = os.path.splitext(os.path.basename(file))[0]
-            if pdf_name not in txt_path_list:
-                cls._log(pdf_name)
-                text = cls.extract_text(file)
-                t_path = cls._struct_txt_subfolders(file)
-                f = open(RESULTS_PATH_TXT + '/' + t_path, "w")
-                f.write(text)
-            else:
-                cls._log("TXT already exists")
-
-    @classmethod
-    def extract_to_json(cls, titles_with_boxes=False):
-        """Extract information from DODF to JSON.
-
-        For each pdf file in data/dodfs, extract information from the
-        pdf and output it to json.
+            The string returned correspond to the text from all PDF
 
         """
-        # Get list of all downloaded pdfs
-        pdfs_path_list = cls._get_pdfs_list()
-        # Get list of existing json to not repeat work
-        json_path_list = cls._get_json_list()
-
-        cls._create_single_folder(TMP_PATH)
-        cls._create_single_folder(RESULTS_PATH)
-        cls._create_single_folder(RESULTS_PATH_JSON)
-        cls._create_single_folder(RESULTS_PATH_TXT)
-
-        for file in pdfs_path_list:
-            pdf_name = os.path.splitext(os.path.basename(file))[0]
-            # We do not want the system to repeat itself doing the same work
-            if pdf_name not in json_path_list:
-                # TODO(Khalil009) Include a CLI Flag to make only
-                # low cost extractions
-                if os.path.getsize(file) < 30000000:  # Remove in future.
-                    # Remove images that might still there from previous exec
-                    cls._log(pdf_name)
-                    if titles_with_boxes:
-                        content = cls.extract_structure(file)
+        drawboxes_text = ''
+        list_of_boxes = []
+        pymu_file = fitz.open(file)
+        for textboxes in get_doc_text_boxes(pymu_file):
+            for text in textboxes:
+                if int(text[1]) != 55 and int(text[1]) != 881:
+                    if block:
+                        norm_text = cls._normalize_text(text[4], norm)
+                        list_of_boxes.append((text[0], text[1], text[2], text[3], norm_text))
                     else:
-                        content = cls.extract_text(file, block=True)
+                        drawboxes_text += (text[4] + sep)
 
-                    j_path = cls._struct_json_subfolders(file)
-                    json.dump(content, open(RESULTS_PATH_JSON + '/' + j_path, "w",
-                                                 encoding="utf-8"), ensure_ascii=False)
-            else:
-                cls._log("JSON already exists")
+        if block:
+            return list_of_boxes
+
+        drawboxes_text = cls._normalize_text(drawboxes_text, norm)
+        return drawboxes_text
 
     @classmethod
-    def _extract_boxes_with_title(cls, file):
+    def extract_structure(cls, file, norm='NFKD'):
+        """
+            Extract boxes of text with your respective titles
+        Args:
+            file: The DODF to extract the titles.
+
+        Returns:
+            A dictionaty with the blocks organized by title
+
+            Example:
+                {
+                    "Title": [
+                        [
+                            x0,
+                            y0,
+                            x1,
+                            y1,
+                            "Text"
+                        ]
+                    ],
+                    ...
+                }
+
+        """
         content_dict = {}
         try:
-            title_base = cls._extract_titles(file).json.keys() 
-        except Exception as e:  
+            title_base = cls._extract_titles(file).json.keys()
+        except Exception as e:
             cls._log(e)
         else:
-            boxes = cls._drawboxes_extraction(file, block=True)
+            boxes = cls.extract_text(file, block=True, norm=norm)
             first_title = False
             is_title = False
             actual_title = ''
@@ -143,23 +128,83 @@ class ContentExtractor:
             return content_dict
 
     @classmethod
-    def _drawboxes_extraction(cls, file, block=False, sep=' '):
-        drawboxes_text = ''
-        list_of_boxes = []
-        pymu_file = fitz.open(file)
-        for textboxes in get_doc_text_boxes(pymu_file):
-            for text in textboxes:
-                if int(text[1]) != 55 and int(text[1]) != 881:
-                    if block:
-                        list_of_boxes.append(text)
-                    else:   
-                        drawboxes_text += (text[4] + sep)
+    def extract_to_txt(cls, folder='./', norm='NFKD'):
+        """Extract information from DODF to TXT.
 
-        if block:
-            return list_of_boxes
-        else:
-            drawboxes_text = unicodedata.normalize('NFKD', drawboxes_text).encode('ascii', 'ignore').decode('utf8')
-            return drawboxes_text
+        For each pdf file in data/dodfs, extract information from the
+        pdf and output it to txt.
+
+        """
+        pdfs_path_list = cls._get_pdfs_list()
+        cls._create_single_folder(folder + RESULTS_PATH)
+        cls._create_single_folder(folder + RESULTS_PATH_TXT)
+        txt_path_list = cls._get_txt_list()
+
+        for file in pdfs_path_list:
+            pdf_name = os.path.splitext(os.path.basename(file))[0]
+            if pdf_name not in txt_path_list:
+                cls._log(pdf_name)
+                text = cls.extract_text(file, norm=norm)
+                t_path = cls._struct_txt_subfolders(file)
+                f = open(folder + RESULTS_PATH_TXT + '/' + t_path, "w")
+                f.write(text)
+            else:
+                cls._log("TXT already exists")
+
+    @classmethod
+    def extract_to_json(cls, folder='./', titles_with_boxes=False, norm='NFKD'):
+        """Extract information from DODF to JSON.
+
+        Args:
+            folder: The folder containing the PDFs to be extracted
+            titles_with_boxes: Extract with titles
+            norm: What normalization to use. Normalizations can be found unicodedata library
+
+        For each pdf file in data/dodfs, extract information from the
+        pdf and output it to json.
+
+        """
+        # Get list of all downloaded pdfs
+        pdfs_path_list = cls._get_pdfs_list()
+        # Get list of existing json to not repeat work
+        json_path_list = cls._get_json_list()
+
+        cls._create_single_folder(folder + RESULTS_PATH)
+        cls._create_single_folder(folder + RESULTS_PATH_JSON)
+
+        for file in pdfs_path_list:
+            pdf_name = os.path.splitext(os.path.basename(file))[0]
+            # We do not want the system to repeat itself doing the same work
+            if pdf_name not in json_path_list:
+                # low cost extractions
+                if os.path.getsize(file) < 30000000:  # Remove in future.
+                    # Remove images that might still there from previous exec
+                    cls._log(pdf_name)
+                    if titles_with_boxes:
+                        content = cls.extract_structure(file, norm=norm)
+                    else:
+                        content = cls.extract_text(file, block=True, norm=norm)
+
+                    j_path = cls._struct_json_subfolders(file)
+                    json.dump(content, open(folder + RESULTS_PATH_JSON + '/' + j_path, "w",
+                                            encoding="utf-8"), ensure_ascii=False)
+            else:
+                cls._log("JSON already exists")
+
+    @classmethod
+    def _normalize_text(cls, text, form='NFKD'):
+        """Normalize text
+
+        Args:
+            text: The text to be normalized.
+            form: The normalized form accordingly to the unicodedata library'
+
+        Returns:
+            A string with the normalized text
+
+        """
+        normalized = unicodedata.normalize(form, text).encode('ascii', 'ignore').decode('utf8')
+        return normalized
 
     @classmethod
     def _extract_titles(cls, file):
