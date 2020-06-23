@@ -4,9 +4,10 @@
 
 Download monthly pdfs of DODFs, or just one in necessity of tests.
 
-Typical usage example:
-    fetcher = Fetcher(single=False)
-    fetcher.pull(start_date, end_date)
+Usage example::
+
+    $ fetcher = Fetcher(single=False)
+    $ fetcher.pull(start_date, end_date)
 
 """
 
@@ -307,7 +308,6 @@ class Fetcher(object):
                     else:
                         self._log("Jumping to the next")
 
-            # TODO: For some reason this crashes, FIXME
             self.prog_bar.update(1)
 
     def _log(self, message):
