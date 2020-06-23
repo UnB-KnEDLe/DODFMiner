@@ -17,12 +17,6 @@ class CLI(object):
                     standalone aplication.
         def_start_date: Default start date to download 01/19.
         def_end_date: Default end date to download 01/19.
-        def_single: Download a single PDF if True.
-        update_base: Update title and subtitle database if true.
-        def_dpi: Default dpi for the pdf2image.
-        def_file_format: Default file format output for pdf2image.
-        def_language:  Default language for tesseract
-        def_callback: Default callback to the extraction process
     """
 
     def __init__(self):
@@ -32,10 +26,11 @@ class CLI(object):
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
-        self.def_single = False
         self.pure_text = False
         self.block = False
         self.titles_with_boxes = False
+        self.save_path = './'
+        self.input_folder = './'
 
     def _new_group(self, name, subparser):
         """Create new argument group.
@@ -52,11 +47,13 @@ class CLI(object):
 
     def _download_parser(self):
         """Create parser for download configs."""
-        download_parser = self.subparsers.add_parser("fetch")
+        download_parser = self.subparsers.add_parser("downloader")
 
-        download_parser.add_argument('-s', '--single', dest='single',
-                                     default=self.def_single, type=bool,
-                                     help='Download a single DODF pdf file.')
+        help_text = 'Folder to output the download DODFs'
+        download_parser.add_argument('-sp', '--save_path', dest='save_path',
+                                     default=self.save_path, type=str,
+                                     help=help_text)
+
 
         help_text = 'Input the date in either mm/yy or mm-yy.'
         download_parser.add_argument('-sd', '--start_date', dest='start_date',
@@ -74,6 +71,10 @@ class CLI(object):
 
         group = self._new_group('Tesseract Configs', download_parser)
 
+        group.add_argument('-i', '--input_folder', dest='input_folder',
+                    default=self.input_folder, type=str,
+                    help='Path to the PDFs folder')
+
         group.add_argument('-b', '--block', dest='block',
                            default=self.block, type=bool,
                            help='Extract pure text in blocks of text')
@@ -86,10 +87,6 @@ class CLI(object):
                            default=self.titles_with_boxes, type=bool,
                            help='Extract text separated by titles')
 
-    def _prextract_parser(self):
-        """Create parser for pre-extraction configs."""
-        _ = self.subparsers.add_parser("prextract")
-
     def parse(self):
         """Create parser and parse the arguments.
 
@@ -99,7 +96,6 @@ class CLI(object):
         """
         self._download_parser()
         self._extract_content_parser()
-        self._prextract_parser()
         return self.parser.parse_args()
 
 
