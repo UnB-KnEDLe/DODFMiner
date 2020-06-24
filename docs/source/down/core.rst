@@ -2,12 +2,12 @@
 Downloader Module
 =================
 
-.. automodule:: dodfminer.downloader.fetcher
+.. automodule:: dodfminer.downloader.core
 
 Downloader Class
 ================
 
-.. autoclass:: dodfminer.downloader.fetcher.Fetcher
+.. autoclass:: dodfminer.downloader.core.Downloader
     :members:
     :private-members:
 

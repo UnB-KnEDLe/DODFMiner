@@ -1,1 +1,1 @@
-from dodfminer.extract import regex
+# from dodfminer.extract import regex
