@@ -4,10 +4,10 @@
 
 Contains class miner which is an interface to handle all extraction tasks.
 
-Typical usage example:
-    From DODFMiner execute:
-    python3 dodfminer
+Usage example::
 
+    dodfminer --help
+    
 """
 
 from dodfminer.downloader.core import Downloader
