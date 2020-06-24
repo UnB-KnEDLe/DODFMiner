@@ -32,9 +32,6 @@ class CLI(object):
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
-        self.pure_text = False
-        self.block = False
-        self.titles_with_boxes = False
         self.save_path = './data'
         self.input_folder = './data'
 
@@ -82,17 +79,9 @@ class CLI(object):
                     default=self.input_folder, type=str,
                     help='Path to the PDFs folder')
 
-        group.add_argument('-b', '--block', dest='block',
-                           default=self.block, type=bool,
-                           help='Extract pure text in blocks of text')
-
-        group.add_argument('-p', '--pure-text', dest='pure_text',
-                          default=self.pure_text, type=bool,
-                          help='Extract pure text in txt format')
-        
-        group.add_argument('-tb', '--titles-with-boxes', dest='titles_with_boxes',
-                           default=self.titles_with_boxes, type=bool,
-                           help='Extract text separated by titles')
+        group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
+                            default='pure-text', type=str,
+                            choices=['pure-text', 'blocks', 'with-titles']) 
 
     def parse(self):
         """Create parser and parse the arguments.

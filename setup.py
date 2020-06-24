@@ -13,7 +13,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dodfminer",
-    version="0.0.1",
+    version="1.0.0",
     author="Knedle",
     author_email="author@example.com",
     description="",
