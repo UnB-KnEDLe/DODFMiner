@@ -1,7 +1,8 @@
-[<img src="assets/img/knedle.jpg" width="1300" title="">](https://unb-knedle.github.io/)
+[<img src="docs/source/_static/knedle.svg" width="1300" title="">](https://unb-knedle.github.io/)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a8ab63922f34a63be4cb/maintainability)](https://codeclimate.com/github/UnB-KnEDLe/DODFMiner/maintainability)
+[![Documentation Status](https://readthedocs.org/projects/dodfminer/badge/?version=latest)](https://dodfminer.readthedocs.io/en/latest/?badge=latest)
 
 ### DODFMiner
 
@@ -20,6 +21,7 @@ To run the project environment, access our [installation guide](INSTALLATION.md)
 
 ### Documentation
 
+To access our documentation and understand how to install and use the library, [Read The Docs](dodfminer.readthedocs.io).
 
 ### Collaborators
 

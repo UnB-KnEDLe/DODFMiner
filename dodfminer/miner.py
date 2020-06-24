@@ -4,16 +4,15 @@
 
 Contains class miner which is an interface to handle all extraction tasks.
 
-Typical usage example:
-    From DODFMiner execute:
-    python3 dodfminer
+Usage example::
 
+    dodfminer --help
+    
 """
 
-from dodfminer.cli import GLOBAL_ARGS
-from dodfminer.downloader.fetcher import Fetcher
-from dodfminer.extract.content_extractor import ContentExtractor
-
+from dodfminer.downloader.core import Downloader
+from dodfminer.extract.core import ContentExtractor
+from dodfminer.cli import CLI
 
 class Miner(object):
     """Main DODFMiner class.
@@ -31,21 +30,22 @@ class Miner(object):
 
     def __init__(self):
         """Init Miner class to handle all the extraction process."""
-        self.args = GLOBAL_ARGS
+        self.args = CLI().parse()
 
     def download(self):
         """Download PDFs with parameters from CLI."""
-        fetcher = Fetcher(single=self.args.single)
-        fetcher.pull(self.args.start_date, self.args.end_date)
+        downloader = Downloader(save_path=self.args.save_path)
+        downloader.pull(self.args.start_date, self.args.end_date)
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        if self.args.pure_text:
-            ContentExtractor.extract_to_txt()
-        elif self.args.titles_with_boxes:
-            ContentExtractor.extract_to_json(titles_with_boxes=True)
-        else:
-            ContentExtractor.extract_to_json()
+        if self.args.type_of_extr == 'pure-text':
+            ContentExtractor.extract_to_txt(folder=self.args.input_folder)
+        elif self.args.type_of_extr == 'with-title':
+            ContentExtractor.extract_to_json(folder=self.args.input_folder,
+                                             titles_with_boxes=True)
+        elif self.args.type_of_extr == 'blocks':
+            ContentExtractor.extract_to_json(folder=self.args.input_folder)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
@@ -53,10 +53,8 @@ class Miner(object):
 
 def run():
     miner = Miner()
-    if miner.args.subparser_name == 'fetch':
+    if miner.args.subparser_name == 'downloader':
         miner.download()
-    elif miner.args.subparser_name == 'prextract':
-        miner._log("Prextract usage not Implemented")
     elif miner.args.subparser_name == 'extract':
         miner.extract_content()
     else:
