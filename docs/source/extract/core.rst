@@ -1,5 +1,7 @@
-================
-Extractor Module
-================
+====
+Core
+====
 
-.. automodule:: dodfminer.extract.content_extractor
+.. automodule:: dodfminer.extract.core
+    :members:
+    :private-members:
