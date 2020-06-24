@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  dodfminer:
+    environment:
+      - LANG=en_US.UTF-8
+    build:
+      context: .
+      network: host
+    network_mode: host
+    entrypoint:
+      - dodfminer
+    volumes:
+      - .:/home/App
+      - ${DATA_PATH}:/home/App/data/
