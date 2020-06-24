@@ -104,6 +104,3 @@ class CLI(object):
         self._download_parser()
         self._extract_content_parser()
         return self.parser.parse_args()
-
-
-GLOBAL_ARGS = CLI().parse()
