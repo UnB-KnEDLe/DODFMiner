@@ -1,3 +1,5 @@
+"""Regras regex para ato de Nomeacao de Comissionados."""
+
 from dodfminer.extract.regex.atos.base import Atos
 
 class NomeacaoComissionados(Atos):

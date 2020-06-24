@@ -1,3 +1,5 @@
+"""Regras regex para ato de Aposentadoria."""
+
 import re
 from dodfminer.extract.regex.atos.base import Atos
 
