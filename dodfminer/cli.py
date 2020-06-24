@@ -12,11 +12,17 @@ class CLI(object):
     Set Command Line Input groups and arguments.
 
     Attributes:
-        parser: An ArgumentParser object.
+        parser (:obj:`ArgumentParser`): An ArgumentParser object.
         subparsers: Adds subparser to the parser, each one is like a
                     standalone aplication.
-        def_start_date: Default start date to download 01/19.
-        def_end_date: Default end date to download 01/19.
+        def_start_date (str): Start date to download DODFS. Default start date to download 01/19.
+        def_end_date (str): End date to download DODFS. Default end date to download 01/19.
+        pure_text (bool): Enable extraction in pure text mode. Defaults to False.
+        block (bool): Enable extraction in bloc mode. Defaults to False.
+        titles_with_boxes (bool): Enable extraction in titles with boxes mode. Defaults to False.
+        save_path (str): Save path of the download. Defaults to './data'.
+        input_folder (str): Path where the extractor should look to files. Defaults to './data'.
+
     """
 
     def __init__(self):
@@ -37,6 +43,7 @@ class CLI(object):
 
         Args:
             name: Name of the group.
+            subparser: The subparser.
 
         Returns:
             The argparse group created.

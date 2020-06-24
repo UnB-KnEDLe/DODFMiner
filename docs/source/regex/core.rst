@@ -1,6 +1,6 @@
-====
-Core 
-====
+==========
+Regex Core 
+==========
 
 .. automodule:: dodfminer.extract.regex.core
     :members: _acts_ids

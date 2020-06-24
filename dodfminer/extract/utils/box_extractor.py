@@ -1,3 +1,5 @@
+"""Missing Doc."""
+
 import fitz
 from typing import List
 
@@ -27,10 +29,11 @@ def get_doc_text_boxes(doc: fitz.Document):
     """Returns list of list of extracted text blocks.
 
     Args:
-        doc: an opened fitz document
+        doc: an opened fitz document.
 
     Returns:
         List[List[tuple(float, float, float, float, str, int, int)]]
+
     """
 
     return [page.getTextBlocks() for page in doc]
@@ -40,10 +43,11 @@ def get_doc_text_lines(doc: fitz.Document):
 	"""Returns list of list of extracted text lines.
 
     Args:
-        doc: an opened fitz document
+        doc: an opened fitz document.
 
 	Returns:
 		List[List[tuple(float, float, float, str)]]
+
 	"""
 
 	return [_extract_page_lines_content(page) for page in doc]
@@ -52,7 +56,7 @@ def get_doc_text_lines(doc: fitz.Document):
 def _get_doc_img(doc: fitz.Document):
 	"""Returns list of list of image items.
 	
-	ObS: this function is not intented to be used by final users,
+	Note: this function is not intented to be used by final users,
 		but internally. Image `items` are described at:
 
 		https://pymupdf.readthedocs.io/en/latest/page/#Page.getImageBbox

@@ -1,10 +1,6 @@
 """Missing Doc."""
 
-# TODO: Improve Doc
-# TODO: Should this be a filter class?
-
 import functools
-
 
 class BoldUpperCase:
     """Filter functions useful for bold and upper case text.
@@ -13,7 +9,6 @@ class BoldUpperCase:
         This class is static and should not be instanciated.
 
     """
-
     TEXT_MIN = 4
     TRASH_WORDS = [
         "SUMÁRIO",
@@ -25,11 +20,17 @@ class BoldUpperCase:
 
     @classmethod
     def dict_text(cls, d):
-        """Evaluates to true if d['text'] matches the following conditions:
-            - all letters are uppercase
-            - does not contain 4 or more consecutive spaces
-            - has a len greater than BoldUpperCase.TEXT_MIN
-        ."""
+        """Check if text is title.
+        
+        Evaluates to true if d['text'] matches the following conditions:
+
+            - all letters are uppercase;
+            - does not contain 4 or more consecutive spaces;
+            - has a len greater than BoldUpperCase.TEXT_MIN/
+
+        Returns:
+            Boolean indicating if text is title.
+        """
         t = d['text'].strip().strip('.')
         cond1 = 4 * " " not in t
         cond2 = len(t) > cls.TEXT_MIN
@@ -38,24 +39,34 @@ class BoldUpperCase:
 
     @classmethod
     def dict_bold(cls, d):
-        """Evaluates do True if d['flags'] matches the following conditions:
+        """Hmm.
+        
+        Evaluates do True if d['flags'] matches the following conditions:
+        
             - is one of the values in BoldUpperCase.BOLD_FLAGS
-        ."""
+
+        """
         flags = d['flags']
         return flags in cls.BOLD_FLAGS
 
     @classmethod
     def params(cls, params_sep_underscore):
-        """Returns an function which evaluates a conjunction over the results
+        """Hmm.
+        
+        Returns an function which evaluates a conjunction over the results
         of all filters specified by params_sep_underscore.
 
         params_sep_underscore must be a compound string
         wich will be splited based on '_'. Each os these strings
         specify a different filter.
-        Ex:
-          params("font_text") returns something like:
-            def gambs(x):
-              return dict_font(x) and dict_text(x)
+        
+        :Example:
+
+            params("font_text") returns something like::
+
+                def gambs(x):
+                    return dict_font(x) and dict_text(x)
+    
         """
         func_lis: list = []
         for criteria in params_sep_underscore.split('_'):
