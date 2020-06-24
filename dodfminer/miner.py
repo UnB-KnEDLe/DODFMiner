@@ -11,7 +11,7 @@ Typical usage example:
 """
 
 from dodfminer.downloader.core import Downloader
-from dodfminer.extract.content_extractor import ContentExtractor
+from dodfminer.extract.core import ContentExtractor
 from dodfminer.cli import CLI
 
 class Miner(object):
