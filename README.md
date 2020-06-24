@@ -21,7 +21,7 @@ To run the project environment, access our [installation guide](INSTALLATION.md)
 
 ### Documentation
 
-To access our documentation and understand how to install and use the library, [Read The Docs](dodfminer.readthedocs.io).
+To access our documentation and understand how to install and use the library, [Read The Docs](https://dodfminer.readthedocs.io).
 
 ### Collaborators
 
