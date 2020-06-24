@@ -39,12 +39,12 @@ class Miner(object):
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        if self.args.pure_text:
+        if self.args.type_of_extr == 'pure-text':
             ContentExtractor.extract_to_txt(folder=self.args.input_folder)
-        elif self.args.titles_with_boxes:
+        elif self.args.type_of_extr == 'with-title':
             ContentExtractor.extract_to_json(folder=self.args.input_folder,
                                              titles_with_boxes=True)
-        else:
+        elif self.args.type_of_extr == 'blocks':
             ContentExtractor.extract_to_json(folder=self.args.input_folder)
 
     def _log(self, msg):
