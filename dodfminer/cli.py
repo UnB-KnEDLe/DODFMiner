@@ -27,7 +27,7 @@ class CLI(object):
 
     def __init__(self):
         """Init CLI class with default values."""
-        self.parser = ArgumentParser(prog="", usage='',
+        self.parser = ArgumentParser(prog="DODFMiner", usage='',
                                      description="", epilog='')
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
