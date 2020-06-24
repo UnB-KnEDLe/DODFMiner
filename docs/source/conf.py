@@ -66,7 +66,7 @@ html_theme_options = {
     'display_version': True
 }
 
-autodoc_mock_imports = []
+autodoc_mock_imports = ['fitz', 'pandas', 'numpy']
 
 def setup(app):
     app.add_css_file('css/modify.css')
