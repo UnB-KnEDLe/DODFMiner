@@ -81,8 +81,9 @@ class CLI(object):
                     help='Path to the PDFs folder')
 
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
-                            default='pure-text', type=str,
-                            choices=['pure-text', 'blocks', 'with-titles']) 
+                           default='pure-text', type=str,
+                           choices=['pure-text', 'blocks', 'with-titles'],
+                           help="Type of text extraction") 
 
     def parse(self):
         """Create parser and parse the arguments.
