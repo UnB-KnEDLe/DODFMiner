@@ -1,7 +1,6 @@
 FROM ubuntu:18.04
 
 RUN apt-get update -y \
-    && apt-get install tesseract-ocr -y \
     && apt-get install software-properties-common -y \
     && apt-get install -y poppler-utils \
     && apt-get install -y locales && locale-gen en_US.UTF-8
@@ -19,8 +18,7 @@ ADD . /home/App
 WORKDIR /home/App
 # COPY requirements.txt ./
 # COPY . .
-COPY por.traineddata /usr/share/tesseract-ocr/4.00/tessdata/
-RUN pip3 install -r requirements.txt
+RUN pip3 install -e .
 
 VOLUME ["./data"]
 
