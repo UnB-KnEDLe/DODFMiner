@@ -1,3 +1,5 @@
+"""Regras regex para ato de Substituição."""
+
 import re
 from dodfminer.extract.regex.atos.base import Atos
 

@@ -1,3 +1,5 @@
+"""Regras regex para ato de Abono de Permanencia."""
+
 import re
 from dodfminer.extract.regex.atos.base import Atos
 
