@@ -8,7 +8,6 @@ services:
       network: host
     network_mode: host
     entrypoint:
-      - python3
       - dodfminer
     volumes:
       - .:/home/App
