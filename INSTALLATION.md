@@ -47,7 +47,7 @@ Now, with the image created, the docker-compose can generate instances (containe
 ![image](./dodfminer-docker.jpg)
 
 ```sh
-DATA_PATH=/path/to/save/files/ \
+export DATA_PATH=/path/to/save/files/ \
 sudo -E docker-compose run dodfminer -sd 01/19 -ed 01/19
 ```
 This command executes the download task, where -st is the start date and -ed is the end date, representing the interval that the DODFs will be downloaded.
@@ -55,7 +55,7 @@ This command executes the download task, where -st is the start date and -ed is 
 Other arguments can be found excuting the command:
 
 ```sh
-DATA_PATH=/path/to/save/files/ \
+export DATA_PATH=/path/to/save/files/ \
 sudo -E docker-compose run dodfminer --help
 ```
 Notes:
