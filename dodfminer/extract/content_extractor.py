@@ -135,18 +135,18 @@ class ContentExtractor:
         pdf and output it to txt.
 
         """
-        pdfs_path_list = cls._get_pdfs_list()
-        cls._create_single_folder(folder + RESULTS_PATH)
-        cls._create_single_folder(folder + RESULTS_PATH_TXT)
-        txt_path_list = cls._get_txt_list()
+        pdfs_path_list = cls._get_pdfs_list(folder)
+        cls._create_single_folder(os.path.join(folder, RESULTS_PATH))
+        cls._create_single_folder(os.path.join(folder, RESULTS_PATH_TXT))
+        txt_path_list = cls._get_txt_list(folder)
 
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             if pdf_name not in txt_path_list:
                 cls._log(pdf_name)
                 text = cls.extract_text(file, norm=norm)
-                t_path = cls._struct_txt_subfolders(file)
-                f = open(folder + RESULTS_PATH_TXT + '/' + t_path, "w")
+                t_path = cls._struct_subfolders(file, False, folder)
+                f = open(os.path.join(folder, RESULTS_PATH_TXT, t_path), "w")
                 f.write(text)
             else:
                 cls._log("TXT already exists")
@@ -165,12 +165,12 @@ class ContentExtractor:
 
         """
         # Get list of all downloaded pdfs
-        pdfs_path_list = cls._get_pdfs_list()
+        pdfs_path_list = cls._get_pdfs_list(folder)
         # Get list of existing json to not repeat work
-        json_path_list = cls._get_json_list()
+        json_path_list = cls._get_json_list(folder)
 
-        cls._create_single_folder(folder + RESULTS_PATH)
-        cls._create_single_folder(folder + RESULTS_PATH_JSON)
+        cls._create_single_folder(os.path.join(folder, RESULTS_PATH))
+        cls._create_single_folder(os.path.join(folder, RESULTS_PATH_JSON))
 
         for file in pdfs_path_list:
             pdf_name = os.path.splitext(os.path.basename(file))[0]
@@ -184,9 +184,8 @@ class ContentExtractor:
                         content = cls.extract_structure(file, norm=norm)
                     else:
                         content = cls.extract_text(file, block=True, norm=norm)
-
-                    j_path = cls._struct_json_subfolders(file)
-                    json.dump(content, open(folder + RESULTS_PATH_JSON + '/' + j_path, "w",
+                    j_path = cls._struct_subfolders(file, True, folder)
+                    json.dump(content, open(os.path.join(folder, RESULTS_PATH_JSON, j_path), "w",
                                             encoding="utf-8"), ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
@@ -234,7 +233,7 @@ class ContentExtractor:
             return title_database
 
     @classmethod
-    def _get_pdfs_list(cls):
+    def _get_pdfs_list(cls, folder):
         """Get DODFs list from the path.
 
         Returns:
@@ -242,14 +241,15 @@ class ContentExtractor:
 
         """
         pdfs_path_list = []
-        for dp, _, fn in os.walk(os.path.expanduser('./data/dodfs')):
+        for dp, _, fn in os.walk(os.path.expanduser(os.path.join(folder))):
             for f in fn:
-                pdfs_path_list.append(os.path.join(dp, f))
+                if '.pdf' in f:
+                    pdfs_path_list.append(os.path.join(dp, f))
 
         return pdfs_path_list
 
     @classmethod
-    def _get_json_list(cls):
+    def _get_json_list(cls, folder):
         """Get list of exisiting JSON from the path.
 
         Returns:
@@ -257,7 +257,7 @@ class ContentExtractor:
 
         """
         aux = []
-        for dp, _, fn in os.walk(os.path.expanduser(RESULTS_PATH_JSON)):
+        for dp, _, fn in os.walk(os.path.expanduser(os.path.join(folder, RESULTS_PATH_JSON))):
             for f in fn:
                 aux.append(os.path.join(dp, f))
 
@@ -268,7 +268,7 @@ class ContentExtractor:
         return json_path_list
 
     @classmethod
-    def _get_txt_list(cls):
+    def _get_txt_list(cls, folder):
         """Get list of exisiting TXT from the path.
 
         Returns:
@@ -276,7 +276,7 @@ class ContentExtractor:
 
         """
         aux = []
-        for dp, _, fn in os.walk(os.path.expanduser(RESULTS_PATH_TXT)):
+        for dp, _, fn in os.walk(os.path.expanduser(os.path.join(folder, RESULTS_PATH_TXT))):
             for f in fn:
                 aux.append(os.path.join(dp, f))
 
@@ -287,7 +287,7 @@ class ContentExtractor:
         return txt_path_list
 
     @classmethod
-    def _struct_json_subfolders(cls, path):
+    def _struct_subfolders(cls, path, json_f, folder):
         """Create directory for the JSON.
 
         Using the same standart from the DODFs directory tree. Create the
@@ -300,41 +300,17 @@ class ContentExtractor:
             The path created for the JSON to be saved.
 
         """
+        type_f = '.json' if json_f else '.txt'
+        res_path = RESULTS_PATH_JSON if json_f else RESULTS_PATH_TXT
+
+        path = path.replace(folder, "")
         splited = path.split('/')
-        splited = splited[3:]
         basename = splited[-1].split('.')
-        basename = basename[0] + '.json'
+        basename = basename[0] + type_f
         splited[-1] = basename
-        final_path = '/'.join(splited)
-        path = Path(RESULTS_PATH_JSON + '/' + '/'.join(splited[:-1]))
-        try:
-            path.mkdir(parents=True)
-        except FileExistsError:
-            pass
-
-        return final_path
-
-    @classmethod
-    def _struct_txt_subfolders(cls, path):
-        """Create directory for the TXT.
-
-        Using the same standart from the DODFs directory tree. Create the
-        TXTs folder as same.
-
-        Raises:
-            FileExistsError: The folder being created is already there.
-
-        Return:
-            The path created for the TXT to be saved.
-
-        """
-        splited = path.split('/')
-        splited = splited[3:]
-        basename = splited[-1].split('.')
-        basename = basename[0] + '.txt'
-        splited[-1] = basename
-        final_path = '/'.join(splited)
-        path = Path(RESULTS_PATH_TXT + '/' + '/'.join(splited[:-1]))
+        final_path = '/'.join(splited[1:])
+        final_path = os.path.join(folder, res_path, final_path)
+        path = Path(os.path.join(folder, res_path, *splited[:-1]))
         try:
             path.mkdir(parents=True)
         except FileExistsError:
