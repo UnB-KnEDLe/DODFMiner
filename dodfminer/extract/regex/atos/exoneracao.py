@@ -1,3 +1,5 @@
+"""Regras regex para ato de Exoneração."""
+
 from dodfminer.extract.regex.atos.base import Atos
 
 class Exoneracao(Atos):
