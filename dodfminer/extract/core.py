@@ -7,8 +7,8 @@ avaiable to extract the DODF to JSON
 
 Usage example::
 
-    ContentExtractor.extract_text(file)
-    ContentExtractor.extract_to_txt(file)
+    pdf_text = ContentExtractor.extract_text(file)
+    ContentExtractor.extract_to_txt(folder)
 
 """
 
