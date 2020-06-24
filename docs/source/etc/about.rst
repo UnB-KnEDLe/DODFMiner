@@ -10,5 +10,6 @@ The project “KnEDLe - Knowledge Extraction from Documents of Legal content” 
 `Check our website`_
 --------------------
 
+
 .. _Check our website:
     https://unb-knedle.github.io
