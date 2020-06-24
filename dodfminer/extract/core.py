@@ -5,9 +5,11 @@
 Contains class ContentExtractor which have to public functions
 avaiable to extract the DODF to JSON
 
-Typical usage example:
+Usage example::
+
     ContentExtractor.extract_text(file)
     ContentExtractor.extract_to_txt(file)
+
 """
 
 import os
@@ -52,7 +54,7 @@ class ContentExtractor:
             are the coordinates of the box (x0, y0, x1, y1) end the last
             is the text from the box.
 
-            The string returned correspond to the text from all PDF
+            The string returned correspond to the text from all PDF.
 
         """
         drawboxes_text = ''
@@ -75,15 +77,16 @@ class ContentExtractor:
 
     @classmethod
     def extract_structure(cls, file, norm='NFKD'):
-        """
-            Extract boxes of text with your respective titles
+        """Extract boxes of text with your respective titles.
+
         Args:
             file: The DODF to extract the titles.
 
         Returns:
             A dictionaty with the blocks organized by title
 
-            Example:
+            Example::
+
                 {
                     "Title": [
                         [
@@ -191,14 +194,14 @@ class ContentExtractor:
 
     @classmethod
     def _normalize_text(cls, text, form='NFKD'):
-        """Normalize text
+        """Normalize text.
 
         Args:
             text: The text to be normalized.
-            form: The normalized form accordingly to the unicodedata library'
+            form: The normalized form accordingly to the unicodedata library'.
 
         Returns:
-            A string with the normalized text
+            A string with the normalized text.
 
         """
         normalized = unicodedata.normalize(form, text).encode('ascii', 'ignore').decode('utf8')

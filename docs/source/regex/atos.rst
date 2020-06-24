@@ -2,6 +2,8 @@
 Acts
 ====
 
+.. contents:: Table of Contents
+
 Acts are build always as a child class from the Base class :obj:`Atos`. Following are the base class structure
 and a guide for implementating your own act. Also, a list of implementated and missing acts are presented.
 

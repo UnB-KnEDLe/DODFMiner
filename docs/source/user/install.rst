@@ -2,6 +2,8 @@
 Installation
 ============
 
+.. contents:: Table of Contents
+
 DODFMiner is currently only supported on Linux and OSX. It may be possible to install on Windows, though this hasn’t been extensively tested. 
 
 Requirements
@@ -39,9 +41,15 @@ variable as the location to save the downloaded DODF PDFs and the extracted JSON
 To build and execute the image the docker and docker-compose
 need to be correct installed:
 
-1. [Install Docker](https://docs.docker.com/compose/environment-variables/)
+1. `Install Docker`_
 
-2. [Install Docker Compose](https://docs.docker.com/compose/install/)
+2. `Install Docker Compose`_
+
+.. _Install Docker:
+    https://docs.docker.com/compose/environment-variables/
+
+.. _Install Docker Compose:
+    https://docs.docker.com/compose/install/
 
 After the installation, the first thing that docker needs is an image. To create the image run the following command in the root of the project::
 

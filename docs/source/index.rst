@@ -1,7 +1,7 @@
 Welcome to DODFMiner's documentation!
 =====================================
 
-.. image:: _static/knedle.jpg
+.. image:: _static/miner.svg
 
 .. toctree::
   :maxdepth: 2

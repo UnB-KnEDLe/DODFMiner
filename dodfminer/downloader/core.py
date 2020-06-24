@@ -6,7 +6,7 @@ Download monthly pdfs of DODFs, or just one in necessity of tests.
 
 Usage example::
 
-    donwloader = Donwloader(single=False)
+    downloader = Downloader(single=False)
     downloader.pull(start_date, end_date)
 
 """
@@ -29,6 +29,9 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
 class Downloader(object):
     """Responsible for download the DODF Pdfs.
 
+    Args:
+        save_path (str): Path to save the downloads.
+
     Attributes:
         save_path: Path to save the downloads.
         download_path: Folder in which the downloads will be stored.
@@ -37,12 +40,6 @@ class Downloader(object):
     """
 
     def __init__(self, save_path='./'):
-        """Construct Method for the Donwloadr class.
-
-        Args:
-            single: Boolean indicating to download one or more DODFs
-
-        """
         self.save_path = save_path
         self.download_path = os.path.join(self.save_path, 'dodfs')
         self.prog_bar = None
@@ -105,7 +102,7 @@ class Downloader(object):
         Uses the date as parameter to download.
 
         Args:
-            date: The date to download the DODF
+            date (:obj:`datetime`): The date to download the DODF
 
         Returns:
             The complete url to the buriti website to download the DODF.
@@ -143,10 +140,10 @@ class Downloader(object):
         """Make downloadable url.
 
         Args:
-            href: The dodf part of url to be downloaded
+            href: The dodf part of url to be downloaded.
 
         Returns:
-            The url of the dodf to download
+            The url of the dodf to download.
 
         """
         url = "http://www.buriti.df.gov.br/ftp/"
@@ -159,8 +156,8 @@ class Downloader(object):
         """Log error messages in download.
 
         Args:
-            url: The failing url to the website.
-            error: The kind of error happening
+            url (str): The failing url to the website.
+            error (str): The kind of error happening.
 
         """
         self._log(error)
@@ -172,11 +169,13 @@ class Downloader(object):
         """Create the souplink to download the pdf.
 
         Args:
-            url: The website url to download the DODF
+            url (str): The website url to download the DODF.
+ 
         Returns:
-            An BeautifulSoup object which html queries are made
+            An :obj:`BeautifulSoup` which html queries are made.
+
         Raises:
-            RequestException: log error in download
+            RequestException: log error in download.
 
         """
         headers = {'User-Agent': 'Chrome/71.0.3578.80'}
@@ -192,8 +191,8 @@ class Downloader(object):
         Prevents redownloads.
 
         Args:
-            path: The path where the file might be
-
+            path (str): The path where the file might be
+ 
         Returns:
             Boolean indicating if file does really exists.
 
@@ -211,11 +210,11 @@ class Downloader(object):
             Might be time consuming depending on bandwidth.
 
         Args:
-            url: the pdf url
-            path: the path to save the pdf
+            url (str): The pdf url.
+            path (str): The path to save the pdf.
 
         Raises:
-            RequestException: Error in case the request to download fails
+            RequestException: Error in case the request to download fails.
 
         """
         try:
@@ -231,8 +230,8 @@ class Downloader(object):
         """Create and return the folder for the year and month being download.
 
         Args:
-            year: The year respective to the folder.
-            actual_date: The date in which the downloaded DODF corresponds.
+            year (int): The year respective to the folder.
+            actual_date (:obj:`datetime`): The date in which the downloaded DODF corresponds.
 
         Returns:
             The path to the actual month in which the download is being made.
@@ -248,7 +247,7 @@ class Downloader(object):
         return month_path
 
     def pull(self, start_date, end_date):
-        """Start the download of the DODF pdfs.
+        """Make the download of the DODFs pdfs.
 
         All dodfs are downloaded from start_date to end_date inclusively.
         The Pdfs are saved in a folder called "data" inside the project folder.
@@ -258,8 +257,8 @@ class Downloader(object):
             be changed due to some nonsense software engineer decision.
 
         Args:
-            start_date: the start date in format mm/yy.
-            end_date: the start date in format mm/yy.
+            start_date (str): The start date in format mm/yy.
+            end_date (str): The start date in format mm/yy.
 
         """
         # Convert string to datetime and calculate ammount to be used in
@@ -286,8 +285,6 @@ class Downloader(object):
             url = self._make_url(actual_date)
             a_list = self._get_soup_link(url)
             year = actual_date.year
-            # amt = len(a_list.find_all('a', href=True))
-            # self.prog_bar.total = amt
             for a in a_list.find_all('a', href=True):
                 a_url = self._make_href_url(a['href'])
                 download_page = self._get_soup_link(a_url)
@@ -310,4 +307,10 @@ class Downloader(object):
             self.prog_bar.update(1)
 
     def _log(self, message):
+        """Logs a message following the downloader pattern.
+
+        Args:
+            message (str): The message to be logged.
+
+        """
         self.prog_bar.write("[DOWNLOADER] " + str(message))

@@ -1,6 +1,6 @@
-=====
-Utils 
-=====
+===========
+Regex Utils 
+===========
 
 .. automodule:: dodfminer.extract.regex.helper
     :members:
