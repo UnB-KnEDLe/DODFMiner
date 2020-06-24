@@ -29,8 +29,8 @@ class CLI(object):
         self.pure_text = False
         self.block = False
         self.titles_with_boxes = False
-        self.save_path = './'
-        self.input_folder = './'
+        self.save_path = './data'
+        self.input_folder = './data'
 
     def _new_group(self, name, subparser):
         """Create new argument group.

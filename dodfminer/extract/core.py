@@ -146,7 +146,7 @@ class ContentExtractor:
                 cls._log(pdf_name)
                 text = cls.extract_text(file, norm=norm)
                 t_path = cls._struct_subfolders(file, False, folder)
-                f = open(os.path.join(folder, RESULTS_PATH_TXT, t_path), "w")
+                f = open(t_path, "w")
                 f.write(text)
             else:
                 cls._log("TXT already exists")
@@ -185,8 +185,7 @@ class ContentExtractor:
                     else:
                         content = cls.extract_text(file, block=True, norm=norm)
                     j_path = cls._struct_subfolders(file, True, folder)
-                    json.dump(content, open(os.path.join(folder, RESULTS_PATH_JSON, j_path), "w",
-                                            encoding="utf-8"), ensure_ascii=False)
+                    json.dump(content, open(j_path, "w", encoding="utf-8"), ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
 
