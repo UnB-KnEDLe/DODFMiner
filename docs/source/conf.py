@@ -59,6 +59,7 @@ html_theme = 'sphinx_rtd_theme'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 html_logo = '_static/miner.svg'
+html_favicon = '_static/mine-icon.png'
 
 html_theme_options = {
     'logo_only': True,

@@ -6,7 +6,7 @@ Download monthly pdfs of DODFs, or just one in necessity of tests.
 
 Usage example::
 
-    downloader = Downloader(single=False)
+    downloader = Downloader()
     downloader.pull(start_date, end_date)
 
 """
@@ -48,7 +48,7 @@ class Downloader(object):
         """Convert the date to datetime.
 
         Args:
-            date: The date to be converted in string format.
+            date (:obj:`datetime`): The date to be converted in string format.
 
         Returns:
             Return the date formated in string now as datetime datatype.
@@ -74,7 +74,7 @@ class Downloader(object):
         exists, or raise an error if the folder cannot be created.
 
         Args:
-            path: The path to be created
+            path (str): The path to be created
 
         Raises:
             OSError: Error creating the directory.
@@ -121,7 +121,7 @@ class Downloader(object):
         """Preprocess the URL to be aceptable by the souplink.
 
         Args:
-            href: The dodf url part.
+            href (str): The dodf url part.
 
         Returns:
             The desired url preprocessed.
@@ -140,7 +140,7 @@ class Downloader(object):
         """Make downloadable url.
 
         Args:
-            href: The dodf part of url to be downloaded.
+            href (str): The dodf part of url to be downloaded.
 
         Returns:
             The url of the dodf to download.
