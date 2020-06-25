@@ -233,10 +233,16 @@ def get_first_title_cands(extracted_blocks, page_width):
     span_lis = []
     for block in extracted_blocks:
         span_lis.extend(get_block_spans((block)))
+    # note: maybe this should not be done since it would instead filter 
+    
+    # TODO: procurar por seçãoI apenas, depois por seçãoII, e 
+    # caso ainda n tenha encontrado, por seçãoIII.
+
+    # TODO: add index LOGO ANTES de ordenar; ou seja, fazer
+    # uma linha só p isso
     cands = [(idx, sp) for (idx, sp) in enumerate(span_lis) if (
         re.sub(r'[ \n]+', '', sp['text']).startswith('SEÇÃOI')
         and is_bold(sp['flags'])
-
     )]
     # Unfortunately, some older PDF files has "SEÇÃO I" in bold fonts
     # Proposed solution: sort candidates by decreasing font size
