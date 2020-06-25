@@ -4,8 +4,8 @@ from typing import List
 def _extract_page_lines_content(page):
 	"""Extracts page lines;
 
-	Args:
-		page: fitz.fitz.Page object to have its bold content extracted.
+    Args:
+        page: fitz.fitz.Page object to have its bold content extracted.
 
 	Returns:
 		List[tuple(float, float, float, float, str)]
@@ -24,23 +24,23 @@ def _extract_page_lines_content(page):
 
 
 def get_doc_text_boxes(doc: fitz.Document):
-	"""Returns list of list of extracted text blocks.
+    """Returns list of list of extracted text blocks.
 
-	Args:
-		doc: an opened fitz document
+    Args:
+        doc: an opened fitz document
 
-	Returns:
-		List[List[tuple(float, float, float, float, str, int, int)]]
-	"""
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int)]]
+    """
 
-	return [page.getTextBlocks() for page in doc]
+    return [page.getTextBlocks() for page in doc]
 
 
 def get_doc_text_lines(doc: fitz.Document):
 	"""Returns list of list of extracted text lines.
 
-	Args:
-		doc: an opened fitz document
+    Args:
+        doc: an opened fitz document
 
 	Returns:
 		List[List[tuple(float, float, float, str)]]
@@ -57,8 +57,8 @@ def _get_doc_img(doc: fitz.Document):
 
 		https://pymupdf.readthedocs.io/en/latest/page/#Page.getImageBbox
 
-	Args:
-		doc: an opened fitz document
+    Args:
+        doc: an opened fitz document
 
 	Returns:
 		List[List[tuple(int, int, int, int, str, str, str, str, int)]]

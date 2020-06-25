@@ -9,12 +9,12 @@ from fitz.utils import getColor, getColorList
 
 
 class LINE_WIDTH(MetaDataClass, metaclass=MetaDataClass):
-	_values = {
-		'img': 3,
-		'txt': 2,
-		'word': 1,
-		'line': 1,
-	}
+    _values = {
+        'img': 3,
+        'txt': 2,
+        'word': 1,
+        'line': 1,
+    }
 
 class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
 	_values = {
@@ -29,62 +29,62 @@ class ELEMENT_COLOR(MetaDataClass, metaclass=MetaDataClass):
 
 # # https://pymupdf.readthedocs.io/en/latest/faq/#drawing-and-graphics
 def _recover_words(words, rect, thresh_divisor=5):
-	""" Word recovery.
+    """ Word recovery.
 
-	Notes:
-		Method 'getTextWords()' does not try to recover words, if their single
-		letters do not appear in correct lexical order. This function steps in
-		here and creates a new list of recoveRED words.
-	Args:
-		words: list of words as created by 'getTextWords()'
-		rect: rectangle to consider (usually the full page)
-		thresh_quocient: TODO 
-	Returns:
-		List of recoveRED words. Same format as 'getTextWords', but left out
-		block, line and word number - a list of items of the following format:
-		[x0, y0, x1, y1, "word"]
-	"""
-	# build my sublist of words contained in given rectangle
-	mywords = [w for w in words if fitz.Rect(w[:4]) in rect]
+    Notes:
+        Method 'getTextWords()' does not try to recover words, if their single
+        letters do not appear in correct lexical order. This function steps in
+        here and creates a new list of recoveRED words.
+    Args:
+        words: list of words as created by 'getTextWords()'
+        rect: rectangle to consider (usually the full page)
+        thresh_quocient: TODO
+    Returns:
+        List of recoveRED words. Same format as 'getTextWords', but left out
+        block, line and word number - a list of items of the following format:
+        [x0, y0, x1, y1, "word"]
+    """
+    # build my sublist of words contained in given rectangle
+    mywords = [w for w in words if fitz.Rect(w[:4]) in rect]
 
-	# sort the words by lower line, then by word start coordinate
-	mywords.sort(key=itemgetter(3, 0))  # sort by y1, x0 of word rectangle
+    # sort the words by lower line, then by word start coordinate
+    mywords.sort(key=itemgetter(3, 0))  # sort by y1, x0 of word rectangle
 
-	# build word groups on same line
-	grouped_lines = groupby(mywords, key=itemgetter(3))
+    # build word groups on same line
+    grouped_lines = groupby(mywords, key=itemgetter(3))
 
-	words_out = []  # we will return this
+    words_out = []  # we will return this
 
-	# iterate through the grouped lines
-	# for each line coordinate ("_"), the list of words is given
-	for _, words_in_line in grouped_lines:
-		for i, w in enumerate(words_in_line):
-			if i == 0:  # store first word
-				x0, y0, x1, y1, word = w[:5]
-				continue
+    # iterate through the grouped lines
+    # for each line coordinate ("_"), the list of words is given
+    for _, words_in_line in grouped_lines:
+        for i, w in enumerate(words_in_line):
+            if i == 0:  # store first word
+                x0, y0, x1, y1, word = w[:5]
+                continue
 
-			r = fitz.Rect(w[:4])  # word rect
+            r = fitz.Rect(w[:4])  # word rect
 
-			# Compute word distance threshold as (100 / thresh_divisor)% of width of 1 letter.
-			# So we should be safe joining text pieces into one word if they
-			# have a distance shorter than that.
-			threshold = r.width / len(w[4]) / thresh_divisor
-			if r.x0 <= x1 + threshold:  # join with previous word
-				word += w[4]  # add string
-				x1 = r.x1  # new end-of-word coordinate
-				y0 = max(y0, r.y0)  # extend word rect upper bound
-				continue
+            # Compute word distance threshold as (100 / thresh_divisor)% of width of 1 letter.
+            # So we should be safe joining text pieces into one word if they
+            # have a distance shorter than that.
+            threshold = r.width / len(w[4]) / thresh_divisor
+            if r.x0 <= x1 + threshold:  # join with previous word
+                word += w[4]  # add string
+                x1 = r.x1  # new end-of-word coordinate
+                y0 = max(y0, r.y0)  # extend word rect upper bound
+                continue
 
-			# now have a new word, output previous one
-			words_out.append([x0, y0, x1, y1, word])
+            # now have a new word, output previous one
+            words_out.append([x0, y0, x1, y1, word])
 
-			# store the new word
-			x0, y0, x1, y1, word = w[:5]
+            # store the new word
+            x0, y0, x1, y1, word = w[:5]
 
-		# output word waiting for completion
-		words_out.append([x0, y0, x1, y1, word])
+        # output word waiting for completion
+        words_out.append([x0, y0, x1, y1, word])
 
-	return words_out
+    return words_out
 
 
 def draw(doc, img=True, txt=True, line=True, word=False, color_schema={}, width_schema={}):
@@ -205,52 +205,50 @@ def draw2(doc, img=True, txt=True, line=True, word=False, color_schema={}, width
 
 class DrawBoxes:
 
-	_COLOR_MAP = dict(ELEMENT_COLOR.items())
+    _COLOR_MAP = dict(ELEMENT_COLOR.items())
 
-	_WIDTH_MAP = dict(LINE_WIDTH.items())
+    _WIDTH_MAP = dict(LINE_WIDTH.items())
 
-	def __init__(self, path, color_schema={}, width_schema={}):
-		self._path = path
-		self._fp = fitz.open(path)
-		
-		if not isinstance(color_schema, dict):
-			raise TypeError("'color_schema' should be an dict instance.")
-		
-		self._color_schema = self._COLOR_MAP.copy()
-		self._color_schema.update(color_schema)
+    def __init__(self, path, color_schema={}, width_schema={}):
+        self._path = path
+        self._fp = fitz.open(path)
 
-		self._width_schema = self._WIDTH_MAP.copy()
-		self._width_schema.update(width_schema)	
-		self._color_schema = {k: tuple(v) for (k,v) in self._color_schema.items()}
+        if not isinstance(color_schema, dict):
+            raise TypeError("'color_schema' should be an dict instance.")
 
+        self._color_schema = self._COLOR_MAP.copy()
+        self._color_schema.update(color_schema)
 
-	def draw(self, inplace=True, img=True, txt=True, line=True, word=False,
-			color_schema={}, width_schema={}):
-		"""Wraps `draw` function passing instance parameters if None is provided.
-
-		Args:
-			inplace: wheter to modify instance document
-			or to create a copy and draw on it
-
-			img: check `draw` documentation
-			txt: check `draw` documentation
-			line: check `draw` documentation
-			word: check `draw` documentation
-			color_schema: dict mapping string to 3-uples whose each
-						elements must be in range [0, 1]
-			width_schema: dict mapping string to integers
-		
-		Returns:
-			the annotated document.
-		
-		"""
-		if color_schema: self._color_schema.update(color_schema)
-		if width_schema: self._color_schema.update(width_schema)
-		return draw(self._fp if inplace else fitz.open(self._fp.name),
-			img=img, txt=txt, line=line, word=word,
-			color_schema=self._color_schema, width_schema=self._width_schema)
-
-	def save(self, path):
-		self._fp.save(path)
+        self._width_schema = self._WIDTH_MAP.copy()
+        self._width_schema.update(width_schema)
+        self._color_schema = {k: tuple(v) for (k,v) in self._color_schema.items()}
 
 
+    def draw(self, inplace=True, img=True, txt=True, line=True, word=False,
+            color_schema={}, width_schema={}):
+        """Wraps `draw` function passing instance parameters if None is provided.
+
+        Args:
+            inplace: wheter to modify instance document
+            or to create a copy and draw on it
+
+            img: check `draw` documentation
+            txt: check `draw` documentation
+            line: check `draw` documentation
+            word: check `draw` documentation
+            color_schema: dict mapping string to 3-uples whose each
+                        elements must be in range [0, 1]
+            width_schema: dict mapping string to integers
+
+        Returns:
+            the annotated document.
+
+        """
+        if color_schema: self._color_schema.update(color_schema)
+        if width_schema: self._color_schema.update(width_schema)
+        return draw(self._fp if inplace else fitz.open(self._fp.name),
+            img=img, txt=txt, line=line, word=word,
+            color_schema=self._color_schema, width_schema=self._width_schema)
+
+    def save(self, path):
+        self._fp.save(path)

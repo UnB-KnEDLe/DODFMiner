@@ -32,7 +32,6 @@ class MetaDataClass(type):
 		"""
 		return cls._values.items()
 
-
 	@classmethod
 	def values(cls):
 		"""Gets class internal values.
@@ -53,7 +52,6 @@ class MetaDataClass(type):
 		"""
 		return list(cls._values.keys())
 
-
 	def __getitem__(self, key):
 		"""Returns value mapped by `key`.
 
@@ -63,8 +61,7 @@ class MetaDataClass(type):
 			Content of _values[key] if key is present. `None` otherwise
 		"""
 		return self._values.get(key)
-
-
+		
 	def __setitem__(self, key, val):
 		raise TypeError("{} types does not support item assignment.".format(type(self)))
 
