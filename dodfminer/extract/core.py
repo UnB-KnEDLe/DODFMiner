@@ -62,7 +62,7 @@ class ContentExtractor:
         pymu_file = fitz.open(file)
         for textboxes in get_doc_text_boxes(pymu_file):
             for text in textboxes:
-                if int(text[1]) != 55 and int(text[1]) != 881:
+                if int(text[1]) != 55 and int(text[1]) != 881: # o que?
                     if block:
                         norm_text = cls._normalize_text(text[4], norm)
                         list_of_boxes.append((text[0], text[1], text[2], text[3], norm_text))
@@ -80,10 +80,10 @@ class ContentExtractor:
         """Extract boxes of text with your respective titles.
 
         Args:
-            file: The DODF to extract the titles.
+            file: The DODF pdf from where to extract the titles.
 
         Returns:
-            A dictionaty with the blocks organized by title
+            A dictionary with the blocks organized by title
 
             Example::
 
@@ -156,6 +156,7 @@ class ContentExtractor:
 
     @classmethod
     def extract_to_json(cls, folder='./', titles_with_boxes=False, norm='NFKD'):
+        # COMMENT: NFKD parece ser a unica normalizacao usada, precisa de parametro?
         """Extract information from DODF to JSON.
 
         Args:
@@ -169,7 +170,7 @@ class ContentExtractor:
         """
         # Get list of all downloaded pdfs
         pdfs_path_list = cls._get_pdfs_list(folder)
-        # Get list of existing json to not repeat work
+        # Get list of existing json not to repeat work
         json_path_list = cls._get_json_list(folder)
 
         cls._create_single_folder(os.path.join(folder, RESULTS_PATH))
@@ -180,8 +181,8 @@ class ContentExtractor:
             # We do not want the system to repeat itself doing the same work
             if pdf_name not in json_path_list:
                 # low cost extractions
-                if os.path.getsize(file) < 30000000:  # Remove in future.
-                    # Remove images that might still there from previous exec
+                if os.path.getsize(file) < 30*1000* 1000:  # Remove in future. # COMMENT: melhora leitura
+                    # Remove images that might still be there from previous exec
                     cls._log(pdf_name)
                     if titles_with_boxes:
                         content = cls.extract_structure(file, norm=norm)

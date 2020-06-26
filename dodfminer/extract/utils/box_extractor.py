@@ -35,7 +35,7 @@ def get_doc_text_boxes(doc: fitz.Document):
         List[List[tuple(float, float, float, float, str, int, int)]]
 
     """
-
+# COMMENT: deprecated https://pymupdf.readthedocs.io/en/latest/functions/#Page.getTextBlocks
     return [page.getTextBlocks() for page in doc]
 
 

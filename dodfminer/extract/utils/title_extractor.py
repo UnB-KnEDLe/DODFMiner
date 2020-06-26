@@ -20,7 +20,7 @@ BBox = namedtuple("BBox", "bbox")
 TitlesSubtitles = namedtuple("TitlesSubtitles", "titles subtitles")
 TextTypeBboxPageTuple = namedtuple(
     "TextTypeBboxPageTuple", "text type bbox page")
-_DODF_WIDTH = 765
+_DODF_WIDTH = 765  # pra que isso?
 _DODF_HEIGHT = 907
 
 _TRASH_WORDS = [

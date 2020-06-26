@@ -54,6 +54,7 @@ class Miner(object):
 def run():
     miner = Miner()
     if miner.args.subparser_name == 'downloader':
+        # COMMENT: downloader aqui deveria ser apenas download para combinar com extract, ou entao extractor.
         miner.download()
     elif miner.args.subparser_name == 'extract':
         miner.extract_content()
