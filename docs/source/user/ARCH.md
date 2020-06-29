@@ -77,8 +77,6 @@ dodfminer
 └── miner.py
 ```
 
-### Patterns
-
 ### Technologies
 
 Following are some of the most essencial tecnologies used with the DODFMiner application
