@@ -32,7 +32,7 @@ Through this document, the reader will be able to understand the functioning of 
 
 ### Revision History
 
-| Data     | Versão | Descrição          | Autor        | 
+| Data     | Versão | Descrição          | Autor        |
 |----------|--------|--------------------|--------------|
 |29/06/2020| 1.0    | Documment Creation | Renato Nobre |
 
@@ -46,17 +46,42 @@ Being a library requires a given ammount of complexity. In larger applications, 
 
 ### Relationship Diagram 
 
-### Subpackages Representations
+![](../_static/app.svg)
 
-#### Main Application
+### Subpackages Structure
 
-#### Downloader
+This applications follows the basic structure for a python library with multiple subpackages. It uses a common concept of *core* and *helper* files.
 
-#### Extractor
+The *core* file is the main file in a package or subpackage, it contains the class with the main package execution. The *helper* file contains suporting functions to the package.
+
+In summary, the project structure look as follows:
+
+```bash
+dodfminer
+├── __init__.py
+├── downloader
+│   ├── __init__.py
+│   └── core.py
+├── extract
+│   ├── __init__.py
+│   ├── core.py
+│   ├── regex
+│   │   ├── __init__.py
+│   │   ├── atos/
+│   │   ├── core.py
+│   │   └── helper.py
+│   └── helpers
+│       ├── box_extractor.py
+│       ├── title_extractor.py
+│       └── title_filter.py
+└── miner.py
+```
 
 ### Patterns
 
 ### Technologies
+
+Following are some of the most essencial tecnologies used with the DODFMiner application
 
 1. **MuPDF**
 
@@ -70,7 +95,9 @@ Being a library requires a given ammount of complexity. In larger applications, 
 
     Pandas is a software library written for the Python programming language for data manipulation and analysis. In particular, it offers data structures and operations for manipulating numerical tables and time series. It is free software released under the three-clause BSD license
 
-4. Site do DODF 
+4. [Site do DODF](http://www.buriti.df.gov.br/ftp/)
+
+    Website where all of the DODFs are downloaded from.
 
 
 ## Goals and Constraints
@@ -116,16 +143,11 @@ The purpose of Amika is to be an application that facilitates communication and 
 
 ### Package Diagram
 
-### Class Diagram
-
-### Use Cases
-
+![](../_static/pacotes.svg)
 
 ## References
 -------------
 
-https://fga-eps-mds.github.io/2019.2-Amika-Wiki/#/docs/projeto/documentoarquitetura
+[Amika Architecture](https://fga-eps-mds.github.io/2019.2-Amika-Wiki/#/docs/projeto/documentoarquitetura)
 
-https://realpython.com/python-application-layouts/
-
-
+[Python Layouts](https://realpython.com/python-application-layouts/)
