@@ -32,7 +32,7 @@ release = '1.0.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ["sphinx_rtd_theme", 'sphinx.ext.viewcode', 'sphinx.ext.autodoc',
-              'sphinx.ext.coverage', 'sphinx.ext.napoleon', 'recommonmark']
+              'sphinx.ext.coverage', 'sphinx.ext.napoleon', 'recommonmark', 'sphinx_markdown_tables']
 # extensions.append('autoapi.extension')
 
 # autoapi_type = 'python'
