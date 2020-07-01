@@ -134,11 +134,6 @@ Following are some of the most essencial tecnologies used with the DODFMiner app
 
 DODFMiner is a library and CLI application made with the Python language, using MuPDF, BeautifulSoup, Pandas, and many others python libraries. The purpose of DODFMiner is to be an library and tool to fullfil the hole process of extraction of a official diary from federal district in Brazil. 
 
-
-The objective of RasaNLU is to apply natural language algorithms to extract the user's intention (intents) and from Rasa Core it is possible to manage the dialogue between the user and the bot. The main functionality is the policy, which receives the user's intent, updates the tracker () and provides the best bot action (utter, action, listening). The Node.js platform is a runtime environment that executes JavaScript code for writing command-line tools and for server-side scripts, capable of performing asynchronous input / output, which allows other processing to continue before the transmission has ended.
-
-The purpose of Amika is to be an application that facilitates communication and contact between professor, students and monitors of the discipline of Happiness offered at the University of Brasilia on the campus of Gama. From the PostgreSQL database, it will be possible to store student and class data, both student activities that will be delivered by students through the application and the basic data of each student in the academic environment.
-
 ### Package Diagram
 
 ![](../_static/pacotes.svg)
