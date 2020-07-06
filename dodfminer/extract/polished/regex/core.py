@@ -1,108 +1,109 @@
-"""Regex core module.
+import re
 
-This module contains the Regex class, which have all that is necessary to
-extract a single act or all the acts from a DODF.
+class ActRegex:
 
-Usage Example::
+    def __init__(self):
+        super(ActRegex, self).__init__()
+        self._flags = self._regex_flags()
+        self._rules = self._prop_rules()
+        self._inst_rule = self._rule_for_inst()
 
-    from dodfminer.extract.regex.core import Regex
-    Regex.get_act_obj()
-
-"""
-
-from dodfminer.extract.polished.acts.aposentadoria import Retirements
-from dodfminer.extract.polished.acts.reversoes import Revertions
-from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados
-from dodfminer.extract.polished.acts.exoneracao import Exoneracao
-from dodfminer.extract.polished.acts.abono import AbonoPermanencia
-from dodfminer.extract.polished.acts.retificacoes import RetAposentadoria
-from dodfminer.extract.polished.acts.substituicao import Substituicao
-from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
-from dodfminer.extract.polished.acts.cessoes import Cessoes
-
-_acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
-             "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
-             "substituicao": Substituicao, "sem_efeito_aposentadoria": SemEfeitoAposentadoria, 
-             "cessoes": Cessoes}
-"""dict: All avaiable acts classes indexed by a given string name."""
-
-class Regex:
-    """Regex main class.
-
-    All interactions with the acts needs to be done through this interface.
-    This class handles all the requests to regex searches.
-
-    Note:
-        This class is static
-
-    """
-
-    @staticmethod
-    def get_act_obj(ato_id, file):
-        """Extract a single act type from a single.
-
-        Object format.
-        
-        Args:
-            ato_id (string): The name of the act to extract.
-            file (string): Path of the file.
-
-        Returns:
-            An object of the desired act, already with extracted information.
-        
-        """
-        return _acts_ids[ato_id](file)
-
-    @staticmethod
-    def get_all_obj(file):
-        """Extract all acts types from a single DODF. 
-
-        Object format.
-        
-        Args:
-            file (string): Path of the file.
-
-        Returns:
-            An vector of objects of all the acts, already with extracted information.
-        
-        """
-        res = {}
-        for key in _acts_ids:
-            res[key] = _acts_ids[key](file)
+    def _regex_flags(self):
+        """Flags of the regex search"""
+        return 0
     
-        return res
+    def _inst_rule(self):
+        """Rule for extraction of the act
+        
+        Warning:
+            Must return a regex rule that finds an act in two parts, containing a head
+            and a body. Where only the body will be used to search for proprieties.
 
-    @staticmethod
-    def get_act_df(ato_id, file):
-        """Extract a single act type from a single DODF. 
+        Raises:
+            NotImplementedError: Child class needs to overwrite this method.
+ 
+        """
+        raise NotImplementedError
+    
+    def _prop_rules(self):
+        """Rules for extraction of the proprieties.
+        
+        Must return a dictionary of regex rules, where the key is the propriety type
+        and the value is the rule.
 
-        Dataframe format.
+        Raises:
+            NotImplementedError: Child class needs to overwrite this method
+
+        """
+        raise NotImplementedError 
+
+    def _regex_instances(self):
+        """Search for all instances of the act using the defined rule.
+        
+        Returns:
+            List of all act instances in the text.
+        """
+        found = re.findall(self._inst_rule, self._text, flags=self._flags)
+        results = []
+        for instance in found:
+            head, body = instance
+            self.acts_str.append(head+body)
+            results.append(body)
+
+        return results
+    
+    def _find_prop_value(self, rule, act):
+        """Find a single proprietie in an single act.
+
+        Args:
+            rule (str): The regex rule to search for.
+            act (str): The act to apply the rule.
+
+        Returns: 
+            The found propriety, or a nan in case nothing is found.
+
+        """
+        match = re.search(rule, act, flags=self._flags) 
+        if match:
+            return tuple(x for x in match.groups() if x != None)
+        return "nan"
+    
+    def _regex_props(self, act_raw):
+        """Create an act dict with all its proprieties.
         
         Args:
-            ato_id (string): The name of the act to extract.
-            file (string): Path of the file.
+            act_raw (str): The raw text of a single act.
 
         Returns:
-            An dataframe with extracted information, for the desired act.
-        
-        """
-        return _acts_ids[ato_id](file).data_frame
-    
-    @staticmethod
-    def get_all_df(file):
-        """Extract all acts types from a single DODF. 
+            The act, and its props in a dictionary format.
 
-        Dataframe format.
-        
-        Args:
-            file (string): Path of the file.
+        """
+        act = {}
+        act["tipo_ato"] = self._name
+        for key in self._rules:
+            try:
+                act[key], = self._find_prop_value(self._rules[key], act_raw)
+            except:
+                act[key] = "nan"
+
+        return act
+      
+
+    def _extract_instances(self):
+        """Extract instances of an act.
+
+        Warning:
+            Instance must have an head and an body.
 
         Returns:
-            An vector of dataframed with extracted information for all acts.
-        
+            All the instances of the act found.
+
         """
-        res = {}
-        for key in _acts_ids:
-            res[key] = _acts_ids[key](file).data_frame
-    
-        return res
+        found = self._find_instances()
+        results = []
+        for instance in found:
+            head, body = instance
+            self.acts_str.append(head+body)
+            results.append(body)
+            
+        return results

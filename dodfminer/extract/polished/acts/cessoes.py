@@ -1,7 +1,10 @@
 import re
-from typing import List, Match
+import os
+import joblib
 import pandas as pd
-from dodfminer.extract.regex.atos.base import Atos
+from typing import List, Match
+
+from dodfminer.extract.polished.acts.base import Atos
 
 def case_insensitive(s: str):
     """Returns regular expression similar to `s` but case careless.
@@ -51,6 +54,7 @@ ONUS = r"(?P<onus>\b[oôOÔ]{}\b[^.]+[.])".format(case_insensitive("nus"))
 
 class Cessoes(Atos):
     _special_acts = ['matricula', 'cargo']
+
     def __init__(self, file, debug=False, extra_search = True):
         self._debug = debug
         self._extra_search = extra_search
@@ -58,10 +62,13 @@ class Cessoes(Atos):
         self._raw_matches = []
         super().__init__(file)
 
-
     def _act_name(self):
         return "Cessoes"
 
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/cessoes_ner.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return list(self._prop_rules())
