@@ -1,4 +1,4 @@
-"""."""
+"""Extract Title and Subtitles."""
 
 # TODO: Improve docummentation
 # TODO: Remove global variables and functions

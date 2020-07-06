@@ -50,26 +50,27 @@ Extractor Module
 
 The extractor module is responsible for extracting information from DODF PDFs and save it 
 in a desirable format.
-It allows you to choose the output format between three options: pure text in blocks of text, pure text in txt format and
-text separated by titles.
+It allows you to choose the output format between three options: blocks of text with tiles,
+pure text in .txt format and text separated by titles:
+
+- **Blocks of Text**: Outputs a JSON file that extract text blocks.
+- **Pure Text**: Output a .txt file, with raw text from the pdf.
+- **Blocks of Text with Titles**: Outputs a JSON file that extract text blocks indexed by titles.
+
 Also, you can choose where to look for the files, but changing this argument is not recomended.
 Following are the list of avaiable parameters, their description and the default value.
 
-+------------------------+-------------------------------------+---------+
-| Argument               | Description                         | Default |
-+========================+=====================================+=========+
-| -i --input_folder      | Path to the PDFs folder             | ./data  |
-+------------------------+-------------------------------------+---------+
-| -b --block             | Extract pure text in blocks of text | False   |
-+------------------------+-------------------------------------+---------+
-| -p --pure_text         | Extract pure text in txt format     | False   |
-+------------------------+-------------------------------------+---------+
-| -tb --title-with-boxes | Extract text separated by titles    | False   |
-+------------------------+-------------------------------------+---------+
++-------------------------+-------------------------------------+------------+
+| Argument                | Description                         | Default    |
++=========================+=====================================+============+
+| -i --input_folder       | Path to the PDFs folder             | ./data     |
++-------------------------+-------------------------------------+------------+
+| -t --type-of-extraction | Type of text extraction             | pure-text  |
++-------------------------+-------------------------------------+------------+
 
 Usage Example::
 
-    $ dodfminer extract -p True
+    $ dodfminer extract
 
 Library Usage
 =============

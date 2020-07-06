@@ -27,8 +27,9 @@ class CLI(object):
 
     def __init__(self):
         """Init CLI class with default values."""
-        self.parser = ArgumentParser(prog="", usage='',
-                                     description="", epilog='')
+        desc = "Data extractor of PDF documents from the Official Gazette of the Federal District, Brazil."
+        self.parser = ArgumentParser(prog="DODFMiner", description=desc,
+                                     epilog='© Copyright 2020, KnEDLe Team. Version 1.0.0')
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
@@ -73,15 +74,16 @@ class CLI(object):
         """Create parser for extraction configs."""
         download_parser = self.subparsers.add_parser("extract")
 
-        group = self._new_group('Tesseract Configs', download_parser)
+        group = self._new_group('Extraction Configs', download_parser)
 
         group.add_argument('-i', '--input_folder', dest='input_folder',
                     default=self.input_folder, type=str,
                     help='Path to the PDFs folder')
 
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
-                            default='pure-text', type=str,
-                            choices=['pure-text', 'blocks', 'with-titles']) 
+                           default='pure-text', type=str,
+                           choices=['pure-text', 'blocks', 'with-titles'],
+                           help="Type of text extraction") 
 
     def parse(self):
         """Create parser and parse the arguments.
