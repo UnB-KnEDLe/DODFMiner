@@ -1,7 +1,7 @@
 """Regras regex para ato de Retificação de Aposentadorias."""
 
 import re
-from dodfminer.extract.regex.atos.base import Atos
+from dodfminer.extract.polished.acts.base import Atos
 
 class RetAposentadoria(Atos):
 

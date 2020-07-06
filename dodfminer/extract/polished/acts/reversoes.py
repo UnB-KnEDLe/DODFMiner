@@ -1,7 +1,7 @@
 """Regras regex para atos de Reversões."""
 
 import re
-from dodfminer.extract.regex.atos.base import Atos
+from dodfminer.extract.polished.acts.base import Atos
 
 class Revertions(Atos):
 

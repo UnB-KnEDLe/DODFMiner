@@ -119,13 +119,12 @@ class Atos:
         """
         raise NotImplementedError 
 
-    def _find_instances(self):
+    def _find_instances(self, backend):
         """Search for all instances of the act using the defined rule.
         
         Returns:
             List of all act instances in the text.
         """
-
         return re.findall(self._inst_rule, self._text, flags=self._flags)
     
     def _find_props(self, rule, act):
@@ -206,3 +205,6 @@ class Atos:
             df.columns = self._columns
             return df
         return pd.DataFrame()
+
+
+    
