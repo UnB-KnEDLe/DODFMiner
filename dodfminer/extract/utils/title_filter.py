@@ -1,4 +1,4 @@
-"""Missing Doc."""
+"""Find titles using a Filter."""
 
 import functools
 

@@ -1,10 +1,10 @@
-"""Missing Doc."""
+"""Functions to extract boxes from text."""
 
 import fitz
 from typing import List
 
 def _extract_page_lines_content(page):
-	"""Extracts page lines;
+	"""Extracts page lines.
 
     Args:
         page: fitz.fitz.Page object to have its bold content extracted.
@@ -56,7 +56,8 @@ def get_doc_text_lines(doc: fitz.Document):
 def _get_doc_img(doc: fitz.Document):
 	"""Returns list of list of image items.
 	
-	Note: this function is not intented to be used by final users,
+	Note:
+		This function is not intented to be used by final users,
 		but internally. Image `items` are described at:
 
 		https://pymupdf.readthedocs.io/en/latest/page/#Page.getImageBbox
