@@ -10,15 +10,15 @@ Usage Example::
 
 """
 
-from dodfminer.extract.regex.atos.aposentadoria import Retirements
-from dodfminer.extract.regex.atos.reversoes import Revertions
-from dodfminer.extract.regex.atos.nomeacao import NomeacaoComissionados
-from dodfminer.extract.regex.atos.exoneracao import Exoneracao
-from dodfminer.extract.regex.atos.abono import AbonoPermanencia
-from dodfminer.extract.regex.atos.retificacoes import RetAposentadoria
-from dodfminer.extract.regex.atos.substituicao import Substituicao
-from dodfminer.extract.regex.atos.sem_efeito_aposentadoria import SemEfeitoAposentadoria
-from dodfminer.extract.regex.atos.cessoes import Cessoes
+from dodfminer.extract.polished.acts.aposentadoria import Retirements
+from dodfminer.extract.polished.acts.reversoes import Revertions
+from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados
+from dodfminer.extract.polished.acts.exoneracao import Exoneracao
+from dodfminer.extract.polished.acts.abono import AbonoPermanencia
+from dodfminer.extract.polished.acts.retificacoes import RetAposentadoria
+from dodfminer.extract.polished.acts.substituicao import Substituicao
+from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from dodfminer.extract.polished.acts.cessoes import Cessoes
 
 _acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
              "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,

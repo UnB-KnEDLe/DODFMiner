@@ -20,8 +20,8 @@ from pathlib import Path
 
 import fitz
 
-from dodfminer.extract.utils.title_extractor import ExtractorTitleSubtitle
-from dodfminer.extract.utils.box_extractor import get_doc_text_boxes
+from dodfminer.extract.pure.utils.title_extractor import ExtractorTitleSubtitle
+from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes
 
 RESULTS_PATH = "results/"
 RESULTS_PATH_JSON = "results/json"
