@@ -88,12 +88,14 @@ class Downloader(object):
             except OSError as error:
                 self._log("Exception during the directory creation")
                 self._log(str(error))
+                raise
             else:
                 basename = os.path.basename(path)
                 self._log(basename + " directory successful created")
 
     def _create_download_folder(self):
         """Create Downloaded DODFs Structures."""
+        # import pdb; pdb.set_trace()
         self._create_single_folder(self.download_path)
 
     def _make_url(self, date):
@@ -133,6 +135,7 @@ class Downloader(object):
         url = url.replace('%C2', '')
         url = url.replace('3%8', '')
         url = url.replace('%C3%A7', '%E7')
+        url = url.replace('%C3%A3', '%E3')
 
         return url
 
@@ -288,6 +291,7 @@ class Downloader(object):
             for a in a_list.find_all('a', href=True):
                 a_url = self._make_href_url(a['href'])
                 download_page = self._get_soup_link(a_url)
+                self._log("a_URL " + a_url)
                 number_of_files = int(download_page.find_all('b')[1].text)
                 dodf_path = month_path
                 if number_of_files > 1:

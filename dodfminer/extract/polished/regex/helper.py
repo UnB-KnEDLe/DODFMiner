@@ -49,6 +49,27 @@ def extract_multiple(files, type, txt_out=False, txt_path="./results"):
                             ignore_index=True)
     return res_final
 
+def extract_single(file, type):
+    """Extract Act from a single DODF to a single DataFrame.
+
+    Note:
+        This function might save data to disc in text format, if txt_out is True.
+
+    Args:
+        files ([str]): List of dodfs files path.
+        type (str): Type of the act, see the core class to view avaiables types.
+    
+    Returns:
+        A dataframe containing all instances of the desired act including the texts found.
+
+    """
+    res_obj = Regex.get_act_obj(type, file)
+    res_df = res_obj.data_frame
+    res_txt = res_obj.acts_str
+    res_df['text'] = res_txt
+    
+    return res_df
+
 def build_act_txt(acts, name, save_path="./results/"):
     """Create a text file in disc for a act type.
 
