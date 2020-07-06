@@ -1,73 +1,55 @@
-import pandas as pd
 import re
-# import spacy
-
-# nlp=spacy.load('pt_core_news_sm')
-
-def case_insensitive(s: str):
-    """Returns regular expression similar to `s` but case careless.
-
-    Note: strings containing characters set, as `[ab]` will be transformed to `[[Aa][Bb]]`.
-        `s` is espected to NOT contain situations like that.
-    Args:
-        s: the stringregular expression string to be transformed into case careless
-    Returns:
-        the new case-insensitive string 
-    """
-
-    return ''.join([c if not c.isalpha() else '[{}{}]'.format(c.upper(), c.lower()) for c in s])
+from typing import List, Match
+import pandas as pd
+from dodfminer.extract.regex.atos.base import Atos
 
 
 DODF = r"(DODF|[Dd]i.rio\s+[Oo]ficial\s+[Dd]o\s+[Dd]istrito\s+[Ff]ederal)"
+_EDICAO_DODF = r"(\b(?i:suplement(o|ar)|extra|.ntegra))\b."
+TIPO_EDICAO = r"\b(?P<tipo>(?i:extra(\sespecial)?|suplement(ar|o)))\b"
+DODF_TIPO_EDICAO = DODF + r"(?P<tipo_edicao>.{0,50}?)" + _EDICAO_DODF
 
-MONTHS_LOWER = (
-    r'(janeiro|fevereiro|mar.o|abril|maio|junho|' \
+MONTHS = (
+    r'(?i:janeiro|fevereiro|mar.o|abril|maio|junho|' \
     r'julho|agosto|setembro|outubro|novembro|dezembro)'
 )
 
-FLEX_DATE = r"(?P<date>\d+\s+(?:de\s*)?{}\s*(?:de\s*)?\d+|\d+[.]\d+[.]\d+|\d+[/]\d+[/]\d+)".format(case_insensitive(MONTHS_LOWER))
+FLEX_DATE = r"(?P<date>\d+\s+(?:de\s*)?" + MONTHS + "\s*(?:de\s*)?\d+|\d+[.]\d+[.]\d+|\d+[/]\d+[/]\d+)"
 
-DODF_NUM = r"(DODF|[Dd]i.rio [Oo]ficial [Dd]o [Dd]istrito [Ff]ederal)\s*(n?r?o?[^\d]?)(?P<num>\d+)"
-DODF_DATE = r"{}[^\n\n]{{0,50}}?(de\s?)?{}".format(DODF, FLEX_DATE)
+DODF_NUM = r"(?i:DODF|[Dd]i.rio [Oo]ficial [Dd]o [Dd]istrito [Ff]ederal)\s*[\w\W]{0,3}?(?i:n?(.mero|[.roº]{1,4})?[^\d]+?)(?P<num>\d+)"
 
-SIAPE = r"{}\s*(?:n?.?)\s*[-\d.Xx/\s]".format(case_insensitive("siape"))
+DODF_DATE = DODF + r"[^\n\n]{0,50}?(de\s?)?" + FLEX_DATE
 
-MATRICULA = r"(?:matr.cul.|matr?[.]?\B)[^\d]+(?P<matricula>[-\d.XxZzYz/\s]+)"
+SIAPE = r"(?i:siape)\s*(?i:n?.?)\s*[-\d.Xx/\s]"
+
+MATRICULA = r"(?i:matr.cul.|matr?[.]?\B)[^\d]+(?P<matricula>[-\d.XxZzYz/\s]+)"
 
 MATRICULA_GENERICO = r"(?<![^\s])(?P<matricula>([-\d.XxZzYz/\s]{1,})[.-][\dXxYy][^\d])"
 
-MATRICULA_ENTRE_VIRGULAS = r"(?<=[A-Z]{3})\s*,\s+([-\d.XxZzYz/\s]{3,}?),"
+MATRICULA_ENTRE_VIRGULAS = r"(?<=[A-ZÀ-Ž]{3})\s*,\s+([-\d.XxZzYz/\s]{3,}?),"
 
-# WARNING: "page_nums" may match not only nums.
-# TODO: deal with edge cases like "p 33". There are only a few ones.
-PAGE = r"((?:p\.|p.ginas?|p.?gs?\.?\b)(?P<page_nums>.{0,}?)(?=[,;:]|\n|\s[A-Z]|$))"
+PAGE = r"((?i:p\.|p.ginas?|p.?gs?\.?\b)(?P<page_nums>.{0,}?)(?=[,;:]|\n|\s[A-Z]|$))"
 
-SERVIDOR_NOME_COMPLETO = r"servidora?\b.{0,40}?(?P<name>[A-ZÀ-Ž][.'A-ZÀ-Ž\s]{7,})"
+SERVIDOR_NOME_COMPLETO = r"(?i:servidora?\b.{0,40}?)(?P<name>[A-ZÀ-Ž][.'A-ZÀ-Ž\s]{7,})"
 
 NOME_COMPLETO = r"(?P<name>[.'A-ZÀ-Ž\s]{8,})"
-
-EDICAO_DODF = r"(?P<edition>[Ss]uplement(o|ar)|[Ee]xtra|.ntegra)"
 
 LOWER_LETTER = r"[áàâäéèẽëíìîïóòôöúùûüça-z]"
 UPPER_LETTER = r"[ÁÀÂÄÉÈẼËÍÌÎÏÓÒÔÖÚÙÛÜÇA-Z]"
 
-PROCESSO = r"(?P<processo>[-0-9/.]+)"
+PROCESSO_MATCH = r"(?i:processo):?[^\d]{0,50}?(?P<processo>\d[-0-9./\s]*\d(?!\d))"
+TIPO_DOCUMENTO = r"(?i:portaria|ordem de servi.o|instru..o)"
 
-TIPO_DOCUMENTO = r"(portaria|ordem de servi.o|instrucao)"
-
-class SemEfeitoAposentadoria:
-    _name = "Atos Tornados sem Efeito (aposentadoria)"
-
-    _raw_pattern = (
-        r"TORNAR SEM EFEITO" + \
-        r"([^\n]+\n){0,10}?[^\n]*?(tempo\sde\sservi.o|aposentadoria|aposentou|([Dd][Ee][Ss])?[Aa][Vv][Ee][Rr][Bb][Aa]..[Oo]|(des)?averb(ar?|ou))[\d\D]{0,500}?[.]\s" \
-        r"(?=[A-Z]{4})"
-    )
+class SemEfeitoAposentadoria(Atos):
+    _special_acts = [
+        'dodf_num', 'tornado_sem_efeito_publicacao', 
+        'dodf_pagina', 'servidor', 'matricula',
+        'cargo', 'dodf_tipo_edicao', 
+    ]
 
     _BAD_MATCH_WORDS = [
         "AVERBAR",
         "NOMEAR",
-        # "CONCEDER ABONO DE PERMANENCIA",
         "CONCEDER",
         "EXONERAR",
         "DESAVERBAR",
@@ -75,53 +57,177 @@ class SemEfeitoAposentadoria:
         "RETIFICAR",
     ]
 
-    def __init__(self,file_name, text=False, nlp=None, debug=False):
+
+    def _pre_process_text(self, s):
+        # Make sure words splitted accross lines are joined together
+        no_split_word = s.replace('-\n', '-')        
+        return no_split_word.replace('\n', ' ')
+
+
+    def __init__(self, file, debug=False, extra_search=True, nlp=None):
         self._debug = debug
-        self.nlp = nlp
-        if not text:
-            fp = open(file_name, "r")
-            self._file_name = file_name
-            self._text = fp.read()
-            fp.close()
-        else:
-            self._file_name = ''
-            self._text = file_name
-        
-        self._raw_matches = self._extract_raw_matches()
-        self._processed_text = self._post_process_raw()
-        self._final_matches = self._run_property_extraction()
-        
-        self._data_frame = self._build_dataframe()
-    @classmethod
-    def _self_match(cls, s:str, group_name: str):
-        return re.match(fr'(?P<{group_name}>{s})', s)
+        self._extra_search = extra_search
+        self._processed_text = self._pre_process_text(open(file).read())
+        self._raw_matches = []
+        self._nlp = nlp
+        super().__init__(file)
+
+    def _act_name(self):
+        return "Atos tornados sem efeito - aposentadoria"
 
 
-    @property
-    def data_frame(self):
-        return self._data_frame
+    def _props_names(self):
+        return list(self._prop_rules())
 
-    @property
-    def name(self):
-        return self._name
 
-    @property
-    def acts_str(self):
-        return self._processed_text    
+    def _rule_for_inst(self):
+        return (
+        r"TORNAR SEM EFEITO" + \
+        r"([^\n]+\n){0,10}?[^\n]*?(tempo\sde\sservi.o|aposentadoria|aposentou|([Dd][Ee][Ss])?[Aa][Vv][Ee][Rr][Bb][Aa]..[Oo]|(des)?averb(ar?|ou))[\d\D]{0,500}?[.]\s" +\
+        r"(?=[A-Z]{4})"
+    )
 
-    @property
-    def props(self):
-        return self._final_matches
-    def _extract_raw_matches(self):
-        """Returns list of re.Match objects found on `self._text`.
+    # TODO: UPDATE REULES!!!
+    def _prop_rules(self):
+        return {
+            'tipo_documento': TIPO_DOCUMENTO,
+            'processo': PROCESSO_MATCH,
+            'dodf_data': DODF_DATE,
+        }
+
+
+    def _find_instances(self) -> List[Match]:
+        """Returns list of re.Match objects found on `self._text_no_crosswords`.
 
         Return:
             a list with all re.Match objects resulted from searching for
         """
-        l = list(re.finditer(self._raw_pattern, self._text))
+        head = "TORNAR SEM EFEITO"
+        end = "CAFEBABE"
+
+        lis = self._processed_text.split(head)
+        lis = [
+            re.search(self._inst_rule, head + tex + end) \
+            for tex in lis[1:]]
+        lis = [i for i in lis if i]
+        self._raw_matches = lis
         if self._debug:
-            print("DEBUG:", len(l), 'matches')
-        return l
+            print("DEBUG:", len(lis), 'matches')
+        return [i.group() for i in lis]
+
+
+    # TODO: UPDATE WITH SEM EFEITO APOSENTADORIA SPECIFICITIES
+    def _get_special_acts(self, lis_dict):
+        for i, match in enumerate(self._raw_matches):
+            act = match.group()
+            curr_dict = lis_dict[i]
+            dodf_date = curr_dict['dodf_data']
+            dodf_num = dodf_date and re.search(DODF_NUM, dodf_date.group())
+            tornado_sem_efeito_publicacao = dodf_date and \
+                re.search(FLEX_DATE, act[:dodf_date.start()] + act[dodf_date.end():])
+            dodf_pagina = dodf_date and re.search(PAGE, act[dodf_date.end():][:50])
+
+            servidor = re.search(SERVIDOR_NOME_COMPLETO, act)
+            if not servidor:
+                #  If it fails then a more generic regex is searched for
+                dodf_mt = re.search(DODF, act)
+                dodf_end = 0 if not dodf_mt else dodf_mt.end()
+                servidor = re.search(NOME_COMPLETO, act[dodf_end:])
+                del dodf_mt, dodf_end
+                if not servidor:
+                    # Appeal to spacy
+                    all_cands = re.findall(NOME_COMPLETO, act)
+                    cand_text = 'SEM-SERVIDOR'
+                    for cand in self._nlp(', '.join([c.strip().title() for c in all_cands])).ents:
+                        cand_text = cand.text                
+                        if cand.label_ == 'PER':
+                            break
+                    servidor =  re.search(cand_text.upper(), act)
+                    del all_cands, cand_text, cand
+            end_employee = servidor.end() if servidor else 0
+            matricula = re.search(MATRICULA, act[end_employee:]) or \
+                        re.search(MATRICULA_GENERICO, act[end_employee:]) or \
+                        re.search(MATRICULA_ENTRE_VIRGULAS, act[end_employee:] ) 
+            del end_employee
+            if not matricula or not servidor:
+                cargo = None
+            else:
+                servidor_start = act[servidor.start():].find(servidor.group()) + servidor.start()
+                matricula_start = act[matricula.start():].find(matricula.group()) + matricula.start()
+
+                # NOTE: -1 is important in case `matricula` end with `,`
+                if 0 <= (matricula_start - (servidor_start + len(servidor.group()))) <= 5:
+                    # cargo does not fit between 'servidor' e 'matricula'
+                    cargo = re.search(r",(?P<cargo>[^,]+)", act[ matricula_start + len(matricula.group())-1: ])        
+                else:
+                    # cargo right after employee's name                    
+                    cargo = re.search(r",(?P<cargo>[^,]+)", act[servidor_start + len(servidor.group())-1:])
+                del matricula_start, servidor_start
+            edicao = re.search(DODF_TIPO_EDICAO, act)
+            dodf_tipo_edicao = re.search(TIPO_EDICAO, act[edicao.start()-1:edicao.end()+1])\
+                         if edicao else re.search("normal", "normal")
+            curr_dict['dodf_num'] = dodf_num
+            curr_dict['tornado_sem_efeito_publicacao'] = tornado_sem_efeito_publicacao
+            curr_dict['dodf_pagina'] = dodf_pagina
+            curr_dict['servidor'] = servidor
+            curr_dict['matricula'] = matricula
+            curr_dict['cargo'] = cargo            
+            curr_dict['dodf_tipo_edicao'] = dodf_tipo_edicao
+
+
+    def _find_props(self, rule, act):
+        """Returns named group, or the whole match if no named groups
+                are present on the match.
+        Args:
+            match: a re.Match object
+        Returns: content of the unique named group found at match,
+            the whole match if there are no groups at all or raise
+            an exception if there are more than two groups.
+        """
+        match = re.search(rule, act, flags=self._flags)
+        return match,
+
+
+
+    def _group_solver(self, match):
+        """Returns named group, or the whole match if no named groups
+                are present on the match.
+        Args:
+            match: a re.Match object
+        Returns: content of the unique named group found at match,
+            the whole match if there are no groups at all or raise
+            an exception if there are more than two groups.
+        """
+        if not match or type(match) == str:
+            return "nan"
+        elif match.groupdict():
+            key = list(match.groupdict())[0]
+            return match.group(key)
+        else:
+            return match.group()
+
+
+    def _acts_props(self):
+        acts = []
+        for raw in self._raw_acts:
+            act = self._act_props(raw)
+            acts.append(act)
+        if self._extra_search:
+            self._get_special_acts(acts)
+        return acts      
+
+
+    def _extract_instances(self) -> List[Match]:
+        found = self._find_instances()
+        self._acts_str = found.copy()
+        return found
+
+    def _build_dataframe(self):
+        _=re.search(self._name, self._name)
+        for dic in self._acts:
+            dic["tipo_ato"] = _
+        data = [ { k: self._group_solver(v) for k, v in act.items() } for act in self._acts]
+        return pd.DataFrame(data)
 
 
     def _post_process_raw(self):
@@ -139,192 +245,4 @@ class SemEfeitoAposentadoria:
             last_tornar_sem_efeito = single_spaces[single_spaces.rfind("TORNAR SEM EFEITO"):]
             l.append(last_tornar_sem_efeito)
         return l
-
-
-    def _run_property_extraction(self):
-        """Effectively extracts que information it was supposed to extract.
-        For more details check "TCDF_requisitos" for KnEDLe project.
-
-        Note:
-            WARNING: this function tends to be very extense.
-                Maybe a pipepilne-like approach would be better
-                but haven't figured how to do so (yet).
-        """
-        # DODF date usually is easily extracted.
-        tipo_lis = []
-        processo_lis = []
-        dodf_dates = []
-        dodf_num = []
-        tornado_sem_dates = []
-        pages = []
-        servidor_nome = []
-        servidor_matricula = []
-        cargo_efetivo_lis = []
-        edicoes = []
-        for tex in self._processed_text:
-            tipo = re.search(TIPO_DOCUMENTO, tex[len("TORNAR SEM EFEITO"):], re.IGNORECASE)
-            tipo_lis.append(tipo)
-            processo = re.search(
-                r"{}:?[^\d]{}(?P<processo>\d[-0-9./\s]*\d(?!\d))".format(case_insensitive("processo"), "{0,50}?",PROCESSO),
-                tex)
-            processo_lis.append(processo)
-
-            
-            # First, get DODF date.
-            date_mt = re.search(DODF_DATE, tex)
-            dodf_dates.append(date_mt)
-            if date_mt:
-                # seach for DODF num
-                num = re.search(DODF_NUM, date_mt.group())
-                if num:
-                    if self._debug:
-                        print('num.span():', num.span())
-                    # num = re.search(fr'(?P<num>{date_mt.group()})', date_mt.group())
-                dodf_num.append(num)
-
-                # THEN lets search for publication date (heuristic)
-                span = date_mt.span()
-                removed_dodf_date = '{}{}'.format(tex[:span[0]], tex[span[1]:])
-                published_date = re.search(FLEX_DATE, removed_dodf_date)
-                tornado_sem_dates.append(published_date)
-                # ALSO, page numbers (if present) come right after DODF date
-                window = tex[span[1]:][:50]
-                page = re.search(PAGE, window)                
-                pages.append(page)
-
-            else:
-                tornado_sem_dates.append(None)
-                dodf_num.append(None)
-                pages.append(None)
-            # Try to match employee
-            servidor = re.search(SERVIDOR_NOME_COMPLETO, tex)
-            if self._debug:
-                print("SERVIDOR:", servidor)
-            if not servidor:
-                if self._debug:
-                    print("SEM SERVIDOR!!!")
-                #  If it fails then a more generic regex is searched for
-                dodf_span = re.search(DODF, tex).span()
-                # therefore `servidor` is not trustable when comes to start/end
-                servidor = re.search(NOME_COMPLETO, tex[dodf_span[1]:])
-                if not servidor:
-                    # Appeal to spacy
-                    all_cands = re.findall(
-                        r"{}".format(NOME_COMPLETO),
-                        tex
-                    )
-                    print("ALL_CANDS:", all_cands)
-                    # print('\t(', *all_cands, sep=')\n\t(', end=')\n\n')
-                    person_cands = []
-                    for cand in self.nlp(', '.join([c.strip().title() for c in all_cands])).ents:
-                        if cand.label_ == 'PER':
-                            print(cand, 'IS THE PERSON')
-                            break
-                    servidor =  re.search(cand.text.upper(), tex)
-            servidor_nome.append(servidor)
-            
-            if servidor:
-                matricula = re.search(MATRICULA, tex[servidor.end():])
-                if not matricula:
-                    matricula = re.search(MATRICULA_GENERICO, tex[servidor.end():])
-                    if not matricula:
-                        matricula = re.search(MATRICULA_ENTRE_VIRGULAS, tex[servidor.end():] )
-            else:
-                matricula = None
-
-            if not matricula or not servidor:
-                cargo = None
-            else:
-                # TODO: improve robustness: cargo_efetivo is assumed to be either right after 
-                # employee name or its matricula
-                servidor = re.search(servidor.group(), tex)
-                matricula = re.search(matricula.group(), tex)
-                print("matricula.start() - servidor.end():", matricula.start() - servidor.end())
-                # NOTE: -1 is important in case `matricula` end with `,`
-                if 0 <= (matricula.start() - servidor.end()) <= 5:
-                    # cargo NAO CABE entre 'servidor' e 'matricula'
-                    print("CARGO DEPOIS DE MAATRICULA")
-                    cargo = re.search(r",(?P<cargo>[^,]+)", tex[ matricula.end()-1: ])        
-                else:
-                    # cargo apohs nome do servidor
-                    print("CARGO ANTES DE MATRICULA")
-                    cargo = re.search(r",(?P<cargo>[^,]+)", tex[servidor.end()-1:])
-            print("MATRICULA FINAL:", matricula.group())
-            servidor_matricula.append(matricula)
-
-            cargo_efetivo_lis.append(cargo)
-            _ = DODF + r".{0,50}?" + EDICAO_DODF
-            edicao = re.search(_, tex)
-
-            if edicao:
-                if re.search(r"\bextra\b", tex, re.IGNORECASE):
-                    edicoes.append(re.search(r"\bextra\b", tex))
-                elif re.search("\bsuplement(ar|o)\b", tex, re.IGNORECASE):
-                    edicoes.append( re.search("\bsuplement(ar|o)\b", tex) )
-                else:
-                    edicoes.append( self._self_match("tipo-estranho", "edition") )
-            else:
-                edicoes.append(self._self_match("normal", "edition"))
-        if self._debug:
-            print(
-                "tipo_lis:", len(tipo_lis), '\n',
-                "processo_lis:", len(processo_lis), '\n',
-                "dodf_dates:", len(dodf_dates), '\n',
-                "dodf_num:", len(dodf_num), '\n',
-                "tornado_sem_dates:", len(tornado_sem_dates), '\n',
-                "pages:", len(pages), '\n',
-                "servidor_nome:", len(servidor_nome), '\n',
-                "servidor_matricula:", len(servidor_matricula), '\n',
-                "cargo_efetivo:", len(cargo_efetivo_lis), '\n',
-                "edicoes:", len(edicoes), '\n'
-
-            )
-        l = list(zip(
-            tipo_lis,
-            processo_lis,
-            dodf_dates,
-            dodf_num,
-            tornado_sem_dates,
-            pages,
-            servidor_nome,
-            servidor_matricula,
-            cargo_efetivo_lis,
-            edicoes
-        ))
-        if len(l) != len(self._processed_text):
-            raise Exception("Processed matches and list of attributes differ! {} vs {}".format(
-                len(self._processed_text), len(l)
-            ))
-        return l
-
-
-    def _build_dataframe(self):
-        def by_group_name(match):
-            if match:
-                keys = list(match.groupdict().keys())
-                if len(keys) == 0:
-                    return match.group()
-                elif len(keys) > 1:
-                    raise ValueError("Named regex must have AT MOST ONE NAMED GROUP.")
-                if self._debug:
-                    print('key: ', keys[0])
-                return match.group(keys[0])
-            else:
-                return "nan"
-        return pd.DataFrame(
-            data=map(lambda lis: [by_group_name(i) for i in lis],self._final_matches),
-            columns=[
-                'tipo',
-                'processo',
-                'dodf_data',
-                'dodf_num',
-                'tse_data',
-                'pag',
-                'nome',
-                'matricula',
-                'cargo_efetivo',
-                'tipo_edicao'
-            ]
-        )
-    
 
