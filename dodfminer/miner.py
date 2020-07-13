@@ -10,9 +10,9 @@ Usage example::
     
 """
 
-from dodfminer.downloader.core import Downloader
-from dodfminer.extract.core import ContentExtractor
 from dodfminer.cli import CLI
+from dodfminer.downloader.core import Downloader
+from dodfminer.extract.pure.core import ContentExtractor
 
 class Miner(object):
     """Main DODFMiner class.
@@ -59,3 +59,6 @@ def run():
         miner.extract_content()
     else:
         miner._log("Program mode not recognized")
+
+if __name__ == '__main__':
+    Miner().run()
