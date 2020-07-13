@@ -61,4 +61,4 @@ def run():
         miner._log("Program mode not recognized")
 
 if __name__ == '__main__':
-    Miner().run()
+    run()

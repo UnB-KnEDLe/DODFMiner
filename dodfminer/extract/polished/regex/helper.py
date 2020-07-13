@@ -16,8 +16,10 @@ Functions
 
 import os
 import pandas as pd
-from dodfminer.extract.regex.core import Regex
 from os.path import isfile, join
+
+from dodfminer.extract.polished.regex.core import ActRegex
+
 
 def extract_multiple(files, type, txt_out=False, txt_path="./results"):
     """Extract Act from Multiple DODF to a single DataFrame.
