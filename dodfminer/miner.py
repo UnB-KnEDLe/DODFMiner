@@ -46,6 +46,8 @@ class Miner(object):
                                              titles_with_boxes=True)
         elif self.args.type_of_extr == 'blocks':
             ContentExtractor.extract_to_json(folder=self.args.input_folder)
+        elif len(self.args.act) > 0:
+            print(self.args.act)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")

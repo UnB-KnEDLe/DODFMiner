@@ -83,7 +83,13 @@ class CLI(object):
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
                            default='pure-text', type=str,
                            choices=['pure-text', 'blocks', 'with-titles'],
-                           help="Type of text extraction") 
+                           help="Type of text extraction")
+
+        group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
+                           choices=['cessoes', 'nomeacoes'], nargs='+')
+
+        group.add_argument('-b', '--backend', dest='backend', default='regex', type=str, 
+                           choices=['regex', 'ner'])
 
     def parse(self):
         """Create parser and parse the arguments.
