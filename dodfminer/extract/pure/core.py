@@ -27,6 +27,7 @@ RESULTS_PATH = "results/"
 RESULTS_PATH_JSON = "results/json"
 RESULTS_PATH_TXT = "results/txt"
 
+
 class ContentExtractor:
     """Extract content from DODFs and export to JSON.
 
@@ -65,7 +66,8 @@ class ContentExtractor:
                 if int(text[1]) != 55 and int(text[1]) != 881:
                     if block:
                         norm_text = cls._normalize_text(text[4], norm)
-                        list_of_boxes.append((text[0], text[1], text[2], text[3], norm_text))
+                        list_of_boxes.append((text[0], text[1], text[2],
+                                              text[3], norm_text))
                     else:
                         drawboxes_text += (text[4] + sep)
 
@@ -155,13 +157,15 @@ class ContentExtractor:
                 cls._log("TXT already exists")
 
     @classmethod
-    def extract_to_json(cls, folder='./', titles_with_boxes=False, norm='NFKD'):
+    def extract_to_json(cls, folder='./',
+                        titles_with_boxes=False, norm='NFKD'):
         """Extract information from DODF to JSON.
 
         Args:
             folder: The folder containing the PDFs to be extracted
             titles_with_boxes: Extract with titles
-            norm: What normalization to use. Normalizations can be found unicodedata library
+            norm: What normalization to use. Normalizations can be found
+                  unicodedata library
 
         For each pdf file in data/dodfs, extract information from the
         pdf and output it to json.
@@ -188,7 +192,8 @@ class ContentExtractor:
                     else:
                         content = cls.extract_text(file, block=True, norm=norm)
                     j_path = cls._struct_subfolders(file, True, folder)
-                    json.dump(content, open(j_path, "w", encoding="utf-8"), ensure_ascii=False)
+                    json.dump(content, open(j_path, "w", encoding="utf-8"),
+                              ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
 

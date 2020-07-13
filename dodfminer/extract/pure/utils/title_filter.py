@@ -2,6 +2,7 @@
 
 import functools
 
+
 class BoldUpperCase:
     """Filter functions useful for bold and upper case text.
 
@@ -21,7 +22,7 @@ class BoldUpperCase:
     @classmethod
     def dict_text(cls, d):
         """Check if text is title.
-        
+
         Evaluates to true if d['text'] matches the following conditions:
 
             - all letters are uppercase;
@@ -40,9 +41,9 @@ class BoldUpperCase:
     @classmethod
     def dict_bold(cls, d):
         """Hmm.
-        
+
         Evaluates do True if d['flags'] matches the following conditions:
-        
+
             - is one of the values in BoldUpperCase.BOLD_FLAGS
 
         """
@@ -52,21 +53,21 @@ class BoldUpperCase:
     @classmethod
     def params(cls, params_sep_underscore):
         """Hmm.
-        
+
         Returns an function which evaluates a conjunction over the results
         of all filters specified by params_sep_underscore.
 
         params_sep_underscore must be a compound string
         wich will be splited based on '_'. Each os these strings
         specify a different filter.
-        
+
         :Example:
 
             params("font_text") returns something like::
 
                 def gambs(x):
                     return dict_font(x) and dict_text(x)
-    
+
         """
         func_lis: list = []
         for criteria in params_sep_underscore.split('_'):

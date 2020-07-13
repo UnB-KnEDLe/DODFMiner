@@ -1,6 +1,3 @@
-import sklearn_crfsuite
-from sklearn_crfsuite import metrics
-
 class ActNER:
 
     def __init__(self):
@@ -11,8 +8,7 @@ class ActNER:
         if self._backend == 'ner':
             print("This Act does not have an model: FALLING BACK TO REGEX")
             self._backend = 'regex'
-        # raise NotImplementedError("This Act does not have an model")
-    
+
     def _get_features(self, act):
         sent_features = []
         for i in range(len(act)):
@@ -21,10 +17,10 @@ class ActNER:
                 'capital_letter': act[i][0].isupper(),
                 'all_capital': act[i].isupper(),
                 'isdigit': act[i].isdigit(),
-                'word_before': act[i].lower() if i==0 else act[i-1].lower(),
-                'word_after:': act[i].lower() if i+1>=len(act) else act[i+1].lower(),
-                'BOS': i==0,
-                'EOS': i==len(act)-1
+                'word_before': act[i].lower() if i == 0 else act[i-1].lower(),
+                'word_after:': act[i].lower() if i+1 >= len(act) else act[i+1].lower(),
+                'BOS': i == 0,
+                'EOS': i == len(act)-1
             }
             sent_features.append(word_feat)
         return sent_features
@@ -43,7 +39,8 @@ class ActNER:
             return self.dataFramefy(act, predictions)
 
     def _preprocess(self, sentence):
-        sentence = sentence.replace(',', ' , ').replace(';', ' ; ').replace(':', ' : ').replace('. ', ' . ').replace('\n', ' ')
+        sentence = sentence.replace(',', ' , ').replace(';', ' ; '). \
+                   replace(':', ' : ').replace('. ', ' . ').replace('\n', ' ')
         if sentence[len(sentence)-2:] == '. ':
             sentence = sentence[:len(sentence)-2] + " ."
         return sentence.split()
