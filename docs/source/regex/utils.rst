@@ -2,5 +2,5 @@
 Regex Utils 
 ===========
 
-.. automodule:: dodfminer.extract.regex.helper
+.. automodule:: dodfminer.extract.polished.regex.helper
     :members:

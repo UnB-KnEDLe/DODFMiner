@@ -1,4 +1,5 @@
 import setuptools
+from dodfminer.__version__ import __version__
 
 def requirements_list():
     list_of_req = []
@@ -13,7 +14,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="dodfminer",
-    version="1.0.0",
+    version=__version__,
     author="Knedle",
     author_email="author@example.com",
     description="",

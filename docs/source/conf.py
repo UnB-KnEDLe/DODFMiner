@@ -13,6 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
+from dodfminer.__version__ import __version__
 
 
 
@@ -23,7 +24,7 @@ copyright = '2020, KnEDLe Team'
 author = 'KnEDLe Team'
  
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------

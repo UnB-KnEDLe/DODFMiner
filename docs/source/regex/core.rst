@@ -2,12 +2,12 @@
 Regex Core 
 ==========
 
-.. automodule:: dodfminer.extract.regex.core
-    :members: _acts_ids
+.. automodule:: dodfminer.extract.polished.regex.core
+    :members:
     :private-members:
 
 The Regex Class
 ===============
 
-.. autoclass:: dodfminer.extract.regex.core.Regex
+.. autoclass:: dodfminer.extract.polished.regex.core.ActRegex
     :members:
