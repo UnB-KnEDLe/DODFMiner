@@ -64,13 +64,13 @@ class SemEfeitoAposentadoria(Atos):
         return no_split_word.replace('\n', ' ')
 
 
-    def __init__(self, file, debug=False, extra_search=True, nlp=None):
+    def __init__(self, file, backend,debug=False, extra_search=True, nlp=None):
         self._debug = debug
         self._extra_search = extra_search
         self._processed_text = self._pre_process_text(open(file).read())
         self._raw_matches = []
         self._nlp = nlp
-        super().__init__(file)
+        super().__init__(file, backend)
 
     def _act_name(self):
         return "Atos tornados sem efeito - aposentadoria"
