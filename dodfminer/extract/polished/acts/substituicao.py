@@ -9,6 +9,11 @@ class Substituicao(Atos):
     def __init__(self, file):
         super().__init__(file)
 
+    # def _load_model(self):
+    #     f_path = os.path.dirname(__file__)
+    #     f_path += '/models/substituicao_ner.pkl'
+    #     return joblib.load(f_path)
+
     def _regex_flags(self):
         return re.IGNORECASE
 
