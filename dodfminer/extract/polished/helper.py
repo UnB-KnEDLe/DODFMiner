@@ -17,7 +17,7 @@ Functions
 import os
 import pandas as pd
 
-from dodfminer.extract.polished.core import ActsPropsExtractor
+from dodfminer.extract.polished.core import ActsExtractor
 
 
 def extract_multiple(files, type, txt_out=False, txt_path="./results"):
@@ -42,7 +42,7 @@ def extract_multiple(files, type, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_obj = ActsPropsExtractor.get_act_obj(type, file)
+        res_obj = ActsExtractor.get_act_obj(type, file)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
         if not res_df.empty:
@@ -72,7 +72,7 @@ def extract_single(file, type):
         including the texts found.
 
     """
-    res_obj = ActsPropsExtractor.get_act_obj(type, file)
+    res_obj = ActsExtractor.get_act_obj(type, file)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
