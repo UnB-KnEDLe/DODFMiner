@@ -12,6 +12,11 @@ class Retirements(Atos):
     def _regex_flags(self):
         return re.IGNORECASE
 
+    # def _load_model(self):
+    #     f_path = os.path.dirname(__file__)
+    #     f_path += '/models/aposentadoria_ner.pkl'
+    #     return joblib.load(f_path)
+
     def _act_name(self):
         return "Aposentadoria"
 
