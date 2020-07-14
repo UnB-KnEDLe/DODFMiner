@@ -1,4 +1,6 @@
 import setuptools
+from dodfminer.__version__ import __version__
+
 
 def requirements_list():
     list_of_req = []
@@ -8,12 +10,13 @@ def requirements_list():
 
     return list_of_req
 
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="dodfminer",
-    version="1.0.0",
+    version=__version__,
     author="Knedle",
     author_email="author@example.com",
     description="",
@@ -21,7 +24,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/UnB-KnEDLe/DODFMiner",
     packages=setuptools.find_packages(),
-    entry_points = {
+    entry_points={
         'console_scripts': ['dodfminer=dodfminer.miner:run'],
     },
     install_requires=requirements_list(),

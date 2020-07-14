@@ -4,7 +4,9 @@ Typical usage example:
     args = CLI().parse()
 """
 
+from dodfminer.__version__ import __version__
 from argparse import ArgumentParser
+
 
 class CLI(object):
     """CLI Class contains all parameters to handle arguments.
@@ -15,21 +17,28 @@ class CLI(object):
         parser (:obj:`ArgumentParser`): An ArgumentParser object.
         subparsers: Adds subparser to the parser, each one is like a
                     standalone aplication.
-        def_start_date (str): Start date to download DODFS. Default start date to download 01/19.
-        def_end_date (str): End date to download DODFS. Default end date to download 01/19.
-        pure_text (bool): Enable extraction in pure text mode. Defaults to False.
-        block (bool): Enable extraction in bloc mode. Defaults to False.
-        titles_with_boxes (bool): Enable extraction in titles with boxes mode. Defaults to False.
+        def_start_date (str): Start date to download DODFS. Default start date
+                              to download 01/19.
+        def_end_date (str): End date to download DODFS. Default end date
+                            to download 01/19.
+        pure_text (bool): Enable extraction in pure text mode.
+                          Defaults to False.
+        block (bool): Enable extraction in bloc mode.
+                      Defaults to False.
+        titles_with_boxes (bool): Enable extraction in titles with boxes mode.
+                                  Defaults to False.
         save_path (str): Save path of the download. Defaults to './data'.
-        input_folder (str): Path where the extractor should look to files. Defaults to './data'.
+        input_folder (str): Path where the extractor should look to files.
+                            Defaults to './data'.
 
     """
 
     def __init__(self):
         """Init CLI class with default values."""
-        desc = "Data extractor of PDF documents from the Official Gazette of the Federal District, Brazil."
+        desc = """Data extractor of PDF documents from the Official Gazette
+                  of the Federal District, Brazil."""
         self.parser = ArgumentParser(prog="DODFMiner", description=desc,
-                                     epilog='© Copyright 2020, KnEDLe Team. Version 1.0.0')
+                                     epilog=f'© Copyright 2020, KnEDLe Team. Version {__version__}')
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
@@ -59,7 +68,6 @@ class CLI(object):
                                      default=self.save_path, type=str,
                                      help=help_text)
 
-
         help_text = 'Input the date in either mm/yy or mm-yy.'
         download_parser.add_argument('-sd', '--start_date', dest='start_date',
                                      default=self.def_start_date, type=str,
@@ -76,12 +84,15 @@ class CLI(object):
 
         group = self._new_group('Extraction Configs', download_parser)
 
-        group.add_argument('-i', '--input_folder', dest='input_folder',
-                    default=self.input_folder, type=str,
-                    help='Path to the PDFs folder')
+        group.add_argument('-i', '--input-folder', dest='input_folder',
+                           default=self.input_folder, type=str,
+                           help='Path to the PDFs folder')
 
+        group.add_argument('-s', '--single-file', dest='single_file', type=str,
+                           default=None, help='Path to the single file to extract')
+        
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
-                           default='pure-text', type=str,
+                           default=None, type=str,
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
 

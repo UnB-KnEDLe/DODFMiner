@@ -234,7 +234,8 @@ class Downloader(object):
 
         Args:
             year (int): The year respective to the folder.
-            actual_date (:obj:`datetime`): The date in which the downloaded DODF corresponds.
+            actual_date (:obj:`datetime`): The date in which the downloaded
+            DODF corresponds.
 
         Returns:
             The path to the actual month in which the download is being made.

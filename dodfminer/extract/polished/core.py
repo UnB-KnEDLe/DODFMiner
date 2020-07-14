@@ -17,14 +17,18 @@ from dodfminer.extract.polished.acts.exoneracao import Exoneracao
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.retificacoes import RetAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
-from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.\
+     sem_efeito_aposentadoria import SemEfeitoAposentadoria
 
-_acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions, "nomeacao": NomeacaoComissionados,
-             "exoneracao": Exoneracao, "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
-             "substituicao": Substituicao, "sem_efeito_aposentadoria": SemEfeitoAposentadoria, 
-             "cessoes": Cessoes}
-"""dict: All avaiable acts classes indexed by a given string name."""
+
+_acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions,
+             "nomeacao": NomeacaoComissionados, "exoneracao": Exoneracao,
+             "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
+             "substituicao": Substituicao, "cessoes": Cessoes,
+             "sem_efeito_aposentadoria": SemEfeitoAposentadoria}
+"""_acts_ids: All avaiable acts classes indexed by a given string name."""
+
 
 class ActsPropsExtractor:
     """Regex main class.
@@ -42,67 +46,68 @@ class ActsPropsExtractor:
         """Extract a single act type from a single.
 
         Object format.
-        
+
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
 
         Returns:
             An object of the desired act, already with extracted information.
-        
+
         """
         return _acts_ids[ato_id](file)
 
     @staticmethod
     def get_all_obj(file):
-        """Extract all acts types from a single DODF. 
+        """Extract all acts types from a single DODF.
 
         Object format.
-        
+
         Args:
             file (string): Path of the file.
 
         Returns:
-            An vector of objects of all the acts, already with extracted information.
-        
+            An vector of objects of all the acts, already with extracted
+            information.
+
         """
         res = {}
         for key in _acts_ids:
             res[key] = _acts_ids[key](file)
-    
+
         return res
 
     @staticmethod
     def get_act_df(ato_id, file):
-        """Extract a single act type from a single DODF. 
+        """Extract a single act type from a single DODF.
 
         Dataframe format.
-        
+
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
 
         Returns:
             An dataframe with extracted information, for the desired act.
-        
+
         """
         return _acts_ids[ato_id](file).data_frame
-    
+
     @staticmethod
     def get_all_df(file):
-        """Extract all acts types from a single DODF. 
+        """Extract all acts types from a single DODF.
 
         Dataframe format.
-        
+
         Args:
             file (string): Path of the file.
 
         Returns:
             An vector of dataframed with extracted information for all acts.
-        
+
         """
         res = {}
         for key in _acts_ids:
             res[key] = _acts_ids[key](file).data_frame
-    
+
         return res
