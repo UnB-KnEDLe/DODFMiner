@@ -6,6 +6,7 @@ Typical usage example:
 
 from dodfminer.__version__ import __version__
 from argparse import ArgumentParser
+from dodfminer.extract.polished.core import _acts_ids
 
 
 class CLI(object):
@@ -84,7 +85,7 @@ class CLI(object):
         group = self._new_group('Extraction Configs', download_parser)
 
         group.add_argument('-i', '--input-folder', dest='input_folder',
-                           default=None, type=str,
+                           default='./', type=str,
                            help='Path to the PDFs folder')
 
         group.add_argument('-s', '--single-file', dest='single_file', type=str,
@@ -96,7 +97,7 @@ class CLI(object):
                            help="Type of text extraction")
 
         group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
-                           choices=['cessoes', 'nomeacao', 'aposentadoria'], nargs='+')
+                           choices=_acts_ids.keys(), nargs='+')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex', type=str, 
                            choices=['regex', 'ner'])
