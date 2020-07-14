@@ -30,7 +30,7 @@ _acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions,
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
 
-class ActsPropsExtractor:
+class ActsExtractor:
     """Regex main class.
 
     All interactions with the acts needs to be done through this interface.
@@ -43,7 +43,7 @@ class ActsPropsExtractor:
 
     @staticmethod
     def get_act_obj(ato_id, file):
-        """Extract a single act type from a single.
+        """Extract a single act type from a single DODF.
 
         Object format.
 

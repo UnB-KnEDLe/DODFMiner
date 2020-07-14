@@ -18,10 +18,18 @@ Implementing new acts
 
 The Acts base class is build in a way to make easy implementation of new acts.
 A programmer seeking to help with regex rules, need not to worry about anything, besides
-the regex itself. 
+the regex or ner itself.
 
 Mainly, the following four funcions need to be overwrited in the child class.
 
+
+.. automethod:: dodfminer.extract.polished.acts.base.Atos._act_name
+
+.. automethod:: dodfminer.extract.polished.acts.base.Atos._props_names
+
+.. automethod:: dodfminer.extract.polished.backend.regex.ActRegex._rule_for_inst
+
+.. automethod:: dodfminer.extract.polished.backend.regex.ActRegex._prop_rules
 
 Additionaly, if the programmer whishes to change the regex flags
 for his/her class, they can overwrite the following function in the child
@@ -43,6 +51,11 @@ Base Class Mechanisms
 
 One does not access directly none of those functions, but they are listed here in case the programmer
 implementing the act needs more informations.
+
+
+.. automethod:: dodfminer.extract.polished.acts.base.Atos._extract_instances
+
+.. automethod:: dodfminer.extract.polished.acts.base.Atos._extract_props
 
 Implemented Acts
 ================
