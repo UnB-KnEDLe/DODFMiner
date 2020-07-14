@@ -7,12 +7,13 @@ Contains class miner which is an interface to handle all extraction tasks.
 Usage example::
 
     dodfminer --help
-    
+
 """
 
 from dodfminer.cli import CLI
 from dodfminer.downloader.core import Downloader
 from dodfminer.extract.pure.core import ContentExtractor
+
 
 class Miner(object):
     """Main DODFMiner class.
@@ -39,15 +40,25 @@ class Miner(object):
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        if self.args.type_of_extr == 'pure-text':
-            ContentExtractor.extract_to_txt(folder=self.args.input_folder)
-        elif self.args.type_of_extr == 'with-title':
-            ContentExtractor.extract_to_json(folder=self.args.input_folder,
-                                             titles_with_boxes=True)
-        elif self.args.type_of_extr == 'blocks':
-            ContentExtractor.extract_to_json(folder=self.args.input_folder)
-        elif len(self.args.act) > 0:
-            print(self.args.act)
+        if self.args.single_file is None:
+            if self.args.type_of_extr is not None:
+                if self.args.type_of_extr == 'pure-text':
+                    ContentExtractor.extract_to_txt(folder=self.args.input_folder)
+                elif self.args.type_of_extr == 'with-titles':
+                    ContentExtractor.extract_to_json(folder=self.args.input_folder,
+                                                    titles_with_boxes=True)
+                elif self.args.type_of_extr == 'blocks':
+                    ContentExtractor.extract_to_json(folder=self.args.input_folder)
+            elif len(self.args.act) > 0:
+                print(self.args.act)
+        elif self.args.single_file is not None:
+            if self.args.type_of_extr is not None:
+                if self.args.type_of_extr == 'pure-text':
+                    ContentExtractor.extract_text(self.args.single_file, single=True)
+                elif self.args.type_of_extr == 'with-titles':
+                    ContentExtractor.extract_structure(self.args.single_file, single=True)
+                elif self.args.type_of_extr == 'blocks':
+                    ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
@@ -62,5 +73,6 @@ def run():
     else:
         miner._log("Program mode not recognized")
 
+
 if __name__ == '__main__':
-    Miner().run()
+    run()

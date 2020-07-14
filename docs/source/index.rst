@@ -22,19 +22,23 @@ Welcome to DODFMiner's documentation!
 
 .. toctree::
   :maxdepth: 2
-  :caption: Extractor Module
+  :caption: Pure Extractor
 
   extract/core
   extract/utils
 
 .. toctree::
   :maxdepth: 2
-  :caption: Regex Module
+  :caption: Polished Extractor
 
   regex/core
-  regex/atos
   regex/utils
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Polished Extractor
   
+  regex/atos
 
 .. toctree::
   :maxdepth: 2
