@@ -43,7 +43,6 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.save_path = './data'
-        self.input_folder = './data'
 
     def _new_group(self, name, subparser):
         """Create new argument group.
@@ -85,7 +84,7 @@ class CLI(object):
         group = self._new_group('Extraction Configs', download_parser)
 
         group.add_argument('-i', '--input-folder', dest='input_folder',
-                           default=self.input_folder, type=str,
+                           default=None, type=str,
                            help='Path to the PDFs folder')
 
         group.add_argument('-s', '--single-file', dest='single_file', type=str,
@@ -97,7 +96,7 @@ class CLI(object):
                            help="Type of text extraction")
 
         group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
-                           choices=['cessoes', 'nomeacoes'], nargs='+')
+                           choices=['cessoes', 'nomeacao', 'aposentadoria'], nargs='+')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex', type=str, 
                            choices=['regex', 'ner'])

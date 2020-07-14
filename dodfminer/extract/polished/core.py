@@ -42,7 +42,7 @@ class ActsPropsExtractor:
     """
 
     @staticmethod
-    def get_act_obj(ato_id, file):
+    def get_act_obj(ato_id, file, backend):
         """Extract a single act type from a single.
 
         Object format.
@@ -55,10 +55,11 @@ class ActsPropsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        return _acts_ids[ato_id](file)
+        
+        return _acts_ids[ato_id](file, backend)
 
     @staticmethod
-    def get_all_obj(file):
+    def get_all_obj(file, backend):
         """Extract all acts types from a single DODF.
 
         Object format.
@@ -73,12 +74,12 @@ class ActsPropsExtractor:
         """
         res = {}
         for key in _acts_ids:
-            res[key] = _acts_ids[key](file)
+            res[key] = _acts_ids[key](file, backend)
 
         return res
 
     @staticmethod
-    def get_act_df(ato_id, file):
+    def get_act_df(ato_id, file, backend):
         """Extract a single act type from a single DODF.
 
         Dataframe format.
@@ -91,10 +92,10 @@ class ActsPropsExtractor:
             An dataframe with extracted information, for the desired act.
 
         """
-        return _acts_ids[ato_id](file).data_frame
+        return _acts_ids[ato_id](file, backend).data_frame
 
     @staticmethod
-    def get_all_df(file):
+    def get_all_df(file, backend):
         """Extract all acts types from a single DODF.
 
         Dataframe format.
@@ -108,6 +109,6 @@ class ActsPropsExtractor:
         """
         res = {}
         for key in _acts_ids:
-            res[key] = _acts_ids[key](file).data_frame
+            res[key] = _acts_ids[key](file, backend).data_frame
 
         return res
