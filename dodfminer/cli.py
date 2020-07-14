@@ -85,14 +85,23 @@ class CLI(object):
 
         group = self._new_group('Extraction Configs', download_parser)
 
-        group.add_argument('-i', '--input_folder', dest='input_folder',
+        group.add_argument('-i', '--input-folder', dest='input_folder',
                            default=self.input_folder, type=str,
                            help='Path to the PDFs folder')
 
+        group.add_argument('-s', '--single-file', dest='single_file', type=str,
+                           default=None, help='Path to the single file to extract')
+        
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
-                           default='pure-text', type=str,
+                           default=None, type=str,
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
+
+        group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
+                           choices=['cessoes', 'nomeacoes'], nargs='+')
+
+        group.add_argument('-b', '--backend', dest='backend', default='regex', type=str, 
+                           choices=['regex', 'ner'])
 
     def parse(self):
         """Create parser and parse the arguments.
