@@ -6,6 +6,7 @@ from typing import List, Match
 
 from dodfminer.extract.polished.acts.base import Atos
 
+
 def case_insensitive(s: str):
     """Returns regular expression similar to `s` but case careless.
 
@@ -55,7 +56,7 @@ ONUS = r"(?P<onus>\b[oôOÔ]{}\b[^.]+[.])".format(case_insensitive("nus"))
 class Cessoes(Atos):
     _special_acts = ['matricula', 'cargo']
 
-    def __init__(self, file, debug=False, extra_search = True):
+    def __init__(self, file, debug=False, extra_search=True):
         self._debug = debug
         self._extra_search = extra_search
         self._processed_text = remove_crossed_words(open(file).read())
@@ -75,13 +76,12 @@ class Cessoes(Atos):
 
     def _rule_for_inst(self):
         return (
-            r"([Pp][Rr][Oo][Cc][Ee][Ss][Ss][Oo][^0-9/]{0,12})([^\n]+?\n){0,2}?"\
-            + r"[^\n]*?[Aa]\s*[Ss]\s*[Ss]\s*[Uu]\s*[Nn]\s*[Tt]\s*[Oo]\s*:?\s*\bCESS.O\b"\
-            + r"([^\n]*\n){0,}?[^\n]*?(?=(?P<look_ahead>PROCESSO|Processo:|PUBLICAR|pertinentes[.]|autoridade cedente|"\
+            r"([Pp][Rr][Oo][Cc][Ee][Ss][Ss][Oo][^0-9/]{0,12})([^\n]+?\n){0,2}?"
+            + r"[^\n]*?[Aa]\s*[Ss]\s*[Ss]\s*[Uu]\s*[Nn]\s*[Tt]\s*[Oo]\s*:?\s*\bCESS.O\b"
+            + r"([^\n]*\n){0,}?[^\n]*?(?=(?P<look_ahead>PROCESSO|Processo:|PUBLICAR|pertinentes[.]|autoridade cedente|"
             + case_insensitive('publique-se') + "))"
             # + r'(?i:publique-se)' + "))"
         )
-
 
     def _prop_rules(self):
         return {
@@ -94,7 +94,6 @@ class Cessoes(Atos):
             'siape': SIAPE,
             'cargo': r",(?P<cargo>[^,]+)",
         }
-
 
     def _find_instances(self) -> List[Match]:
         """Returns list of re.Match objects found on `self._text_no_crosswords`.
@@ -111,14 +110,13 @@ class Cessoes(Atos):
             print("DEBUG:", len(l), 'matches')
         return l
 
-
     def _get_special_acts(self, lis_matches):
         for i, match in enumerate(self._raw_matches):
             act = match.group()
             matricula = re.search(MATRICULA, act) or \
                     re.search(MATRICULA_GENERICO, act) or \
                     re.search(MATRICULA_ENTRE_VIRGULAS, act)
-            
+
             nome = re.search(self._rules['nome'], act)
             if matricula and nome:
                 offset = matricula.end()-1 if 0 <= (matricula.start() - nome.end()) <= 5 \
@@ -126,7 +124,7 @@ class Cessoes(Atos):
                 cargo, = self._find_props(r",(?P<cargo>[^,]+)", act[offset:])
             else:
                 cargo = "nan"
-            
+
             lis_matches[i]['matricula'] = matricula.group('matricula') if matricula \
                                         else "nan"
             lis_matches[i]['cargo'] = cargo
@@ -142,7 +140,7 @@ class Cessoes(Atos):
             an exception if there are more than two groups.
         """
         match = re.search(rule, act, flags=self._flags)
-        
+
         if match:
             keys = list(match.groupdict().keys())
             if len(keys) == 0:
@@ -163,7 +161,7 @@ class Cessoes(Atos):
             acts.append(act)
         if self._extra_search:
             self._get_special_acts(acts)
-        return acts      
+        return acts
 
 
     def _extract_instances(self) -> List[Match]:
@@ -173,4 +171,3 @@ class Cessoes(Atos):
 
     def _build_dataframe(self):
         return pd.DataFrame(self._acts)
-

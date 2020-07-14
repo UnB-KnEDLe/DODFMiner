@@ -27,7 +27,6 @@ class Substituicao(Atos):
                 "Hierarquia da Lotação", "Órgão", "Data Inicial da Vigência",
                 "Data Final de Vigência", "Matrícula SIAPE", "Motivo"]
 
-
     def _rule_for_inst(self):
         start = r"(DESIGNAR)"
         body = r"([\s\S]*?)"

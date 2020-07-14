@@ -37,8 +37,9 @@ class CLI(object):
         """Init CLI class with default values."""
         desc = """Data extractor of PDF documents from the Official Gazette
                   of the Federal District, Brazil."""
+        epilog = f'© Copyright 2020, KnEDLe Team. Version {__version__}'
         self.parser = ArgumentParser(prog="DODFMiner", description=desc,
-                                     epilog=f'© Copyright 2020, KnEDLe Team. Version {__version__}')
+                                     epilog=epilog)
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
