@@ -18,9 +18,29 @@ import os
 import pandas as pd
 
 from dodfminer.extract.polished.core import ActsExtractor
+from dodfminer.extract.pure.core import ContentExtractor
 
 
-def extract_multiple(files, type, txt_out=False, txt_path="./results"):
+def extract_multiple_acts(folder, types, backend):
+    """Extract multple Acts from Multiple DODFs to act named CSVs.
+
+    Args:
+        folder (str): Folder where the Dodfs are.
+        types ([str]): Types of the act, see the core class to view
+                    avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
+
+    Returns:
+        None
+    """
+    ContentExtractor.extract_to_txt(folder)
+    for type in types:
+        files = get_files_path(folder, 'txt')
+        df = extract_multiple(files, type, backend)
+        df.to_csv(os.path.join(folder, type+".csv"))
+
+
+def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """Extract Act from Multiple DODF to a single DataFrame.
 
     Note:
@@ -42,7 +62,7 @@ def extract_multiple(files, type, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_obj = ActsExtractor.get_act_obj(type, file)
+        res_obj = ActsExtractor.get_act_obj(type, file, backend)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
         if not res_df.empty:
@@ -55,7 +75,7 @@ def extract_multiple(files, type, txt_out=False, txt_path="./results"):
     return res_final
 
 
-def extract_single(file, type):
+def extract_single(file, type, backend):
     """Extract Act from a single DODF to a single DataFrame.
 
     Note:
@@ -63,7 +83,7 @@ def extract_single(file, type):
         if txt_out is True.
 
     Args:
-        files ([str]): List of dodfs files path.
+        files (str): Dodf file path.
         type (str): Type of the act, see the core class to view
                     avaiables types.
 
@@ -72,7 +92,7 @@ def extract_single(file, type):
         including the texts found.
 
     """
-    res_obj = ActsExtractor.get_act_obj(type, file)
+    res_obj = ActsExtractor.get_act_obj(type, file, backend)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
@@ -116,7 +136,7 @@ def print_dataframe(df):
     return style_df
 
 
-def get_files_path(path):
+def get_files_path(path, type):
     """Get all files path inside a folder.
 
     Works with nested folders.
@@ -124,13 +144,14 @@ def get_files_path(path):
     Args:
         path: Folder to look into for files
 
-    Returns:
+    Returns:A dataframe containing all instances of the desired
+        act in the files set.
         A list of strings with the file path.
 
     """
     files_path = []
     for root, _, files in os.walk(path):
         for file in files:
-            if file.endswith(".txt"):
+            if file.endswith("."+type):
                 files_path.append(os.path.join(root, file))
     return files_path
