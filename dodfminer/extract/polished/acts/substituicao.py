@@ -6,8 +6,8 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class Substituicao(Atos):
 
-    def __init__(self, text):
-        super().__init__(text)
+    def __init__(self, file):
+        super().__init__(file)
 
     def _regex_flags(self):
         return re.IGNORECASE

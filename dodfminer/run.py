@@ -13,6 +13,7 @@ Usage example::
 from dodfminer.cli import CLI
 from dodfminer.downloader.core import Downloader
 from dodfminer.extract.pure.core import ContentExtractor
+from dodfminer.extract.polished.helper import extract_multiple_acts
 
 
 class Miner(object):
@@ -40,7 +41,7 @@ class Miner(object):
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        if self.args.single_file is None:
+        if self.args.input_folder is not None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':
                     ContentExtractor.extract_to_txt(folder=self.args.input_folder)
@@ -50,7 +51,7 @@ class Miner(object):
                 elif self.args.type_of_extr == 'blocks':
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
             elif len(self.args.act) > 0:
-                print(self.args.act)
+                extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
         elif self.args.single_file is not None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':

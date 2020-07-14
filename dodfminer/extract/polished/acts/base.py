@@ -36,10 +36,9 @@ class Atos(ActRegex, ActNER):
 
     """
 
-    def __init__(self, file):
-        self._backend = 'ner'
+    def __init__(self, file, backend='regex'):
         super(Atos, self).__init__()
-
+        self._backend = backend
         fp = open(file, "r")
         self._file_name = file
         self._text = fp.read()
