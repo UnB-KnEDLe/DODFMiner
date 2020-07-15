@@ -1,5 +1,7 @@
 """Regras regex para ato de Nomeacao de Comissionados."""
 
+import os
+import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -10,6 +12,11 @@ class NomeacaoComissionados(Atos):
 
     def _act_name(self):
         return "Nomeação"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/nomeacao_ner.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ['Tipo', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',

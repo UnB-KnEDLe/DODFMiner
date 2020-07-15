@@ -1,6 +1,8 @@
 """Regras regex para ato de Abono de Permanencia."""
 
 import re
+import os
+import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -14,6 +16,11 @@ class AbonoPermanencia(Atos):
 
     def _act_name(self):
         return "Abono de Permanência"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/abono_ner.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ["Tipo do Ato", "Nome do Servidor", "Matrícula",
