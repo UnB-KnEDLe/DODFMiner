@@ -32,7 +32,8 @@ class Miner(object):
 
     def __init__(self):
         """Init Miner class to handle all the extraction process."""
-        self.args = CLI().parse()
+        self.cli = CLI()
+        self.args = self.cli.parse()
 
     def download(self):
         """Download PDFs with parameters from CLI."""
@@ -64,7 +65,6 @@ class Miner(object):
                     ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
             elif len(self.args.act) > 0:
                 extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
-
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
 
@@ -76,8 +76,7 @@ def run():
     elif miner.args.subparser_name == 'extract':
         miner.extract_content()
     else:
-        miner._log("Program mode not recognized")
-
+        miner.cli.parser.print_help()
 
 if __name__ == '__main__':
     run()
