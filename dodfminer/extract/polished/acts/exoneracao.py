@@ -44,7 +44,7 @@ class Exoneracao(Atos):
 
 class ExoneracaoEfetivos(Atos):
 
-    def __init__(self,text):
+    def __init__(self, file, backend):
         super().__init__(text)
 
     def _act_name(self):
