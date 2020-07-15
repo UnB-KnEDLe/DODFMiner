@@ -6,8 +6,8 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class Substituicao(Atos):
 
-    def __init__(self, file):
-        super().__init__(file)
+    def __init__(self, file, backend):
+        super().__init__(file, backend)
 
     # def _load_model(self):
     #     f_path = os.path.dirname(__file__)

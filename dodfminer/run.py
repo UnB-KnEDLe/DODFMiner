@@ -41,7 +41,7 @@ class Miner(object):
 
     def extract_content(self):
         """Extract Content from PDFs."""
-        if self.args.input_folder is not None:
+        if self.args.single_file is None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':
                     ContentExtractor.extract_to_txt(folder=self.args.input_folder)
@@ -61,8 +61,9 @@ class Miner(object):
                     ContentExtractor.extract_structure(self.args.single_file,
                                                        single=True)
                 elif self.args.type_of_extr == 'blocks':
-                    ContentExtractor.extract_text(self.args.single_file,
-                                                  single=True, block=True)
+                    ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
+            elif len(self.args.act) > 0:
+                extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")

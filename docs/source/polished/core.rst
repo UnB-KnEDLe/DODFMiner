@@ -1,13 +1,13 @@
-==========
-Regex Core
-==========
+=============
+Polished Core
+=============
 
-.. automodule:: dodfminer.extract.polished.backend.regex
+.. automodule:: dodfminer.extract.polished.core
     :members:
     :private-members:
 
-The Regex Class
-===============
+The Act Extractor Class
+=======================
 
-.. autoclass:: dodfminer.extract.polished.backend.regex.ActRegex
+.. autoclass:: dodfminer.extract.polished.core.ActsExtractor
     :members:

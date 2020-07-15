@@ -1,8 +1,8 @@
-===============
-Extractor Utils 
-===============
+==========
+Pure Utils
+==========
 
-.. warning:: 
+.. warning::
     This documentation needs improvments by the code's author.
 
 .. contents:: Table of Contents
@@ -20,4 +20,4 @@ Title Filter
 Title Extactor
 ==============
 
-.. automodule:: dodfminer.extract.pure.utils.title_extractor    
+.. automodule:: dodfminer.extract.pure.utils.title_extractor

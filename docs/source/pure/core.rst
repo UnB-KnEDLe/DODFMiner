@@ -1,6 +1,6 @@
-==============
-Extractor Core
-==============
+=========
+Pure Core
+=========
 
 .. contents:: Table of Contents
 
@@ -12,7 +12,7 @@ Extract Class
 .. autoclass:: dodfminer.extract.pure.core.ContentExtractor
     :members:
 
-Downloader Private Members
+Extractor Private Members
 ==========================
 
 One does not access directly none of those methods, but they are listed here in case the programmer
