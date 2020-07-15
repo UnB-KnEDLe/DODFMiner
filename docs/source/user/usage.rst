@@ -60,17 +60,37 @@ pure text in .txt format and text separated by titles:
 Also, you can choose where to look for the files, but changing this argument is not recomended.
 Following are the list of avaiable parameters, their description and the default value.
 
-+-------------------------+-------------------------------------+------------+
-| Argument                | Description                         | Default    |
-+=========================+=====================================+============+
-| -i --input_folder       | Path to the PDFs folder             | ./data     |
-+-------------------------+-------------------------------------+------------+
-| -t --type-of-extraction | Type of text extraction             | pure-text  |
-+-------------------------+-------------------------------------+------------+
++-------------------------+------------------------------------------+------------+
+| Argument                | Description                              | Default    |
++=========================+==========================================+============+
+| -i --input_folder       | Path to the PDFs folder                  | ./data     |
++-------------------------+------------------------------------------+------------+
+| -s --single-file        | Path to a single PDF                     | None       |
++-------------------------+------------------------------------------+------------+
+| -t --type-of-extraction | Type of text extraction                  | pure-text  |
++-------------------------+------------------------------------------+------------+
+| -a --act                | List of acts that will be extract to CSV | None       |
++-------------------------+------------------------------------------+------------+
+| -b --backend            | Which backend will extract the acts      | regex      |
++-------------------------+------------------------------------------+------------+
+
 
 Usage Example::
 
-    $ dodfminer extract
+    $ dodfminer extract -i path/to/pdf/folder -t with-titles
+    $ dodfminer extract -s path/to/dodf.pdf -t pure-text
+    $ dodfminer extract -s path/to/dodf.pdf -a nomeacao
+    $ dodfminer extract -s path/to/dodf.pdf -a nomeacao cessoes -b ner
+
+.. note::
+    
+    It's important to notice that if -t and -a options are used together the -t option will 
+    have the priority and the -a will not execute.
+    
+.. note::
+
+    The dodfminer act extraction needs the text data from DODFs to correct extract the acts
+    from DODF, therefore the -a option generates first txt files before the act extraction.
 
 Library Usage
 =============
