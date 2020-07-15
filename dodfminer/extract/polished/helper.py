@@ -17,14 +17,15 @@ Functions
 import os
 import pandas as pd
 
-from dodfminer.extract.polished.core import ActsPropsExtractor
+from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.pure.core import ContentExtractor
 
-def extract_multiple_acts(folder, types, backend):
+
+def extract_multiple_acts(path, types, backend):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
 
     Args:
-        folder (str): Folder where the Dodfs are.
+        path (str): Folder where the Dodfs are.
         types ([str]): Types of the act, see the core class to view
                     avaiables types.
         backend (str): what backend will be used to extract Acts {regex, ner}
@@ -32,12 +33,17 @@ def extract_multiple_acts(folder, types, backend):
     Returns:
         None
     """
-    ContentExtractor.extract_to_txt(folder)
-    for type in types:
-        files = get_files_path(folder, 'txt')
-        df = extract_multiple(files, type, backend)
-        df.to_csv(os.path.join(folder, type+".csv"))
-
+    if os.path.isfile(path):
+        ContentExtractor.extract_text(path, single=True)
+        for type in types:
+            df = extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
+            df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
+    else:
+        ContentExtractor.extract_to_txt(path)
+        files = get_files_path(path, 'txt')
+        for type in types:
+            df = extract_multiple(files, type, backend)
+            df.to_csv(os.path.join(path, type+".csv"))
 
 
 def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
@@ -62,7 +68,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_obj = ActsPropsExtractor.get_act_obj(type, file, backend)
+        res_obj = ActsExtractor.get_act_obj(type, file, backend)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
         if not res_df.empty:
@@ -92,7 +98,7 @@ def extract_single(file, type, backend):
         including the texts found.
 
     """
-    res_obj = ActsPropsExtractor.get_act_obj(type, file, backend)
+    res_obj = ActsExtractor.get_act_obj(type, file, backend)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt

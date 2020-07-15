@@ -17,7 +17,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="dodfminer",
     version=__version__,
-    author="Knedle",
+    author="KnEDLe",
     author_email="author@example.com",
     description="",
     long_description=long_description,
@@ -25,7 +25,7 @@ setuptools.setup(
     url="https://github.com/UnB-KnEDLe/DODFMiner",
     packages=setuptools.find_packages(),
     entry_points={
-        'console_scripts': ['dodfminer=dodfminer.miner:run'],
+        'console_scripts': ['dodfminer=dodfminer.run:run'],
     },
     install_requires=requirements_list(),
     classifiers=[

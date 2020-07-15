@@ -38,8 +38,9 @@ class CLI(object):
         """Init CLI class with default values."""
         desc = """Data extractor of PDF documents from the Official Gazette
                   of the Federal District, Brazil."""
+        epilog = f'© Copyright 2020, KnEDLe Team. Version {__version__}'
         self.parser = ArgumentParser(prog="DODFMiner", description=desc,
-                                     epilog=f'© Copyright 2020, KnEDLe Team. Version {__version__}')
+                                     epilog=epilog)
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
@@ -89,8 +90,9 @@ class CLI(object):
                            help='Path to the PDFs folder')
 
         group.add_argument('-s', '--single-file', dest='single_file', type=str,
-                           default=None, help='Path to the single file to extract')
-        
+                           default=None,
+                           help='Path to the single file to extract')
+
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
                            default=None, type=str,
                            choices=['pure-text', 'blocks', 'with-titles'],
@@ -99,8 +101,8 @@ class CLI(object):
         group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
                            choices=_acts_ids.keys(), nargs='+')
 
-        group.add_argument('-b', '--backend', dest='backend', default='regex', type=str, 
-                           choices=['regex', 'ner'])
+        group.add_argument('-b', '--backend', dest='backend', default='regex',
+                           type=str, choices=['regex', 'ner'])
 
     def parse(self):
         """Create parser and parse the arguments.
