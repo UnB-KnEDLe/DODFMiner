@@ -13,7 +13,7 @@ class ActRegex:
         """Flags of the regex search"""
         return 0
 
-    def _inst_rule(self):
+    def _rule_for_inst(self):
         """Rule for extraction of the act
 
         Warning:

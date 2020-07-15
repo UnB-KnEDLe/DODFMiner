@@ -73,6 +73,6 @@ class ActNER:
                 last_tag = "I" + prediction[i][1:]
 
         if temp_entity:
-            tags[last_tag[2:]].append(temp_entity)
+            dict[last_tag[2:]].append(temp_entity)
 
         return dict

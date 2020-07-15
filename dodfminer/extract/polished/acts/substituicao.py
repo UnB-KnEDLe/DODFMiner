@@ -9,6 +9,11 @@ class Substituicao(Atos):
     def __init__(self, file, backend):
         super().__init__(file, backend)
 
+    # def _load_model(self):
+    #     f_path = os.path.dirname(__file__)
+    #     f_path += '/models/substituicao_ner.pkl'
+    #     return joblib.load(f_path)
+
     def _regex_flags(self):
         return re.IGNORECASE
 
@@ -26,7 +31,6 @@ class Substituicao(Atos):
                 "Símbolo do cargo comissionado objeto da substituição",
                 "Hierarquia da Lotação", "Órgão", "Data Inicial da Vigência",
                 "Data Final de Vigência", "Matrícula SIAPE", "Motivo"]
-
 
     def _rule_for_inst(self):
         start = r"(DESIGNAR)"

@@ -173,7 +173,7 @@ class Downloader(object):
 
         Args:
             url (str): The website url to download the DODF.
- 
+
         Returns:
             An :obj:`BeautifulSoup` which html queries are made.
 
@@ -195,7 +195,7 @@ class Downloader(object):
 
         Args:
             path (str): The path where the file might be
- 
+
         Returns:
             Boolean indicating if file does really exists.
 

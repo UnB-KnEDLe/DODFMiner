@@ -47,7 +47,7 @@ class Miner(object):
                     ContentExtractor.extract_to_txt(folder=self.args.input_folder)
                 elif self.args.type_of_extr == 'with-titles':
                     ContentExtractor.extract_to_json(folder=self.args.input_folder,
-                                                    titles_with_boxes=True)
+                                                     titles_with_boxes=True)
                 elif self.args.type_of_extr == 'blocks':
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
             elif len(self.args.act) > 0:
@@ -55,13 +55,15 @@ class Miner(object):
         elif self.args.single_file is not None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':
-                    ContentExtractor.extract_text(self.args.single_file, single=True)
+                    ContentExtractor.extract_text(self.args.single_file,
+                                                  single=True)
                 elif self.args.type_of_extr == 'with-titles':
-                    ContentExtractor.extract_structure(self.args.single_file, single=True)
+                    ContentExtractor.extract_structure(self.args.single_file,
+                                                       single=True)
                 elif self.args.type_of_extr == 'blocks':
                     ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
-        elif len(self.args.act) > 0:
-            extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
+            elif len(self.args.act) > 0:
+                extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
 
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
