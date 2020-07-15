@@ -4,10 +4,10 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class NomeacaoComissionados(Atos):
-
-    def __init__(self, text, backend):
-        super().__init__(text, backend)
-
+    
+    def __init__(self, file, backend):
+        super().__init__(file, backend)
+    
     def _act_name(self):
         return "Nomeação"
 

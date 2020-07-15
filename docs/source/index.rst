@@ -22,15 +22,10 @@ Welcome to DODFMiner's documentation!
 
 .. toctree::
   :maxdepth: 2
-  :caption: Pure Extractor
+  :caption: Extractor Module
 
   pure/core
   pure/utils
-
-.. toctree::
-  :maxdepth: 2
-  :caption: Polished Extractor
-
   polished/core
   polished/utils
 
