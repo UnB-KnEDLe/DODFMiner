@@ -19,6 +19,9 @@ class Atos(ActRegex, ActNER):
 
     Args:
         file (str): The dodf file path.
+        backend (str): The mechanism to use in extraction.
+                       Can be either regex or ner.
+                       Defaults to regex.
 
     Attributes:
         _file_name (str): The dodf file path.
@@ -53,14 +56,14 @@ class Atos(ActRegex, ActNER):
         self._data_frame = self._build_dataframe()
 
     @property
-    def data_frame(self):
-        """:obj:`dataframe`: Act dataframe with proprieties extracted."""
-        return self._data_frame
-
-    @property
     def name(self):
         """str: Name of the act."""
         return self._name
+
+    @property
+    def data_frame(self):
+        """:obj:`dataframe`: Act dataframe with proprieties extracted."""
+        return self._data_frame
 
     @property
     def acts_str(self):
@@ -100,7 +103,10 @@ class Atos(ActRegex, ActNER):
         """
         if len(self._acts) > 0:
             df = pd.DataFrame(self._acts)
-            df.columns = self._columns
+            if self._backend == 'regex':
+                df.columns = self._columns
+            else:
+                df.columns = [x.capitalize() for x in df.columns]
             return df
         return pd.DataFrame()
 
