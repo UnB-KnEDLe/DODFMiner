@@ -16,8 +16,8 @@ import tqdm
 import requests
 import urllib.parse
 
-from pathlib import Path
 from bs4 import BeautifulSoup
+from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 

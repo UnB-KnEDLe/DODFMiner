@@ -99,10 +99,12 @@ class CLI(object):
                            help="Type of text extraction")
 
         group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
-                           choices=_acts_ids.keys(), nargs='+')
+                           choices=_acts_ids.keys(), nargs='+',
+                           help='Which acts to extract to CSV')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex',
-                           type=str, choices=['regex', 'ner'])
+                           type=str, choices=['regex', 'ner'],
+                           help="The backend to be used in CSV extraction")
 
     def parse(self):
         """Create parser and parse the arguments.
