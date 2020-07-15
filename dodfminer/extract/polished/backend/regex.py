@@ -1,7 +1,28 @@
+"""Regex backend for act and propriety extraction.
+
+This module contains the ActRegex class, which have all that is necessary to
+extract an act and, its proprieties, using regex rules.
+
+"""
+
 import re
 
 
 class ActRegex:
+    """Act Regex Class.
+
+    This class encapsulate all functions, and attributes related
+    to the process of regex extraction.
+
+    Attributes:
+        _flags: All the regex flags which will be used in extraction.
+        _rules: The regex rules for proprieties extraction.
+        _inst_rule: The regex rule for act extraction.
+
+    Note:
+        This class is one of the fathers of the Base act class.
+
+    """
 
     def __init__(self):
         super(ActRegex, self).__init__()
@@ -9,10 +30,7 @@ class ActRegex:
         self._rules = self._prop_rules()
         self._inst_rule = self._rule_for_inst()
 
-    def _regex_flags(self):
-        """Flags of the regex search"""
-        return 0
-
+    @property
     def _rule_for_inst(self):
         """Rule for extraction of the act
 
@@ -27,6 +45,7 @@ class ActRegex:
         """
         raise NotImplementedError
 
+    @property
     def _prop_rules(self):
         """Rules for extraction of the proprieties.
 
@@ -38,6 +57,10 @@ class ActRegex:
 
         """
         raise NotImplementedError
+
+    def _regex_flags(self):
+        """Flag of the regex search"""
+        return 0
 
     def _regex_instances(self):
         """Search for all instances of the act using the defined rule.

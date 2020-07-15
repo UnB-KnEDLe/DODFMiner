@@ -1,12 +1,12 @@
-""" Regex helper functions.
+""" Polished extraction helper functions.
 
-Functions in this files can be used inside, or outside, the Regex class.
-Their purpose is to make some tasks easier for the user, like creating txts,
-searching through files, and print dataframes.
+Functions in this files can be used inside, or outside, the ActsExtractor
+class. Their purpose is to make some tasks easier for the user,
+like creating txts, searching through files, and print dataframes.
 
 Usage Example::
 
-    from dodfminer.extract.regex import helper
+    from ddodfminer.extract.polished import helper
     helper.print_dataframe(df)
 
 Functions

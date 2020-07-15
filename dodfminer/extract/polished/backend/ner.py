@@ -1,15 +1,54 @@
+"""NER backend for act and propriety extraction.
+
+This module contains the ActNER class, which have all that is necessary to
+extract an act and, its proprieties, using a trained ner model.
+
+"""
+
+import numpy as np
+
 class ActNER:
+    """Act NER Class.
+
+    This class encapsulate all functions, and attributes related
+    to the process of NER extraction.
+
+    Note:
+        This class is one of the fathers of the Base act class.
+
+    Attributes:
+        _model: The trained NER model for the act
+
+    """
 
     def __init__(self):
         super(ActNER, self).__init__()
         self._model = self._load_model()
 
     def _load_model(self):
+        """Load Model from models/folder.
+
+        Note:
+            This function needs to be overwriten in
+            the child class. If this function is not
+            overwrite the backend will fall back to regex.
+
+        """
         if self._backend == 'ner':
             print("This Act does not have an model: FALLING BACK TO REGEX")
             self._backend = 'regex'
 
     def _get_features(self, act):
+        """Create features for each word in act.
+
+        Create a list of dict of words features to be used in the predictor module.
+
+        Args:
+            act (list): List of words in an act.
+
+        Returns:
+            A list with a dictionary of features for each of the words.
+        """
         sent_features = []
         for i in range(len(act)):
             word_feat = {
@@ -26,28 +65,47 @@ class ActNER:
         return sent_features
 
     def _prediction(self, act):
+        """Predict classes for a single act.
+
+        Args:
+            act (string): Full act
+
+        Returns:
+            A dictionary with the proprieties and its
+            predicted value.
+        """
         act = self._preprocess(act)
-        if isinstance(act[0], list):
-            feats = []
-            for i in range(len(act)):
-                feats.append(self._get_features(act[i]))
-            predictions = self._model.predict(feats)
-            return predictions
-        else:
-            feats = self._get_features(act)
-            predictions = self._model.predict_single(feats)
-            return self.dataFramefy(act, predictions)
+        feats = self._get_features(act)
+        predictions = self._model.predict_single(feats)
+        return self.dataFramefy(act, predictions)
 
     def _preprocess(self, sentence):
+        """Transform a raw string to a list of words.
+
+        Args:
+            sentence (string): Raw act as string.
+
+        Returns:
+            The list of words in the act.
+        """
         sentence = sentence.replace(',', ' , ').replace(';', ' ; '). \
                    replace(':', ' : ').replace('. ', ' . ').replace('\n', ' ')
         if sentence[len(sentence)-2:] == '. ':
             sentence = sentence[:len(sentence)-2] + " ."
         return sentence.split()
 
-    # TODO create dataframe with identified entities
     def dataFramefy(self, sentence, prediction):
-        # Create dictionary of tags to save predicted entities
+        """[summary]
+
+        Create dictionary of tags to save predicted entities
+
+        Args:
+            sentence ([type]): [description]
+            prediction ([type]): [description]
+
+        Returns:
+            [type]: [description]
+        """
         tags = self._model.classes_
         tags.remove('O')
         tags.sort(reverse=True)
@@ -56,6 +114,7 @@ class ActNER:
         for i in range(len(tags)):
             tags[i] = tags[i][2:]
         dict = {}
+        dict["Tipo do Ato"] = ""
         for i in tags:
             dict[i] = []
 
@@ -74,5 +133,22 @@ class ActNER:
 
         if temp_entity:
             dict[last_tag[2:]].append(temp_entity)
+
+        for key in dict.keys():
+            values = []
+            for value in dict[key]:
+                value = ' '.join(value)
+                values.append(value)
+            if len(values) == 1:
+                dict[key] = values[0]
+            else:
+                dict[key] = values
+
+
+            if dict[key] == []:
+                dict[key] = np.nan
+
+        dict["Tipo do Ato"] = self._name
+
 
         return dict

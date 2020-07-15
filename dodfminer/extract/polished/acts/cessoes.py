@@ -56,12 +56,12 @@ ONUS = r"(?P<onus>\b[oôOÔ]{}\b[^.]+[.])".format(case_insensitive("nus"))
 class Cessoes(Atos):
     _special_acts = ['matricula', 'cargo']
 
-    def __init__(self, file, debug=False, extra_search=True):
+    def __init__(self, file, backend, debug=False, extra_search=True):
         self._debug = debug
         self._extra_search = extra_search
         self._processed_text = remove_crossed_words(open(file).read())
         self._raw_matches = []
-        super().__init__(file)
+        super().__init__(file, backend)
 
     def _act_name(self):
         return "Cessoes"
@@ -72,7 +72,7 @@ class Cessoes(Atos):
         return joblib.load(f_path)
 
     def _props_names(self):
-        return list(self._prop_rules())
+        return ["tipo"] + list(self._prop_rules())
 
     def _rule_for_inst(self):
         return (
@@ -168,6 +168,3 @@ class Cessoes(Atos):
         found = self._find_instances()
         self._acts_str = found.copy()
         return found
-
-    def _build_dataframe(self):
-        return pd.DataFrame(self._acts)

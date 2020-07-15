@@ -1,40 +1,44 @@
-"""Regex core module.
+"""Pure extractor core module.
 
-This module contains the Regex class, which have all that is necessary to
+This module contains the ActsExtractor class, which have all that is necessary to
 extract a single act or all the acts from a DODF.
 
 Usage Example::
 
-    from dodfminer.extract.regex.core import Regex
-    Regex.get_act_obj()
+    from dodfminer.extract.polished.core import ActsExtractor
+    ActsExtractor.get_act_obj(ato_id, file, backend)
 
 """
 
-from dodfminer.extract.polished.acts.aposentadoria import Retirements
+from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
+from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados, NomeacaoEfetivos
+from dodfminer.extract.polished.acts.exoneracao import Exoneracao, ExoneracaoEfetivos
 from dodfminer.extract.polished.acts.reversoes import Revertions
-from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados
-from dodfminer.extract.polished.acts.exoneracao import Exoneracao
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
-from dodfminer.extract.polished.acts.retificacoes import RetAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
-from dodfminer.extract.polished.acts.\
-     sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 
 
-_acts_ids = {"aposentadoria": Retirements, "reversoes": Revertions,
-             "nomeacao": NomeacaoComissionados, "exoneracao": Exoneracao,
-             "abono": AbonoPermanencia, "retificacoes": RetAposentadoria,
-             "substituicao": Substituicao, "cessoes": Cessoes,
-             "sem_efeito_aposentadoria": SemEfeitoAposentadoria}
+_acts_ids = {"aposentadoria": Retirements,
+             "reversoes": Revertions,
+             "nomeacao": NomeacaoComissionados,
+             "exoneracao": Exoneracao,
+             "abono": AbonoPermanencia,
+             "retificacoes": RetAposentadoria,
+             "substituicao": Substituicao,
+             "cessoes": Cessoes,
+             "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+             "efetivos_nome": NomeacaoEfetivos,
+             "efetivos_exo": ExoneracaoEfetivos}
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
 
 class ActsExtractor:
-    """Regex main class.
+    """Polished Extraction main class.
 
     All interactions with the acts needs to be done through this interface.
-    This class handles all the requests to regex searches.
+    This class handles all the requests to regex or ner extraction.
 
     Note:
         This class is static
@@ -55,7 +59,6 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-
         return _acts_ids[ato_id](file, backend)
 
     @staticmethod
