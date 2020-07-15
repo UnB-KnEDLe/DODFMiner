@@ -14,6 +14,8 @@ def requirements_list():
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+print(requirements_list())
+
 setuptools.setup(
     name="dodfminer",
     version=__version__,
