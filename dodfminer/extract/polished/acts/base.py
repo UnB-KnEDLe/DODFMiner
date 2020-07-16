@@ -38,6 +38,7 @@ class Atos(ActRegex, ActNER):
 
     def __init__(self, file, backend='regex'):
         self._backend = backend
+        self._name = self._act_name()
         super(Atos, self).__init__()
         fp = open(file, "r")
         self._file_name = file
@@ -45,7 +46,6 @@ class Atos(ActRegex, ActNER):
         fp.close()
 
         self._acts_str = []
-        self._name = self._act_name()
         self._columns = self._props_names()
 
         self._raw_acts = self._extract_instances()
