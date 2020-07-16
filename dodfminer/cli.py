@@ -44,7 +44,7 @@ class CLI(object):
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
-        self.save_path = './data'
+        self.save_path = './'
 
     def _new_group(self, name, subparser):
         """Create new argument group.
@@ -98,8 +98,8 @@ class CLI(object):
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
 
-        group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
-                           choices=_acts_ids.keys(), nargs='+',
+        group.add_argument('-a', '--act', dest='act', default='all', type=str, 
+                           choices=_acts_ids.keys(), nargs='*',
                            help='Which acts to extract to CSV')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex',

@@ -12,7 +12,7 @@ class Exoneracao(Atos):
         return "Exoneração"
 
     def _props_names(self):
-        return ['tipo', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
+        return ['Tipo do Ato', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
                 'lotacao', 'orgao', 'vigencia', 'pedido', 'cargo_efetivo',
                 'siape', 'motivo']
 
