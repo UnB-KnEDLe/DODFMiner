@@ -27,11 +27,8 @@ class Atos(ActRegex, ActNER):
         _file_name (str): The dodf file path.
         _text (str): The dodf content in string format.
         _acts_str (str): List of raw text acts.
-        _flags (list): List of all flags to be used in the regex search.
         _name (str): Name of the act.
         _columns (str): List of the proprieties names from the act.
-        _rules (dict): Dictionary of regex rules, one entry for each propriety.
-        _inst_rule (str): Regex rule for extracting an act.
         _raw_acts (list): List of raw text acts .
         _acts (list): List of acts with propreties extracted.
         _data_frame (dataframe): The resulting dataframe from the
