@@ -31,6 +31,9 @@ Following are the list of avaiable parameters, their description and the default
     This module relies on internet connection and can fail if internet is not working properly.
     Also, the execution might take a while if there are a huge ammount of pdfs to download.
 
+Parameters Table
+^^^^^^^^^^^^^^^^
+
 +------------------+-----------------------------------------+---------+
 | Argument         | Description                             | Default |
 +==================+=========================================+=========+
@@ -51,16 +54,46 @@ Extractor Module
 The extractor module is responsible for extracting information from DODF PDFs and save it
 in a desirable format.
 
-It allows you to choose the output format between three options: blocks of text with tiles,
+The extraction can be made, to a pure text content, where a DODF will be converted to TXT or JSON. Or,
+additionaly, the extraction can be done in a polished way, where from the DODF will be extracted to acts and
+its given proprieties in a CSV format.
+
+Pure extraction
+^^^^^^^^^^^^^^^
+
+Given a -t flag, it allows you to choose the output format between three options: blocks of text with tiles,
 pure text in .txt format and text separated by titles:
 
 - **Blocks of Text**: Outputs a JSON file that extract text blocks.
 - **Pure Text**: Output a .txt file, with raw text from the pdf.
 - **Blocks of Text with Titles**: Outputs a JSON file that extract text blocks indexed by titles.
 
+Polished Extraction
+^^^^^^^^^^^^^^^^^^^
+
+Using the -a or --act flag, you can extract the dodf in a polished way. The usage of the -a will extract all types
+of act in the DODF. Additionaly, if desired, the flag can followed by a list of specific acts types which you want to extract.
+The extraction is done using the backend specified in the -b flag, which can be either regex or ner.
+
+Available Act Types:
+
+    - aposentadoria
+    - reversoes
+    - nomeacao
+    - exoneracao
+    - abono
+    - retificacoes
+    - substituicao
+    - cessoes
+    - sem_efeito_aposentadoria
+    - efetivos_nome
+    - efetivos_exo
 
 
-Also, you can choose where to look for the files.
+
+Parameters Table
+^^^^^^^^^^^^^^^^
+
 Following are the list of avaiable parameters, their description and the default value.
 
 +-------------------------+------------------------------------------+------------+

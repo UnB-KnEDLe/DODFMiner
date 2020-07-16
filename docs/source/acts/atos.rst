@@ -85,8 +85,7 @@ Implemented Acts
 - Substituições
 - Cessões
 - Tornar sem efeito Aposentadoria
-
-Missing Acts
-============
-
 - Exoneração de Cargos Efetivos
+
+
+
