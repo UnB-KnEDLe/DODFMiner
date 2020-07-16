@@ -57,6 +57,7 @@ class ActsExtractor:
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
             An object of the desired act, already with extracted information.
@@ -72,6 +73,7 @@ class ActsExtractor:
 
         Args:
             file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
             An vector of objects of all the acts, already with extracted
@@ -93,6 +95,7 @@ class ActsExtractor:
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
             An dataframe with extracted information, for the desired act.
@@ -108,6 +111,7 @@ class ActsExtractor:
 
         Args:
             file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
             An vector of dataframed with extracted information for all acts.

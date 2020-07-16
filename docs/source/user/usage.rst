@@ -34,7 +34,7 @@ Following are the list of avaiable parameters, their description and the default
 +------------------+-----------------------------------------+---------+
 | Argument         | Description                             | Default |
 +==================+=========================================+=========+
-| -sp --save_path  | Folder to output the download DODFs     | ./data  |
+| -sp --save_path  | Folder to output the download DODFs     | ./      |
 +------------------+-----------------------------------------+---------+
 | -sd --start_date | Input the date in either mm/yy or mm-yy | 01/19   |
 +------------------+-----------------------------------------+---------+
@@ -66,7 +66,7 @@ Following are the list of avaiable parameters, their description and the default
 +-------------------------+------------------------------------------+------------+
 | Argument                | Description                              | Default    |
 +=========================+==========================================+============+
-| -i --input_folder       | Path to the PDFs folder                  | ./data     |
+| -i --input_folder       | Path to the PDFs folder                  | ./         |
 +-------------------------+------------------------------------------+------------+
 | -s --single-file        | Path to a single PDF                     | None       |
 +-------------------------+------------------------------------------+------------+
