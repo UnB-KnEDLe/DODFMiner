@@ -51,8 +51,10 @@ class Miner(object):
                                                      titles_with_boxes=True)
                 elif self.args.type_of_extr == 'blocks':
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
-            elif len(self.args.act) >= 0:
+            elif self.args.act != 'all':
                 extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
+            else:
+                self.cli.extract_content_parser.print_help()
         elif self.args.single_file is not None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':
@@ -63,8 +65,10 @@ class Miner(object):
                                                        single=True)
                 elif self.args.type_of_extr == 'blocks':
                     ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
-            elif len(self.args.act) >= 0:
+            elif self.args.act != 'all':
                 extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
+            else:
+                self.cli.extract_content_parser.print_help()
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
 

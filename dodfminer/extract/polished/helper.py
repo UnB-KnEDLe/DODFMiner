@@ -35,7 +35,7 @@ def extract_multiple_acts(path, types, backend):
         None
     """
 
-    if len(types) == 0:
+    if types == 'all':
         types = _acts_ids.keys()
 
     if os.path.isfile(path):

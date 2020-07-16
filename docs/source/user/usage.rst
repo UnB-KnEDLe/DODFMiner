@@ -103,9 +103,9 @@ Following are the list of avaiable parameters, their description and the default
 +-------------------------+------------------------------------------+------------+
 | -s --single-file        | Path to a single PDF                     | None       |
 +-------------------------+------------------------------------------+------------+
-| -t --type-of-extraction | Type of text extraction                  | pure-text  |
+| -t --type-of-extraction | Type of text extraction                  | None       |
 +-------------------------+------------------------------------------+------------+
-| -a --act                | List of acts that will be extract to CSV | None       |
+| -a --act                | List of acts that will be extract to CSV | all        |
 +-------------------------+------------------------------------------+------------+
 | -b --backend            | Which backend will extract the acts      | regex      |
 +-------------------------+------------------------------------------+------------+
