@@ -4,24 +4,53 @@ Installation
 
 .. contents:: Table of Contents
 
-DODFMiner is currently only supported on Linux and OSX. It may be possible to install on Windows, though this hasn’t been extensively tested. 
+DODFMiner is currently only supported on Linux and OSX. It may be possible to install on Windows, though this hasn’t been extensively tested.
 
 Requirements
 ============
 
 - Python3
 - MuPDF
-- pdfinfo
 
-Installation Methods
-====================
+
+Installing MuPDF
+================
+
+MuPDF is the main engine used to parse pdf files on DODFMiner. Its installation is essencial for proper work.
+
+macOS
+-----
+
+In macOS use brew to install the library::
+
+    $ brew install mupdf
+
+
+Debian Linux (Ubuntu)
+---------------------
+
+On Ubuntu, or other Debian Linux distro, use the following commands::
+
+    $ add-apt-repository ppa:ubuntuhandbook1/apps
+    $ apt-get update
+    $ apt-get install mupdf mupdf-tools
+
+
+
+DODFMiner Installation Methods
+==============================
 
 We support two method of installation. The Library method (recommended), and a Docker Install.
 
 Library Install
 ---------------
 
-::
+From The Python Package Index (PyPI)::
+
+    pip install dodfminer
+
+
+From Github::
 
     git clone https://github.com/UnB-KnEDLe/DODFMiner.git
     cd dodfminer
@@ -71,7 +100,7 @@ This command executes the download task, where -st is the start date and -ed is 
 
 Other arguments can be found excuting the command:
 
-:: 
+::
 
     $ export DATA_PATH=/path/to/save/files/ \
     $ sudo -E docker-compose run dodfminer --help
@@ -82,4 +111,4 @@ Other arguments can be found excuting the command:
     execute without _sudo_, otherwise the -E argument is needed for
     _sudo_ use the environment variables declared in login _bash_.
 
-    2. The container will not work if the DATA_PATH is not defined in the environment. 
+    2. The container will not work if the DATA_PATH is not defined in the environment.
