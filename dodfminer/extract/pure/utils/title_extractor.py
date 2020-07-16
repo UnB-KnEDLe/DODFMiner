@@ -3,16 +3,16 @@
 # TODO: Improve docummentation
 # TODO: Remove global variables and functions
 
+import os
 import re
 import json
-import operator
-from functools import reduce
-from typing import List, Iterable
-from collections import namedtuple
-import os
-import json
-
 import fitz
+import operator
+
+from typing import List
+from functools import reduce
+from collections import namedtuple
+
 import dodfminer.extract.pure.utils.title_filter as title_filter
 
 Box = namedtuple("Box", "x0 y0 x1 y1")
@@ -34,6 +34,7 @@ _TRASH_COMPILED = re.compile('|'.join(_TRASH_WORDS))
 _TYPE_TITLE, _TYPE_SUBTITLE = "title", "subtitle"
 _TITLE_MULTILINE_THRESHOLD = 10
 
+
 def load_blocks_list(path):
     """Loads list of blocks list from the file specified.
 
@@ -48,25 +49,6 @@ def load_blocks_list(path):
     doc = fitz.open(path)
     return [p.getTextPage().extractDICT()['blocks'] for p in doc]
 
-def group_by_page(elements):
-    """Groups elements by page number.
-
-    Essentially a "groupby" where the key is the page number of each span.
-
-    Args:
-        elements: Iterable[TextTypeBboxPageTuple] sorted by its page number to be grouped.
-
-    Returns:
-        A dict with spans of each page, being keys the page numbers.
-
-    """
-    page_elements = {}
-    for page_num in set(map(lambda x: x.page, elements)):
-        page_elements[page_num] = []
-    for el in elements:
-        page_elements[el.page].append(el)
-    return page_elements
-
 
 def group_by_column(elements, width=_DODF_WIDTH):
     """Groups elements by its culumns.
@@ -76,7 +58,8 @@ def group_by_column(elements, width=_DODF_WIDTH):
     Essentially a "groupby" where the key is the page number of each span.
 
     Args:
-        elements: Iterable[TextTypeBboxPageTuple] sorted by its page number to be grouped.
+        elements: Iterable[TextTypeBboxPageTuple] sorted by its page
+                  number to be grouped.
 
     Returns:
         A dict with spans of each page, being keys the page numbers.
@@ -91,13 +74,15 @@ def group_by_column(elements, width=_DODF_WIDTH):
             left_right[1].append(i)
     return left_right
 
+
 def group_by_page(elements):
     """Groups elements by page number.
 
     Essentially a "groupby" where the key is the page number of each span.
 
     Args:
-        elements: Iterable[TextTypeBboxPageTuple] sorted by its page number to be grouped.
+        elements: Iterable[TextTypeBboxPageTuple] sorted by its page
+                  number to be grouped.
 
     Returns:
         A dict with spans of each page, being keys the page numbers.
@@ -120,7 +105,8 @@ def sort_by_column(elements, width=_DODF_WIDTH):
             were originally).
 
     Returns:
-        List[TextTypeBboxPageTuple] containing the list elements sorted according to:
+        List[TextTypeBboxPageTuple] containing the list elements
+        sorted according to:
             1. columns
             2. position on column
         Assumes a 2-column page layout. All elements on the left column will
@@ -146,8 +132,8 @@ def _invert_TextTypeBboxPageTuple(textTypeBboxPageTuple):
 
     """
     text, _type, bbox, page = textTypeBboxPageTuple
-    return TextTypeBboxPageTuple(text, _TYPE_TITLE if _type is _TYPE_SUBTITLE else _TYPE_SUBTITLE,
-                                 bbox, page)
+    return TextTypeBboxPageTuple(text, _TYPE_TITLE if _type is _TYPE_SUBTITLE
+                                 else _TYPE_SUBTITLE, bbox, page)
 
 
 def _extract_bold_upper_page(page):
@@ -210,8 +196,11 @@ def sort_2column(elements):
 
 
 def _get_titles_subtitles(elements):
-    """Extracts titles and subtitles from list. WARNING: Based on font size and heuristic.
-    
+    """Extracts titles and subtitles from list.
+
+    Warning:
+        Based on font size and heuristic.
+
     Args:
         titles_subtitles: a list of dict all of them having the keys:
             size -> float
@@ -220,13 +209,13 @@ def _get_titles_subtitles(elements):
             page -> int
 
     Returns:
-        TitlesSubtitles[List[TextTypeBboxPageTuple], List[TextTypeBboxPageTuple]].
-    
+        TitlesSubtitles[List[TextTypeBboxPageTuple],
+                        List[TextTypeBboxPageTuple]].
+
     """
     # mainly to remove "DISTRITO FEDERAL" trash below
     elements = sorted(
         elements, key=lambda d: d['size'], reverse=True)
-
 
     # Usually part of "Diário Oficial do DISTRITO FEDERAL"
     if "DISTRITO FEDERAL" in elements[0]['text']:
@@ -246,19 +235,21 @@ def _get_titles_subtitles(elements):
                 cond1 = abs(
                     previous_element['bbox'].y1 - current_element['bbox'].y0) < _TITLE_MULTILINE_THRESHOLD
                 cond2 = previous_element['page'] == current_element['page']
-                
+
                 # Titles must be algo in the same column
 
-                column_grouped = group_by_column( ( BBox(previous_element['bbox']), BBox(current_element['bbox']) ))
+                column_grouped = group_by_column((BBox(previous_element['bbox']), BBox(current_element['bbox'])))
                 cond3 = not (column_grouped[0] and column_grouped[1])
                 if cond1 and cond2 and cond3:
                     titles[-1][0].append(current_element['text'])
                 else:
                     titles.append([[current_element['text']], _TYPE_TITLE,
-                                   current_element['bbox'], current_element['page']])
+                                   current_element['bbox'],
+                                   current_element['page']])
             else:
                 titles.append([[current_element['text']], _TYPE_TITLE,
-                               current_element['bbox'], current_element['page']])
+                               current_element['bbox'],
+                               current_element['page']])
             elements = elements[1:]
         else:
             break
@@ -271,7 +262,7 @@ def _get_titles_subtitles(elements):
     # if the elements is over, there are no subtitles
     if elements:
         size = elements[0]['size']
-        
+
         # PS: majority of subtitles uses only 1 line. Hard to distinguish
         while elements:
             current_element = elements[0]
@@ -279,15 +270,16 @@ def _get_titles_subtitles(elements):
             # RODAGEM DO DISTRITO FEDERAL" (5/1/2005)
             if size == current_element['size']:
                 sub_titles.append((current_element['text'], _TYPE_SUBTITLE,
-                                   current_element['bbox'], current_element['page']))
-            else:   # this and next elements has others font sizes; therefore aren't subtitles
+                                   current_element['bbox'],
+                                   current_element['page']))
+            else:   # this and next elements has others font sizes;
                 break
             elements = elements[1:]
         sub_titles = [TextTypeBboxPageTuple(*i) for i in sub_titles]
 
-    # Sometimes heuristic fails. However, the fix below seems to work on most cases.
+    # Sometimes heuristic fails. However, the fix below seems to work on most
+    # cases.
     # Happens mostly when there are only one title and other stuffs.
-
 
     if not titles and sub_titles:
         return TitlesSubtitles([_invert_TextTypeBboxPageTuple(i) for i in sub_titles], titles)
@@ -300,19 +292,20 @@ def _get_titles_subtitles_smart(path):
 
     Wraps _get_titles_subtitles, removing most of impurity
     (spans not which aren't titles/subtutles).
-    
+
     Args:
         path: str with the path do DODF PDF file
 
     Returns:
-        TitlesSubtitles(List[TextTypeBboxPageTuple], List[TextTypeBboxPageTuple]).
+        TitlesSubtitles(List[TextTypeBboxPageTuple],
+                        List[TextTypeBboxPageTuple]).
     """
     bold_spans = reduce(operator.add, _extract_bold_upper_pdf(path))
     filtered1 = filter(title_filter.BoldUpperCase.dict_text, bold_spans)
-    filtered2 = filter(lambda s: not re.search(_TRASH_COMPILED, s['text']), filtered1)
+    filtered2 = filter(lambda s: not re.search(_TRASH_COMPILED, s['text']),
+                       filtered1)
     # 'calibri' as font apears sometimes, however never in titles or subtitles
-    
-    
+
     filtered3 = filter(lambda x: 'calibri' not in x['font'].lower(), filtered2)
 
     # TODO: check for necessity of this sorting
@@ -336,6 +329,7 @@ def extract_titles_subtitles(path):
     titles_subtitles = _get_titles_subtitles_smart(path)
     by_page = sort_2column(reduce(operator.add, titles_subtitles))
     return reduce(operator.add, by_page.values())
+
 
 # TODO: use tuples instead of lists for ensure
 # immutability and avoid unexpected behavior
@@ -393,7 +387,7 @@ class ExtractorTitleSubtitle(object):
                     if current_element.type == _TYPE_SUBTITLE:
                         _json[title].append(current_element.text)
                         i += 1
-                    else:                        
+                    else:
                         break
             else:
                 raise ValueError("Does not begin with a title")
@@ -431,8 +425,10 @@ class ExtractorTitleSubtitle(object):
         return self._hierarchy
 
     def _do_cache(self):
-        """Internal function. Computes some internal attributes so that no more computations
-        are needed for them. Implicit called after first access to some property.
+        """Computes some internal attributes.
+
+        So that no more computations are needed for them.
+        Implicit called after first access to some property.
         Computes and caches the following internal attributes:
             - _titles_subtitles
             - _titles
@@ -440,9 +436,9 @@ class ExtractorTitleSubtitle(object):
         """
         self._titles_subtitles = tuple(extract_titles_subtitles(self._path))
         self._titles = tuple(filter(lambda x: x.type == _TYPE_TITLE,
-                                   self._titles_subtitles))
+                                    self._titles_subtitles))
         self._subtitles = tuple(filter(lambda x: x.type == _TYPE_SUBTITLE,
-                                      self._titles_subtitles))
+                                       self._titles_subtitles))
         self._cached = True
 
     @property
@@ -477,13 +473,13 @@ class ExtractorTitleSubtitle(object):
             self._do_cache()
         return list(self._titles_subtitles)
 
-
     @property
     def json(self):
         """All titles with its subtitles associated.
 
-        All subtitles under the same title are at the same level. 
-        Deprecated. Better use `titles_subtitles` or `titles_subtitles_hierarchy`.
+        All subtitles under the same title are at the same level.
+        Deprecated. Better use `titles_subtitles` or
+        `titles_subtitles_hierarchy`.
         """
         if not self._json:
             if not self._cached:
@@ -563,13 +559,15 @@ def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
         et = ExtractorTitleSubtitle(file)
         titles_text = map(lambda x: x.text, et.titles)
         titles.update(titles_text)
-    js = {"titles" : list(titles)}
+    js = {"titles": list(titles)}
     json.dump(js, open("{}".format(base_name), 'w'),
               ensure_ascii=False, indent=indent*' ')
 
     return js
 
-def gen_hierarchy_base(dir_path=".", folder="hierarchy", indent=4, forced=False):
+
+def gen_hierarchy_base(dir_path=".",
+                       folder="hierarchy", indent=4, forced=False):
     """Generates json base from all PDFs immediately under dir_path directory.
     The hiearchy files are generated under dir_path directory.
     Args:
@@ -611,15 +609,15 @@ def gen_hierarchy_base(dir_path=".", folder="hierarchy", indent=4, forced=False)
         et = ExtractorTitleSubtitle("{}/{}".format(dir_path, file))
         hierarchy = et.titles_subtitles_hierarchy
         hierarchy = [
-            ({ d[0]: [ dict([(i, '')]) for i in d[1] ] })
+            ({d[0]: [dict([(i, '')]) for i in d[1]]})
             for d in hierarchy
         ]
         hierarchy = {file.rstrip('.pdf'): hierarchy}
         hierarchies.append(hierarchy)
 
         json.dump(hierarchy,
-            open("{}/{}.json".format(
-                folder, file.rstrip('.pdf')), 'w'),
-            ensure_ascii=False, indent=indent*' ')
+                  open("{}/{}.json".format(
+                                    folder, file.rstrip('.pdf')), 'w'),
+                  ensure_ascii=False, indent=indent*' ')
 
     return hierarchies
