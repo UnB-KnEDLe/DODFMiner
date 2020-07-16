@@ -25,16 +25,18 @@ Through this document, the reader will be able to understand the functioning of 
 
 ### Definitions, Acronyms and Abreviations
 
-| Acronym       | Definition             |
-|---------------|------------------------|
-| CLI           | Command Line Interface |
+| Acronym       | Definition                         |
+|---------------|------------------------------------|
+| CLI           | Command Line Interface             |
+| DODF          | Diário Oficial do Distrito Federal |
 
 
 ### Revision History
 
-| Data     | Versão | Descrição          | Autor        |
-|----------|--------|--------------------|--------------|
-|29/06/2020| 1.0    | Documment Creation | Renato Nobre |
+| Data     | Versão | Descrição          | Autor                       |
+|----------|--------|--------------------|-----------------------------|
+|29/06/2020| 1.0    | Documment Creation | Renato Nobre                |
+|16/07/2020| 1.1.0  | Documment Creation | Renato Nobre & Khalil Casten|
 
 
 ## Architectural Representation
@@ -44,13 +46,13 @@ The main point to understand in this architecture is that the DODFMiner is a lib
 
 Being a library requires a given ammount of complexity. In larger applications, you may have one or more internal packages that provide specific functionality to a larger library you are packaging. This application follows this aspect, mining pdf documents, imply in many subpackages with specific functionality, that when working together, fulfill a greater aspect.
 
-### Relationship Diagram 
+### Relationship Diagram
 
 ![](../_static/app.svg)
 
 ### Subpackages Structure
 
-This applications follows the basic structure for a python library with multiple subpackages. It uses a common concept of *core* and *helper* files.
+This applications follow the basic structure for a python library with multiple subpackages. It uses a common concept of *core* and *helper* files.
 
 The *core* file is the main file in a package or subpackage, it contains the class with the main package execution. The *helper* file contains suporting functions to the package.
 
@@ -58,23 +60,35 @@ In summary, the project structure look as follows:
 
 ```bash
 dodfminer
-├── __init__.py
+├── __version__.py
+├── cli.py
 ├── downloader
-│   ├── __init__.py
 │   └── core.py
 ├── extract
-│   ├── __init__.py
-│   ├── core.py
-│   ├── regex
-│   │   ├── __init__.py
-│   │   ├── atos/
+│   ├── polished
+│   │   ├── acts
+│   │   │   ├── abono.py
+│   │   │   ├── aposentadoria.py
+│   │   │   ├── base.py
+│   │   │   ├── cessoes.py
+│   │   │   ├── exoneracao.py
+│   │   │   ├── models/
+│   │   │   ├── nomeacao.py
+│   │   │   ├── reversoes.py
+│   │   │   ├── sem_efeito_aposentadoria.py
+│   │   │   └── substituicao.py
+│   │   ├── backend
+│   │   │   ├── ner.py
+│   │   │   └── regex.py
 │   │   ├── core.py
 │   │   └── helper.py
-│   └── helpers
-│       ├── box_extractor.py
-│       ├── title_extractor.py
-│       └── title_filter.py
-└── miner.py
+│   └── pure
+│       ├── core.py
+│       └── utils
+│           ├── box_extractor.py
+│           ├── title_extractor.py
+│           └── title_filter.py
+└── run.py
 ```
 
 ### Technologies
@@ -132,11 +146,14 @@ Following are some of the most essencial tecnologies used with the DODFMiner app
 
 ### Overview
 
-DODFMiner is a library and CLI application made with the Python language, using MuPDF, BeautifulSoup, Pandas, and many others python libraries. The purpose of DODFMiner is to be an library and tool to fullfil the hole process of extraction of a official diary from federal district in Brazil. 
+DODFMiner is a library and CLI application made with the Python language, using MuPDF, BeautifulSoup, Pandas, and many others python libraries. The purpose of DODFMiner is to be an library and tool to fullfil the hole process of extraction of a official diary from federal district in Brazil.
 
 ### Package Diagram
 
 ![](../_static/pacotes.svg)
+
+### Class Diagram
+
 
 ## References
 -------------

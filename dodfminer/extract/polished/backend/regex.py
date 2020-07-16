@@ -14,13 +14,13 @@ class ActRegex:
     This class encapsulate all functions, and attributes related
     to the process of regex extraction.
 
+    Note:
+        This class is one of the fathers of the Base act class.
+
     Attributes:
         _flags: All the regex flags which will be used in extraction.
         _rules: The regex rules for proprieties extraction.
         _inst_rule: The regex rule for act extraction.
-
-    Note:
-        This class is one of the fathers of the Base act class.
 
     """
 
@@ -30,7 +30,6 @@ class ActRegex:
         self._rules = self._prop_rules()
         self._inst_rule = self._rule_for_inst()
 
-    @property
     def _rule_for_inst(self):
         """Rule for extraction of the act
 
@@ -45,7 +44,6 @@ class ActRegex:
         """
         raise NotImplementedError
 
-    @property
     def _prop_rules(self):
         """Rules for extraction of the proprieties.
 

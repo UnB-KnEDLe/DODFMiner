@@ -48,6 +48,7 @@ class ActNER:
 
         Returns:
             A list with a dictionary of features for each of the words.
+
         """
         sent_features = []
         for i in range(len(act)):
@@ -77,7 +78,7 @@ class ActNER:
         act = self._preprocess(act)
         feats = self._get_features(act)
         predictions = self._model.predict_single(feats)
-        return self.dataFramefy(act, predictions)
+        return self._predictions_dict(act, predictions)
 
     def _preprocess(self, sentence):
         """Transform a raw string to a list of words.
@@ -94,17 +95,19 @@ class ActNER:
             sentence = sentence[:len(sentence)-2] + " ."
         return sentence.split()
 
-    def dataFramefy(self, sentence, prediction):
-        """[summary]
+    def _predictions_dict(self, sentence, prediction):
+        """Create dictionary of proprieties.
 
-        Create dictionary of tags to save predicted entities
+        Create dictionary of tags to save predicted entities.
 
         Args:
-            sentence ([type]): [description]
-            prediction ([type]): [description]
+            sentence (list): List of words and tokens in the act.
+            prediction ([type]): The correspondent predicitons for each
+                                 word in the sentence.
 
         Returns:
-            [type]: [description]
+            A dictionary of the proprieties found.
+
         """
         tags = self._model.classes_
         tags.remove('O')
