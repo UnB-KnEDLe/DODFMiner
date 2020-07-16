@@ -62,28 +62,28 @@ class CLI(object):
 
     def _download_parser(self):
         """Create parser for download configs."""
-        download_parser = self.subparsers.add_parser("downloader")
+        self.download_parser = self.subparsers.add_parser("downloader")
 
         help_text = 'Folder to output the download DODFs'
-        download_parser.add_argument('-sp', '--save_path', dest='save_path',
+        self.download_parser.add_argument('-sp', '--save_path', dest='save_path',
                                      default=self.save_path, type=str,
                                      help=help_text)
 
         help_text = 'Input the date in either mm/yy or mm-yy.'
-        download_parser.add_argument('-sd', '--start_date', dest='start_date',
+        self.download_parser.add_argument('-sd', '--start_date', dest='start_date',
                                      default=self.def_start_date, type=str,
                                      help=help_text)
 
         help_text = 'Input the date in either mm/yy or mm-yy.'
-        download_parser.add_argument('-ed', '--end_date', dest='end_date',
+        self.download_parser.add_argument('-ed', '--end_date', dest='end_date',
                                      default=self.def_end_date, type=str,
                                      help=help_text)
 
     def _extract_content_parser(self):
         """Create parser for extraction configs."""
-        download_parser = self.subparsers.add_parser("extract")
+        self.extract_content_parser = self.subparsers.add_parser("extract")
 
-        group = self._new_group('Extraction Configs', download_parser)
+        group = self._new_group('Extraction Configs', self.extract_content_parser)
 
         group.add_argument('-i', '--input-folder', dest='input_folder',
                            default='./', type=str,
@@ -94,7 +94,7 @@ class CLI(object):
                            help='Path to the single file to extract')
 
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
-                           default=None, type=str,
+                           default=None, type=str, nargs='?',
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
 
