@@ -62,6 +62,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
         files ([str]): List of dodfs files path.
         type (str): Type of the act, see the core class to view
                     avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
         txt_out (bool): Boolean indicating if acts should be saved on
                         text files.
         txt_path (str): Path to save the text files.
@@ -100,6 +101,7 @@ def extract_single(file, type, backend):
         files (str): Dodf file path.
         type (str): Type of the act, see the core class to view
                     avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
 
     Returns:
         A dataframe containing all instances of the desired act
