@@ -32,14 +32,17 @@ Regex Methods
 In case you want to extract through regex, the following funcions needs to be written:
 
 .. automethod:: dodfminer.extract.polished.backend.regex.ActRegex._rule_for_inst
+    :noindex:
 
 .. automethod:: dodfminer.extract.polished.backend.regex.ActRegex._prop_rules
+    :noindex:
 
 Additionaly, if the programmer whishes to change the regex flags
 for his/her class, they can overwrite the following function in the child
 class:
 
 .. automethod:: dodfminer.extract.polished.backend.regex.ActRegex._regex_flags
+    :noindex:
 
 NER Methods
 ^^^^^^^^^^^
@@ -47,6 +50,7 @@ NER Methods
 If NER will be used, you shall add a trained model to the acts/models folder. Also the following method should be overwrited in your act:
 
 .. automethod:: dodfminer.extract.polished.backend.ner.ActNER._load_model
+    :noindex:
 
 Change the Core File
 ^^^^^^^^^^^^^^^^^^^^

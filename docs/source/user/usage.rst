@@ -22,12 +22,12 @@ Depending which module you choose the execution parameters will change.
 Downloader Module
 -----------------
 
-The download module is responsible for downloading DODF PDFs from the website.
+The downloader module is responsible for downloading DODF PDFs from the website.
 It allows you to choose the start and end date of the files you want to download.
-Also, you can choose where to save them, but changing this argument is not recomended.
+Also, you can choose where to save them.
 Following are the list of avaiable parameters, their description and the default value.
 
-.. :note:
+.. note::
     This module relies on internet connection and can fail if internet is not working properly.
     Also, the execution might take a while if there are a huge ammount of pdfs to download.
 
@@ -48,8 +48,9 @@ Usage Example::
 Extractor Module
 ----------------
 
-The extractor module is responsible for extracting information from DODF PDFs and save it 
+The extractor module is responsible for extracting information from DODF PDFs and save it
 in a desirable format.
+
 It allows you to choose the output format between three options: blocks of text with tiles,
 pure text in .txt format and text separated by titles:
 
@@ -57,7 +58,9 @@ pure text in .txt format and text separated by titles:
 - **Pure Text**: Output a .txt file, with raw text from the pdf.
 - **Blocks of Text with Titles**: Outputs a JSON file that extract text blocks indexed by titles.
 
-Also, you can choose where to look for the files, but changing this argument is not recomended.
+
+
+Also, you can choose where to look for the files.
 Following are the list of avaiable parameters, their description and the default value.
 
 +-------------------------+------------------------------------------+------------+
@@ -83,13 +86,13 @@ Usage Example::
     $ dodfminer extract -s path/to/dodf.pdf -a nomeacao cessoes -b ner
 
 .. note::
-    
-    It's important to notice that if -t and -a options are used together the -t option will 
+
+    It's important to notice that if -t and -a options are used together the -t option will
     have the priority and the -a will not execute.
-    
+
 .. note::
 
-    The dodfminer act extraction needs the text data from DODFs to correct extract the acts
+    The DODFMiner act extraction needs the text data from DODFs to correct extract the acts
     from DODF, therefore the -a option generates first txt files before the act extraction.
 
 Library Usage
@@ -99,9 +102,9 @@ The DODFMiner was created also thinking the user might want to use it as a libra
 Users can use install the DODFMiner and call its modules and functions in their python scripts. Following are
 some of the imports you might want to do, while using as a library::
 
-    from dodfminer import extract
-    from dodfminer import downloader
-    from dodfminer.extract import regex
-    from dodfminer.downloader import core
+    from dodfminer import acts
+    from dodfminer import Downloader
+    from dodfminer import ActsExtractor
+    from dodfminer import ContentExtractor
 
 The details of using the DODFMiner modules and functions are described in this documentation, in the following sections.

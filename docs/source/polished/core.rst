@@ -3,8 +3,8 @@ Polished Core
 =============
 
 .. automodule:: dodfminer.extract.polished.core
-    :members:
-    :private-members:
+    :members: _acts_ids
+
 
 The Act Extractor Class
 =======================

@@ -8,6 +8,9 @@ Usage Example::
     from dodfminer.extract.polished.core import ActsExtractor
     ActsExtractor.get_act_obj(ato_id, file, backend)
 
+Acts Available and IDs
+----------------------
+
 """
 
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
