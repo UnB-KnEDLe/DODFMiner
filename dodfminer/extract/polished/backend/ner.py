@@ -35,7 +35,7 @@ class ActNER:
 
         """
         if self._backend == 'ner':
-            print("This Act does not have an model: FALLING BACK TO REGEX")
+            print(f"Act {self._name} does not have an model: FALLING BACK TO REGEX")
             self._backend = 'regex'
 
     def _get_features(self, act):
