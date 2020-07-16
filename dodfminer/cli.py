@@ -44,7 +44,7 @@ class CLI(object):
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
-        self.save_path = './data'
+        self.save_path = './'
 
     def _new_group(self, name, subparser):
         """Create new argument group.
