@@ -41,8 +41,9 @@ class Downloader(object):
 
     def __init__(self, save_path='./'):
         self.save_path = save_path
+        self.prog_bar = tqdm.tqdm()
+        self._create_single_folder(os.path.join(self.save_path, 'dodfs'))
         self.download_path = os.path.join(self.save_path, 'dodfs')
-        self.prog_bar = None
 
     def _string_to_date(self, date):
         """Convert the date to datetime.

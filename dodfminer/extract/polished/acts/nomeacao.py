@@ -19,7 +19,7 @@ class NomeacaoComissionados(Atos):
         return joblib.load(f_path)
 
     def _props_names(self):
-        return ['Tipo', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
+        return ['Tipo do Ato', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
                 'Simbolo', 'Cargo Comissao', 'Lotacao', 'Orgao']
 
     def _rule_for_inst(self):
