@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-
+from dodfminer.__version__ import __version__
 
 
 # -- Project information -----------------------------------------------------
@@ -21,9 +21,9 @@ sys.path.insert(0, os.path.abspath('../../'))
 project = 'DODFMiner'
 copyright = '2020, KnEDLe Team'
 author = 'KnEDLe Team'
- 
+
 # The full version, including alpha/beta/rc tags
-release = '1.0.0'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,7 +32,8 @@ release = '1.0.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ["sphinx_rtd_theme", 'sphinx.ext.viewcode', 'sphinx.ext.autodoc',
-              'sphinx.ext.coverage', 'sphinx.ext.napoleon', 'recommonmark']
+              'sphinx.ext.coverage', 'sphinx.ext.napoleon', 'recommonmark',
+              'sphinx_markdown_tables']
 # extensions.append('autoapi.extension')
 
 # autoapi_type = 'python'
@@ -67,6 +68,7 @@ html_theme_options = {
 }
 
 autodoc_mock_imports = ['fitz', 'pandas', 'numpy']
+
 
 def setup(app):
     app.add_css_file('css/modify.css')
