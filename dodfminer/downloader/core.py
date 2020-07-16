@@ -2,7 +2,7 @@
 
 """Download DODFs from the Buriti Website and save on proper directory.
 
-Download monthly pdfs of DODFs, or just one in necessity of tests.
+Download monthly pdfs of DODFs.
 
 Usage example::
 
@@ -27,23 +27,21 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
 
 
 class Downloader(object):
-    """Responsible for download the DODF Pdfs.
+    """Responsible for the download of the DODFs Pdfs.
 
     Args:
         save_path (str): Path to save the downloads.
 
     Attributes:
-        save_path: Path to save the downloads.
-        download_path: Folder in which the downloads will be stored.
-        prog_bar: Indicate if download should contain a progress bar.
+        _download_path: Folder in which the downloads will be stored.
+        _prog_bar: Indicate if download should contain a progress bar.
 
     """
 
     def __init__(self, save_path='./'):
-        self.save_path = save_path
-        self.prog_bar = tqdm.tqdm()
-        self._create_single_folder(os.path.join(self.save_path, 'dodfs'))
-        self.download_path = os.path.join(self.save_path, 'dodfs')
+        self._prog_bar = tqdm.tqdm()
+        self._create_single_folder(os.path.join(save_path, 'dodfs'))
+        self._download_path = os.path.join(save_path, 'dodfs')
 
     def _string_to_date(self, date):
         """Convert the date to datetime.
@@ -97,7 +95,7 @@ class Downloader(object):
     def _create_download_folder(self):
         """Create Downloaded DODFs Structures."""
         # import pdb; pdb.set_trace()
-        self._create_single_folder(self.download_path)
+        self._create_single_folder(self._download_path)
 
     def _make_url(self, date):
         """Make the url to download the dodf.
@@ -242,7 +240,7 @@ class Downloader(object):
             The path to the actual month in which the download is being made.
 
         """
-        year_path = os.path.join(self.download_path,
+        year_path = os.path.join(self._download_path,
                                  str(actual_date.year))
         if year != actual_date.year:
             self._create_single_folder(year_path)
@@ -257,13 +255,13 @@ class Downloader(object):
         All dodfs are downloaded from start_date to end_date inclusively.
         The Pdfs are saved in a folder called "data" inside the project folder.
 
-        Note:
-            The name or the path of the save folder are hard coded and can't
-            be changed due to some nonsense software engineer decision.
-
         Args:
             start_date (str): The start date in format mm/yy.
             end_date (str): The start date in format mm/yy.
+
+        Note:
+            The name or the path of the save folder are hard coded and can't
+            be changed due to some nonsense software engineer decision.
 
         """
         # Convert string to datetime and calculate ammount to be used in
@@ -273,7 +271,7 @@ class Downloader(object):
         months_amt = ((end_date.year - start_date.year) * 12
                       + (end_date.month - start_date.month))
         # Creates progress bar
-        self.prog_bar = tqdm.tqdm(total=months_amt)
+        self._prog_bar = tqdm.tqdm(total=months_amt)
         # Creates the project folder structure
         self._create_download_folder()
         year = 0
@@ -283,7 +281,7 @@ class Downloader(object):
             actual_date = start_date + relativedelta(months=+month)
             # Convert back to string to update progress bar
             desc_bar = str(actual_date)
-            self.prog_bar.set_description("Date %s" % desc_bar)
+            self._prog_bar.set_description("Date %s" % desc_bar)
             # Create and return the path for the dodfs to be donwloaded
             month_path = self._make_month_path(year, actual_date)
             self._create_single_folder(month_path)
@@ -310,7 +308,7 @@ class Downloader(object):
                     else:
                         self._log("Jumping to the next")
 
-            self.prog_bar.update(1)
+            self._prog_bar.update(1)
 
     def _log(self, message):
         """Logs a message following the downloader pattern.
@@ -319,4 +317,4 @@ class Downloader(object):
             message (str): The message to be logged.
 
         """
-        self.prog_bar.write("[DOWNLOADER] " + str(message))
+        self._prog_bar.write("[DOWNLOADER] " + str(message))
