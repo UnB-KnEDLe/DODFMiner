@@ -14,3 +14,5 @@ soupsieve==2.0.1
 tqdm==4.46.1
 urllib3==1.25.9
 utils==1.0.1
+joblib==0.16.0
+sklearn_crfsuite==0.3.6
