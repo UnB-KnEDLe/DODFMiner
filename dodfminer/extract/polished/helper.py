@@ -18,6 +18,7 @@ import os
 import pandas as pd
 
 from dodfminer.extract.polished.core import ActsExtractor
+from dodfminer.extract.polished.core import _acts_ids
 from dodfminer.extract.pure.core import ContentExtractor
 
 
@@ -33,6 +34,10 @@ def extract_multiple_acts(path, types, backend):
     Returns:
         None
     """
+
+    if len(types) == 0:
+        types = _acts_ids.keys()
+
     if os.path.isfile(path):
         ContentExtractor.extract_text(path, single=True)
         for type in types:
@@ -75,9 +80,12 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
             res.append(res_df)
             if txt_out:
                 build_act_txt(res_txt, type, txt_path)
-
-    res_final = pd.concat([pd.DataFrame(df) for df in res],
-                          ignore_index=True)
+    
+    if len(res) == 0:
+        res_final = pd.DataFrame()
+    else:
+        res_final = pd.concat([pd.DataFrame(df) for df in res],
+                              ignore_index=True)
     return res_final
 
 

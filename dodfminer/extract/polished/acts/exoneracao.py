@@ -12,7 +12,7 @@ class Exoneracao(Atos):
         return "Exoneração"
 
     def _props_names(self):
-        return ['tipo', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
+        return ['Tipo do Ato', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
                 'lotacao', 'orgao', 'vigencia', 'pedido', 'cargo_efetivo',
                 'siape', 'motivo']
 
@@ -44,8 +44,8 @@ class Exoneracao(Atos):
 
 class ExoneracaoEfetivos(Atos):
 
-    def __init__(self,text):
-        super().__init__(text)
+    def __init__(self, file, backend):
+        super().__init__(file, backend)
 
     def _act_name(self):
         return "Exoneração Efetivos"
