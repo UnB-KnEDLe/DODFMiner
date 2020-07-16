@@ -98,8 +98,8 @@ class CLI(object):
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
 
-        group.add_argument('-a', '--act', dest='act', default='cessoes', type=str, 
-                           choices=_acts_ids.keys(), nargs='+',
+        group.add_argument('-a', '--act', dest='act', default='all', type=str, 
+                           choices=_acts_ids.keys(), nargs='*',
                            help='Which acts to extract to CSV')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex',

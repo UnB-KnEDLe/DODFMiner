@@ -12,7 +12,7 @@ class NomeacaoComissionados(Atos):
         return "Nomeação"
 
     def _props_names(self):
-        return ['Tipo', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
+        return ['Tipo do Ato', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
                 'Simbolo', 'Cargo Comissao', 'Lotacao', 'Orgao']
 
     def _rule_for_inst(self):
@@ -42,8 +42,8 @@ class NomeacaoComissionados(Atos):
 
 class NomeacaoEfetivos(Atos):
 
-    def __init__(self,text):
-        super().__init__(text)
+    def __init__(self, file, backend):
+        super().__init__(file, backend)
 
     def _act_name(self):
         return "Nomeação de Efetivos"
