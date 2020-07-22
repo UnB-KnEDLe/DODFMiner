@@ -6,8 +6,18 @@ Typical usage example:
 
 from dodfminer.__version__ import __version__
 from argparse import ArgumentParser
-from dodfminer.extract.polished.core import _acts_ids
 
+act_choices = ["aposentadoria",
+                "reversoes",
+                "nomeacao",
+                "exoneracao",
+                "abono",
+                "retificacoes",
+                "substituicao",
+                "cessoes",
+                "sem_efeito_aposentadoria",
+                "efetivos_nome",
+                "efetivos_exo"]
 
 class CLI(object):
     """CLI Class contains all parameters to handle arguments.
@@ -99,7 +109,7 @@ class CLI(object):
                            help="Type of text extraction")
 
         group.add_argument('-a', '--act', dest='act', default='all', type=str, 
-                           choices=_acts_ids.keys(), nargs='*',
+                           choices=act_choices, nargs='*',
                            help='Which acts to extract to CSV')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex',
