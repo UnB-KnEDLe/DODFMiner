@@ -66,6 +66,12 @@ class SemEfeitoAposentadoria(Atos):
 
     def __init__(self, file, backend, debug=False, extra_search=True,
                  nlp=None, max_length=2000):
+        """
+        Extra args:
+            - extra_search: wheter to search for self._special_acts
+            - nlp: should be an `spacy` nlp model or such that bool(nlp) == False
+            - max_length: acts with length bigger than that are discarded
+        """
         self._max_length = max_length
         self._debug = debug
         self._extra_search = extra_search
@@ -148,7 +154,7 @@ class SemEfeitoAposentadoria(Atos):
                 dodf_end = 0 if not dodf_mt else dodf_mt.end()
                 servidor = re.search(NOME_COMPLETO, act[dodf_end:])
                 del dodf_mt, dodf_end
-                if not servidor:
+                if not servidor and self._nlp:
                     # Appeal to spacy
                     all_cands = re.findall(NOME_COMPLETO, act)
                     cand_text = 'SEM-SERVIDOR'
