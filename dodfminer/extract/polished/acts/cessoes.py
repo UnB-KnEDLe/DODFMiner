@@ -66,10 +66,10 @@ class Cessoes(Atos):
     def _act_name(self):
         return "Cessoes"
 
-    def _load_model(self):
-        f_path = os.path.dirname(__file__)
-        f_path += '/models/cessoes_ner.pkl'
-        return joblib.load(f_path)
+    # def _load_model(self):
+    #     f_path = os.path.dirname(__file__)
+    #     f_path += '/models/cessoes_ner.pkl'
+    #     return joblib.load(f_path)
 
     def _props_names(self):
         return ["tipo"] + list(self._prop_rules())
@@ -86,13 +86,13 @@ class Cessoes(Atos):
     def _prop_rules(self):
         return {
             'interessado': INTERESSADO,
-            'nome': SERVIDOR_NOME_COMPLETO,
+            'nome_substituto': SERVIDOR_NOME_COMPLETO,
             'matricula': MATRICULA,
-            'processo': r"[^0-9]+?{}".format(PROCESSO_NUM),
+            'processo_SEI': r"[^0-9]+?{}".format(PROCESSO_NUM),
             # 'processo': r"[^0-9]+?" + PROCESSO_NUM,
             'onus': ONUS,
-            'siape': SIAPE,
-            'cargo': r",(?P<cargo>[^,]+)",
+            'matricula_SIAPE': SIAPE,
+            'cargo_efetivo': r",(?P<cargo>[^,]+)",
         }
 
     def _find_instances(self) -> List[Match]:
