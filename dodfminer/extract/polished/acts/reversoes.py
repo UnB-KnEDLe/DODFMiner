@@ -31,16 +31,16 @@ class Revertions(Atos):
         sei = r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s"
         sei2 = r"?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]"
         org = r"Lotacao:|Quadro\sde\sPessoal\sd[a|e|o]([\s\S]*?)[.|,]"
-        rules = {"sei": sei + sei2,
+        rules = {"processo_SEI": sei + sei2,
                  "nome": r"\s([^,]*?),\smatricula",
                  "matricula": r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
-                 "cargo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
+                 "cargo_efetivo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
                  "classe": r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
                  "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
                  "quadro": r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
-                 "fundamento": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
+                 "fundamento_legal": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
                  "orgao": org,
                  "vigencia": "",
-                 "siape": r"siape\sn?o?\s([\s\S]*?)[,| | .]"}
+                 "matriucla_SIAPE": r"siape\sn?o?\s([\s\S]*?)[,| | .]"}
 
         return rules

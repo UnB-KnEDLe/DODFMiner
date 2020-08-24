@@ -39,13 +39,13 @@ class AbonoPermanencia(Atos):
         siape = r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]"
         rules = {"nome": r"\s([^,]*?),\smatricula",
                  "matricula": r"matricula\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "cargo": r"Cargo\s[d|D]?[e|E]?\s([\s\S]*?),",
+                 "cargo_efetivo": r"Cargo\s[d|D]?[e|E]?\s([\s\S]*?),",
                  "classe": r"[C|c]lasse\s([\s\S]*?),",
                  "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
                  "quadro": r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
-                 "fundamento": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
+                 "fundamento_legal_abono_permanencia": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
                  "orgao": r"Lotacao: ([\s\S]*?)[.]",
-                 "sei": r"Processo SEI: ([\s\S]*?)\.\n",
+                 "processo_SEI": r"Processo SEI: ([\s\S]*?)\.\n",
                  "vigencia": r"a contar de ([\s\S]*?)\,",
-                 "siape": siape}
+                 "matricula_SIAPE": siape}
         return rules

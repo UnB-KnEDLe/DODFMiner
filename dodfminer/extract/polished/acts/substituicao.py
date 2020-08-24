@@ -40,18 +40,18 @@ class Substituicao(Atos):
 
     def _prop_rules(self):
 
-        rules = {"Nome Serv Substituto": r"(^[A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
-                 "Matricula Serv Substituto": r"(?:^[A-ZÀ-Ž\s]+[A-ZÀ-Ž])\s[\s\S]*?\smatr[í|i]cula\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "Nome do Servidor a ser Substituido": r"para\ssubstituir\s([A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
-                 "Matrícula do Servidor a ser Substituido": r"matr[í|i]cula\s?n?o?\s(?:[\s\S]*?)[\s\S]*?matr[í|i]cula\s?n?o?\s([\s\S]*?),",
-                 "cargo": r"para\ssubstituir\s(?:[A-ZÀ-Ž\s]+[A-ZÀ-Ž]),\smatr[í|i]cula\s?n?o?\s(?:[\s\S]*?),\s([\s\S]*?),",
-                 "Símbolo do cargo do servidor substituto": r"[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "Cargo comissionado objeto da substituição": "",
-                 "Símbolo do cargo do objeto da substituição": r"[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[\s\S]*?[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)",
-                 "Hierarquia da Lotação": "",
+        rules = {"nome_substituto": r"(^[A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
+                 "matricula_substituto": r"(?:^[A-ZÀ-Ž\s]+[A-ZÀ-Ž])\s[\s\S]*?\smatr[í|i]cula\s?n?o?\s([\s\S]*?)[,|\s]",
+                 "nome_substituido": r"para\ssubstituir\s([A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
+                 "matricula_substituido": r"matr[í|i]cula\s?n?o?\s(?:[\s\S]*?)[\s\S]*?matr[í|i]cula\s?n?o?\s([\s\S]*?),",
+                 "cargo_substituto": r"para\ssubstituir\s(?:[A-ZÀ-Ž\s]+[A-ZÀ-Ž]),\smatr[í|i]cula\s?n?o?\s(?:[\s\S]*?),\s([\s\S]*?),",
+                 "simbolo_substituto": r"[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)[,|\s]",
+                 "cargo_objeto_substituicao": "",
+                 "simbolo_objeto_substituicao": r"[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[\s\S]*?[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)",
+                 "hierarquia_lotacao": "",
                  "orgao": r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s(?:[\s\S]*,?),\sd[a|e|o]\s([\s\S]*?)$",
-                 "Data Inicial da Vigência": "",
-                 "Data Final de Vigência": "",
-                 "siape": r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]",
-                 "Motivo": ""}
+                 "data_inicial": "",
+                 "data_final": "",
+                 "matricula_SIAPE": r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]",
+                 "motivo": ""}
         return rules
