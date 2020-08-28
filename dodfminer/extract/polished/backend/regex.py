@@ -6,6 +6,7 @@ extract an act and, its proprieties, using regex rules.
 """
 
 import re
+import numpy as np
 
 
 class ActRegex:
@@ -89,7 +90,8 @@ class ActRegex:
         match = re.search(rule, act, flags=self._flags)
         if match:
             return tuple(x for x in match.groups() if x is not None)
-        return "nan"
+
+        return np.nan
 
     def _regex_props(self, act_raw):
         """Create an act dict with all its proprieties.
@@ -107,25 +109,6 @@ class ActRegex:
             try:
                 act[key], = self._find_prop_value(self._rules[key], act_raw)
             except Exception:
-                act[key] = "nan"
+                act[key] = np.nan
 
         return act
-
-    def _extract_instances(self):
-        """Extract instances of an act.
-
-        Warning:
-            Instance must have an head and an body.
-
-        Returns:
-            All the instances of the act found.
-
-        """
-        found = self._find_instances()
-        results = []
-        for instance in found:
-            head, body = instance
-            self.acts_str.append(head+body)
-            results.append(body)
-
-        return results

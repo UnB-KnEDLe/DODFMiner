@@ -108,13 +108,16 @@ class CLI(object):
                            choices=['pure-text', 'blocks', 'with-titles'],
                            help="Type of text extraction")
 
-        group.add_argument('-a', '--act', dest='act', default='all', type=str, 
+        group.add_argument('-a', '--act', dest='act', default='all', type=str,
                            choices=act_choices, nargs='*',
                            help='Which acts to extract to CSV')
 
         group.add_argument('-b', '--backend', dest='backend', default='regex',
                            type=str, choices=['regex', 'ner'],
                            help="The backend to be used in CSV extraction")
+
+        group.add_argument('-x', '--xml', dest='xml', default=False, nargs='*',
+                            type=bool, help="Generate TeamTat XML Annotations")
 
     def parse(self):
         """Create parser and parse the arguments.

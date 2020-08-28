@@ -38,12 +38,12 @@ class NomeacaoComissionados(Atos):
         org2 = r",\sd[a|e|o]\s(?:[\s\S]*,?),\sd[a|e|o]\s([\s\S]*?)$"
 
         rules = {"nome": r"(^[A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
-                 "efetivo": eft,
+                 "cargo_efetivo": eft,
                  "matricula": r"[M|m]atr[í|i]cula\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "siape": siape,
+                 "matricula_SIAPE": siape,
                  "simbolo": r"[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "comissao": coms,
-                 "lotacao": lot + lot2,
+                 "cargo_comissionado": coms,
+                 "hierarquia_lotacao": lot + lot2,
                  "orgao": org + org2}
         return rules
 
@@ -66,18 +66,18 @@ class NomeacaoEfetivos(Atos):
 
     def _prop_rules(self):
         rules = rules = {"edital_normativo": r"Edital\s(?:[Nn]ormativo|de\s[Aa]bertura)\sno\s([\/\s\-a-zA-Z0-9_]+)",
-                         "data_do_edital_normativo": r"",
-                         "DODF_edital_normativo": r"publicado\sno\sDODF\sno\s(\d{1,3})",
-                         "data_DODF_edital_normativo": r"publicado\sno\sDODF\sno\s\d{1,3},\s?de([\s0-9a-or-vzç]*\d{4})",
+                         "data_edital_normativo": r"",
+                         "numero_dodf_edital_normativo": r"publicado\sno\sDODF\sno\s(\d{1,3})",
+                         "data_dodf_edital_normativo": r"publicado\sno\sDODF\sno\s\d{1,3},\s?de([\s0-9a-or-vzç]*\d{4})",
                          "edital_resultado_final": r"Resultado\sFinal\sno\s([\/\s\-a-zA-Z0-9_]+)",
                          "data_edital_resultado_final": r"",
                          "cargo": r"DODF\sno\s\d{1,3}(?:,[\s0-9a-or-vzç]*\d{4}),[\sa-z]*([A-Z\s]+)",
                          "especialiade": r"[\s,a-z\(\:\)]+([\sA-Z\-]*):",
                          "carreira": r"[cC]arreira\s(?:d[ae]\s)?([a-zA-Z\s]+)",
                          "orgao": r"[cC]arreira\s(?:d[ae]\s)?(?:[a-zA-Z\s]+),\s?d?[ao]?\s?([\sa-zA-Z0-9_]*)",
-                         "nome_candidato": r"(?:[\sA-Z\-]*):(?:[\sa-zC]*:)?\s([\sA-Z0-9\,o\;]+)",
+                         "candidato": r"(?:[\sA-Z\-]*):(?:[\sa-zC]*:)?\s([\sA-Z0-9\,o\;]+)",
                          "classificacao": r"",
                          "pne": r"(?:deficiencia|especiais):\s([\sA-Z0-9\,o\;]+)",
-                         "sei": r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]",
+                         "processo_SEI": r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]",
                          "reposicionamento": r"lista\sde\sclassificacao:\s([\sA-Z0-9\,o\;]+)"}
         return rules

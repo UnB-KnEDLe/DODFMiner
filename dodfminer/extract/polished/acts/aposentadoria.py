@@ -37,18 +37,18 @@ class Retirements(Atos):
         sei = r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?"
         sei2 = r"[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]"
         orgao = r"Lotacao:|Quadro\sde\sPessoal\sd[a|e|o]([\s\S]*?)[.|,]"
-        rules = {"sei": sei+sei2,
+        rules = {"processo_SEI": sei+sei2,
                  "nome": r"\s([^,]*?),\smatricula",
                  "matricula": r"matricula\s?n?o?\s([\s\S]*?)[,|\s]",
                  "tipo_ret": r"",
-                 "cargo": r"Cargo de([\s\S]*?)\,",
+                 "cargo_efetivo": r"Cargo de([\s\S]*?)\,",
                  "classe": r"[C|c]lasse\s([\s\S]*?)\,",
                  "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
                  "quadro": r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
-                 "fundamento": r"nos\stermos\sdo\s[a|A]rtigo([\s\S]*?),\sa?\s",
+                 "fundamento_legal": r"nos\stermos\sdo\s[a|A]rtigo([\s\S]*?),\sa?\s",
                  "orgao": orgao,
                  "vigencia": r"",
-                 "siape": siape}
+                 "matricula_SIAPE": siape}
         return rules
 
 class RetAposentadoria(Atos):
@@ -94,18 +94,18 @@ class RetAposentadoria(Atos):
         leia = r"\sle[,|:|;]\s?(?:[\s\S]*?),"
         leia2 = r"?\sleia[\s\S]*?[,|:|;]\s([\s\S]*?)[.]\s"
 
-        rules = {"tipo_doc": tipo + tipo2,
-                 "num_doc": num_doc + num_doc2,
-                 "data_doc": data_doc + data_doc2,
-                 "num_dodf": r"dodf[\s\S]*?([0-9]*?),",
+        rules = {"tipo_documento": tipo + tipo2,
+                 "numero_documento": num_doc + num_doc2,
+                 "data_documento": data_doc + data_doc2,
+                 "numero_dodf": r"dodf[\s\S]*?([0-9]*?),",
                  "data_dodf": data_dodf + data_dodf2,
-                 "pag_dodf": r"",
+                 "pagina_dodf": r"",
                  "nome": r"\sa\s([^,]*?),\smatricula",
                  "matricula": r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
-                 "cargo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
+                 "cargo_efetivo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
                  "classe": r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
                  "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
-                 "siape": r"siape\sn?o?\s([\s\S]*?)[,| | .]",
-                 "le": le+le2,
-                 "leiase": leia+leia2}
+                 "matricula_SIAPE": r"siape\sn?o?\s([\s\S]*?)[,| | .]",
+                 "informacao_errada": le+le2,
+                 "informacao_corrigida": leia+leia2}
         return rules
