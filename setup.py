@@ -1,7 +1,6 @@
 import setuptools
 from dodfminer.__version__ import __version__
 
-
 def requirements_list():
     list_of_req = []
     with open('requirements.txt') as req:
@@ -37,5 +36,5 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     package_data={'dodfminer': ['extract/polished/acts/models/*.pkl']},
-    include_package_data = True, 
+    include_package_data = True,
 )

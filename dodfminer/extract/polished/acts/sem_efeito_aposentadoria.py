@@ -44,9 +44,9 @@ TIPO_DOCUMENTO = r"(?i:portaria|ordem de servi.o|instru..o)"
 
 class SemEfeitoAposentadoria(Atos):
     _special_acts = [
-        'dodf_num', 'tornado_sem_efeito_publicacao',
-        'dodf_pagina', 'servidor', 'matricula',
-        'cargo', 'dodf_tipo_edicao',
+        'numero_dodf', 'tornado_sem_efeito_publicacao',
+        'pagina_dodf', 'nome', 'matricula',
+        'cargo_efetivo', 'tipo_edicao',
     ]
 
     _BAD_MATCH_WORDS = [
@@ -91,9 +91,9 @@ class SemEfeitoAposentadoria(Atos):
 
     def _prop_rules(self):
         return {
-            'tipo_documento': TIPO_DOCUMENTO,
+            'tipo_documento ': TIPO_DOCUMENTO,
             'processo': PROCESSO_MATCH,
-            'dodf_data': DODF_DATE,
+            'data_documento': DODF_DATE,
         }
 
     def _find_instances(self) -> List[Match]:
@@ -133,7 +133,7 @@ class SemEfeitoAposentadoria(Atos):
         for i, match in enumerate(self._raw_matches):
             act = match.group()
             curr_dict = lis_dict[i]
-            dodf_date = curr_dict['dodf_data']
+            dodf_date = curr_dict['data_dodf']
             dodf_num = dodf_date and re.search(DODF_NUM, dodf_date.group())
             tornado_sem_efeito_publicacao = dodf_date and \
                 re.search(
@@ -188,14 +188,14 @@ class SemEfeitoAposentadoria(Atos):
             edicao = re.search(DODF_TIPO_EDICAO, act)
             dodf_tipo_edicao = re.search(TIPO_EDICAO, act[edicao.start()-1:edicao.end()+1])\
                 if edicao else re.search("normal", "normal")
-            curr_dict['dodf_num'] = dodf_num
+            curr_dict['numero_dodf'] = dodf_num
             curr_dict['tornado_sem_efeito_publicacao'] = tornado_sem_efeito_publicacao
-            curr_dict['dodf_pagina'] = dodf_pagina
-            curr_dict['servidor'] = servidor
+            curr_dict['pagina_dodf'] = dodf_pagina
+            curr_dict['nome'] = servidor
             curr_dict['matricula'] = matricula
-            curr_dict['cargo'] = cargo
+            curr_dict['cargo_efetivo'] = cargo
 
-            curr_dict['dodf_tipo_edicao'] = dodf_tipo_edicao
+            curr_dict['tipo_edicao'] = dodf_tipo_edicao
 
     def _find_props(self, rule, act):
         """Returns named group, or the whole match if no named groups
