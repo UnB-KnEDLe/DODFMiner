@@ -4,6 +4,7 @@ This module contains the ActRegex class, which have all that is necessary to
 extract an act and, its proprieties, using regex rules.
 
 """
+import abc
 
 import re
 import numpy as np
