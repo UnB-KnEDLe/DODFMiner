@@ -121,7 +121,7 @@ class Cessoes(Atos):
             if matricula and nome:
                 offset = matricula.end()-1 if 0 <= (matricula.start() - nome.end()) <= 5 \
                             else nome.end() - 1
-                cargo, = self._find_props(r",(?P<cargo>[^,]+)", act[offset:])
+                cargo, = self._find_prop_value(r",(?P<cargo>[^,]+)", act[offset:])
             else:
                 cargo = "nan"
 
@@ -130,7 +130,7 @@ class Cessoes(Atos):
             lis_matches[i]['cargo'] = cargo
 
 
-    def _find_props(self, rule, act):
+    def _find_prop_value(self, rule, act):
         """Returns named group, or the whole match if no named groups
                 are present on the match.
         Args:
@@ -154,10 +154,10 @@ class Cessoes(Atos):
             return "nan"
 
 
-    def _acts_props(self):
+    def _extract_props(self):
         acts = []
         for raw in self._raw_acts:
-            act = self._act_props(raw)
+            act = self._regex_props(raw)
             acts.append(act)
         if self._extra_search:
             self._get_special_acts(acts)

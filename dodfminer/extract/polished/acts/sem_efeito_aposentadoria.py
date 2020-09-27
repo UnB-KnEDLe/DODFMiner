@@ -142,7 +142,7 @@ class SemEfeitoAposentadoria(Atos):
                 PAGE, act[dodf_date.end():][:50])
 
             servidor = re.search(SERVIDOR_NOME_COMPLETO, act)
-            if not servidor:
+            if not servidor and self._nlp:
                 #  If it fails then a more generic regex is searched for
                 dodf_mt = re.search(DODF, act)
                 dodf_end = 0 if not dodf_mt else dodf_mt.end()
@@ -197,7 +197,7 @@ class SemEfeitoAposentadoria(Atos):
 
             curr_dict['dodf_tipo_edicao'] = dodf_tipo_edicao
 
-    def _find_props(self, rule, act):
+    def _find_prop_value(self, rule, act):
         """Returns named group, or the whole match if no named groups
                 are present on the match.
         Args:
@@ -226,10 +226,10 @@ class SemEfeitoAposentadoria(Atos):
         else:
             return match.group()
 
-    def _acts_props(self):
+    def _extract_props(self):
         acts = []
         for raw in self._raw_acts:
-            act = self._act_props(raw)
+            act = self._regex_props(raw)
             acts.append(act)
         if self._extra_search:
             self._get_special_acts(acts)
