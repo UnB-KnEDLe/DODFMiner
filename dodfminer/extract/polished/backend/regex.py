@@ -27,6 +27,12 @@ class ActRegex:
     """
 
     def __init__(self):
+        # Attributes to be overrided by child
+        self._name = None
+        self._acts_str = []
+        self._text = None
+
+        #Act Regex Constuction
         super(ActRegex, self).__init__()
         self._flags = self._regex_flags()
         self._rules = self._prop_rules()
@@ -72,7 +78,7 @@ class ActRegex:
         results = []
         for instance in found:
             head, body = instance
-            self.acts_str.append(head+body)
+            self._acts_str.append(head+body)
             results.append(body)
 
         return results

@@ -22,6 +22,8 @@ class ActNER:
     """
 
     def __init__(self):
+        self._backend = 'regex'
+        self._name = None
         super(ActNER, self).__init__()
         self._model = self._load_model()
 
@@ -36,6 +38,8 @@ class ActNER:
         """
         if self._backend == 'ner':
             print(f"Act {self._name} does not have an model: FALLING BACK TO REGEX")
+            self._backend = 'regex'
+        else:
             self._backend = 'regex'
 
     def _get_features(self, act):
