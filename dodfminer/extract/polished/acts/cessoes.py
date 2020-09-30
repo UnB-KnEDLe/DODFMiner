@@ -7,20 +7,6 @@ from typing import List, Match
 from dodfminer.extract.polished.acts.base import Atos
 
 
-def case_insensitive(s: str):
-    """Returns regular expression similar to `s` but case careless.
-
-    Note: strings containing characters set, as `[ab]` will be transformed to `[[Aa][Bb]]`.
-        `s` is espected to NOT contain situations like that.
-    Args:
-        s: the stringregular expression string to be transformed into case careless
-    Returns:
-        the new case-insensitive string
-    """
-
-    return ''.join([c if not c.isalpha() else '[{}{}]'.format(c.upper(), c.lower()) for c in s])
-
-
 def remove_crossed_words(s: str):
     """Any hyfen followed by 1+ spaces are removed.
     """
@@ -32,7 +18,7 @@ UPPER_LETTER = r"[ÁÀÂÄÉÈẼËÍÌÎÏÓÒÔÖÚÙÛÜÇA-Z]"
 
 DODF = r"(DODF|[Dd]i.rio\s+[Oo]ficial\s+[Dd]o\s+[Dd]istrito\s+[Ff]ederal)"
 
-SIAPE = r"{}\s*(?:n?.?)\s*(?P<siape>[-\d.Xx/\s]+)".format(case_insensitive("siape"))
+SIAPE = r"(?i:siape)\s*(?:n?.?)\s*(?P<siape>[-\d.Xx/\s]+)"
 # SIAPE = r"(?i:siape)\s*(?:n?.?)\s*(?P<siape>[-\d.Xx/\s]+)"
 
 MATRICULA = r"(?:matr.cul.|matr?[.]?\B)[^\d]+(?P<matricula>[-\d.XxZzYz/\s]+)"
@@ -45,11 +31,11 @@ SERVIDOR_NOME_COMPLETO = r"(servidor.?|empregad.)[^A-ZÀ-Ž]{0,40}(?P<name>[A-Z�
 NOME_COMPLETO = r"(?P<name>['A-ZÀ-Ž][.'A-ZÀ-Ž\s]{6,}(?=[,.:;]))"
 
 PROCESSO_NUM = r"(?P<processo>[-0-9/.]+)"
-INTERESSADO = r"{}:\s*{}".format(case_insensitive("interessad."), NOME_COMPLETO)
+INTERESSADO = r"(?i:interessad.):\s*{}".format(NOME_COMPLETO)
 # INTERESSADO = r"(?i:interessad.):\s*{}".format(NOME_COMPLETO)
 # INTERESSADO = r"(?i:interessad.):\s*" + NOME_COMPLETO
 
-ONUS = r"(?P<onus>\b[oôOÔ]{}\b[^.]+[.])".format(case_insensitive("nus"))
+ONUS = r"(?P<onus>\b[oôOÔ](?i:nus)\b[^.]+[.])"
 # ONUS = r"(?P<onus>\b[oôOÔ](?i:(nus))\b[^.]+[.])"
 
 
@@ -66,10 +52,10 @@ class Cessoes(Atos):
     def _act_name(self):
         return "Cessoes"
 
-    # def _load_model(self):
-    #     f_path = os.path.dirname(__file__)
-    #     f_path += '/models/cessoes_ner.pkl'
-    #     return joblib.load(f_path)
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/cessoes_ner.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ["tipo"] + list(self._prop_rules())
@@ -79,20 +65,26 @@ class Cessoes(Atos):
             r"([Pp][Rr][Oo][Cc][Ee][Ss][Ss][Oo][^0-9/]{0,12})([^\n]+?\n){0,2}?"
             + r"[^\n]*?[Aa]\s*[Ss]\s*[Ss]\s*[Uu]\s*[Nn]\s*[Tt]\s*[Oo]\s*:?\s*\bCESS.O\b"
             + r"([^\n]*\n){0,}?[^\n]*?(?=(?P<look_ahead>PROCESSO|Processo:|PUBLICAR|pertinentes[.]|autoridade cedente|"
-            + case_insensitive('publique-se') + "))"
-            # + r'(?i:publique-se)' + "))"
+            + r"(?i:publique-se)" + "))"
         )
 
     def _prop_rules(self):
         return {
-            'interessado': INTERESSADO,
-            'nome_substituto': SERVIDOR_NOME_COMPLETO,
+            'nome': SERVIDOR_NOME_COMPLETO,
             'matricula': MATRICULA,
-            'processo_SEI': r"[^0-9]+?{}".format(PROCESSO_NUM),
-            # 'processo': r"[^0-9]+?" + PROCESSO_NUM,
+            'cargo_efetivo': "",
+            'classe': "",
+            'padrao': "",
+            'orgao_cedente': "",
+            'orgao_cessionario': "",
             'onus': ONUS,
+            'fundamento legal': "",
+            'processo_SEI': r"[^0-9]+?{}".format(PROCESSO_NUM),
+            'vigencia': "",
             'matricula_SIAPE': SIAPE,
-            'cargo_efetivo': r",(?P<cargo>[^,]+)",
+            'cargo_orgao_cessionario': r",(?P<cargo>[^,]+)",
+            'simbolo': "",
+            'hierarquia_lotacao': "",
         }
 
     def _find_instances(self) -> List[Match]:
@@ -121,7 +113,7 @@ class Cessoes(Atos):
             if matricula and nome:
                 offset = matricula.end()-1 if 0 <= (matricula.start() - nome.end()) <= 5 \
                             else nome.end() - 1
-                cargo, = self._find_props(r",(?P<cargo>[^,]+)", act[offset:])
+                cargo, = self._find_prop_value(r",(?P<cargo>[^,]+)", act[offset:])
             else:
                 cargo = "nan"
 
@@ -130,7 +122,7 @@ class Cessoes(Atos):
             lis_matches[i]['cargo'] = cargo
 
 
-    def _find_props(self, rule, act):
+    def _find_prop_value(self, rule, act):
         """Returns named group, or the whole match if no named groups
                 are present on the match.
         Args:
@@ -154,10 +146,10 @@ class Cessoes(Atos):
             return "nan"
 
 
-    def _acts_props(self):
+    def _extract_props(self):
         acts = []
         for raw in self._raw_acts:
-            act = self._act_props(raw)
+            act = self._regex_props(raw)
             acts.append(act)
         if self._extra_search:
             self._get_special_acts(acts)
