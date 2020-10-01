@@ -7,7 +7,7 @@ from dodfminer.extract.pure.core import ContentExtractor as ce
 
 class XMLFy:
 
-    def __init__(self, file, acts_ids):
+    def __init__(self, file, acts_ids, i):
         file_nums = list((map(int, re.findall(r'\d+', file))))
         file_nums = file_nums[2:]
         file_id = ""
