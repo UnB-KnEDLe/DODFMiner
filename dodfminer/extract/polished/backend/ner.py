@@ -23,7 +23,6 @@ class ActNER:
 
     def __init__(self):
         self._backend = 'regex'
-        self._name = None
         super(ActNER, self).__init__()
         self._model = self._load_model()
 

@@ -28,9 +28,9 @@ class ActRegex:
 
     def __init__(self):
         # Attributes to be overrided by child
-        self._name = None
-        self._acts_str = []
-        self._text = None
+        # self._name = None
+        # self._acts_str = []
+        # self._text = None
 
         #Act Regex Constuction
         super(ActRegex, self).__init__()
