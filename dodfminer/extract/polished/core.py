@@ -125,7 +125,7 @@ class ActsExtractor:
         return res
 
     @staticmethod
-    def get_xml(file, backend):
+    def get_xml(file, backend, i):
         """Extract all acts types from a single DODF.
 
         Dataframe format.
@@ -138,7 +138,7 @@ class ActsExtractor:
             An vector of dataframed with extracted information for all acts.
 
         """
-        res = XMLFy(file, _acts_ids)
+        res = XMLFy(file, _acts_ids, i)
         return res
         # res.print_tree()
         # res.save_to_disc()
