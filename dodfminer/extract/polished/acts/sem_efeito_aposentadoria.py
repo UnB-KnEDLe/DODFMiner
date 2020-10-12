@@ -1,6 +1,7 @@
 import re
 from typing import List, Match
 import pandas as pd
+import numpy as np
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -19,7 +20,7 @@ FLEX_DATE = r"(?P<date>\d+\s+(?:de\s*)?" + MONTHS + \
 
 DODF_NUM = r"(?i:DODF|[Dd]i.rio [Oo]ficial [Dd]o [Dd]istrito [Ff]ederal)\s*[\w\W]{0,3}?(?i:n?(.mero|[.roº]{1,4})?[^\d]+?)(?P<num>\d+)"
 
-DODF_DATE = DODF + r"[^\n\n]{0,50}?(de\s?)?" + FLEX_DATE
+DODF_DATE = DODF + r"[^\n\n]{0,50}?(?i:de\s?)?" + FLEX_DATE
 
 SIAPE = r"(?i:siape)\s*(?i:n?.?)\s*[-\d.Xx/\s]"
 
@@ -41,12 +42,17 @@ UPPER_LETTER = r"[ÁÀÂÄÉÈẼËÍÌÎÏÓÒÔÖÚÙÛÜÇA-Z]"
 PROCESSO_MATCH = r"(?i:processo):?[^\d]{0,50}?(?P<processo>\d[-0-9./\s]*\d(?!\d))"
 TIPO_DOCUMENTO = r"(?i:portaria|ordem de servi.o|instru..o)"
 
+EMPTY_MATCH = r'(?!x)x'
 
 class SemEfeitoAposentadoria(Atos):
     _special_acts = [
-        'numero_dodf', 'tornado_sem_efeito_publicacao',
-        'pagina_dodf', 'nome', 'matricula',
-        'cargo_efetivo', 'tipo_edicao',
+        'data_documento',
+        'tipo_edicao',
+        'numero_dodf',
+        'pagina_dodf',
+        'nome',
+        'cargo_efetivo',
+        'matricula',
     ]
 
     _BAD_MATCH_WORDS = [
@@ -69,7 +75,7 @@ class SemEfeitoAposentadoria(Atos):
         self._max_length = max_length
         self._debug = debug
         self._extra_search = extra_search
-        self._processed_text = self._pre_process_text(open(file).read())
+        # self._processed_text = self._pre_process_text(open(file).read())
         self._raw_matches = []
         self._nlp = nlp
         super().__init__(file, backend)
@@ -91,9 +97,21 @@ class SemEfeitoAposentadoria(Atos):
 
     def _prop_rules(self):
         return {
-            'tipo_documento ': TIPO_DOCUMENTO,
-            'processo': PROCESSO_MATCH,
-            'data_documento': DODF_DATE,
+            'tipo_documento': TIPO_DOCUMENTO,
+            'numero_documento': EMPTY_MATCH,
+            'data_documento': EMPTY_MATCH,
+            'numero_dodf': EMPTY_MATCH,
+            'data_dodf': DODF_DATE,
+            'pagina_dodf': EMPTY_MATCH,
+            'nome': EMPTY_MATCH,
+            'matricula': EMPTY_MATCH,
+            'matricula_SIAPE': EMPTY_MATCH,
+            'cargo_efetivo': EMPTY_MATCH,
+            'classe': EMPTY_MATCH,
+            'padrao': EMPTY_MATCH,
+            'quadro': EMPTY_MATCH,
+            'orgao': EMPTY_MATCH,
+            'processo_SEI': PROCESSO_MATCH,
         }
 
     def _find_instances(self) -> List[Match]:
@@ -104,7 +122,8 @@ class SemEfeitoAposentadoria(Atos):
         """
         head = "TORNAR SEM EFEITO"
         end = " CAFEBABE"   # so that lookeahead does not become a problem
-        lis = self._processed_text.split(head)
+        # lis = self._processed_text.split(head)
+        lis = self._text.split(head)
         lis = [
             re.search(self._inst_rule, head + tex + end)
             # content before first `head` occurrence does not matter
@@ -133,22 +152,33 @@ class SemEfeitoAposentadoria(Atos):
         for i, match in enumerate(self._raw_matches):
             act = match.group()
             curr_dict = lis_dict[i]
-            dodf_date = curr_dict['data_dodf']
-            dodf_num = dodf_date and re.search(DODF_NUM, dodf_date.group())
-            tornado_sem_efeito_publicacao = dodf_date and \
-                re.search(
-                    FLEX_DATE, act[:dodf_date.start()] + act[dodf_date.end():])
-            dodf_pagina = dodf_date and re.search(
-                PAGE, act[dodf_date.end():][:50])
+            data_dodf = curr_dict['data_dodf']
+            if data_dodf == 'nan' or not data_dodf:
+                data_dodf = re.search(
+                    FLEX_DATE, self._raw_acts[i]
+                )
+                curr_dict['data_dodf'] = data_dodf
 
-            servidor = re.search(SERVIDOR_NOME_COMPLETO, act)
-            if not servidor:
+
+            numero_dodf = data_dodf and re.search(DODF_NUM, data_dodf.group())
+            data_documento = data_dodf and \
+                re.search(
+                    FLEX_DATE, act[:data_dodf.start()] + act[data_dodf.end():])
+            pagina_dodf = data_dodf and re.search(
+                PAGE, act[data_dodf.end():][:50])
+
+            nome = re.search(SERVIDOR_NOME_COMPLETO, act)
+            if self._debug:
+                print('NOME ENCONTRADO:', nome)
+            if not nome:
                 #  If it fails then a more generic regex is searched for
                 dodf_mt = re.search(DODF, act)
                 dodf_end = 0 if not dodf_mt else dodf_mt.end()
-                servidor = re.search(NOME_COMPLETO, act[dodf_end:])
+                nome = re.search(NOME_COMPLETO, act[dodf_end:])
+                if self._debug:
+                    print("NOME ENCONTRADO 2:", nome)
                 del dodf_mt, dodf_end
-                if not servidor:
+                if not nome and self._nlp:
                     # Appeal to spacy
                     all_cands = re.findall(NOME_COMPLETO, act)
                     cand_text = 'SEM-SERVIDOR'
@@ -157,47 +187,46 @@ class SemEfeitoAposentadoria(Atos):
 
                         if cand.label_ == 'PER':
                             break
-                    servidor = re.search(cand_text.upper(), act)
+                    nome = re.search(cand_text.upper(), act)
                     del all_cands, cand_text, cand
-            end_employee = servidor.end() if servidor else 0
+            end_employee = nome.end() if nome else 0
             matricula = re.search(MATRICULA, act[end_employee:]) or \
                 re.search(MATRICULA_GENERICO, act[end_employee:]) or \
                 re.search(MATRICULA_ENTRE_VIRGULAS, act[end_employee:])
 
             del end_employee
-            if not matricula or not servidor:
-                cargo = None
+            if not matricula or not nome:
+                cargo_efetivo = None
             else:
-                servidor_start = act[servidor.start():].find(
-                    servidor.group()) + servidor.start()
+                nome_start = act[nome.start():].find(
+                    nome.group()) + nome.start()
                 matricula_start = act[matricula.start():].find(
                     matricula.group()) + matricula.start()
 
                 # NOTE: -1 is important in case `matricula` end with `,`
-                if 0 <= (matricula_start - (servidor_start + len(servidor.group()))) <= 5:
-                    # cargo does not fit between 'servidor' and 'matricula'
-                    cargo = re.search(
-                        r",(?P<cargo>[^,]+)", act[matricula_start + len(matricula.group())-1:])
+                if 0 <= (matricula_start - (nome_start + len(nome.group()))) <= 5:
+                    # cargo_efetivo does not fit between 'nome' and 'matricula'
+                    cargo_efetivo = re.search(
+                        r",(?P<cargo_efetivo>[^,]+)", act[matricula_start + len(matricula.group())-1:])
 
                 else:
-                    # cargo right after employee's name
+                    # cargo_efetivo right after employee's name
 
-                    cargo = re.search(
-                        r",(?P<cargo>[^,]+)", act[servidor_start + len(servidor.group())-1:])
-                del matricula_start, servidor_start
+                    cargo_efetivo = re.search(
+                        r",(?P<cargo_efetivo>[^,]+)", act[nome_start + len(nome.group())-1:])
+                del matricula_start, nome_start
             edicao = re.search(DODF_TIPO_EDICAO, act)
-            dodf_tipo_edicao = re.search(TIPO_EDICAO, act[edicao.start()-1:edicao.end()+1])\
+            tipo_edicao = re.search(TIPO_EDICAO, act[edicao.start()-1:edicao.end()+1])\
                 if edicao else re.search("normal", "normal")
-            curr_dict['numero_dodf'] = dodf_num
-            curr_dict['tornado_sem_efeito_publicacao'] = tornado_sem_efeito_publicacao
-            curr_dict['pagina_dodf'] = dodf_pagina
-            curr_dict['nome'] = servidor
+            curr_dict['data_documento'] = data_documento
+            curr_dict['numero_dodf'] = numero_dodf
+            curr_dict['pagina_dodf'] = pagina_dodf
+            curr_dict['nome'] = nome
             curr_dict['matricula'] = matricula
-            curr_dict['cargo_efetivo'] = cargo
+            curr_dict['cargo_efetivo'] = cargo_efetivo
+            curr_dict['tipo_edicao'] = tipo_edicao
 
-            curr_dict['tipo_edicao'] = dodf_tipo_edicao
-
-    def _find_props(self, rule, act):
+    def _find_prop_value(self, rule, act):
         """Returns named group, or the whole match if no named groups
                 are present on the match.
         Args:
@@ -219,17 +248,17 @@ class SemEfeitoAposentadoria(Atos):
             an exception if there are more than two groups.
         """
         if not match or isinstance(match, str):
-            return "nan"
+            return np.nan
         elif match.groupdict():
             key = list(match.groupdict())[0]
             return match.group(key)
         else:
             return match.group()
 
-    def _acts_props(self):
+    def _extract_props(self):
         acts = []
         for raw in self._raw_acts:
-            act = self._act_props(raw)
+            act = self._regex_props(raw)
             acts.append(act)
         if self._extra_search:
             self._get_special_acts(acts)
