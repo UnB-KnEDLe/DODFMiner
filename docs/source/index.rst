@@ -10,9 +10,10 @@ Welcome to DODFMiner's documentation!
   user/intro
   user/install
   user/usage
+  user/ARCH.md
   user/CODE_OF_CONDUCT.md
   user/CONTRIBUTING.md
- 
+
 .. toctree::
   :maxdepth: 2
   :caption: Downloader Module
@@ -23,17 +24,18 @@ Welcome to DODFMiner's documentation!
   :maxdepth: 2
   :caption: Extractor Module
 
-  extract/core
-  extract/utils
+  pure/core
+  pure/utils
+  polished/core
+  polished/utils
 
 .. toctree::
   :maxdepth: 2
-  :caption: Regex Module
+  :caption: Acts
 
-  regex/core
-  regex/atos
-  regex/utils
-  
+  acts/atos
+  acts/regex
+  acts/ner
 
 .. toctree::
   :maxdepth: 2
@@ -41,5 +43,4 @@ Welcome to DODFMiner's documentation!
 
   etc/ack
   etc/about
-  
-  
+
