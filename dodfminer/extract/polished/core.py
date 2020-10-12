@@ -140,5 +140,4 @@ class ActsExtractor:
         """
         res = XMLFy(file, _acts_ids)
         return res
-        # res.print_tree()
-        # res.save_to_disc()
+
