@@ -73,55 +73,55 @@ def test_act_retirement_ner():
 def act_retapos():
     return RetAposentadoria(file, 'regex')
 
-def test_retretirement_backend(act_retapos):
-    assert act_retapos._backend == "regex"
+# def test_retretirement_backend(act_retapos):
+#     assert act_retapos._backend == "regex"
 
-def test_retretirement_name(act_retapos):
-    assert act_retapos._name == "Retificações de Aposentadoria"
-    assert act_retapos.name == "Retificações de Aposentadoria"
-    assert act_retapos._act_name() == "Retificações de Aposentadoria"
+# def test_retretirement_name(act_retapos):
+#     assert act_retapos._name == "Retificações de Aposentadoria"
+#     assert act_retapos.name == "Retificações de Aposentadoria"
+#     assert act_retapos._act_name() == "Retificações de Aposentadoria"
 
-def test_retretirement_flags(act_retapos):
-    assert act_retapos._regex_flags() == re.IGNORECASE
+# def test_retretirement_flags(act_retapos):
+#     assert act_retapos._regex_flags() == re.IGNORECASE
 
-def test_retretirement_prop_names(act_retapos):
-    assert act_retapos._props_names() == ["Tipo do Ato", "Tipo de Documento", "Número do documento",
-                "Data do documento ", "Número do DODF", "Data do DODF",
-                "Página do DODF", "Nome do Servidor", "Matrícula", "Cargo",
-                "Classe", "Padrao", "Matricula SIAPE",
-                "Informação Errada", "Informação Corrigida"]
+# def test_retretirement_prop_names(act_retapos):
+#     assert act_retapos._props_names() == ["Tipo do Ato", "Tipo de Documento", "Número do documento",
+#                 "Data do documento ", "Número do DODF", "Data do DODF",
+#                 "Página do DODF", "Nome do Servidor", "Matrícula", "Cargo",
+#                 "Classe", "Padrao", "Matricula SIAPE",
+#                 "Informação Errada", "Informação Corrigida"]
 
-def test_retretirement_rule(act_retapos):
-    assert act_retapos._rule_for_inst() == r"(RETIFICAR,\s)(.*?ato\sque\sconcedeu\saposentadoria[\s\S]*?\.\n)"
+# def test_retretirement_rule(act_retapos):
+#     assert act_retapos._rule_for_inst() == r"(RETIFICAR,\s)(.*?ato\sque\sconcedeu\saposentadoria[\s\S]*?\.\n)"
 
-def test_retretirement_prop_rules_names(act_retapos):
-    assert list(act_retapos._prop_rules()) == [
-        "tipo_documento", "numero_documento", "data_documento", "numero_dodf", "data_dodf", "pagina_dodf", "nome", "matricula", "cargo_efetivo","classe", "padrao", "matricula_SIAPE","informacao_errada", "informacao_corrigida"]
+# def test_retretirement_prop_rules_names(act_retapos):
+#     assert list(act_retapos._prop_rules()) == [
+#         "tipo_documento", "numero_documento", "data_documento", "numero_dodf", "data_dodf", "pagina_dodf", "nome", "matricula", "cargo_efetivo","classe", "padrao", "matricula_SIAPE","informacao_errada", "informacao_corrigida"]
 
-def test_retretirement_prop_rules_rules(act_retapos):
-    assert list(act_retapos._prop_rules().values()) == [
-        r"^n[a|o]\s([\s\S]*?),?\s?(?:[0-9]*?),?\sde\s(?:[0-9]*?[/|.][0-9]*?[/|.][0-9]*?|,)",
-        r"n[a|o]\s(?:[\s\S]*?),?\s?([0-9]*?),?\sde\s(?:[0-9]*?[/|.][0-9]*?[/|.][0-9]*?|,)",
-        r"n[a|o]\s(?:[\s\S]*?),?\s?(?:[0-9]*?),?\sde\s([0-9]*?[/|.][0-9]*?[/|.][0-9]*?),\s",
-        r"dodf[\s\S]*?([0-9]*?),",
-        r"dodf[\s\S]*?(?:[0-9]*?)([0-9]*?[/|.][0-9]*?[/|.][0-9]*?)[,|\s]",
-        r"",
-        r"\sa\s([^,]*?),\smatricula",
-        r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
-        r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
-        r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
-        r"[p|P]adr[a|ã]o\s([\s\S]*?),",
-        r"siape\sn?o?\s([\s\S]*?)[,| | .]",
-        r"\sle[,|:|;]\s?([\s\S]*?),?\sleia[\s\S]*?[,|:|;]\s(?:[\s\S]*?)[.]\s",
-        r"\sle[,|:|;]\s?(?:[\s\S]*?),?\sleia[\s\S]*?[,|:|;]\s([\s\S]*?)[.]\s"
-    ]
+# def test_retretirement_prop_rules_rules(act_retapos):
+#     assert list(act_retapos._prop_rules().values()) == [
+#         r"^n[a|o]\s([\s\S]*?),?\s?(?:[0-9]*?),?\sde\s(?:[0-9]*?[/|.][0-9]*?[/|.][0-9]*?|,)",
+#         r"n[a|o]\s(?:[\s\S]*?),?\s?([0-9]*?),?\sde\s(?:[0-9]*?[/|.][0-9]*?[/|.][0-9]*?|,)",
+#         r"n[a|o]\s(?:[\s\S]*?),?\s?(?:[0-9]*?),?\sde\s([0-9]*?[/|.][0-9]*?[/|.][0-9]*?),\s",
+#         r"dodf[\s\S]*?([0-9]*?),",
+#         r"dodf[\s\S]*?(?:[0-9]*?)([0-9]*?[/|.][0-9]*?[/|.][0-9]*?)[,|\s]",
+#         r"",
+#         r"\sa\s([^,]*?),\smatricula",
+#         r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
+#         r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
+#         r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
+#         r"[p|P]adr[a|ã]o\s([\s\S]*?),",
+#         r"siape\sn?o?\s([\s\S]*?)[,| | .]",
+#         r"\sle[,|:|;]\s?([\s\S]*?),?\sleia[\s\S]*?[,|:|;]\s(?:[\s\S]*?)[.]\s",
+#         r"\sle[,|:|;]\s?(?:[\s\S]*?),?\sleia[\s\S]*?[,|:|;]\s([\s\S]*?)[.]\s"
+#     ]
 
-def test_act_retretirement_consistence_rule(act_retapos):
-    assert len(act_retapos._props_names())-1 == len(act_retapos._prop_rules())
+# def test_act_retretirement_consistence_rule(act_retapos):
+#     assert len(act_retapos._props_names())-1 == len(act_retapos._prop_rules())
 
-def test_act_retretirement_ner():
-    act = RetAposentadoria(file, 'ner')
-    assert act._load_model() == None
+# def test_act_retretirement_ner():
+#     act = RetAposentadoria(file, 'ner')
+#     assert act._load_model() == None
 
 #
 #
