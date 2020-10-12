@@ -3,6 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/a8ab63922f34a63be4cb/maintainability)](https://codeclimate.com/github/UnB-KnEDLe/DODFMiner/maintainability)
 [![Documentation Status](https://readthedocs.org/projects/dodfminer/badge/?version=latest)](https://dodfminer.readthedocs.io/en/latest/?badge=latest)
+[![Coverage Status](https://coveralls.io/repos/github/UnB-KnEDLe/DODFMiner/badge.svg)](https://coveralls.io/github/UnB-KnEDLe/DODFMiner)
 
 ### DODFMiner
 
@@ -12,7 +13,7 @@ DODFMiner is the software that is being developed for the extraction of data fro
 ### Contribute
 
 If you want to contribute to our project, it's simple! We have a [Contribution Guide](CONTRIBUTING.md) where all the steps to contribute are explained.
-Don't forget to also read our [Code of Conduct](CODE_OF_CONDUCT.md).   
+Don't forget to also read our [Code of Conduct](CODE_OF_CONDUCT.md).
 If you have any questions you can also contact us by creating an issue or by ask.knedle@googlegroups.com
 
 ### Installation

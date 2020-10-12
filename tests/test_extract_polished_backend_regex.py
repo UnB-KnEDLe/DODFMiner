@@ -12,7 +12,9 @@ from dodfminer.extract.polished.backend.regex import ActRegex
     "nao_encontra": "khalil"
 })
 def act_regex(test_rule_for_inst, test_prop_rules):
-    return ActRegex()
+    act =  ActRegex()
+    act._acts_str = []
+    return act
 
 def test_act_regex_flags(act_regex):
     assert act_regex._flags == 0
