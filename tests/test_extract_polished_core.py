@@ -82,5 +82,5 @@ def test_polished_core_get_all_df():
     assert len(data_frames) == len(dataframes)
 
 def test_polished_get_xml():
-    xml = ActsExtractor.get_xml(""+os.path.dirname(__file__)+"/support/invalid.pdf", "regex")
-    assert type(xml) == type(XMLFy(""+os.path.dirname(__file__)+"/support/invalid.pdf", _acts_ids))
+    xml = ActsExtractor.get_xml(""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf", "regex")
+    assert type(xml) == type(XMLFy(""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf", _acts_ids))
