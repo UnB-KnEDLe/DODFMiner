@@ -22,7 +22,9 @@ def test_polished_core_acts():
                             "retificacoes": RetAposentadoria,
                             "substituicao": Substituicao,
                             "efetivos_nome": NomeacaoEfetivos,
-                            "efetivos_exo": ExoneracaoEfetivos}
+                            "efetivos_exo": ExoneracaoEfetivos,
+                            "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+                            "cessoes": Cessoes}
 
 def test_polished_core_act_obj():
     assert type(ActsExtractor.get_act_obj("aposentadoria", "", "regex")) == type(Retirements("", "regex"))
@@ -34,7 +36,9 @@ def test_polished_core_act_obj():
     assert type(ActsExtractor.get_act_obj("efetivos_nome", "", "regex")) == type(NomeacaoEfetivos("", "regex"))
     assert type(ActsExtractor.get_act_obj("efetivos_exo", "", "regex")) == type(ExoneracaoEfetivos("", "regex"))
     assert type(ActsExtractor.get_act_obj("exoneracao", "", "regex")) == type(Exoneracao("", "regex"))
-    assert len(_acts_ids) == 9
+    assert type(ActsExtractor.get_act_obj("sem_efeito_aposentadoria", "", "regex")) == type(SemEfeitoAposentadoria("", "regex"))
+    assert type(ActsExtractor.get_act_obj("cessoes", "", "regex")) == type(Cessoes("", "regex"))
+    assert len(_acts_ids) == 11
 
 def test_polished_core_get_all_obj():
     objs = ActsExtractor.get_all_obj("", "regex")
@@ -47,9 +51,11 @@ def test_polished_core_get_all_obj():
         "nomeacao": NomeacaoComissionados("","regex"),
         "retificacoes": RetAposentadoria("","regex"),
         "reversoes": Revertions("","regex"),
-        "substituicao": Substituicao("","regex")
+        "substituicao": Substituicao("","regex"),
+        "sem_efeito_aposentadoria": SemEfeitoAposentadoria("","regex"),
+        "cessoes": Cessoes("","regex")
     }
-    assert len(objs) == 9
+    assert len(objs) == 11
     assert len(objs) == len(needed)
 
 def test_polished_core_act_df():
@@ -62,7 +68,9 @@ def test_polished_core_act_df():
     assert type(ActsExtractor.get_act_df("efetivos_nome", "", "regex")) == type(NomeacaoEfetivos("", "regex").data_frame)
     assert type(ActsExtractor.get_act_df("efetivos_exo", "", "regex")) == type(ExoneracaoEfetivos("", "regex").data_frame)
     assert type(ActsExtractor.get_act_df("exoneracao", "", "regex")) == type(Exoneracao("", "regex").data_frame)
-    assert len(_acts_ids) == 9
+    assert type(ActsExtractor.get_act_df("sem_efeito_aposentadoria", "", "regex")) == type(SemEfeitoAposentadoria("", "regex").data_frame)
+    assert type(ActsExtractor.get_act_df("cessoes", "", "regex")) == type(Cessoes("", "regex").data_frame)
+    assert len(_acts_ids) == 11
 
 
 def test_polished_core_get_all_df():
@@ -76,11 +84,13 @@ def test_polished_core_get_all_df():
         "nomeacao": NomeacaoComissionados("","regex").data_frame,
         "retificacoes": RetAposentadoria("","regex").data_frame,
         "reversoes": Revertions("","regex").data_frame,
-        "substituicao": Substituicao("","regex").data_frame
+        "substituicao": Substituicao("","regex").data_frame,
+        "sem_efeito_aposentadoria": SemEfeitoAposentadoria("","regex").data_frame,
+        "cessoes": Cessoes("","regex").data_frame
     }
-    assert len(data_frames) == 9
+    assert len(data_frames) == 11
     assert len(data_frames) == len(dataframes)
 
 def test_polished_get_xml():
-    xml = ActsExtractor.get_xml(""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf", "regex")
-    assert type(xml) == type(XMLFy(""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf", _acts_ids))
+    xml = ActsExtractor.get_xml(""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf", "regex", 0)
+    assert isinstance(xml, XMLFy)
