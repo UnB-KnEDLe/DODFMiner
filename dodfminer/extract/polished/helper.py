@@ -32,9 +32,11 @@ def xml_multiple(path, backend):
     print(files)
     print("[XMLFy] Make yourself a coffee! This may take a while")
     bar = tqdm.tqdm(total=len(files), desc="[XMLFy] Progress")
+    i = 1
     for file in files:
-        xml = ActsExtractor.get_xml(file, backend)
+        xml = ActsExtractor.get_xml(file, backend, i)
         xml.save_to_disc(path)
+        i += 1
         bar.update(1)
 
 def extract_multiple_acts(path, types, backend):

@@ -23,8 +23,6 @@ from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.create_xml import XMLFy
 
-# "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-# "cessoes": Cessoes,
 
 _acts_ids = {"aposentadoria": Retirements,
              "reversoes": Revertions,
@@ -34,7 +32,10 @@ _acts_ids = {"aposentadoria": Retirements,
              "retificacoes": RetAposentadoria,
              "substituicao": Substituicao,
              "efetivos_nome": NomeacaoEfetivos,
-             "efetivos_exo": ExoneracaoEfetivos}
+             "efetivos_exo": ExoneracaoEfetivos,
+             "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+             "cessoes": Cessoes}
+
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
 
@@ -125,7 +126,7 @@ class ActsExtractor:
         return res
 
     @staticmethod
-    def get_xml(file, backend):
+    def get_xml(file, backend, i):
         """Extract all acts types from a single DODF.
 
         Dataframe format.
@@ -138,6 +139,6 @@ class ActsExtractor:
             An vector of dataframed with extracted information for all acts.
 
         """
-        res = XMLFy(file, _acts_ids)
+        res = XMLFy(file, _acts_ids, i)
         return res
 

@@ -20,4 +20,5 @@ lxml==4.5.2
 pytest==6.0.2
 pytest-cov==2.10.1
 pytest-mock==3.3.1
+Jinja2==2.11.2
 coveralls==2.1.2

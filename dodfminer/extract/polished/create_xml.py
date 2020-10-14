@@ -8,12 +8,14 @@ from dodfminer.extract.pure.core import ContentExtractor as ce
 
 class XMLFy:
 
-    def __init__(self, file, acts_ids):
+    def __init__(self, file, acts_ids, i):
         file_nums = list((map(int, re.findall(r'\d+', file))))
         file_nums = file_nums[2:]
-        file_id = ""
+        print(file_nums)
+        file_id = f"{i}_"
         for s in file_nums:
-            file_id += str(s)
+            file_id += str(s) + "."
+        file_id = file_id[:-1]
         self._file = file
         self._acts_ids = acts_ids
         self._xml_id = file_id
@@ -110,7 +112,7 @@ class XMLFy:
         child_text.text = text
         root_passage.append(child_text)
 
-        relations = []
+        # relations = []
         if an_dict:
             for act_type in an_dict:
                 for act_inst in an_dict[act_type]:
@@ -124,14 +126,14 @@ class XMLFy:
                                 child_annotation = self._annotate(prop_type,
                                                                   value, offset_prop)
                                 root_passage.append(child_annotation)
-                                relations_ids.append(self._annotation_id)
+                                # relations_ids.append(self._annotation_id)
                                 self._annotation_id += 1
-                    child_rel = self._create_relation("Ato_"+act_type.capitalize(), relations_ids)
-                    relations.append(child_rel)
-                    self._relations_id += 1
+                    # child_rel = self._create_relation("Ato_"+act_type.capitalize(), relations_ids)
+                    # relations.append(child_rel)
+                    # self._relations_id += 1
 
-        for relation in relations:
-            root_passage.append(relation)
+        # for relation in relations:
+        #     root_passage.append(relation)
 
         return root_passage
 
