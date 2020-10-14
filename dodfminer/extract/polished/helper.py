@@ -25,10 +25,11 @@ from dodfminer.extract.pure.core import ContentExtractor
 def xml_multiple(path, backend):
     files = []
     if os.path.isfile(path):
-        files = [].append(path)
+        files = [path]
     else:
         files = get_files_path(path, 'pdf')
 
+    print(files)
     print("[XMLFy] Make yourself a coffee! This may take a while")
     bar = tqdm.tqdm(total=len(files), desc="[XMLFy] Progress")
     for file in files:

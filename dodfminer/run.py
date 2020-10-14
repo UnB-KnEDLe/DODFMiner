@@ -70,7 +70,7 @@ class Miner(object):
             elif self.args.act != 'all':
                 extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
             elif self.args.xml != False:
-                xml_multiple(self.args.input_folder, self.args.backend)
+                xml_multiple(self.args.single_file, self.args.backend)
             else:
                 self.cli.extract_content_parser.print_help()
     def _log(self, msg):
