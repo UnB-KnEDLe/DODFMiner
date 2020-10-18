@@ -82,10 +82,15 @@ def doc_2020():
 
 def test_load_blocks_list_1():
     functions_with_path('load_blocks_list', PDF_2001_PATH)
+
 def test_load_blocks_list_2():
     functions_with_path('load_blocks_list', PDF_2017_PATH)
+
 def test_load_blocks_list_3():
     functions_with_path('load_blocks_list', PDF_2018_PATH)
+
+def test_load_blocks_list_4():
+    functions_with_path('load_blocks_list', PDF_2020_PATH)
 
 
 def functions_with_path(name, pdf_path):
@@ -253,12 +258,15 @@ def test_extract_bold_upper_page():
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_1(doc_2001):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2001)
+
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_2(doc_2017):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2017)
+
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_3(doc_2018):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2018)
+
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_4(doc_2020):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2020)
@@ -272,7 +280,7 @@ def test_sort_2column():
 
 
 def test_get_titles_subtitles():
-    """Difícil de testar. Ainda não decidi como fazê-lo."""
+    """Hard to test. It's indirectly tested by `test_get_titles_subtitles_smart_X`"""
     pass
 
 @pytest.mark.xfail(reason="Bug #45 not yet fixed (will change function signature).", run=False)
@@ -303,34 +311,16 @@ def test_get_titles_subtitles_smart_4(doc_2020):
 
 def test_extract_titles_subtitles_1():
     functions_with_path('extract_titles_subtitles', PDF_2001_PATH)
+
 def test_extract_titles_subtitles_2():
     functions_with_path('extract_titles_subtitles', PDF_2017_PATH)
+
 def test_extract_titles_subtitles_3():
     functions_with_path('extract_titles_subtitles', PDF_2018_PATH)
+
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_titles_subtitles_4():
     functions_with_path('extract_titles_subtitles', PDF_2020_PATH)
-
-
-def wrapper_extractor_props(extractor, name):
-    ground_truth = json.dumps(json.load(
-        open(Path(extractor._path[:-4])/f'{name}.json'))
-    )
-    hier = json.dumps(getattr(extractor, name))
-    assert ground_truth == hier
-
-
-def test_titles_subtitles_hierarchy_1(extractor_2001):
-    wrapper_extractor_props(extractor_2001, 'titles_subtitles_hierarchy')
-def test_titles_subtitles_hierarchy_2(extractor_2017):
-    wrapper_extractor_props(extractor_2017, 'titles_subtitles_hierarchy')
-def test_titles_subtitles_hierarchy_3(extractor_2018):
-    wrapper_extractor_props(extractor_2018, 'titles_subtitles_hierarchy')
-
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
-def test_titles_subtitles_hierarchy_4(extractor_2020):
-    wrapper_extractor_props(extractor_2020, 'titles_subtitles_hierarchy')
-
 
 
 
@@ -357,25 +347,49 @@ def test_subtitles_2(extractor_2017):
 def test_subtitles_3(extractor_2018):
     wrapper_extractor_props(extractor_2018, 'subtitles')
 
-def test_subtitles_4(extractor_2020):
-    wrapper_extractor_props(extractor_2020, 'subtitles')
-
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_subtitles_4(extractor_2020):
     wrapper_extractor_props(extractor_2020, 'subtitles')
 
 
-def test_titles_subtitles_1(extractor_2001):
-    wrapper_extractor_props(extractor_2001, 'titles_subtitles')
-def test_titles_subtitles_2(extractor_2017):
-    wrapper_extractor_props(extractor_2017, 'titles_subtitles')
+def test_json_1(extractor_2001):
+    wrapper_extractor_props(extractor_2001, 'json')
 
-def test_titles_subtitles_3(extractor_2018):
-    wrapper_extractor_props(extractor_2018, 'titles_subtitles')
+def test_json_2(extractor_2017):
+    wrapper_extractor_props(extractor_2017, 'json')
+
+def test_json_3(extractor_2018):
+    wrapper_extractor_props(extractor_2018, 'json')
 
 @pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
-def test_titles_subtitles_4(extractor_2020):
-    wrapper_extractor_props(extractor_2020, 'titles_subtitles')
+def test_json_4(extractor_2020):
+    wrapper_extractor_props(extractor_2020, 'json')
+
+
+
+def wrapper_extractor_props(extractor, name):
+    ground_truth = json.dumps(json.load(
+        open(Path(extractor._path[:-4])/f'{name}.json'))
+    )
+    hier = json.dumps(getattr(extractor, name))
+    assert ground_truth == hier
+
+
+def test_titles_subtitles_hierarchy_1(extractor_2001):
+    wrapper_extractor_props(extractor_2001, 'titles_subtitles_hierarchy')
+
+def test_titles_subtitles_hierarchy_2(extractor_2017):
+    wrapper_extractor_props(extractor_2017, 'titles_subtitles_hierarchy')
+
+def test_titles_subtitles_hierarchy_3(extractor_2018):
+    wrapper_extractor_props(extractor_2018, 'titles_subtitles_hierarchy')
+
+
+@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
+def test_titles_subtitles_hierarchy_4(extractor_2020):
+    wrapper_extractor_props(extractor_2020, 'titles_subtitles_hierarchy')
+
+
 
 def test_reset(extractor_2001):
     extractor_2001.reset()
