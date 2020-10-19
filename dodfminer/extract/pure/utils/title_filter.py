@@ -49,31 +49,3 @@ class BoldUpperCase:
         """
         flags = d['flags']
         return flags in cls.BOLD_FLAGS
-
-    @classmethod
-    def params(cls, params_sep_underscore):
-        """Hmm.
-
-        Returns an function which evaluates a conjunction over the results
-        of all filters specified by params_sep_underscore.
-
-        params_sep_underscore must be a compound string
-        wich will be splited based on '_'. Each os these strings
-        specify a different filter.
-
-        :Example:
-
-            params("font_text") returns something like::
-
-                def gambs(x):
-                    return dict_font(x) and dict_text(x)
-
-        """
-        func_lis: list = []
-        for criteria in params_sep_underscore.split('_'):
-            func_lis.append(eval("cls.dict_{}".format(criteria)))
-
-        def and_funcs(arg):
-            return functools.reduce(lambda a, b: a and b,
-                                    map(lambda fun: fun(arg), func_lis))
-        return and_funcs
