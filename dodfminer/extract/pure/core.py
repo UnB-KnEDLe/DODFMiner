@@ -136,6 +136,7 @@ class ContentExtractor:
                         content_dict[actual_title].append(box[:5])
 
             return content_dict if not single else cls._save_single_file(file, 'json', json.dumps(content_dict))
+
     @classmethod
     def extract_to_txt(cls, folder='./', norm='NFKD'):
         """Extract information from DODF to TXT.

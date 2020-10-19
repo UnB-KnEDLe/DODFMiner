@@ -23,8 +23,6 @@ from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.create_xml import XMLFy
 
-# "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-# "cessoes": Cessoes,
 
 _acts_ids = {"aposentadoria": Retirements,
              "reversoes": Revertions,
@@ -34,7 +32,10 @@ _acts_ids = {"aposentadoria": Retirements,
              "retificacoes": RetAposentadoria,
              "substituicao": Substituicao,
              "efetivos_nome": NomeacaoEfetivos,
-             "efetivos_exo": ExoneracaoEfetivos}
+             "efetivos_exo": ExoneracaoEfetivos,
+             "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+             "cessoes": Cessoes}
+
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
 
@@ -140,5 +141,4 @@ class ActsExtractor:
         """
         res = XMLFy(file, _acts_ids, i)
         return res
-        # res.print_tree()
-        # res.save_to_disc()
+
