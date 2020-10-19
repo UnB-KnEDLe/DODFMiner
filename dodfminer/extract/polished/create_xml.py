@@ -1,5 +1,8 @@
 import math
+<<<<<<< HEAD
 import os
+=======
+>>>>>>> 8408f7280c1243329517e678ede62d376f08457e
 import datetime
 import numpy as np
 from lxml import etree
@@ -28,6 +31,7 @@ class XMLFy:
 
     def save_to_disc(self, path):
         doc_type = """<!DOCTYPE collection SYSTEM "BioC.dtd">"""
+<<<<<<< HEAD
         if os.path.isfile(path):
             folder_path = os.path.splitext(path)[0]
             print(folder_path)
@@ -35,6 +39,10 @@ class XMLFy:
             folder_path = path
         self.xml.write(os.path.join(folder_path, self._xml_id+".xml"), pretty_print=True, xml_declaration=True,
                       encoding="utf-8", doctype=doc_type)
+=======
+        self.xml.write(f'{path}/{self._xml_id}.xml', pretty_print=True, xml_declaration=True,
+                   encoding="utf-8", doctype=doc_type)
+>>>>>>> 8408f7280c1243329517e678ede62d376f08457e
 
 
     def _create_xml(self):
