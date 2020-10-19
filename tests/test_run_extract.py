@@ -5,7 +5,7 @@ import joblib
 import sklearn_crfsuite
 import json
 import sys
-from glob import glob  
+from glob import glob
 import shutil
 from unittest.mock import patch
 from dodfminer.run import Miner
@@ -88,7 +88,7 @@ def test_run_extract_single_all_act():
     for act in act_choices:
       assert os.path.isfile(folder+act+".csv")
       os.remove(folder+act+".csv")
-      
+
 def test_run_extract_input_folder_pure_text():
   folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
   targets = ["cmd", "extract", "-i", folder, "-t", "pure-text"]
@@ -144,3 +144,21 @@ def test_run_extract_input_folder_one_act_back_end_ner():
     run()
     assert os.path.isfile(folder+"/aposentadoria.csv")
     os.remove(folder+"/aposentadoria.csv")
+
+def test_run_extract_input_folder_xml():
+  folder = ""+os.path.dirname(__file__)+"/support/xml_extract"
+  targets = ["cmd", "extract", "-i", folder, "-x"]
+  with patch.object(sys, 'argv', targets):
+    run()
+    assert os.path.isfile(folder+"/1_1.2.1.2020.xml") and os.path.isfile(folder+'/2_1.10.1.2020.xml')
+    os.remove(folder+"/1_1.2.1.2020.xml")
+    os.remove(folder+'/2_1.10.1.2020.xml')
+
+# def test_run_extract_input_single_xml():
+#   file = ""+os.path.dirname(__file__)+"/support/xml_extract/DODF 001 02-01-2020 INTEGRA.pdf"
+#   targets = ["cmd", "extract", "-s", file, "-x"]
+#   with patch.object(sys, 'argv', targets):
+#     run()
+#     res_file = ""+os.path.dirname(__file__)+"/support/xml_extract/1_1.2.1.2020.xml"
+#     assert os.path.isfile(res_file)
+#     os.remove(res_file)
