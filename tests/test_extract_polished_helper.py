@@ -32,9 +32,9 @@ def test_helper_print_dataframe():
     assert isinstance(df, pd.io.formats.style.Styler)
 
 def test_helper_get_files_path():
-    dir = ""+os.path.dirname(__file__)+"/support/"
+    dir = ""+os.path.dirname(__file__)+"/support/support_supporter/"
     files = get_files_path(dir, "txt")
-    assert files == [""+os.path.dirname(__file__)+'/support/valid.txt', ""+os.path.dirname(__file__)+'/support/support_supporter/valid.txt']
+    assert files == [""+os.path.dirname(__file__)+'/support/support_supporter/valid.txt']
     files = get_files_path(dir, "pdf")
-    assert files == [""+os.path.dirname(__file__)+'/support/03-12-2018.pdf', ""+os.path.dirname(__file__)+'/support/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf', ""+os.path.dirname(__file__)+'/support/support_supporter/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf']
+    assert files == [""+os.path.dirname(__file__)+'/support/support_supporter/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf']
 
