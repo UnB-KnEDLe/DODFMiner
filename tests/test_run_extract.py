@@ -150,9 +150,8 @@ def test_run_extract_input_folder_xml():
   targets = ["cmd", "extract", "-i", folder, "-x"]
   with patch.object(sys, 'argv', targets):
     run()
-    assert os.path.isfile(os.path.join(folder, "1_1.2.1.2020.xml")) and os.path.isfile(os.path.join(folder, '2_1.10.1.2020.xml'))
-    os.remove(folder+"/1_1.2.1.2020.xml")
-    os.remove(folder+'/2_1.10.1.2020.xml')
+    assert os.path.isfile(os.path.join(folder, '1_1.10.1.2020.xml'))
+    os.remove(folder+'/1_1.10.1.2020.xml')
 
 # def test_run_extract_input_single_xml():
 #   file = ""+os.path.dirname(__file__)+"/support/xml_extract/DODF 001 02-01-2020 INTEGRA.pdf"
