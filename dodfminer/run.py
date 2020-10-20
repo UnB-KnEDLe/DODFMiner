@@ -13,7 +13,7 @@ Usage example::
 from dodfminer.cli import CLI
 from dodfminer.downloader.core import Downloader
 from dodfminer.extract.pure.core import ContentExtractor
-from dodfminer.extract.polished.helper import extract_multiple_acts
+from dodfminer.extract.polished.helper import extract_multiple_acts, xml_multiple
 
 
 class Miner(object):
@@ -53,6 +53,8 @@ class Miner(object):
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
             elif self.args.act != 'all':
                 extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
+            elif self.args.xml != False:
+                xml_multiple(self.args.input_folder, self.args.backend)
             else:
                 self.cli.extract_content_parser.print_help()
         elif self.args.single_file is not None:
@@ -67,6 +69,8 @@ class Miner(object):
                     ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
             elif self.args.act != 'all':
                 extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
+            elif self.args.xml != False:
+                xml_multiple(self.args.single_file, self.args.backend)
             else:
                 self.cli.extract_content_parser.print_help()
     def _log(self, msg):

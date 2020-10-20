@@ -40,10 +40,15 @@ class Atos(ActRegex, ActNER):
         self._backend = backend
         self._name = self._act_name()
         super(Atos, self).__init__()
-        fp = open(file, "r")
-        self._file_name = file
-        self._text = fp.read()
-        fp.close()
+
+        try:
+            fp = open(file, "r")
+            self._text = fp.read()
+            fp.close()
+            self._file_name = file
+        except:
+            self._text = file
+            self._file_name = None
 
         self._acts_str = []
         self._columns = self._props_names()
@@ -114,12 +119,12 @@ class Atos(ActRegex, ActNER):
             A vector of extracted acts dictionaries.
         """
         acts = []
-        for raw in self._raw_acts:
+        for value in self._raw_acts:
             act = {}
             if self._backend == 'regex':
-                act = self._regex_props(raw)
+                act = self._regex_props(value)
             elif self._backend == 'ner':
-                act = self._prediction(raw)
+                act = self._prediction(value)
             else:
                 raise NotImplementedError("Non-existent backend option")
             acts.append(act)

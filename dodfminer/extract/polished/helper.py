@@ -15,12 +15,29 @@ Functions
 """
 
 import os
+import tqdm
 import pandas as pd
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
 from dodfminer.extract.pure.core import ContentExtractor
 
+def xml_multiple(path, backend):
+    files = []
+    if os.path.isfile(path):
+        files = [path]
+    else:
+        files = get_files_path(path, 'pdf')
+
+    print(files)
+    print("[XMLFy] Make yourself a coffee! This may take a while")
+    bar = tqdm.tqdm(total=len(files), desc="[XMLFy] Progress")
+    i = 1
+    for file in files:
+        xml = ActsExtractor.get_xml(file, backend, i)
+        xml.save_to_disc(path)
+        i += 1
+        bar.update(1)
 
 def extract_multiple_acts(path, types, backend):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
@@ -81,7 +98,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
             res.append(res_df)
             if txt_out:
                 build_act_txt(res_txt, type, txt_path)
-    
+
     if len(res) == 0:
         res_final = pd.DataFrame()
     else:
