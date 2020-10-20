@@ -31,13 +31,13 @@ class Exoneracao(Atos):
         rules = {"nome": r"([A-ZÀ-Ž\s]+[A-ZÀ-Ž])",
                  "matricula": r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
                  "simbolo": r"[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)[,|\s]",
-                 "cargo_comissao": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
-                 "lotacao": lot1 + lot2,
+                 "cargo_comissionado": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
+                 "hierarqui_lotacao": lot1 + lot2,
                  "orgao": org + org2,
                  "vigencia": r"",
-                 "pedido": r"(a pedido)",
+                 "a_pedido_ou_nao": r"(a pedido)",
                  "cargo_efetivo": r"",
-                 "siape": siape,
+                 "matricula_SIAPE": siape,
                  "motivo": r""}
 
         return rules
@@ -79,10 +79,10 @@ class ExoneracaoEfetivos(Atos):
                 "padrao": r"",
                 "carreira": r"",
                 "quadro": r"",
-                "sei": r"SEI[a-z\s]*([0-9\-\/\n]+)",
+                "processo_SEI": r"SEI[a-z\s]*([0-9\-\/\n]+)",
                 "data": r"a\scontar\sde\s([\s0-9\/]*)",
                 "pedido": r"(a\spedido,)?\s(?:[A-Z\\n\s]+)",
                 "motivo": r"",
-                "SIAPE": r"",
-                "fundalamento_legal": r"nos\stermos\sdo[\n]?([a-zA-Z\s0-9\/]*)"}
+                "matricula_SIAPE": r"",
+                "fundamento_legal": r"nos\stermos\sdo[\n]?([a-zA-Z\s0-9\/]*)"}
         return rules
