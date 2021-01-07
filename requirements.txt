@@ -16,7 +16,7 @@ urllib3==1.25.9
 utils==1.0.1
 joblib==0.16.0
 sklearn_crfsuite==0.3.6
-lxml==4.5.2
+lxml==4.6.2
 pytest==6.0.2
 pytest-cov==2.10.1
 pytest-mock==3.3.1
