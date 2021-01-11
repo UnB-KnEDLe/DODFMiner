@@ -61,7 +61,7 @@ def test_act_retirement_consistence_rule(act_ret):
 
 def test_act_retirement_ner():
     act = Retirements(file, 'ner')
-    assert act._load_model() == None
+    assert type(act._load_model()) == sklearn_crfsuite.estimator.CRF
 
 #
 #

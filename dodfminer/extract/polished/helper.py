@@ -92,6 +92,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     res = []
     for file in files:
         res_obj = ActsExtractor.get_act_obj(type, file, backend)
+        print(res_obj._backend)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
         if not res_df.empty:
