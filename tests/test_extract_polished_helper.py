@@ -27,9 +27,9 @@ def test_helper_build_act_txt():
     assert "crioutxt.txt" in os.listdir(dir)
     os.remove(os.path.join(dir, "crioutxt.txt"))
 
-def test_helper_print_dataframe():
-    df = print_dataframe(pd.DataFrame())
-    assert isinstance(df, pd.io.formats.style.Styler)
+# def test_helper_print_dataframe():
+#     df = print_dataframe(pd.DataFrame())
+#     assert isinstance(df, pd.io.formats.style.Styler)
 
 def test_helper_get_files_path():
     dir = ""+os.path.dirname(__file__)+"/support/support_supporter/"

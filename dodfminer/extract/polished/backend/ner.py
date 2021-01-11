@@ -22,7 +22,7 @@ class ActNER:
     """
 
     def __init__(self):
-        self._backend = 'regex'
+        # self._backend = 'regex'
         super(ActNER, self).__init__()
         self._model = self._load_model()
 
@@ -78,6 +78,7 @@ class ActNER:
             A dictionary with the proprieties and its
             predicted value.
         """
+        print("Predicting")
         act = self._preprocess(act)
         feats = self._get_features(act)
         predictions = self._model.predict_single(feats)
