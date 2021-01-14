@@ -73,6 +73,7 @@ class Miner(object):
                 xml_multiple(self.args.single_file, self.args.backend)
             else:
                 self.cli.extract_content_parser.print_help()
+
     def _log(self, msg):
         print(f"[DODFMiner] {msg}")
 
