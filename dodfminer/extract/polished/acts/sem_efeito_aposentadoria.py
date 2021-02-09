@@ -70,7 +70,7 @@ class SemEfeitoAposentadoria(Atos):
         no_split_word = s.replace('-\n', '-')
         return no_split_word.replace('\n', ' ')
 
-    def __init__(self, file, backend, debug=False, extra_search=True,
+    def __init__(self, file, backend, segmentation, debug=False, extra_search=True,
                  nlp=None, max_length=2000):
         self._max_length = max_length
         self._debug = debug

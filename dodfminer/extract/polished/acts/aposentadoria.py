@@ -8,8 +8,8 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class Retirements(Atos):
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, segmentation):
+        super().__init__(file, backend, segmentation)
 
     def _regex_flags(self):
         return re.IGNORECASE

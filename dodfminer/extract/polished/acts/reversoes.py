@@ -6,7 +6,7 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class Revertions(Atos):
 
-    def __init__(self, text, backend):
+    def __init__(self, text, backend, segmentation):
         super().__init__(text, backend)
 
     def _regex_flags(self):
