@@ -10,7 +10,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-tests/support/*
+tests/support/*/*
 
 # Heavy models
 *.pt

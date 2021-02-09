@@ -8,7 +8,7 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class AbonoPermanencia(Atos):
 
-    def __init__(self, file, backend, segmentation):
+    def __init__(self, file, backend, segmentation=False):
         super().__init__(file, backend, segmentation)
 
     def _regex_flags(self):

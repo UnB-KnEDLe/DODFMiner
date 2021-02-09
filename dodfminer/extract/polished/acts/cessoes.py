@@ -43,12 +43,12 @@ ONUS = r"(?P<onus>\b[oôOÔ](?i:nus)\b[^.]+[.])"
 class Cessoes(Atos):
     _special_acts = ['matricula', 'cargo']
 
-    def __init__(self, file, backend, segmentation, debug=False, extra_search=True):
+    def __init__(self, file, backend, segmentation=False, debug=False, extra_search=True):
         self._debug = debug
         self._extra_search = extra_search
         # self._processed_text = remove_crossed_words(open(file).read())
         self._raw_matches = []
-        super().__init__(file, backend)
+        super().__init__(file, backend, segmentation)
 
     def _act_name(self):
         return "Cessoes"

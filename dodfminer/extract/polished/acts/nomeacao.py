@@ -7,8 +7,8 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class NomeacaoComissionados(Atos):
 
-    def __init__(self, file, backend, segmentation):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, segmentation=False):
+        super().__init__(file, backend, segmentation)
 
     def _act_name(self):
         return "Nomeação"
@@ -49,8 +49,8 @@ class NomeacaoComissionados(Atos):
 
 class NomeacaoEfetivos(Atos):
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, segmentation=False):
+        super().__init__(file, backend, segmentation)
 
     def _act_name(self):
         return "Nomeação de Efetivos"
