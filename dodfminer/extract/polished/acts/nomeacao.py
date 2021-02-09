@@ -7,7 +7,7 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class NomeacaoComissionados(Atos):
 
-    def __init__(self, file, backend):
+    def __init__(self, file, backend, segmentation):
         super().__init__(file, backend)
 
     def _act_name(self):

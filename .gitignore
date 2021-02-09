@@ -10,6 +10,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Heavy models
+*.pt
 # C extensions
 *.so
 
