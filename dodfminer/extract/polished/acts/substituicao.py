@@ -6,7 +6,7 @@ from dodfminer.extract.polished.acts.base import Atos
 
 class Substituicao(Atos):
 
-    def __init__(self, file, backend, segmentation):
+    def __init__(self, file, backend, segmentation=False):
         super().__init__(file, backend, segmentation)
 
     # def _load_model(self):
