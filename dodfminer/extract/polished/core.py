@@ -24,7 +24,8 @@ from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAp
 from dodfminer.extract.polished.create_xml import XMLFy
 
 
-_acts_ids = {"aposentadoria": Retirements,
+_acts_ids = {
+             "aposentadoria": Retirements,
              "reversoes": Revertions,
              "nomeacao": NomeacaoComissionados,
              "exoneracao": Exoneracao,
@@ -34,13 +35,13 @@ _acts_ids = {"aposentadoria": Retirements,
              "efetivos_nome": NomeacaoEfetivos,
              "efetivos_exo": ExoneracaoEfetivos,
              "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-             "cessoes": Cessoes}
+             "cessoes": Cessoes
+             }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
-
 class ActsExtractor:
-    """Polished Extraction main class.
+    """Polished Extraction act class.
 
     All interactions with the acts needs to be done through this interface.
     This class handles all the requests to regex or ner extraction.
@@ -51,7 +52,7 @@ class ActsExtractor:
     """
 
     @staticmethod
-    def get_act_obj(ato_id, file, backend):
+    def get_act_obj(ato_id, file, backend, segmentation=False):
         """Extract a single act type from a single.
 
         Object format.
@@ -65,10 +66,10 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        return _acts_ids[ato_id](file, backend)
+        return _acts_ids[ato_id](file, backend, segmentation)
 
     @staticmethod
-    def get_all_obj(file, backend):
+    def get_all_obj(file, backend, segmentation=False):
         """Extract all acts types from a single DODF.
 
         Object format.
@@ -84,12 +85,12 @@ class ActsExtractor:
         """
         res = {}
         for key in _acts_ids:
-            res[key] = _acts_ids[key](file, backend)
+            res[key] = _acts_ids[key](file, backend, segmentation)
 
         return res
 
     @staticmethod
-    def get_act_df(ato_id, file, backend):
+    def get_act_df(ato_id, file, backend, segmentation=False):
         """Extract a single act type from a single DODF.
 
         Dataframe format.
@@ -103,10 +104,10 @@ class ActsExtractor:
             An dataframe with extracted information, for the desired act.
 
         """
-        return _acts_ids[ato_id](file, backend).data_frame
+        return _acts_ids[ato_id](file, backend, segmentation).data_frame
 
     @staticmethod
-    def get_all_df(file, backend):
+    def get_all_df(file, backend, segmentation=False):
         """Extract all acts types from a single DODF.
 
         Dataframe format.
@@ -121,7 +122,7 @@ class ActsExtractor:
         """
         res = {}
         for key in _acts_ids:
-            res[key] = _acts_ids[key](file, backend).data_frame
+            res[key] = _acts_ids[key](file, backend, segmentation).data_frame
 
         return res
 

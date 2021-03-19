@@ -109,16 +109,16 @@ class Downloader(object):
             The complete url to the buriti website to download the DODF.
 
         """
-        url_string = "http://www.buriti.df.gov.br/ftp/default.asp?ano="
-        url_string += str(date.year)
-        url_string += "&mes=" + str(MONTHS_STRING[date.month])
+        url_string = f"http://www.buriti.df.gov.br/ftp/novo_portal_gdf/novo_dodf.asp?Ano={str(date.year)}&Mes={str(MONTHS_STRING[date.month])}&dir="
+        # url_string = "http://www.buriti.df.gov.br/ftp/default.asp?ano="
+        # url_string += str(date.year)
+        # url_string += "&mes=" + str(MONTHS_STRING[date.month])
         url = urllib.parse.quote(url_string, safe=':/?=&')
         url = url.replace('%C3%A7', '%E7')  # Replace ç for %E7
-        print(url)
 
         return url
 
-    def _make_href_url(self, href):
+    def _make_href_url(self, url, href):
         """Preprocess the URL to be aceptable by the souplink.
 
         Args:
@@ -128,13 +128,13 @@ class Downloader(object):
             The desired url preprocessed.
 
         """
-        url = "http://www.buriti.df.gov.br/ftp/"
         url += href
         url = urllib.parse.quote(url, safe=':/?=&')
         url = url.replace('%C2', '')
         url = url.replace('3%8', '')
         url = url.replace('%C3%A7', '%E7')
         url = url.replace('%C3%A3', '%E3')
+        print(url)
 
         return url
 
@@ -224,7 +224,7 @@ class Downloader(object):
         except requests.exceptions.RequestException as error:
             self._fail_request_message(url, error)
         else:
-            pdf_file = Path(path)
+            pdf_file = Path(path + ".pdf")
             pdf_file.write_bytes(response.content)
             self._log("Finished " + os.path.basename(path))
 
@@ -286,27 +286,42 @@ class Downloader(object):
             month_path = self._make_month_path(year, actual_date)
             self._create_single_folder(month_path)
             url = self._make_url(actual_date)
-            a_list = self._get_soup_link(url)
+            soup_obj = self._get_soup_link(url)
+            select = soup_obj.find('select', attrs={
+                                     'class': 'chzn-select', 'data-placeholder': 'Selecione o Diário...'})
+            dodfs_list = select.find_all('option')
+
             year = actual_date.year
-            for a in a_list.find_all('a', href=True):
-                a_url = self._make_href_url(a['href'])
-                download_page = self._get_soup_link(a_url)
-                self._log("a_URL " + a_url)
-                number_of_files = int(download_page.find_all('b')[1].text)
+            for dodf in dodfs_list:
+                dodf_url = self._make_href_url(url, dodf.text)
+                download_page = self._get_soup_link(dodf_url)
+                self._log("a_URL " + dodf_url)
+                find_links = download_page.find_all('a')
+                number_of_files = len(find_links)
                 dodf_path = month_path
                 if number_of_files > 1:
-                    dodf_path = os.path.join(month_path, a.text)
+                    dodf_path = os.path.join(month_path, dodf.text)
                     self._create_single_folder(dodf_path)
 
-                for a_href in download_page.find_all('a', href=True):
-                    download_url = self._make_download_url(a_href['href'])
-                    dodf_name_path = os.path.join(dodf_path, a_href.text)
+                for link in find_links:
+                    download_url = self._make_download_url(link.get('href')[3:])
+                    dodf_name_path = os.path.join(dodf_path, link.text)
                     if not self._file_exist(dodf_name_path):
                         self._log("Downloding "
                                   + os.path.basename(dodf_name_path))
                         self._download_pdf(download_url, dodf_name_path)
                     else:
                         self._log("Jumping to the next")
+
+                # for a_href in download_page.find_all('a', href=True):
+                #     download_url = self._make_download_url(a_href['href'])
+                #     dodf_name_path = os.path.join(dodf_path, a_href.text)
+                #     if not self._file_exist(dodf_name_path):
+                #         self._log("Downloding "
+                #                   + os.path.basename(dodf_name_path))
+                #         self._download_pdf(download_url, dodf_name_path)
+                #     else:
+                #         self._log("Jumping to the next")
 
             self._prog_bar.update(1)
 

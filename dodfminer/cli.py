@@ -105,8 +105,12 @@ class CLI(object):
 
         group.add_argument('-t', '--type-of-extraction', dest='type_of_extr',
                            default=None, type=str, nargs='?',
-                           choices=['pure-text', 'blocks', 'with-titles'],
+                           choices=['pure-text', 'blocks', 'with-titles', 'segments'],
                            help="Type of text extraction")
+
+        group.add_argument('-seg', '--segmentation', dest='segmentation',
+                           default=False, type=bool,
+                           help="Activate the segmentation before the act extraction")
 
         group.add_argument('-a', '--act', dest='act', default='all', type=str,
                            choices=act_choices, nargs='*',

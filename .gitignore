@@ -10,6 +10,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+tests/support/*/*
+
+# Heavy models
+*.pt
 # C extensions
 *.so
 

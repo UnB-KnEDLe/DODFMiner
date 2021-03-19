@@ -18,7 +18,7 @@ file = ""+os.path.dirname(__file__)+"/support/valid.txt"
 
 @pytest.fixture()
 def act_ret():
-    return Retirements(file, 'regex')
+    return Retirements(file, 'regex', segmentation=False)
 
 def test_retirement_backend(act_ret):
     assert act_ret._backend == "regex"
@@ -60,7 +60,7 @@ def test_act_retirement_consistence_rule(act_ret):
     assert len(act_ret._props_names())-1 == len(act_ret._prop_rules())
 
 def test_act_retirement_ner():
-    act = Retirements(file, 'ner')
+    act = Retirements(file, 'ner', segmentation=False)
     assert type(act._load_model()) == sklearn_crfsuite.estimator.CRF
 
 #
@@ -131,7 +131,7 @@ def test_act_retretirement_ner():
 
 @pytest.fixture()
 def act_abono():
-    return AbonoPermanencia(file, 'regex')
+    return AbonoPermanencia(file, 'regex', segmentation=False)
 
 def test_abono_backend(act_abono):
     assert act_abono._backend == "regex"
@@ -178,7 +178,7 @@ def test_act_abono_consistence_rule(act_abono):
     assert len(act_abono._props_names())-1 == len(act_abono._prop_rules())
 
 def test_act_abono_ner():
-    act = AbonoPermanencia(file, 'ner')
+    act = AbonoPermanencia(file, 'ner', segmentation=False)
     assert type(act._load_model()) == sklearn_crfsuite.estimator.CRF
 
 #
@@ -326,7 +326,7 @@ def test_act_exo_efet_ner():
 
 @pytest.fixture()
 def act_subs():
-    return Substituicao(file, 'regex')
+    return Substituicao(file, 'regex', segmentation=False)
 
 def test_substituicao_backend(act_subs):
     assert act_subs._backend == "regex"
@@ -394,7 +394,7 @@ def test_act_substitution_consistence_rule(act_subs):
     assert len(act_subs._props_names())-1 == len(act_subs._prop_rules())
 
 def test_act_substituicao_ner():
-    act = Substituicao(file, 'ner')
+    act = Substituicao(file, 'ner', segmentation=False)
     assert act._load_model() == None
 
 #
@@ -405,7 +405,7 @@ def test_act_substituicao_ner():
 
 @pytest.fixture()
 def act_revert():
-    return Revertions(file, 'regex')
+    return Revertions(file, 'regex', segmentation=False)
 
 def test_revertions_backend(act_revert):
     assert act_revert._backend == "regex"
@@ -460,7 +460,7 @@ def test_act_revertions_consistence_rule(act_revert):
     assert len(act_revert._props_names())-1 == len(act_revert._prop_rules())
 
 def test_act_revertions_ner():
-    act = Revertions(file, 'ner')
+    act = Revertions(file, 'ner', segmentation=False)
     assert act._load_model() == None
 
 #
@@ -471,7 +471,7 @@ def test_act_revertions_ner():
 
 @pytest.fixture()
 def act_nomcom():
-    return NomeacaoComissionados(file, 'regex')
+    return NomeacaoComissionados(file, 'regex', segmentation=False)
 
 def test_nomCom_backend(act_nomcom):
     assert act_nomcom._backend == "regex"
@@ -520,7 +520,7 @@ def test_act_nomCom_consistence_rule(act_nomcom):
 
 
 def test_act_nomcom_ner():
-    act = NomeacaoComissionados(file, 'ner')
+    act = NomeacaoComissionados(file, 'ner', segmentation=False)
     assert type(act._load_model()) == sklearn_crfsuite.estimator.CRF
 
 #
@@ -532,7 +532,7 @@ def test_act_nomcom_ner():
 
 @pytest.fixture()
 def act_nom_efet():
-    return NomeacaoEfetivos(file, 'regex')
+    return NomeacaoEfetivos(file, 'regex', segmentation=False)
 
 def test_nom_efet_backend(act_nom_efet):
     assert act_nom_efet._backend == "regex"
@@ -594,5 +594,5 @@ def test_act_nom_efet_consistence_rule(act_nom_efet):
     assert len(act_nom_efet._props_names())-1 == len(act_nom_efet._prop_rules())
 
 def test_act_nom_efet_ner():
-    act = NomeacaoEfetivos(file, 'ner')
+    act = NomeacaoEfetivos(file, 'ner', segmentation=False)
     assert act._load_model() == None

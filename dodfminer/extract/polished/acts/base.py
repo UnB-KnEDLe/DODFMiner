@@ -8,6 +8,7 @@ import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
 from dodfminer.extract.polished.backend.ner import ActNER
+from dodfminer.extract.polished.segmentation.core import Segmentation
 
 
 class Atos(ActRegex, ActNER):
@@ -36,17 +37,21 @@ class Atos(ActRegex, ActNER):
 
     """
 
-    def __init__(self, file, backend='regex'):
+    def __init__(self, file, backend='regex', segmentation=False):
         self._backend = backend
         self._name = self._act_name()
         super(Atos, self).__init__()
 
         try:
             fp = open(file, "r")
-            self._text = fp.read()
+            if segmentation:
+                self._text = Segmentation.extract_segments(fp.read(), self._name)
+            else:
+                self._text = fp.read()
             fp.close()
             self._file_name = file
-        except:
+        except Exception as e:
+            print(e)
             self._text = file
             self._file_name = None
 

@@ -21,6 +21,27 @@ import pandas as pd
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
 from dodfminer.extract.pure.core import ContentExtractor
+from dodfminer.extract.polished.segmentation.core import Segmentation
+
+def extract_segments(path):
+    if os.path.isfile(path):
+        files = [path]
+    else:
+        files = get_files_path(path, 'pdf')
+    print("[Segmentation] Make yourself a coffee! This may take a while")
+    bar = tqdm.tqdm(total=len(files), desc="[Segmentation] Progress")
+    i = 1
+    segments = ''
+    for file in files:
+        text = ContentExtractor.extract_text(file)
+        # import pdb; pdb.set_trace()
+        segments += '\n' +  Segmentation.extract_segments(text, 'Aposentadoria')
+        i += 1
+        bar.update(1)
+    
+    open('segmentation.txt', 'w+').write(segments)
+        
+
 
 def xml_multiple(path, backend):
     files = []
@@ -39,7 +60,7 @@ def xml_multiple(path, backend):
         i += 1
         bar.update(1)
 
-def extract_multiple_acts(path, types, backend):
+def extract_multiple_acts(path, types, backend, segmentation=False):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
 
     Args:
@@ -58,17 +79,17 @@ def extract_multiple_acts(path, types, backend):
     if os.path.isfile(path):
         ContentExtractor.extract_text(path, single=True)
         for type in types:
-            df = extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
+            df = extract_single(path.replace('.pdf', '.txt'), type, backend=backend, segmentation=segmentation)
             df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
         for type in types:
-            df = extract_multiple(files, type, backend)
+            df = extract_multiple(files, type, backend, segmentation=segmentation)
             df.to_csv(os.path.join(path, type+".csv"))
 
 
-def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
+def extract_multiple(files, type, backend, txt_out=False, txt_path="./results", segmentation=False):
     """Extract Act from Multiple DODF to a single DataFrame.
 
     Note:
@@ -91,8 +112,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_obj = ActsExtractor.get_act_obj(type, file, backend)
-        print(res_obj._backend)
+        res_obj = ActsExtractor.get_act_obj(type, file, backend, segmentation)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
         if not res_df.empty:
@@ -108,7 +128,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     return res_final
 
 
-def extract_single(file, type, backend):
+def extract_single(file, type, backend, segmentation=False):
     """Extract Act from a single DODF to a single DataFrame.
 
     Note:
@@ -126,7 +146,7 @@ def extract_single(file, type, backend):
         including the texts found.
 
     """
-    res_obj = ActsExtractor.get_act_obj(type, file, backend)
+    res_obj = ActsExtractor.get_act_obj(type, file, backend, segmentation)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
