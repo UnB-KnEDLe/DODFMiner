@@ -128,48 +128,6 @@ class CNN_CNN_LSTM(nn.Module):
 
 ### Metrics
 
-def relaxed_f1_score(model, dataloader, device):
-    TP = [0 for _ in range(len(model.num_classes))]
-    FP = [0 for _ in range(len(model.num_classes))]
-    FN = [0 for _ in range(len(model.num_classes))]
-
-    # for sent, tag, word, mask in dataloader:
-        # sent = sent.to(device)
-        # tag = tag.to(device)
-        # word = word.to(device)
-        # pred, _ = model.eval().decode(sent, word)
-    print("Still ongoing development!")
-
-def exact_f1_score(model, dataloader, device):
-    TP = np.array([0 for _ in range((model.num_classes-2)//2)])
-    FP = np.array([0 for _ in range((model.num_classes-2)//2)])
-    FN = np.array([0 for _ in range((model.num_classes-2)//2)])
-
-    for x, y, mask in dataloader:
-        x = x.to(device)
-        y = y.to(device)
-        pred, _ = model.eval().decode(x)
-
-        batch_size = pred.shape[0]
-        for i in range(batch_size):
-            predicted_entities = find_entities(pred[i])
-            real_entities = find_entities(y[i])
-            for entity in predicted_entities:
-                if entity in real_entities:
-                    TP[(entity[2]//2)-1] += 1
-                else:
-                    FP[(entity[2]//2)-1] += 1
-            for entity in real_entities:
-                if entity not in predicted_entities:
-                    FN[(entity[2]//2)-1] += 1
-
-    precision = TP/(TP+FP+0.000001)
-    recall = TP/(TP+FN+0.000001)
-    f1 = 2*(precision*recall)/(precision+recall)
-
-    occurrences = TP + FN
-    return occurrences, f1
-
 def find_entities(tag):
     entities = []
     prev_tag = 1
@@ -263,7 +221,7 @@ def get_acts(predictions, sentences):
 
 class Segmentation:
     @staticmethod
-    def extract_segments(text, act_name):
+    def extract_segments(text, act_name='Aposentadoria'):
         if act_name in model_cover_list:
             if not os.path.isfile(os.path.dirname(__file__) + '/model/cnn_cnn_lstm.pt'):
                 print('[Segmentation] The model is not present in local files Downloding...')

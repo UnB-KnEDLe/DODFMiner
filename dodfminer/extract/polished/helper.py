@@ -32,9 +32,9 @@ def extract_segments(path):
     bar = tqdm.tqdm(total=len(files), desc="[Segmentation] Progress")
     i = 1
     segments = ''
+    print(files)
     for file in files:
         text = ContentExtractor.extract_text(file)
-        # import pdb; pdb.set_trace()
         segments += '\n' +  Segmentation.extract_segments(text, 'Aposentadoria')
         i += 1
         bar.update(1)
