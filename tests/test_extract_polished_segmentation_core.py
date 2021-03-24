@@ -94,7 +94,11 @@ def test_segmentation_extract_segments_none_act_found():
     retorna corretamente uma mensagem e o texto original no DODF. Igual ao teste de cima
     somente muda a mensagem que mostra para o usuário.
     """
-    assert True == True
+    text = ContentExtractor.extract_text(file_empty)
+
+    segmentation = Segmentation.extract_segments(text, 'Aposentadoria')
+
+    assert segmentation == text
 
 # IAN
 def test_segmentation_extract_segments_successful_correct_message():
