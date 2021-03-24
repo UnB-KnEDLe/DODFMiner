@@ -76,7 +76,7 @@ def test_segmentation_extract_segments_act_in_cover_list():
     assert len(segments) > 0
 
 # THAIS
-def test_segmentation_extract_segments_act_not_in_cover_list():
+def test_segmentation_extract_segments_act_not_in_cover_list(capsys):
     """
     Nesse teste faremos o teste do primeiro if da função fazendo a pergunta:
     E se o modelo n tiver sido treindo com o ato passado?
@@ -85,7 +85,11 @@ def test_segmentation_extract_segments_act_not_in_cover_list():
     Então nossos "asserts" devem checar tanto se a mensagem foi apresentada quanto se o texto esta
     presente no retorno.
     """
-    assert True == True
+    text = ContentExtractor.extract_text(file_not_empty)
+    segments = Segmentation.extract_segments(text, 'reversoes')
+    captured = capsys.readouterr()
+    assert '[Segmentation] The current model is not trained with this act yet. Changing to pure text' in captured.out
+    assert segments == text
 
 # DANIEL
 def test_segmentation_extract_segments_none_act_found():
