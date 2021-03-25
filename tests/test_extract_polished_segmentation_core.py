@@ -18,7 +18,7 @@ file_empty = ""+os.path.dirname(__file__)+"/support/DODF 001 01-01-2019 EDICAO E
 """ 
 Começaremos os testes agora.....
 
-Toda fução de teste deve começar com prefixo "test_". Isso que indica para
+Toda função de teste deve começar com prefixo "test_". Isso que indica para
 a biblioteca que essa função testa alguma coisa no nosso código.
 
 Outro padrão é o nome auto explicativo, ou seja, vcs irão descrever brevemente no
@@ -105,13 +105,18 @@ def test_segmentation_extract_segments_none_act_found():
     assert segmentation == text
 
 # IAN
-def test_segmentation_extract_segments_successful_correct_message():
+def test_segmentation_extract_segments_successful_correct_message(capsys):
     """
-    Esse teste é um tanto simples, ele repete o que o primeiro teste faz, porém ao invéz
+    Esse teste é um tanto simples, ele repete o que o primeiro teste faz, porém ao invés
     de checar se os segmentos foram extraidos, ele checará se as 3 mensagens para o usuário aparecem
     caso ele consiga extrair corretamente os segmentos.
     """
-    assert True == True
+    text = ContentExtractor.extract_text(file_not_empty)
+    segments = Segmentation.extract_segments(text, 'Aposentadoria')
+
+    captured = capsys.readouterr()
+
+    assert ('[Segmentation] Segmentation is being applied...' and '[Segmentation] Finished.') in captured.out
 
 # GUILHERME
 def test_segmentation_extract_segments_first_argument_not_text():
@@ -127,7 +132,7 @@ def test_segmentation_extract_segments_if_model_is_not_present():
     Essa função faz a extração de segmentos utilizando um modelo de IA, portanto esse modelo
     precisa ser carregado de algum lugar já que não vem durante a instalação da biblioteca.
     Esse teste irá checar se a biblioteca realmente efetua o download do modelo caso ele n esteja presente
-    nos arquivos da biblioteca. Como solução pronho excluir o modelo existente 
+    nos arquivos da biblioteca. Como solução proponho excluir o modelo existente 
     (Ver na função qual o caminho para o modelo) e executá-la para extrair normalmente. 
     Se ao final vc obtiver os segmentos dentro de file_not_empty o assert é correto. 
     """
