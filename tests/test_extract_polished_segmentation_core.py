@@ -116,15 +116,19 @@ def test_segmentation_extract_segments_successful_correct_message(capsys):
 
     captured = capsys.readouterr()
 
-    assert ('[Segmentation] Segmentation is being applied...' and '[Segmentation] Finished.') in captured.out
+    assert '[Segmentation] Segmentation is being applied...' and '[Segmentation] Finished.' in captured.out
 
 # GUILHERME
-def test_segmentation_extract_segments_first_argument_not_text():
+def test_segmentation_extract_segments_first_argument_not_text(capsys):
     """
     Nesse teste faremos o teste se o código realmente retorna alguma exceção caso
     não seja passado um texto como argumento primário.
     """
-    assert True == True
+    segments = Segmentation.extract_segments('Aposentadoria')   
+
+    captured = capsys.readouterr()
+
+    assert '[Segmentation] No act found by segmentation returning the entire text' in captured.out
 
 # GUILHERME
 def test_segmentation_extract_segments_if_model_is_not_present():
@@ -138,3 +142,4 @@ def test_segmentation_extract_segments_if_model_is_not_present():
     """
     assert True == True
 
+    
