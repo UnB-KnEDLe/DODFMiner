@@ -1,4 +1,3 @@
-from os import error, truncate
 import json
 import requests
 
@@ -61,3 +60,5 @@ def get_downloads(year, month):
             _links[dodf_name] = _pdfs
 
     return(_links)
+
+
