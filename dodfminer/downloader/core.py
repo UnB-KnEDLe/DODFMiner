@@ -255,8 +255,3 @@ class Downloader(object):
         """
         self._prog_bar.write("[DOWNLOADER] " + str(message))
 
-
-
-
-downloader = Downloader(save_path='./')
-downloader.pull(start_date="08/2014", end_date="08/2014")
