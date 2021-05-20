@@ -11,7 +11,6 @@ Usage example::
 
 """
 
-from dodfminer.downloader.helper import *
 import os
 import tqdm
 import requests
