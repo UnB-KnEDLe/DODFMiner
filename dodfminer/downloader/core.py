@@ -15,10 +15,11 @@ import os
 import tqdm
 import requests
 
-from dodfminer.downloader.helper import *
 from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+from  dodfminer.downloader.helper import *
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "05_Maio", "06_Junho", "07_Julho", "08_Agosto",
@@ -254,3 +255,6 @@ class Downloader(object):
         """
         self._prog_bar.write("[DOWNLOADER] " + str(message))
 
+
+downloader = Downloader(save_path='./')
+downloader.pull(start_date="08/2014", end_date="08/2014")
