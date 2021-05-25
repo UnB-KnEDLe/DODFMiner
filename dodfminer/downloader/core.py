@@ -11,6 +11,7 @@ Usage example::
 
 """
 
+# from dodfminer.downloader.helper import test_date
 import os
 import tqdm
 import requests
@@ -18,8 +19,8 @@ import requests
 from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from helper import test_date, get_downloads
 
-from  dodfminer.downloader.helper import *
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "05_Maio", "06_Junho", "07_Julho", "08_Agosto",
@@ -256,5 +257,6 @@ class Downloader(object):
         self._prog_bar.write("[DOWNLOADER] " + str(message))
 
 
-downloader = Downloader(save_path='./')
-downloader.pull(start_date="08/2014", end_date="08/2014")
+if __name__ == '__main__':
+    downloader = Downloader(save_path='./')
+    downloader.pull(start_date="05/2021", end_date="06/2021")
