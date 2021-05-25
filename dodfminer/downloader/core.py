@@ -19,7 +19,7 @@ import requests
 from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from helper import test_date, get_downloads
+from dodfminer.downloader.helper import test_date, get_downloads
 
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
