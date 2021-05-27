@@ -25,3 +25,4 @@ coveralls==2.1.2
 torch==1.7.1
 nltk==3.5
 gdown==3.12.2
+pysocks
