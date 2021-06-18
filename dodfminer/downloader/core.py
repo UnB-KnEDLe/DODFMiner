@@ -11,7 +11,6 @@ Usage example::
 
 """
 
-# from dodfminer.downloader.helper import test_date
 import os
 import tqdm
 import requests
@@ -19,7 +18,7 @@ import requests
 from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from dodfminer.downloader.helper import test_date, get_downloads
+from dodfminer.downloader.helper import check_date, get_downloads
 
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
@@ -213,7 +212,7 @@ class Downloader(object):
             month_ = MONTHS_STRING[actual_date.month]
 
             
-            if(test_date(year_,month_) == True):
+            if(check_date(year_,month_) == True):
                 self._create_single_folder(month_path)
             else:
                 print(f"*** There are still no DODFs for that date: {actual_date.month}/{year_} ***")
