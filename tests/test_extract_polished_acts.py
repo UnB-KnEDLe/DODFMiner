@@ -35,7 +35,7 @@ def test_retirement_prop_names(act_ret):
     assert act_ret._props_names() == ["Tipo do Ato", "SEI", "Nome", "Matrícula", "Tipo de Aposentadoria", "Cargo", "Classe", "Padrao", "Quadro", "Fundamento Legal", "Orgao", "Vigencia", "Matricula SIAPE"]
 
 def test_retirement_rule(act_ret):
-    assert act_ret._rule_for_inst() == r"(APOSENTAR|CONCEDER\sAPOSENTADORIA,?\s?)([\s\S]*?(?<!lei)\s(?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*[.|,])"
+    assert act_ret._rule_for_inst() == r"(APOSENTAR|CONCEDER,\sAPOSENTADORIA|CONCEDER\sAPOSENTADORIA,?\s?)([\s\S]*?(?<!lei)\s(?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*[.|,])"
 
 def test_retirement_prop_rules_names(act_ret):
     assert list(act_ret._prop_rules()) == ["processo_SEI", "nome", "matricula", "tipo_ret", "cargo_efetivo", "classe", "padrao", "quadro", "fundamento_legal", "orgao", "vigencia", "matricula_SIAPE"]

@@ -14,12 +14,12 @@ Usage example::
 import os
 import tqdm
 import requests
-import urllib.parse
 
-from bs4 import BeautifulSoup
 from pathlib import Path
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from dodfminer.downloader.helper import check_date, get_downloads
+
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "05_Maio", "06_Junho", "07_Julho", "08_Agosto",
@@ -57,11 +57,11 @@ class Downloader(object):
 
         """
         if '/' in date:
-            date = datetime.strptime(date, '%m/%y').date()
+            date = datetime.strptime(date, '%m/%Y').date()
         elif '-' in date:
-            date = datetime.strptime(date, '%m-%y').date()
+            date = datetime.strptime(date, '%m-%Y').date()
         else:
-            msg = 'start_date or end_date must be in format mm/yy or mm-yy'
+            msg = 'start_date or end_date must be in format mm/yy or mm-yyyy'
             raise Exception(msg)
 
         return date
@@ -97,63 +97,6 @@ class Downloader(object):
         # import pdb; pdb.set_trace()
         self._create_single_folder(self._download_path)
 
-    def _make_url(self, date):
-        """Make the url to download the dodf.
-
-        Uses the date as parameter to download.
-
-        Args:
-            date (:obj:`datetime`): The date to download the DODF
-
-        Returns:
-            The complete url to the buriti website to download the DODF.
-
-        """
-        url_string = "http://www.buriti.df.gov.br/ftp/default.asp?ano="
-        url_string += str(date.year)
-        url_string += "&mes=" + str(MONTHS_STRING[date.month])
-        url = urllib.parse.quote(url_string, safe=':/?=&')
-        url = url.replace('%C3%A7', '%E7')  # Replace ç for %E7
-        print(url)
-
-        return url
-
-    def _make_href_url(self, href):
-        """Preprocess the URL to be aceptable by the souplink.
-
-        Args:
-            href (str): The dodf url part.
-
-        Returns:
-            The desired url preprocessed.
-
-        """
-        url = "http://www.buriti.df.gov.br/ftp/"
-        url += href
-        url = urllib.parse.quote(url, safe=':/?=&')
-        url = url.replace('%C2', '')
-        url = url.replace('3%8', '')
-        url = url.replace('%C3%A7', '%E7')
-        url = url.replace('%C3%A3', '%E3')
-
-        return url
-
-    def _make_download_url(self, href):
-        """Make downloadable url.
-
-        Args:
-            href (str): The dodf part of url to be downloaded.
-
-        Returns:
-            The url of the dodf to download.
-
-        """
-        url = "http://www.buriti.df.gov.br/ftp/"
-        download_url = url + href
-        download_url = urllib.parse.quote(download_url, safe=':/?=&')
-
-        return download_url
-
     def _fail_request_message(self, url, error):
         """Log error messages in download.
 
@@ -166,26 +109,6 @@ class Downloader(object):
         message = "Please check your internet connection, and " \
                   "check if the url is online via browser: {}".format(url)
         self._log(message)
-
-    def _get_soup_link(self, url):
-        """Create the souplink to download the pdf.
-
-        Args:
-            url (str): The website url to download the DODF.
-
-        Returns:
-            An :obj:`BeautifulSoup` which html queries are made.
-
-        Raises:
-            RequestException: log error in download.
-
-        """
-        headers = {'User-Agent': 'Chrome/71.0.3578.80'}
-        try:
-            response = requests.get(url, headers=headers)
-            return BeautifulSoup(response.text, "html.parser")
-        except requests.exceptions.RequestException as error:
-            self._fail_request_message(url, error)
 
     def _file_exist(self, path):
         """Check if a file exists.
@@ -221,7 +144,10 @@ class Downloader(object):
         """
         try:
             response = requests.get(url)
+            response.raise_for_status()
         except requests.exceptions.RequestException as error:
+            self._fail_request_message(url, error)
+        except requests.exceptions.HTTPError as error:
             self._fail_request_message(url, error)
         else:
             pdf_file = Path(path)
@@ -244,8 +170,7 @@ class Downloader(object):
                                  str(actual_date.year))
         if year != actual_date.year:
             self._create_single_folder(year_path)
-        month_path = os.path.join(year_path,
-                                  MONTHS_STRING[actual_date.month])
+        month_path = os.path.join(year_path,MONTHS_STRING[actual_date.month])
 
         return month_path
 
@@ -272,43 +197,54 @@ class Downloader(object):
                       + (end_date.month - start_date.month))
         # Creates progress bar
         self._prog_bar = tqdm.tqdm(total=months_amt)
-        # Creates the project folder structure
+        # # Creates the project folder structure
         self._create_download_folder()
         year = 0
+
+        
         for month in range(months_amt+1):
-            # Uses the function relative delta for in cases the date is the
-            # last of the month, increase month instead of adding more dates
             actual_date = start_date + relativedelta(months=+month)
-            # Convert back to string to update progress bar
             desc_bar = str(actual_date)
             self._prog_bar.set_description("Date %s" % desc_bar)
-            # Create and return the path for the dodfs to be donwloaded
             month_path = self._make_month_path(year, actual_date)
-            self._create_single_folder(month_path)
-            url = self._make_url(actual_date)
-            a_list = self._get_soup_link(url)
             year = actual_date.year
-            for a in a_list.find_all('a', href=True):
-                a_url = self._make_href_url(a['href'])
-                download_page = self._get_soup_link(a_url)
-                self._log("a_URL " + a_url)
-                number_of_files = int(download_page.find_all('b')[1].text)
-                dodf_path = month_path
-                if number_of_files > 1:
-                    dodf_path = os.path.join(month_path, a.text)
-                    self._create_single_folder(dodf_path)
+            year_ = str(year)
+            month_ = MONTHS_STRING[actual_date.month]
 
-                for a_href in download_page.find_all('a', href=True):
-                    download_url = self._make_download_url(a_href['href'])
-                    dodf_name_path = os.path.join(dodf_path, a_href.text)
+            
+            if(check_date(year_,month_) == True):
+                self._create_single_folder(month_path)
+            else:
+                print(f"*** There are still no DODFs for that date: {actual_date.month}/{year_} ***")
+                continue
+
+            _links_for_each_dodf = get_downloads(year_,month_)
+
+            for dodf in _links_for_each_dodf:
+                dodf_name = dodf
+                links = _links_for_each_dodf[dodf]
+                dodf_path = month_path
+
+                if(len(links) > 1):
+                    dodf_path = os.path.join(month_path, dodf_name)
+                    self._create_single_folder(dodf_path)
+                
+                x = 0
+                for l in links:
+                    x+=1
+                    download_link = l 
+                    if(len(links) == 1): 
+                        dodf_name_path = os.path.join(dodf_path, dodf_name)
+                    else:
+                        dodf_name_path = os.path.join(dodf_path, f'{dodf_name} {x}')
+
                     if not self._file_exist(dodf_name_path):
-                        self._log("Downloding "
-                                  + os.path.basename(dodf_name_path))
-                        self._download_pdf(download_url, dodf_name_path)
+                        self._log("Downloding "+ os.path.basename(dodf_name_path))
+                        self._download_pdf(download_link, dodf_name_path)
                     else:
                         self._log("Jumping to the next")
 
-            self._prog_bar.update(1)
+        self._prog_bar.update(1)
 
     def _log(self, message):
         """Logs a message following the downloader pattern.
@@ -318,3 +254,8 @@ class Downloader(object):
 
         """
         self._prog_bar.write("[DOWNLOADER] " + str(message))
+
+
+if __name__ == '__main__':
+    downloader = Downloader(save_path='./')
+    downloader.pull(start_date="05/2021", end_date="06/2021")
