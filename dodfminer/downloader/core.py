@@ -61,11 +61,7 @@ class Downloader(object):
         elif '-' in date:
             date = datetime.strptime(date, '%m-%Y').date()
         else:
-<<<<<<< HEAD
             msg = 'start_date or end_date must be in format mm/yyyy or mm-yyyy'
-=======
-            msg = 'start_date or end_date must be in format mm/yy or mm-yyyy'
->>>>>>> fcc3a52ca6824284dbdbad0bb1a79312573421a9
             raise Exception(msg)
 
         return date
