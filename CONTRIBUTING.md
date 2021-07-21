@@ -20,13 +20,13 @@ See the merges policy in the topic [Merges to **main**](CONTRIBUTING.md#merges-t
 
 ### **development**
 
-The **development** branch is where the work of the other branches will be unified and where a stable version will be created to merge with **main**.
+The **dev** branch is where the work of the other branches will be unified and where a stable version will be created to merge with **main**.
 Like **main** it is blocked for commits and pushs.
-See the merges policy in the topic [Merges for development] (CONTRIBUTING.md#merges-for-development) merges to **development** </a>.
+See the merges policy in the topic [Merges for dev] (CONTRIBUTING.md#merges-for-development) merges to **dev** </a>.
 
 ### Branch name  
 
-The feature development branches will be created from the **development** branch with the default nomenclature `change_name`.
+The feature development branches will be created from the **dev** branch with the default nomenclature `change_name`.
 
 ## Commits Policy
 
@@ -75,7 +75,7 @@ HOTFIX Updating project contribution guide
 
 ### Pull Requests
 
-Pull requests must be made to the **development** branch following the rules and steps in the topic [**Merges**](CONTRIBUTING.md#merges). In the pull request content there should be a clear description of what was done.
+Pull requests must be made to the **dev** branch following the rules and steps in the topic [**Merges**](CONTRIBUTING.md#merges). In the pull request content there should be a clear description of what was done.
 
 
 #### Work in Progress

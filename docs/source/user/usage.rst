@@ -34,19 +34,19 @@ Following are the list of avaiable parameters, their description and the default
 Parameters Table
 ^^^^^^^^^^^^^^^^
 
-+------------------+-----------------------------------------+---------+
-| Argument         | Description                             | Default |
-+==================+=========================================+=========+
-| -sp --save_path  | Folder to output the download DODFs     | ./      |
-+------------------+-----------------------------------------+---------+
-| -sd --start_date | Input the date in either mm/yy or mm-yy | 01/19   |
-+------------------+-----------------------------------------+---------+
-| -ed --end_date   | Input the date in either mm/yy or mm-yy | 01/19   |
-+------------------+-----------------------------------------+---------+
++------------------+---------------------------------------------+---------+
+| Argument         | Description                                 | Default |
++==================+=============================================+=========+
+| -sp --save_path  | Folder to output the download DODFs         | ./      |
++------------------+---------------------------------------------+---------+
+| -sd --start_date | Input the date in either mm/yyyy or mm-yyyy | 01/2019 |
++------------------+---------------------------------------------+---------+
+| -ed --end_date   | Input the date in either mm/yyyy or mm-yyyy | 01/2019 |
++------------------+---------------------------------------------+---------+
 
 Usage Example::
 
-    $ dodfminer downloader -sd 01/03 -ed 12/20
+    $ dodfminer downloader -sd 01/2003 -ed 05/2004
 
 Extractor Module
 ----------------
