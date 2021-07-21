@@ -61,7 +61,11 @@ class Downloader(object):
         elif '-' in date:
             date = datetime.strptime(date, '%m-%Y').date()
         else:
+<<<<<<< HEAD
+            msg = 'start_date or end_date must be in format mm/yyyy or mm-yyyy'
+=======
             msg = 'start_date or end_date must be in format mm/yy or mm-yyyy'
+>>>>>>> fcc3a52ca6824284dbdbad0bb1a79312573421a9
             raise Exception(msg)
 
         return date
@@ -181,8 +185,8 @@ class Downloader(object):
         The Pdfs are saved in a folder called "data" inside the project folder.
 
         Args:
-            start_date (str): The start date in format mm/yy.
-            end_date (str): The start date in format mm/yy.
+            start_date (str): The start date in format mm/yyyy.
+            end_date (str): The start date in format mm/yyyy.
 
         Note:
             The name or the path of the save folder are hard coded and can't
