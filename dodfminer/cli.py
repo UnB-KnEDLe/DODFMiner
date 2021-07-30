@@ -79,12 +79,12 @@ class CLI(object):
                                      default=self.save_path, type=str,
                                      help=help_text)
 
-        help_text = 'Input the date in either mm/yy or mm-yy.'
+        help_text = 'Input the date in either mm/yyyy or mm-yyyy.'
         self.download_parser.add_argument('-sd', '--start_date', dest='start_date',
                                      default=self.def_start_date, type=str,
                                      help=help_text)
 
-        help_text = 'Input the date in either mm/yy or mm-yy.'
+        help_text = 'Input the date in either mm/yyyy or mm-yyyy.'
         self.download_parser.add_argument('-ed', '--end_date', dest='end_date',
                                      default=self.def_end_date, type=str,
                                      help=help_text)
