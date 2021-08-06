@@ -42,13 +42,14 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_text(cls, file, single=False, block=False, sep=' ', norm='NFKD'):
+    def extract_text(cls, file, single=False, block=False, json=True, sep=' ', norm='NFKD'):
         """Extract block of text from file
 
         Args:
-            file: The DODF to extract the titles.
-            single: output content in a single file in the file directory
+            file: The DODF to extract the titles.            
+            single: output content in a single file in the file directory            
             block: Extract the text as a list of text blocks
+            json: the list of text blocks are written as a json file. 
             sep: The separator character between each block of text
             norm: Type of normalization applied to the text
 
@@ -67,15 +68,23 @@ class ContentExtractor:
         for textboxes in get_doc_text_boxes(pymu_file):
             for text in textboxes:
                 if int(text[1]) != 55 and int(text[1]) != 881:
-                    if block:
+                    if block:                        
                         norm_text = cls._normalize_text(text[4], norm)
-                        list_of_boxes.append((text[0], text[1], text[2],
+                        if json:
+                            list_of_boxes.append((text[0], text[1], text[2],
                                               text[3], norm_text))
+                        else:
+                            drawboxes_text += (norm_text + sep)    
                     else:
                         drawboxes_text += (text[4] + sep)
 
         if block:
-            return list_of_boxes if not single else cls._save_single_file(file, 'json', json.dumps(list_of_boxes))
+            if not single:
+                return list_of_boxes 
+            elif json:
+                cls._save_single_file(file, 'json', json.dumps(list_of_boxes))            
+            else:
+                cls._save_single_file(file, 'txt', drawboxes_text)
 
         drawboxes_text = cls._normalize_text(drawboxes_text, norm)
         return drawboxes_text if not single else cls._save_single_file(file, 'txt', drawboxes_text)
