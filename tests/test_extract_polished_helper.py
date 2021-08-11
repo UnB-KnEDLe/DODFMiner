@@ -7,8 +7,8 @@ def test_helper_xml_multiple():
     dir = ""+os.path.dirname(__file__)+"/support/support_supporter"
     try:
         xml_multiple(dir, "regex")
-        assert "1_1.2019.xml" in os.listdir(dir)
-        os.remove(os.path.join(dir, "1_1.2019.xml"))
+        assert "1_1.1.2019.xml" in os.listdir(dir)
+        os.remove(os.path.join(dir, "1_1.1.2019.xml"))
     except:
         assert False
 

@@ -18,7 +18,7 @@ If you have any questions you can also contact us by creating an issue or by ask
 
 ### Installation
 
-To run the project environment, access our [installation guide](INSTALLATION.md).
+To run the project environment, access our [installation guide](https://dodfminer.readthedocs.io/en/stable/user/install.html).
 
 ### Documentation
 
