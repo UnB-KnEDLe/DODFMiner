@@ -6,7 +6,9 @@ Contains class ContentExtractor which have to public functions
 avaiable to extract the DODF to JSON
 
 Usage example::
+
     from dodfminer.extract.pure.core import ContentExtractor
+
     pdf_text = ContentExtractor.extract_text(file)
     ContentExtractor.extract_to_txt(folder)
 
@@ -53,13 +55,16 @@ class ContentExtractor:
             sep: The separator character between each block of text.
             norm: Type of normalization applied to the text.
             
-            Note:
-                To learn more about the each type of normalization used in the
-                `unicode.normalization` method, `click here <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_.
+        Note:
+            To learn more about the each type of normalization used in the
+            `unicode.normalization` method, `click here <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_.
 
         Returns:
+
+            These are the outcomes for each parameter combination.
+
             When `block=True` and `single=True`:
-                In case `json=True`, the method saves a JSON file containing the
+                In case `json=True`, The method saves a JSON file containing the
                 text blocks in the DODF file. However, is case `json=False`, the
                 text from the whole PDF is saved as a string in a .txt file.
             
@@ -71,8 +76,12 @@ class ContentExtractor:
                 (x0, y0, x1, y1), while the last is the text from the box.
                 
                 Example::
-                    (127.77680206298828, 194.2507781982422, 684.0039672851562,211.97523498535156,
-                    'ANO XLVI EDICAO EXTRA No- 4 BRASILIA - DF, QUARTA-FEIRA, 1 DE FEVEREIRO DE 2017')
+
+                    (127.77680206298828, 
+                    194.2507781982422, 
+                    684.0039672851562,
+                    211.97523498535156,
+                    "ANO XLVI EDICAO EXTRA No- 4 BRASILIA - DF")
             
             When `block=False` and `single=True`:
                 The text from the whole PDF is saved in a .txt file as a
@@ -174,7 +183,7 @@ class ContentExtractor:
         For each PDF file in data/DODFs, the method extracts information from the
         PDF and writes it to the .txt file.
         
-        Parameters:
+        Args:
             folder: The folder containing the PDFs to be extracted.
             norm: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
 
@@ -202,8 +211,7 @@ class ContentExtractor:
 
         Args:
             folder: The folder containing the PDFs to be extracted.
-            titles_with_boxes: If True, the method builds a dict containing a list of tuples (similar to `extract_structure`). Otherwise,
-            the method structures a list of tuples (similar to `extract_text`)
+            titles_with_boxes: If True, the method builds a dict containing a list of tuples (similar to `extract_structure`). Otherwise, the method structures a list of tuples (similar to `extract_text`).
             norm: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
         
         Returns:
@@ -355,8 +363,7 @@ class ContentExtractor:
         
         Args:
             path: The path to the extracted file.
-            json_f (boolean): If True, the file will extracted to a JSON.
-            Otherwise, it will be extrated to a .txt.
+            json_f (boolean): If True, the file will extracted to a JSON. Otherwise, it will be extrated to a .txt.
             folder: The folder containing the PDFs to be extracted.
 
         Raises:
@@ -412,4 +419,9 @@ class ContentExtractor:
 
     @classmethod
     def _log(cls, msg):
+        """Print message from within the ContentExtractor class.
+        
+        Args:
+            msg: String with message that should be printed out.
+        """
         print(f"[EXTRACTOR] {msg}")
