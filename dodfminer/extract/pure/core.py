@@ -44,11 +44,11 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_text(cls, file, single=False, block=False, json=True, sep=' ', norm='NFKD'):
+    def extract_text(cls, file, single=False, block=False, is_json=True, sep=' ', norm='NFKD'):
         """Extract block of text from file
 
         Args:
-            file: The DODF to extract the titles.            
+            file: The DODF to extract titles from.            
             single: output content in a single file in the file directory.           
             block: Extract the text as a list of text blocks.
             json: The list of text blocks are written as a json file. 
@@ -100,18 +100,17 @@ class ContentExtractor:
                 if int(text[1]) != 55 and int(text[1]) != 881:
                     if block:                        
                         norm_text = cls._normalize_text(text[4], norm)
-                        if json:
+                        if is_json:
                             list_of_boxes.append((text[0], text[1], text[2],
                                               text[3], norm_text))
                         else:
                             drawboxes_text += (norm_text + sep)    
                     else:
                         drawboxes_text += (text[4] + sep)
-
         if block:
             if not single:
                 return list_of_boxes 
-            elif json:
+            elif is_json:
                 cls._save_single_file(file, 'json', json.dumps(list_of_boxes))            
             else:
                 cls._save_single_file(file, 'txt', drawboxes_text)

@@ -255,19 +255,15 @@ def test_extract_bold_upper_page():
     """ '_extract_bold_upper_page' will not be tested directly"""
     pass
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_1(doc_2001):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2001)
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_2(doc_2017):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2017)
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_3(doc_2018):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2018)
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_bold_upper_pdf_4(doc_2020):
     functions_whole_doc('_extract_bold_upper_pdf', doc_2020)
 
@@ -283,25 +279,21 @@ def test_get_titles_subtitles():
     """Hard to test. It's indirectly tested by `test_get_titles_subtitles_smart_X`"""
     pass
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed (will change function signature).", run=False)
 def test_get_titles_subtitles_smart_1(doc_2001):
     functions_with_kargs(
         '_get_titles_subtitles_smart', PDF_2001_PATH, doc=doc_2001,
         width_lis = [p.MediaBox[2] for p in doc_2001],
     )
-@pytest.mark.xfail(reason="Bug #45 not yet fixed (will change function signature).", run=False)
 def test_get_titles_subtitles_smart_2(doc_2017):
     functions_with_kargs(
         '_get_titles_subtitles_smart', PDF_2017_PATH, doc=doc_2017,
         width_lis = [p.MediaBox[2] for p in doc_2017],
     )
-@pytest.mark.xfail(reason="Bug #45 not yet fixed (will change function signature).", run=False)
 def test_get_titles_subtitles_smart_3(doc_2018):
     functions_with_kargs(
         '_get_titles_subtitles_smart', PDF_2018_PATH, doc=doc_2018,
         width_lis = [p.MediaBox[2] for p in doc_2018],
     )
-@pytest.mark.xfail(reason="Bug #45 not yet fixed (will change function signature).", run=False)
 def test_get_titles_subtitles_smart_4(doc_2020):
     functions_with_kargs(
         '_get_titles_subtitles_smart', PDF_2020_PATH, doc=doc_2020,
@@ -318,7 +310,6 @@ def test_extract_titles_subtitles_2():
 def test_extract_titles_subtitles_3():
     functions_with_path('extract_titles_subtitles', PDF_2018_PATH)
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_extract_titles_subtitles_4():
     functions_with_path('extract_titles_subtitles', PDF_2020_PATH)
 
@@ -333,7 +324,6 @@ def test_titles_2(extractor_2017):
 def test_titles_3(extractor_2018):
     wrapper_extractor_props(extractor_2018, 'titles')
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_titles_4(extractor_2020):
     wrapper_extractor_props(extractor_2020, 'titles')
 
@@ -347,7 +337,6 @@ def test_subtitles_2(extractor_2017):
 def test_subtitles_3(extractor_2018):
     wrapper_extractor_props(extractor_2018, 'subtitles')
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_subtitles_4(extractor_2020):
     wrapper_extractor_props(extractor_2020, 'subtitles')
 
@@ -361,7 +350,6 @@ def test_json_2(extractor_2017):
 def test_json_3(extractor_2018):
     wrapper_extractor_props(extractor_2018, 'json')
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_json_4(extractor_2020):
     wrapper_extractor_props(extractor_2020, 'json')
 
@@ -385,7 +373,6 @@ def test_titles_subtitles_hierarchy_3(extractor_2018):
     wrapper_extractor_props(extractor_2018, 'titles_subtitles_hierarchy')
 
 
-@pytest.mark.xfail(reason="Bug #45 not yet fixed.", run=False)
 def test_titles_subtitles_hierarchy_4(extractor_2020):
     wrapper_extractor_props(extractor_2020, 'titles_subtitles_hierarchy')
 

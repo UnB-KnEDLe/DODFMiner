@@ -8,20 +8,23 @@ from dodfminer.extract.pure.core import ContentExtractor as ce
 
 class XMLFy:
 
-    def __init__(self, file, acts_ids, i):
-        file_nums = list((map(int, re.findall(r'\d+', file))))
-        file_nums = file_nums[2:]
-        print(file_nums)
-        file_id = f"{i}_"
-        for s in file_nums:
-            file_id += str(s) + "."
-        file_id = file_id[:-1]
+    def __init__(self, file, acts_ids, id):
         self._file = file
         self._acts_ids = acts_ids
-        self._xml_id = file_id
+        self._xml_id = self.build_xml_id(id)
         self._annotation_id = 1
         self._relations_id = 1
         self.xml = self._create_xml()
+
+    def build_xml_id(self, id):
+        file_name = self._file.split('/')[-1]
+
+        str2int2str = lambda x : str(int(x))
+        file_numbers_list = map(str2int2str, re.findall(r'\d+', file_name))
+
+        file_id = ".".join(list(file_numbers_list)[1:])
+
+        return f"{id}_{file_id}"
 
     def print_tree(self):
         print(etree.tostring(self.xml, pretty_print=True).decode())
