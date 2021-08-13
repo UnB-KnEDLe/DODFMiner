@@ -6,7 +6,7 @@ like creating txts, searching through files, and print dataframes.
 
 Usage Example::
 
-    from ddodfminer.extract.polished import helper
+    from dodfminer.extract.polished import helper
     helper.print_dataframe(df)
 
 Functions
