@@ -6,7 +6,7 @@ Contains class ContentExtractor which have to public functions
 avaiable to extract the DODF to JSON
 
 Usage example::
-
+    from dodfminer.extract.pure.core import ContentExtractor
     pdf_text = ContentExtractor.extract_text(file)
     ContentExtractor.extract_to_txt(folder)
 
@@ -31,9 +31,9 @@ RESULTS_PATH_TXT = "results/txt"
 class ContentExtractor:
     """Extract content from DODFs and export to JSON.
 
-    Extracts content from DODF using as suport the title and subtitle
-    databases (which runs using MuPDF) and the Tesseract OCR library. All the
-    contents are exported to a JSON in which it's keys are DODFs titles or
+    Extracts content from DODF files using as suport the title and subtitle
+    databases—which runs using MuPDF—, and the Tesseract OCR library. All the
+    content is exported to a JSON file, in which its keys are DODF titles or
     subtitles, and its values are the correspondent content.
 
     Note:
@@ -47,20 +47,41 @@ class ContentExtractor:
 
         Args:
             file: The DODF to extract the titles.            
-            single: output content in a single file in the file directory            
-            block: Extract the text as a list of text blocks
-            json: the list of text blocks are written as a json file. 
-            sep: The separator character between each block of text
-            norm: Type of normalization applied to the text
+            single: output content in a single file in the file directory.           
+            block: Extract the text as a list of text blocks.
+            json: The list of text blocks are written as a json file. 
+            sep: The separator character between each block of text.
+            norm: Type of normalization applied to the text.
+            
+            Note:
+                To learn more about the each type of normalization used in the
+                `unicode.normalization` method, `click here <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_.
 
         Returns:
-            A list of arrays if block is True or strign otherwise.
-            Each array in the list have 5 values: the first four
-            are the coordinates of the box (x0, y0, x1, y1) end the last
-            is the text from the box.
-
-            The string returned correspond to the text from all PDF.
-
+            When `block=True` and `single=True`:
+                In case `json=True`, the method saves a JSON file containing the
+                text blocks in the DODF file. However, is case `json=False`, the
+                text from the whole PDF is saved as a string in a .txt file.
+            
+            When `block=True` and `single=False`:
+                The method returns an array containing text blocks.
+                
+                Each array in the list have 5 values: the first four are the
+                coordinates of the box from where the text was extracted
+                (x0, y0, x1, y1), while the last is the text from the box.
+                
+                Example::
+                    (127.77680206298828, 194.2507781982422, 684.0039672851562,211.97523498535156,
+                    'ANO XLVI EDICAO EXTRA No- 4 BRASILIA - DF, QUARTA-FEIRA, 1 DE FEVEREIRO DE 2017')
+            
+            When `block=False` and `single=True`:
+                The text from the whole PDF is saved in a .txt file as a
+                normalized string.
+            
+            When `block=False` and `single=False`:
+                The method returns a normalized string containing the
+                text from the whole PDF.
+                
         """
         drawboxes_text = ''
         list_of_boxes = []
@@ -91,15 +112,15 @@ class ContentExtractor:
 
     @classmethod
     def extract_structure(cls, file, single=False, norm='NFKD'):
-        """Extract boxes of text with your respective titles.
+        """Extract boxes of text with their respective titles.
 
         Args:
-            file: The DODF to extract the titles.
-            single: output content in a single file in the file directory
-            norm: Type of normalization applied to the text
+            file: The DODF file to extract titles from.
+            single: Output content in a single file in the file directory.
+            norm: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
 
         Returns:
-            A dictionaty with the blocks organized by title
+            A dictionaty with the blocks organized by title.
 
             Example::
 
@@ -148,10 +169,14 @@ class ContentExtractor:
 
     @classmethod
     def extract_to_txt(cls, folder='./', norm='NFKD'):
-        """Extract information from DODF to TXT.
+        """Extract information from DODF to a .txt file.
 
-        For each pdf file in data/dodfs, extract information from the
-        pdf and output it to txt.
+        For each PDF file in data/DODFs, the method extracts information from the
+        PDF and writes it to the .txt file.
+        
+        Parameters:
+            folder: The folder containing the PDFs to be extracted.
+            norm: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
 
         """
         pdfs_path_list = cls._get_pdfs_list(folder)
@@ -176,13 +201,14 @@ class ContentExtractor:
         """Extract information from DODF to JSON.
 
         Args:
-            folder: The folder containing the PDFs to be extracted
-            titles_with_boxes: Extract with titles
-            norm: What normalization to use. Normalizations can be found
-                  unicodedata library
-
-        For each pdf file in data/dodfs, extract information from the
-        pdf and output it to json.
+            folder: The folder containing the PDFs to be extracted.
+            titles_with_boxes: If True, the method builds a dict containing a list of tuples (similar to `extract_structure`). Otherwise,
+            the method structures a list of tuples (similar to `extract_text`)
+            norm: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
+        
+        Returns:
+            For each PDF file in data/DODFs, extract information from the
+            PDF and output it to a JSON file.
 
         """
         # Get list of all downloaded pdfs
@@ -217,11 +243,11 @@ class ContentExtractor:
 
     @classmethod
     def _normalize_text(cls, text, form='NFKD'):
-        """Normalize text.
+        """This method is used for text nomalization.
 
         Args:
             text: The text to be normalized.
-            form: The normalized form accordingly to the unicodedata library'.
+            form: `Type of normalization <https://docs.python.org/3/library/unicodedata.html#unicodedata.normalize>`_ applied to the text.
 
         Returns:
             A string with the normalized text.
@@ -241,11 +267,11 @@ class ContentExtractor:
             An object of type ExtractorTitleSubtitle, in which have the
             attributes:
 
-            titles: get all titles from pdf
-            subtitle: get all subtitles from pdf
+            titles: get all titles from PDF.
+            subtitle: get all subtitles from PDF.
 
         Raises:
-            Exception: error in extracting titles from pdf
+            Exception: error in extracting titles from PDF.
 
         """
         try:
@@ -262,7 +288,7 @@ class ContentExtractor:
         """Get DODFs list from the path.
 
         Returns:
-            A list of DODFS' pdfs paths.
+            A list of DODFS' PDFs paths.
 
         """
         pdfs_path_list = []
@@ -275,10 +301,10 @@ class ContentExtractor:
 
     @classmethod
     def _get_json_list(cls, folder):
-        """Get list of exisiting JSON from the path.
+        """Get list of exisiting JSONs from the path.
 
         Returns:
-            A list of all exisiting JSON's.
+            A list of all exisiting JSONs.
 
         """
         aux = []
@@ -294,10 +320,10 @@ class ContentExtractor:
 
     @classmethod
     def _get_txt_list(cls, folder):
-        """Get list of exisiting TXT from the path.
+        """Get list of exisiting .txt files from the path.
 
         Returns:
-            A list of all exisiting TXT's.
+            A list of all exisiting .txt files.
 
         """
         aux = []
@@ -315,8 +341,8 @@ class ContentExtractor:
     def _struct_subfolders(cls, path, json_f, folder):
         """Create directory for the JSON.
 
-        Using the same standart from the DODFs directory tree. Create the
-        JSONs folder as same.
+        The JSONs folder will be created using the same standard from the
+        DODF's directory tree,
 
         Raises:
             FileExistsError: The folder being created is already there.
@@ -347,11 +373,11 @@ class ContentExtractor:
     def _create_single_folder(cls, path):
         """Create a single folder given the directory path.
 
-        This function might create a folder, observe that the folder already
+        This function might create a folder, observe if the folder already
         exists, or raise an error if the folder cannot be created.
 
         Args:
-            path: The path to be created
+            path: The path to be created.
 
         Raises:
             OSError: Error creating the directory.
