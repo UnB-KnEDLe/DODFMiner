@@ -286,6 +286,9 @@ class ContentExtractor:
     @classmethod
     def _get_pdfs_list(cls, folder):
         """Get DODFs list from the path.
+        
+        Args:
+            folder: The folder containing the PDFs to be extracted.
 
         Returns:
             A list of DODFS' PDFs paths.
@@ -302,6 +305,9 @@ class ContentExtractor:
     @classmethod
     def _get_json_list(cls, folder):
         """Get list of exisiting JSONs from the path.
+        
+        Args:
+            folder: The folder containing the PDFs to be extracted.
 
         Returns:
             A list of all exisiting JSONs.
@@ -321,6 +327,9 @@ class ContentExtractor:
     @classmethod
     def _get_txt_list(cls, folder):
         """Get list of exisiting .txt files from the path.
+        
+        Args:
+            folder: The folder containing the PDFs to be extracted.
 
         Returns:
             A list of all exisiting .txt files.
@@ -339,15 +348,21 @@ class ContentExtractor:
 
     @classmethod
     def _struct_subfolders(cls, path, json_f, folder):
-        """Create directory for the JSON.
+        """Creates a directory for the JSON files.
 
-        The JSONs folder will be created using the same standard from the
-        DODF's directory tree,
+        This method structures the folder tree for the allocation of
+        files the code is curretly dealing with.
+        
+        Args:
+            path: The path to the extracted file.
+            json_f (boolean): If True, the file will extracted to a JSON.
+            Otherwise, it will be extrated to a .txt.
+            folder: The folder containing the PDFs to be extracted.
 
         Raises:
             FileExistsError: The folder being created is already there.
 
-        Return:
+        Returns:
             The path created for the JSON to be saved.
 
         """
