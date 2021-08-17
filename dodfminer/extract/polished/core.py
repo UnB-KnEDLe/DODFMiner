@@ -17,8 +17,9 @@ from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
-from dodfminer.extract.polished.acts.extrato_licitacao import ExtratoLicitacao
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from dodfminer.extract.polished.acts.abertura_licitacao import AberturaLicitacao
+from dodfminer.extract.polished.acts.extrato_licitacao import ExtratoLicitacao
 from dodfminer.extract.polished.create_xml import XMLFy
 
 
@@ -33,7 +34,8 @@ _acts_ids = {"aposentadoria": Retirements,
              "efetivos_exo": ExoneracaoEfetivos,
              "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
              "cessoes": Cessoes,
-             "extrato_licitacao": ExtratoLicitacao}
+             "extrato_licitacao": ExtratoLicitacao,
+             "abertura_licitacao": AberturaLicitacao}
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
