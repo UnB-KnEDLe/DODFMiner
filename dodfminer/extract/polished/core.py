@@ -8,9 +8,6 @@ Usage Example::
     from dodfminer.extract.polished.core import ActsExtractor
     ActsExtractor.get_act_obj(ato_id, file, backend)
 
-Acts Available and IDs
-----------------------
-
 """
 
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
@@ -43,10 +40,10 @@ class ActsExtractor:
     """Polished Extraction main class.
 
     All interactions with the acts needs to be done through this interface.
-    This class handles all the requests to regex or ner extraction.
+    This class handles all the requests to Regex or NER extraction.
 
     Note:
-        This class is static
+        This class is static.
 
     """
 
@@ -59,7 +56,7 @@ class ActsExtractor:
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
-            backend (string): Backend of act extraction, either regex or ner.
+            backend (string): Backend of act extraction, either Regex or NER.
 
         Returns:
             An object of the desired act, already with extracted information.
@@ -69,16 +66,16 @@ class ActsExtractor:
 
     @staticmethod
     def get_all_obj(file, backend):
-        """Extract all acts types from a single DODF.
+        """Extract all act types from a single DODF.
 
         Object format.
 
         Args:
             file (string): Path of the file.
-            backend (string): Backend of act extraction, either regex or ner.
+            backend (string): Backend of act extraction, either Regex or NER.
 
         Returns:
-            An vector of objects of all the acts, already with extracted
+            An vector of objects of all the acts with extracted
             information.
 
         """
@@ -97,17 +94,17 @@ class ActsExtractor:
         Args:
             ato_id (string): The name of the act to extract.
             file (string): Path of the file.
-            backend (string): Backend of act extraction, either regex or ner.
+            backend (string): Backend of act extraction, either Regex or NER.
 
         Returns:
-            An dataframe with extracted information, for the desired act.
+            A dataframe with extracted information, for the desired act.
 
         """
         return _acts_ids[ato_id](file, backend).data_frame
 
     @staticmethod
     def get_all_df(file, backend):
-        """Extract all acts types from a single DODF.
+        """Extract all act types from a single DODF.
 
         Dataframe format.
 
@@ -116,7 +113,7 @@ class ActsExtractor:
             backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
-            An vector of dataframed with extracted information for all acts.
+            A vector of dataframes with extracted information for all acts.
 
         """
         res = {}
@@ -127,7 +124,7 @@ class ActsExtractor:
 
     @staticmethod
     def get_xml(file, backend, i):
-        """Extract all acts types from a single DODF.
+        """Extract all act types from a single DODF.
 
         Dataframe format.
 
@@ -136,7 +133,7 @@ class ActsExtractor:
             backend (string): Backend of act extraction, either regex or ner.
 
         Returns:
-            An vector of dataframed with extracted information for all acts.
+            A vector of dataframes with extracted information for all acts.
 
         """
         res = XMLFy(file, _acts_ids, i)
