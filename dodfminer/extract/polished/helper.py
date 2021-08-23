@@ -58,7 +58,7 @@ def extract_multiple_acts(path, types, backend):
     if os.path.isfile(path):
         ContentExtractor.extract_text(path, single=True)
         for type in types:
-            df, _, _ = extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
+            df, _= extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
             df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
@@ -91,7 +91,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_df, res_txt, _ = extract_single(file, type, backend)
+        res_df, res_txt = extract_single(file, type, backend)
         if not res_df.empty:
             res.append(res_df)
             if txt_out:
@@ -119,8 +119,8 @@ def extract_single(file, type, backend):
         backend (str): what backend will be used to extract Acts {regex, ner}
 
     Returns:
-        A dataframe containing all instances of the desired act
-        including the texts found.
+        A tuple containing, respectively: a dataframe containing all instances of the desired act
+        including the texts found, and a list of the segmented text blocks, and .
 
     """
     res_obj = ActsExtractor.get_act_obj(type, file, backend)
@@ -128,7 +128,7 @@ def extract_single(file, type, backend):
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
 
-    return res_df, res_txt, res_obj
+    return res_df, res_txt
 
 
 def build_act_txt(acts, name, save_path="./results/"):

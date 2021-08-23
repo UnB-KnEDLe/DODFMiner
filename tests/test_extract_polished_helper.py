@@ -47,11 +47,10 @@ def test_helper_extract_multiple(folder_path):
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_single(file_path):
     ContentExtractor.extract_text(file_path(extension="pdf"), single=True)
-    df, texts, obj = extract_single(file_path(extension="txt"), "nomeacao", "regex")
+    df, texts = extract_single(file_path(extension="txt"), "nomeacao", "regex")
 
     assert type(df) is DataFrame
     assert type (texts) is list
-    assert type(obj) is NomeacaoComissionados
 
     assert len(df) > 0
     assert len(texts) > 0
@@ -82,7 +81,7 @@ def test_helper_build_act_txt():
 
 def test_helper_get_files_path(folder_path):
     files = get_files_path(folder_path, "txt")
-    assert len(files) == 1
+    assert len(files) > 0
     files = get_files_path(folder_path, "pdf")
-    assert len(files) == 2
+    assert len(files) > 0
 
