@@ -58,7 +58,7 @@ def extract_multiple_acts(path, types, backend):
     if os.path.isfile(path):
         ContentExtractor.extract_text(path, single=True)
         for type in types:
-            df = extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
+            df, _, _ = extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
             df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
@@ -91,10 +91,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_obj = ActsExtractor.get_act_obj(type, file, backend)
-        print(res_obj._backend)
-        res_df = res_obj.data_frame
-        res_txt = res_obj.acts_str
+        res_df, res_txt, _ = extract_single(file, type, backend)
         if not res_df.empty:
             res.append(res_df)
             if txt_out:
@@ -131,7 +128,7 @@ def extract_single(file, type, backend):
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
 
-    return res_df
+    return res_df, res_txt, res_obj
 
 
 def build_act_txt(acts, name, save_path="./results/"):

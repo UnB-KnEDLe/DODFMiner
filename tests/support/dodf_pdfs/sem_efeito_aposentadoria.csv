@@ -1,8 +1,30 @@
-,tipo_ato,tipo_documento,numero_documento,data_documento,numero_dodf,data_dodf,pagina_dodf,nome,matricula,matricula_SIAPE,cargo_efetivo,classe,padrao,quadro,orgao,processo_SEI,tipo_edicao
-0,Atos tornados sem efeito - aposentadoria,,,,137,19/07/2017,. 42, DELFINO BERNARDES RABELO,100.652-5. ,,,,,,,0070-001865/2016,normal
+,tipo_ato,tipo_documento,numero_documento,data_documento,numero_dodf,data_dodf,pagina_dodf,nome,matricula,matricula_SIAPE,cargo_efetivo,classe,padrao,quadro,orgao,processo_SEI,tipo_edicao,text
+0,Atos tornados sem efeito - aposentadoria,,,,137,19/07/2017,. 42, DELFINO BERNARDES RABELO,100.652-5. ,,,,,,,0070-001865/2016,normal,"TORNAR SEM EFEITO, no DODF n 137, de 19/07/2017, pag. 42, o ato que retificou a averbacao
+de tempo de servico de DELFINO BERNARDES RABELO, matricula no 100.652-5. Processo SEI No
+0070-001865/2016.
+"
 1,Atos tornados sem efeito - aposentadoria,,,05 de fevereiro de 1990,248,"29 de
 dezembro de 2017", 39.,"MARCO
-ANTONIO CATTANI FRANCA","129661-2,",, 129.661-2,,,,,271.000.680/2017,normal
+ANTONIO CATTANI FRANCA","129661-2,",, 129.661-2,,,,,271.000.680/2017,normal,"TORNAR SEM EFEITO A AVERBACAO DE TEMPO DE SERVICO do servidor MARCO
+ANTONIO CATTANI FRANCA, 129661-2, 129.661-2, Medico Cirurgia Geral, Secretaria de Estado
+de Saude do DF, 1103 dias, conforme Certidao de tempo de servico expedida pelo Ministerio da
+Defesa, nos periodos de 1o de janeiro de 1987 a 05 de fevereiro de 1990, contados somente para fins
+de aposentadoria, conforme processo no 271.000.680/2017, publicada no DODF No 248 de 29 de
+dezembro de 2017, pagina 39.
+"
 2,Atos tornados sem efeito - aposentadoria,Ordem de Servico,,03 de dezembro de 2019,04,04 de dezembro de 2019,," FRANCINEIDE
-DANIEL DE LIMA",66.260-7,, no Cargo de Professor de Educacao Basica,,,,,00040-00024368/2019-32,normal
-3,Atos tornados sem efeito - aposentadoria,,,26 de fevereiro de 2019,42,28 de fevereiro 2019, 29,GENI TEREZINHA SPIES DA SILVEIRA,30735-1,, totalizando 731 dias,,,,,00401.00003406/2019-59,normal
+DANIEL DE LIMA",66.260-7,, no Cargo de Professor de Educacao Basica,,,,,00040-00024368/2019-32,normal,"TORNAR SEM EFEITO na Ordem de Servico no 306 de 03 de dezembro de 2019, publicada no
+Diario Oficial do Distrito Federal, de 04 de dezembro de 2019, o ato que aposentou FRANCINEIDE
+DANIEL DE LIMA, matricula 66.260-7, no Cargo de Professor de Educacao Basica, Padrao 25, Etapa
+IV, do Quadro de Pessoal do Distrito Federal. Processo 00040-00024368/2019-32.
+"
+3,Atos tornados sem efeito - aposentadoria,,,26 de fevereiro de 2019,42,28 de fevereiro 2019, 29,GENI TEREZINHA SPIES DA SILVEIRA,30735-1,, totalizando 731 dias,,,,,00401.00003406/2019-59,normal,"TORNAR SEM EFEITO a Ordem de
+Servico no 35, de 26 de fevereiro de 2019, publicada no DODF no 42, de 28 de fevereiro 2019,
+pagina 29, que averbou o tempo de servico em funcao de trabalho prestado a Secretaria de Estado
+de Educacao do Distrito Federal, pela servidora GENI TEREZINHA SPIES DA SILVEIRA, matricula
+30735-1, totalizando 731 dias, relativos ao periodo de 04/05/1999 a 03/05/2001, contados para fins de
+anuenios, aposentadoria e disponibilidade, nos termos do inciso II, do artigo 166, da Lei
+Complementar no 840/2011 c/c a alinea ""a"", do item 17, do Manual de Normas e Procedimentos
+Administrativos do Tribunal de Contas do Distrito Federal, conforme exarado no processo SEI no
+00401.00003406/2019-59.
+"
