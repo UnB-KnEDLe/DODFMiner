@@ -1,12 +1,20 @@
-# command to run tests
 language: python
 python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
+- '3.6'
+- '3.7'
+- '3.8'
 install:
-  - pip3 install -r requirements.txt
+- pip3 install -r requirements.txt
 script:
-  - pytest --cov=dodfminer tests
+- pytest --cov=dodfminer tests
 after_success:
-  - coveralls
+- coveralls
+deploy:
+  provider: pypi
+  username: __token__
+  password:
+    secure: m0+uIPdc3Jz9t088sLURh2xh9RHoCetcJGlraqr5XyMCbYueySs+rm9yQdEZ0yAdAIAOuWSSIhu3OV2FIeRkKNjQ2hOZOI//WN9I9BWYw/Yu1hFn6Ndwb6B7MyD8lmPMx975ks4r2DMvstCn90VD4xCf/pQinjJvOWC/jkVfZuxjnEBZNcZIE1ih3KuwPD+MwF3J4VVniYGgFhySGW7ruu25HCOByxOoptS2t1pTCe6n9DnX8k2iA7oeo0/NL30mN7ck/xjrzSdcJRpSr11nFxigDT440q8SlXnBgf3U3P2FGBpnl4OPMHTzhIYZUdqK2zRpYOZHBrrcULfnBF9OLPgCO+LQkh/C+ZgygLC01ssDts1ulcHZLmdNGn8CuvwFMBVznbLvkqDWIx3MYYwo5EbqXxmVSOUv5q7kt9KGzf1dvbX9pP0vAweNJovphXOcBsqVUVA5SeuyjWeEhaEmI9eGMs1WhJNr9vvsSCx1njqavTLTO0EWkOqhaWPbyytGVqDeCa24jv8LolYF6g//64miwmGTgnZxMo8EW8Dcmn0GIzCy/O/LrSrXTnhcXQ5i2jhM8hR51/I37fqejs5Sntt4tppwzuey8LgrUUzbCcv/VgjJj/Fq0ZJuQZXEOoDXmqn72JlVTL953TVfXWxAbGgjKae33o5C16u6V5/f4Jc=
+  distributions: sdist bdist_wheel
+  skip_existing: true
+  on:
+    tags: true
