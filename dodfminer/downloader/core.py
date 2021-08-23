@@ -150,7 +150,7 @@ class Downloader(object):
         except requests.exceptions.HTTPError as error:
             self._fail_request_message(url, error)
         else:
-            pdf_file = Path(path)
+            pdf_file = Path(f"{path}.pdf")
             pdf_file.write_bytes(response.content)
             self._log("Finished " + os.path.basename(path))
 

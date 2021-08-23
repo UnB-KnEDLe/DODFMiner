@@ -107,13 +107,14 @@ class ContentExtractor:
                             drawboxes_text += (norm_text + sep)    
                     else:
                         drawboxes_text += (text[4] + sep)
+
         if block:
             if not single:
                 return list_of_boxes 
             elif is_json:
-                cls._save_single_file(file, 'json', json.dumps(list_of_boxes))            
+                return cls._save_single_file(file, 'json', json.dumps(list_of_boxes))            
             else:
-                cls._save_single_file(file, 'txt', drawboxes_text)
+                return cls._save_single_file(file, 'txt', drawboxes_text)
 
         drawboxes_text = cls._normalize_text(drawboxes_text, norm)
         return drawboxes_text if not single else cls._save_single_file(file, 'txt', drawboxes_text)
