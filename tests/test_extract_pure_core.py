@@ -6,31 +6,46 @@ import shutil
 from glob import glob
 from dodfminer.extract.pure.core import ContentExtractor
 
+EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
+DODF_FILE_PATH = file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+
 def test_pure_extract_text_single():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    generated_txt = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-    ContentExtractor.extract_text(file, single=True)
-    assert os.path.isfile(file.replace("pdf", "txt"))
-    assert generated_txt in open(file.replace("pdf", "txt")).read()
-    os.remove(file.replace("pdf", "txt"))
+    txt_file = DODF_FILE_PATH.replace("pdf", "txt")
+    
+    ContentExtractor.extract_text(DODF_FILE_PATH, single=True)
+    
+    assert os.path.isfile(txt_file)
+    assert EXPECTED_EXTRACTED_TEXT in open(txt_file).read()
+    
+    os.remove(txt_file)
 
 def test_pure_extract_text_return_text():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    generated_txt = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-    assert generated_txt in ContentExtractor.extract_text(file)
+    assert EXPECTED_EXTRACTED_TEXT in ContentExtractor.extract_text(DODF_FILE_PATH)
 
 def test_pure_extract_text_return_list():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    generated_txt = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-    assert len(ContentExtractor.extract_text(file, block=True)) > 0
+    assert len(ContentExtractor.extract_text(DODF_FILE_PATH, block=True)) > 0
 
 def test_pure_extract_text_single_return_list():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    generated_txt = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-    ContentExtractor.extract_text(file, single=True, block=True)
-    assert os.path.isfile(file.replace("pdf", "json"))
-    assert len(json.loads(open(file.replace('pdf', 'json')).read())) > 0
-    os.remove(file.replace("pdf", "json"))
+    json_file = DODF_FILE_PATH.replace("pdf", "json")
+    
+    ContentExtractor.extract_text(DODF_FILE_PATH, single=True, block=True)
+    
+    assert os.path.isfile(json_file)
+    assert len(json.loads(open(json_file).read())) > 0
+    
+    os.remove(json_file)
+
+def test_pure_extract_text_json_false_saves_txt_file():
+    txt_file = DODF_FILE_PATH.replace("pdf", "txt")
+    
+    ContentExtractor.extract_text(DODF_FILE_PATH, single=True, block=True, is_json=False)
+    
+    assert os.path.isfile(txt_file)
+    assert type(open(txt_file).read()) is str
+    assert len(open(txt_file).read()) > 0
+    
+    os.remove(txt_file)
+
 
 # def test_pure_extract_text_norm():
 #     file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
