@@ -22,7 +22,7 @@ class VencedorLicitacao(Atos):
     def _rule_for_inst(self):
         start = r"(AVISO(?:S)?\s+D[EO]\s+DECLARACAO\s+D[EO]\s+VENCEDOR|AVISO(?:S)?\s+D[EO]\s+RESULTADO)"
         body = r"([\s\S]*?"
-        end = r"<END_OF_BLOCK>){5}"
+        end = r"<END_OF_BLOCK>){3}"
         return start + body + end
 
     def _prop_rules(self):
