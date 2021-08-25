@@ -1,17 +1,17 @@
-"""Regras regex para ato de Abertura de Licitação."""
+"""Regras regex para ato de Aviso de Homologação em Licitações."""
 
 import os
 import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
-class AberturaLicitacao(Atos):
+class HomologacaoLicitacao(Atos):
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
 
     def _act_name(self):
-        return "Abertura de Licitação"
+        return "Aviso de Homologação"
 
     def _load_model(self):
         return None
@@ -20,7 +20,7 @@ class AberturaLicitacao(Atos):
         return ['Tipo do Ato', "DODF", "Data Ato/DODF", "Processo GDF/SEI", "Texto"]
 
     def _rule_for_inst(self):
-        start = r"(AVISO(?:S)?\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITACAO)"
+        start = r"(AVISO(?:S)?\s+D[EO]\s+HOMOLOGACAO\s+E\s+CONVOCACAO|AVISO(?:S)?\s+D[EO]\s+CONVOCACAO)"
         body = r"([\s\S]*?"
         end = r"<END_OF_BLOCK>){5}"
         return start + body + end
