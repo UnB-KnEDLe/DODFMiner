@@ -18,12 +18,20 @@ from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
-from dodfminer.extract.polished.acts.abertura_licitacao import AberturaLicitacao
-from dodfminer.extract.polished.acts.extrato_licitacao import ExtratoLicitacao
-from dodfminer.extract.polished.acts.aviso_homologacao_licitacao import HomologacaoLicitacao
-from dodfminer.extract.polished.acts.declaracao_vencedor_licitacao import VencedorLicitacao
-from dodfminer.extract.polished.acts.aviso_julgamento_licitacao import JulgamentoLicitacao
-from dodfminer.extract.polished.acts.aviso_licitacao import AvisoLicitacao
+from dodfminer.extract.polished.acts.licitacao_abertura import AberturaLicitacao
+from dodfminer.extract.polished.acts.licitacao_adjudicacao import AdjudicacaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_homologacao import HomologacaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_julgamento import JulgamentoLicitacao
+from dodfminer.extract.polished.acts.licitacao_declaracao_vencedor import VencedorLicitacao
+from dodfminer.extract.polished.acts.licitacao_aviso import AvisoLicitacao
+from dodfminer.extract.polished.acts.licitacao_julgHabilitacao import JulgHabilitacaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_recursoJulg import RecursoJulgLicitacao
+from dodfminer.extract.polished.acts.licitacao_suspensao import SuspensaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_adiamento import AdiamentoLicitacao
+from dodfminer.extract.polished.acts.licitacao_alteracao import AlteracaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_extrato import ExtratoLicitacao
+from dodfminer.extract.polished.acts.licitacao_reabertura import ReaberturaLicitacao
+from dodfminer.extract.polished.acts.licitacao_novaData import NovaDataLicitacao
 from dodfminer.extract.polished.create_xml import XMLFy
 
 
@@ -38,12 +46,20 @@ _acts_ids = {"aposentadoria": Retirements,
              "efetivos_exo": ExoneracaoEfetivos,
              "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
              "cessoes": Cessoes,
-             "extrato_licitacao": ExtratoLicitacao,
-             "abertura_licitacao": AberturaLicitacao,
-             "aviso_homologacao_licitacao": HomologacaoLicitacao,
-             "declaracao_vencedor_licitacao": VencedorLicitacao,
-             "aviso_julgamento_licitacao": JulgamentoLicitacao,
-             "aviso_licitacao": AvisoLicitacao,}
+             "licitacao_abertura": AberturaLicitacao,
+             "licitacao_adjudicacao": AdjudicacaoLicitacao,
+             "licitacao_homologacao": HomologacaoLicitacao,
+             "licitacao_julgamento": JulgamentoLicitacao,
+             "licitacao_declaracao_vencedor": VencedorLicitacao,
+             "licitacao_aviso": AvisoLicitacao,
+             "licitacao_julgHabilitacao": JulgHabilitacaoLicitacao,
+             "licitacao_recursoJulg": RecursoJulgLicitacao,
+             "licitacao_suspensao": SuspensaoLicitacao,
+             "licitacao_adiamento": AdiamentoLicitacao,
+             "licitacao_alteracao": AlteracaoLicitacao,
+             "licitacao_extrato": ExtratoLicitacao,
+             "licitacao_reabertura": ReaberturaLicitacao,
+             "licitacao_novaData": NovaDataLicitacao,}
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 
