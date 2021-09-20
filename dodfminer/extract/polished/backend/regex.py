@@ -74,6 +74,7 @@ class ActRegex:
         Returns:
             List of all act instances in the text.
         """
+
         found = re.findall(self._inst_rule, self._text, flags=self._flags)
         results = []
         for instance in found:

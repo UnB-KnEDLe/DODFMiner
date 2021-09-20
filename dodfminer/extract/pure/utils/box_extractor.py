@@ -2,6 +2,7 @@
 
 import typing_extensions
 import fitz
+import re
 
 def _extract_page_lines_content(page):
     """Extracts page lines.
@@ -45,6 +46,7 @@ def _identify_text_boxes(doc_boxes):
     doc_blocks = []
     page_blocks = []
 
+
     for page in doc_boxes:
         for box in page:
             x0, _, x1, _, text, *_ = box
@@ -67,7 +69,7 @@ def _identify_text_boxes(doc_boxes):
     
     return doc_blocks
 
-def _group_blocks_by_identifier(doc_boxes):
+def group_blocks_by_identifier(doc_boxes):
     remove_duplicates = lambda x: list(set(x))
     doc_blocks = []
     page_blocks = []
@@ -101,8 +103,9 @@ def _fuse_blocks(blocks):
     texts = list(map(lambda x: x[4], blocks))
     fused_text = " ".join(texts)
 
-    x0, y0, x1, _, _, index, block_type, id = blocks[0]
-    _, _, _, y1, *_ = blocks[-1]
+    x0, y0, x1_1, _, _, index, block_type, id = blocks[0]
+    _, _, x1_2, y1, *_ = blocks[-1]
+    x1 = x1_1 if x1_1 > x1_2 else x1_2
 
     fused_block = (x0, y0, x1, y1, fused_text, index, block_type, id)
     return fused_block
@@ -118,7 +121,16 @@ def _is_a_valid_box(x0, x1):
     return is_inbounds and is_column_text
 
 def _is_a_complete_text(text):
-    return text[-1] == '.' or "\nBrasília" in text[text.rfind('.'):] or text[text.rfind('.'):].isupper()
+    rest_of_text = text[text.rfind('.')+1:]
+    supposed_author = rest_of_text.strip().split('\n')[0] if '\n' in rest_of_text else ""
+    last_char = text[-1]
+    is_summary_text = "...." in text
+
+    supposed_author_dotless  =  re.search("(\n[A-Z-ÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ ]+$)", text)
+    supposed_author_dotless = supposed_author_dotless.group(0) if supposed_author_dotless else ""
+
+
+    return is_summary_text or last_char == '.' or "\nBrasília" in rest_of_text or supposed_author.isupper() or supposed_author_dotless.isupper()
 
 def get_doc_text_lines(doc: fitz.Document):
     """Returns list of list of extracted text lines.
@@ -133,7 +145,7 @@ def get_doc_text_lines(doc: fitz.Document):
 
     return [_extract_page_lines_content(page) for page in doc]
 
-def draw_doc_text_boxes(doc: fitz.Document, doc_boxes):
+def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
     color = fitz.utils.getColor("greenyellow")
 
     for page in doc:
@@ -146,7 +158,10 @@ def draw_doc_text_boxes(doc: fitz.Document, doc_boxes):
     doc_path = '/'.join(doc.name.split('/')[0:-1])
     doc_name = doc.name.split('/')[-1]
 
-    doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
+    if save_path != None:
+        doc.save(f"{save_path}/BOXES_{doc_name}")
+    else:
+        doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
 
 def _get_doc_img(doc: fitz.Document):
     """Returns list of list of image items.

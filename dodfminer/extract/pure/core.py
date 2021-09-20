@@ -24,7 +24,7 @@ from pathlib import Path
 import fitz
 
 from dodfminer.extract.pure.utils.title_extractor import ExtractorTitleSubtitle
-from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes, draw_doc_text_boxes, _group_blocks_by_identifier
+from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes 
 
 RESULTS_PATH = "results/"
 RESULTS_PATH_JSON = "results/json"
@@ -45,7 +45,7 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_text(cls, file, single=False, block=False, is_json=False, sep='\n\n<END OF BLOCK>\n\n', norm='NFKD'):
+    def extract_text(cls, file, single=False, block=False, is_json=True, sep=' ', norm='NFKD'):
         """Extract block of text from file
 
         Args:
@@ -96,11 +96,6 @@ class ContentExtractor:
         drawboxes_text = ''
         list_of_boxes = []
         pymu_file = fitz.open(file)
-
-        blocks = get_doc_text_boxes(pymu_file)
-        blocks = _group_blocks_by_identifier(blocks)
-        draw_doc_text_boxes(pymu_file, blocks)
-        breakpoint()
 
         concat = lambda box_list: [box for page in box_list for box in page]
 
@@ -166,6 +161,7 @@ class ContentExtractor:
 
         """
         content_dict = {}
+
         try:
             title_base = cls._extract_titles(file).json.keys()
         except Exception as e:
@@ -179,12 +175,14 @@ class ContentExtractor:
                 text = box[4]
                 for title in title_base:
                     title.replace("\n", "")
-                    if text == title:
+                    normalized_title = cls._normalize_text(title, norm)
+
+                    if text == normalized_title:
                         first_title = True
                         is_title = True
-                        actual_title = title
+                        actual_title = normalized_title
                         if title not in content_dict.keys():
-                            content_dict.update({title: []})
+                            content_dict.update({normalized_title: []})
                     else:
                         is_title = False
 
