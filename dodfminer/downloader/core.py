@@ -12,11 +12,11 @@ Usage example::
 """
 
 import os
+from pathlib import Path
+from datetime import datetime
 import tqdm
 import requests
 
-from pathlib import Path
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from dodfminer.downloader.helper import check_date, get_downloads
 
@@ -26,7 +26,7 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "09_Setembro", "10_Outubro", "11_Novembro", "12_Dezembro"]
 
 
-class Downloader(object):
+class Downloader:
     """Responsible for the download of the DODFs Pdfs.
 
     Args:
@@ -43,7 +43,8 @@ class Downloader(object):
         self._create_single_folder(os.path.join(save_path, 'dodfs'))
         self._download_path = os.path.join(save_path, 'dodfs')
 
-    def _string_to_date(self, date):
+    @classmethod
+    def _string_to_date(cls, date):
         """Convert the date to datetime.
 
         Args:
@@ -107,7 +108,7 @@ class Downloader(object):
         """
         self._log(error)
         message = "Please check your internet connection, and " \
-                  "check if the url is online via browser: {}".format(url)
+                  f"check if the url is online via browser: {url}"
         self._log(message)
 
     def _file_exist(self, path):
@@ -125,8 +126,8 @@ class Downloader(object):
         if os.path.exists(path):
             self._log(os.path.basename(path) + " file already exist")
             return True
-        else:
-            return False
+
+        return False
 
     def _download_pdf(self, url, path):
         """Download the DODF PDF.
@@ -145,9 +146,9 @@ class Downloader(object):
         try:
             response = requests.get(url)
             response.raise_for_status()
-        except requests.exceptions.RequestException as error:
-            self._fail_request_message(url, error)
         except requests.exceptions.HTTPError as error:
+            self._fail_request_message(url, error)
+        except requests.exceptions.RequestException as error:
             self._fail_request_message(url, error)
         else:
             pdf_file = Path(f"{path}.pdf")
@@ -170,7 +171,7 @@ class Downloader(object):
                                  str(actual_date.year))
         if year != actual_date.year:
             self._create_single_folder(year_path)
-        month_path = os.path.join(year_path,MONTHS_STRING[actual_date.month])
+        month_path = os.path.join(year_path, MONTHS_STRING[actual_date.month])
 
         return month_path
 
@@ -201,50 +202,61 @@ class Downloader(object):
         self._create_download_folder()
         year = 0
 
-        
         for month in range(months_amt+1):
             actual_date = start_date + relativedelta(months=+month)
             desc_bar = str(actual_date)
-            self._prog_bar.set_description("Date %s" % desc_bar)
+            self._prog_bar.set_description(f"Date {desc_bar}")
             month_path = self._make_month_path(year, actual_date)
             year = actual_date.year
             year_ = str(year)
             month_ = MONTHS_STRING[actual_date.month]
 
-            
-            if(check_date(year_,month_) == True):
+            if check_date(year_, month_) is True:
                 self._create_single_folder(month_path)
             else:
-                print(f"*** There are still no DODFs for that date: {actual_date.month}/{year_} ***")
+                print(
+                    f"*** There are still no DODFs for that date: {actual_date.month}/{year_} ***")
                 continue
 
-            _links_for_each_dodf = get_downloads(year_,month_)
-
-            for dodf in _links_for_each_dodf:
-                dodf_name = dodf
-                links = _links_for_each_dodf[dodf]
-                dodf_path = month_path
-
-                if(len(links) > 1):
-                    dodf_path = os.path.join(month_path, dodf_name)
-                    self._create_single_folder(dodf_path)
-                
-                x = 0
-                for l in links:
-                    x+=1
-                    download_link = l 
-                    if(len(links) == 1): 
-                        dodf_name_path = os.path.join(dodf_path, dodf_name)
-                    else:
-                        dodf_name_path = os.path.join(dodf_path, f'{dodf_name} {x}')
-
-                    if not self._file_exist(dodf_name_path):
-                        self._log("Downloding "+ os.path.basename(dodf_name_path))
-                        self._download_pdf(download_link, dodf_name_path)
-                    else:
-                        self._log("Jumping to the next")
+            self._get_dodfs(get_downloads(year_, month_), month_path)
 
         self._prog_bar.update(1)
+
+
+    def _get_dodfs(self, _links_for_each_dodf, month_path):
+        """Create folder and stores the DODFs pdfs.
+
+        Args:
+            _links_for_each_dodf (dict): a dicts with links for each DODF.
+            month_path (str): path to store DODFs pdfs.
+
+        """
+        for dodf_name, links in _links_for_each_dodf.items():
+            dodf_path = month_path
+
+            if len(links) > 1:
+                dodf_path = os.path.join(month_path, dodf_name)
+                self._create_single_folder(dodf_path)
+
+            index = 0
+            for link in links:
+                index += 1
+                download_link = link
+                if len(links) == 1:
+                    dodf_name_path = os.path.join(dodf_path, dodf_name)
+                else:
+                    dodf_name_path = os.path.join(
+                        dodf_path, f'{dodf_name} {index}')
+
+                if not self._file_exist(dodf_name_path):
+                    self._log("Downloding " +
+                                os.path.basename(dodf_name_path))
+                    self._download_pdf(download_link, dodf_name_path)
+                else:
+                    self._log("Jumping to the next")
+
+    def get_download_path(self):
+        return self._download_path
 
     def _log(self, message):
         """Logs a message following the downloader pattern.

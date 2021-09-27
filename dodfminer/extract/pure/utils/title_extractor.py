@@ -3,15 +3,15 @@
 # TODO: Improve docummentation
 # TODO: Remove global variables and functions
 
-import os
-import re
-import json
-import fitz
-import operator
-
 from typing import List
 from functools import reduce
 from collections import namedtuple
+
+import os
+import re
+import json
+import operator
+import fitz
 
 import dodfminer.extract.pure.utils.title_filter as title_filter
 
@@ -46,7 +46,6 @@ def load_blocks_list(path):
     """
     doc = fitz.open(path)
     return [p.getTextPage().extractDICT()['blocks'] for p in doc]
-
 
 
 def group_by_column(elements, width):

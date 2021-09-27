@@ -4,12 +4,10 @@ This module contains the ActRegex class, which have all that is necessary to
 extract an act and, its proprieties, using regex rules.
 
 """
-import abc
-
 import re
 import numpy as np
 
-
+#pylint: disable=too-few-public-methods
 class ActRegex:
     """Act Regex Class.
 
@@ -33,7 +31,7 @@ class ActRegex:
         # self._text = None
 
         #Act Regex Constuction
-        super(ActRegex, self).__init__()
+        super().__init__()
         self._flags = self._regex_flags()
         self._rules = self._prop_rules()
         self._inst_rule = self._rule_for_inst()
@@ -64,7 +62,8 @@ class ActRegex:
         """
         raise NotImplementedError
 
-    def _regex_flags(self):
+    @classmethod
+    def _regex_flags(cls):
         """Flag of the regex search"""
         return 0
 
@@ -74,10 +73,13 @@ class ActRegex:
         Returns:
             List of all act instances in the text.
         """
+
+        # pylint: disable=no-member
         found = re.findall(self._inst_rule, self._text, flags=self._flags)
         results = []
         for instance in found:
             head, body = instance
+            # pylint: disable=no-member
             self._acts_str.append(head+body)
             results.append(body)
 
@@ -111,11 +113,12 @@ class ActRegex:
 
         """
         act = {}
+        # pylint: disable=no-member
         act["tipo_ato"] = self._name
         for key in self._rules:
             try:
                 act[key], = self._find_prop_value(self._rules[key], act_raw)
-            except Exception:
+            except (TypeError, ValueError):
                 act[key] = np.nan
 
         return act

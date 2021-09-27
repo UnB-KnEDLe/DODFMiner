@@ -22,3 +22,5 @@ pytest-cov==2.10.1
 pytest-mock==3.3.1
 Jinja2==2.11.3
 coveralls==2.1.2
+requests-mock==1.9.3
+pylint==2.11.1

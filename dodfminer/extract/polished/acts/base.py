@@ -39,14 +39,14 @@ class Atos(ActRegex, ActNER):
     def __init__(self, file, backend='regex'):
         self._backend = backend
         self._name = self._act_name()
-        super(Atos, self).__init__()
+        super().__init__()
 
         try:
-            fp = open(file, "r")
-            self._text = fp.read()
-            fp.close()
-            self._file_name = file
-        except:
+            with open(file, "r", encoding='utf-8') as fp:
+                self._text = fp.read()
+                fp.close()
+                self._file_name = file
+        except IOError:
             self._text = file
             self._file_name = None
 
@@ -104,12 +104,12 @@ class Atos(ActRegex, ActNER):
             The dataframe created
         """
         if len(self._acts) > 0:
-            df = pd.DataFrame(self._acts)
+            data_frame = pd.DataFrame(self._acts)
             if self._backend == 'regex':
-                df.columns = self._columns
+                data_frame.columns = self._columns
             else:
-                df.columns = [x.capitalize() for x in df.columns]
-            return df
+                data_frame.columns = [x.capitalize() for x in data_frame.columns]
+            return data_frame
         return pd.DataFrame()
 
     def _extract_props(self):

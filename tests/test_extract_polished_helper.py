@@ -68,20 +68,18 @@ def test_helper_extract_multiple_acts(folder_path, file_path):
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_build_act_txt():
-    dir = ""+os.path.dirname(__file__)+"/support/"
-    build_act_txt(["aposentadoria"], "crioutxt", save_path=dir)
-    
-    assert "crioutxt.txt" in os.listdir(dir)
-
-    os.remove(os.path.join(dir, "crioutxt.txt"))
+    directory = ""+os.path.dirname(__file__)+"/support/"
+    build_act_txt(["aposentadoria"], "crioutxt", save_path=directory)
+    assert "crioutxt.txt" in os.listdir(directory)
+    os.remove(os.path.join(directory, "crioutxt.txt"))
 
 # def test_helper_print_dataframe():
 #     df = print_dataframe(pd.DataFrame())
 #     assert isinstance(df, pd.io.formats.style.Styler)
 
-def test_helper_get_files_path(folder_path):
-    files = get_files_path(folder_path, "txt")
-    assert len(files) > 0
-    files = get_files_path(folder_path, "pdf")
-    assert len(files) > 0
-
+def test_helper_get_files_path():
+    directory = ""+os.path.dirname(__file__)+"/support/support_supporter/"
+    files = get_files_path(directory, "txt")
+    assert files == [""+os.path.dirname(__file__)+'/support/support_supporter/valid.txt']
+    files = get_files_path(directory, "pdf")
+    assert files == [""+os.path.dirname(__file__)+'/support/support_supporter/DODF 001 01-01-2019 EDICAO ESPECIAL.pdf']
