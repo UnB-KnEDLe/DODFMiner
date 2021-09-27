@@ -45,7 +45,7 @@ class ContentExtractor:
     """
 
     @classmethod
-    def extract_text(cls, file, single=False, block=False, is_json=True, sep=' ', norm='NFKD'):
+    def extract_text(cls, file, single=False, block=False, is_json=True, sep=" ", norm='NFKD'):
         """Extract block of text from file
 
         Args:
@@ -97,29 +97,18 @@ class ContentExtractor:
         list_of_boxes = []
         pymu_file = fitz.open(file)
 
-        concat = lambda box_list: [box for page in box_list for box in page]
-
-        last_id = -1
-        doc_boxes = np.array(concat(get_doc_text_boxes(pymu_file)), dtype='O')
-        doc_boxes = list(doc_boxes[doc_boxes[:, 7].argsort()])
-
-        for text in doc_boxes:
-            if int(text[1]) != 55 and int(text[1]) != 881:
-                if block:                        
-                    norm_text = cls._normalize_text(text[4], norm)
-                    if is_json:
-                        list_of_boxes.append((text[0], text[1], text[2],
-                                            text[3], norm_text))
+        for page_boxes in get_doc_text_boxes(pymu_file):
+            for text in page_boxes:
+                if int(text[1]) != 55 and int(text[1]) != 881:
+                    if block:                        
+                        norm_text = cls._normalize_text(text[4], norm)
+                        if is_json:
+                            list_of_boxes.append((text[0], text[1], text[2],
+                                                text[3], norm_text))
+                        else:
+                            drawboxes_text += (norm_text + sep)
                     else:
-                        if last_id > 0 and last_id != text[7]: 
-                            drawboxes_text += sep    
-                        drawboxes_text += norm_text
-                else:
-                    if last_id > 0 and last_id != text[7]:  
-                        drawboxes_text +=  sep
-                    drawboxes_text += text[4]
-
-                last_id = text[7]
+                        drawboxes_text += (text[4] + sep)
 
         if block:
             if not single:
@@ -163,6 +152,7 @@ class ContentExtractor:
         content_dict = {}
 
         try:
+            #breakpoint()
             title_base = cls._extract_titles(file).json.keys()
         except Exception as e:
             cls._log(e)

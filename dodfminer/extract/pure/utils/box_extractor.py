@@ -3,6 +3,7 @@
 import typing_extensions
 import fitz
 import re
+from functools import cmp_to_key
 
 def _extract_page_lines_content(page):
     """Extracts page lines.
@@ -33,14 +34,58 @@ def get_doc_text_boxes(doc: fitz.Document):
         doc: an opened fitz document.
 
     Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
+        List[List[tuple(float, float, float, float, str, int, int)]]
 
     """
   
-    text_blocks = [page.getTextBlocks() for page in doc]
-    return _identify_text_boxes(text_blocks)
+    text_blocks = [sort_blocks(page.getTextBlocks()) for page in doc]
+    return text_blocks
 
-def _identify_text_boxes(doc_boxes):
+
+def sort_blocks(page_blocks):
+    """Sort blocks by their vertical and horizontal position.
+
+        Args:
+            page_blocks: a list of blocks within a page.
+
+        Returns:
+            List[tuple(float, float, float, float, str, int, int)]
+    """
+    return sorted(page_blocks, key=cmp_to_key(compare_blocks))
+    
+def compare_blocks(block1, block2):
+    """Implements a comparison heuristic between blocks.
+       Blocks that are in the uppermost and leftmost positions 
+       should be inserted before the other block in comparison.
+
+    Args:
+        block1: a block tuple to be compared.
+        block2: a block tuple to be compared to.
+
+    Returns:
+        Int
+    """
+    b1_x0, b1_y0, b1_x1, b1_y1, *_ = block1
+    b2_x0, b2_y0, b2_x1, b2_y1, *_ = block2
+
+    b1_y = max([b1_y0, b1_y1])
+    b2_y = max([b2_y0, b2_y1])
+
+    if (b1_x0 >= 55 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
+       (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766):
+        return b1_y-b2_y
+    else:
+        return b1_x0-b2_x0
+
+def identify_text_boxes(doc_boxes):
+    """Insert id component into block tuple for block aggrupation.
+
+    Args:
+        doc_boxes: the list of blocks on a document, separated by pages.
+
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int, int)]]
+    """
     id = 0
     incomplete_block = None
     doc_blocks = []
@@ -70,6 +115,14 @@ def _identify_text_boxes(doc_boxes):
     return doc_blocks
 
 def group_blocks_by_identifier(doc_boxes):
+    """Group blocks in a same page by a id component
+
+    Args:
+        doc_boxes: the list of blocks on a document, separated by pages.
+
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int, int)]]
+    """
     remove_duplicates = lambda x: list(set(x))
     doc_blocks = []
     page_blocks = []
@@ -92,7 +145,45 @@ def group_blocks_by_identifier(doc_boxes):
     
     return doc_blocks
 
+def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
+    """Draw extracted text blocks rectangles.
+       In result, a pdf file with rectangles shapes added, representing the extracted blocks,
+       is saved.
+
+    Args:
+        doc: an opened fitz document
+        doc_boxes: the list of blocks on a document, separated by pages
+        save_path: a custom path for saving the result pdf 
+
+    Returns:
+        None
+    """
+    color = fitz.utils.getColor("greenyellow")
+
+    for page in doc:
+        for page_box in doc_boxes[page.number]:
+            x0, y0, x1, y1, *_ = page_box
+            rect = fitz.Rect(x0, y0, x1, y1)
+
+            page.drawRect(rect, color, width=2)
+    
+    doc_path = '/'.join(doc.name.split('/')[0:-1])
+    doc_name = doc.name.split('/')[-1]
+
+    if save_path != None:
+        doc.save(f"{save_path}/BOXES_{doc_name}")
+    else:
+        doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
+
 def _return_fused_block_if_possible(blocks):
+    """Fuse a list of blocks if necessary
+
+    Args:
+        blocks: a list of blocks to be fused.
+
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int, int)]]
+    """
     if len(blocks) > 1:
         new_block = _fuse_blocks(blocks)
         return new_block
@@ -100,6 +191,16 @@ def _return_fused_block_if_possible(blocks):
         return blocks[0]
                 
 def _fuse_blocks(blocks):
+    """Transform a list of block into one fused block.
+       The block coordinates and text are changed to represent the
+       multiple blocks as a single one.
+
+    Args:
+        blocks: a list of blocks to be fused.
+
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int, int)]]
+    """
     texts = list(map(lambda x: x[4], blocks))
     fused_text = " ".join(texts)
 
@@ -112,6 +213,16 @@ def _fuse_blocks(blocks):
 
     
 def _is_a_valid_box(x0, x1):
+    """Determines conditions for id sharing in the identifying 
+       process of blocks
+
+    Args:
+        x0: x0 coordinate of a block.
+        x1: x1 coordinate of a block.
+
+    Returns:
+        bool
+    """
     in_column1_bounds = x0 >= 55 and x1 <= 405
     in_column2_bounds = x0 >= 417 and x1 <= 766
 
@@ -121,12 +232,20 @@ def _is_a_valid_box(x0, x1):
     return is_inbounds and is_column_text
 
 def _is_a_complete_text(text):
+    """Heuristic to determine if a text contains a complete information.
+
+    Args:
+        text: a string.
+
+    Returns:
+        bool
+    """
     rest_of_text = text[text.rfind('.')+1:]
     supposed_author = rest_of_text.strip().split('\n')[0] if '\n' in rest_of_text else ""
     last_char = text[-1]
     is_summary_text = "...." in text
 
-    supposed_author_dotless  =  re.search("(\n[A-Z-ÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ ]+$)", text)
+    supposed_author_dotless  =  re.search("(\n[A-Z-ÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ. ]+$)", text)
     supposed_author_dotless = supposed_author_dotless.group(0) if supposed_author_dotless else ""
 
 
@@ -144,24 +263,6 @@ def get_doc_text_lines(doc: fitz.Document):
     """
 
     return [_extract_page_lines_content(page) for page in doc]
-
-def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
-    color = fitz.utils.getColor("greenyellow")
-
-    for page in doc:
-        for page_box in doc_boxes[page.number]:
-            x0, y0, x1, y1, *_ = page_box
-            rect = fitz.Rect(x0, y0, x1, y1)
-
-            page.drawRect(rect, color, width=2)
-    
-    doc_path = '/'.join(doc.name.split('/')[0:-1])
-    doc_name = doc.name.split('/')[-1]
-
-    if save_path != None:
-        doc.save(f"{save_path}/BOXES_{doc_name}")
-    else:
-        doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
 
 def _get_doc_img(doc: fitz.Document):
     """Returns list of list of image items.
