@@ -7,7 +7,8 @@ from pandas.core.frame import DataFrame
 from tests.helpers.decorators import clean_extra_files
 
 from dodfminer.extract.pure.core import ContentExtractor
-from dodfminer.extract.polished.helper import xml_multiple, get_files_path, build_act_txt, extract_single, extract_multiple, extract_multiple_acts
+from dodfminer.extract.polished.helper import xml_multiple, get_files_path, build_act_txt, extract_single, extract_multiple, \
+    extract_multiple_acts, extract_multiple_acts_with_classification, committee_classification
 
 
 FOLDER_PATH = f"{os.path.dirname(__file__)}/support/polished"
@@ -65,6 +66,28 @@ def test_helper_extract_multiple_acts(folder_path, file_path):
     assert len(multiple_files_df) > 0
     assert len(single_file_df) > 0
     assert len(multiple_files_df) > len(single_file_df)
+
+@clean_extra_files(FOLDER_PATH)
+def test_helper_extract_multiple_acts_committee_classification(folder_path, file_path):
+    extract_multiple_acts_with_classification(folder_path, ["nomeacao"], "regex")
+    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+    extract_multiple_acts_with_classification(file_path(extension="pdf"), ["nomeacao"], "regex")
+    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+
+    assert len(multiple_files_df) > 0
+    assert len(single_file_df) > 0
+    assert len(multiple_files_df) > len(single_file_df)
+
+@clean_extra_files(FOLDER_PATH)
+def test_helper_committee_classification(folder_path, file_path):
+    dataframe = pd.read_csv(f"{folder_path}/nomeacao_extraida.csv")
+    dataframe = dataframe.filter(['Tipo do Ato', 'text'], axis = 1)
+    dataframe.columns = ['type', 'text']
+
+    committee_classification(dataframe, file_path(extension="pdf"), ["nomeacao"], "regex")
+    output_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+
+    assert len(output_df) == len(dataframe)
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_build_act_txt():

@@ -17,6 +17,7 @@ Functions
 import os
 import tqdm
 import pandas as pd
+import pickle
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
@@ -95,6 +96,7 @@ def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./result
         # print(res_obj._backend)
         res_df = res_obj.data_frame
         res_txt = res_obj.acts_str
+        res_df['text'] = res_txt
         if not res_df.empty:
             res.append(res_df)
             if txt_out:
@@ -107,6 +109,72 @@ def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./result
                               ignore_index=True)
     return res_final
 
+def extract_multiple_acts_with_classification(path, types, backend):
+    """Extract multple Acts from Multiple DODFs to act named CSVs.
+    Uses committee_classification to find act types.
+
+    Args:
+        path (str): Folder where the Dodfs are.
+        types ([str]): Types of the act, see the core class to view
+                    avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
+    Returns:
+        None
+    """
+    print(types)
+    if len(types) == 0:
+        types = _acts_ids.keys()
+
+    all_acts = []
+
+    if os.path.isfile(path):
+        ContentExtractor.extract_text(path, single=True)
+        for act_type in types:
+            dataframe, _= extract_single(path.replace('.pdf', '.txt'), act_type, backend=backend)
+            dataframe['type'] = act_type
+            all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
+    else:
+        ContentExtractor.extract_to_txt(path)
+        files = get_files_path(path, 'txt')
+        for act_type in types:
+            dataframe = extract_multiple(files, act_type, backend)
+            dataframe['type'] = act_type
+            all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
+
+    dataframe = pd.concat(all_acts, ignore_index = True)
+    committee_classification(dataframe, path, types, backend)
+
+def committee_classification(all_acts, path, types, backend):
+    """Uses committee classification to find act types.
+
+    Args:
+        all_acts (DataFrame): Dataframe with acts text and regex type.
+        path (str): Folder where the Dodfs are.
+        types ([str]): Types of the act, see the core class to view
+                    avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
+    Returns:
+        None
+    """
+    model_path = os.path.dirname(__file__)
+    with open(model_path + '/acts/type_classification/committee.pickle', 'rb') as file:
+        committee = pickle.load(file)
+    new_types = committee.transform(all_acts['text'], all_acts['type'])
+
+    all_acts['type']  = new_types
+
+    for act_type in types:
+        df_act = all_acts.loc[all_acts.type == act_type]['text']
+        all_strings = ""
+        for act in df_act:
+            all_strings += act + ".\n"
+
+        df, _ = extract_single(all_strings, act_type, backend=backend)
+
+        if os.path.isfile(path):
+            df.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
+        else:
+            df.to_csv(os.path.join(path, act_type+".csv"))
 
 def extract_single(file, act_type, backend):
     """Extract Act from a single DODF to a single DataFrame.
