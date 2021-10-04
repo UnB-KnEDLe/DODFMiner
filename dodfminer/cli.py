@@ -4,8 +4,8 @@ Typical usage example:
     args = CLI().parse()
 """
 
-from dodfminer.__version__ import __version__
 from argparse import ArgumentParser
+from dodfminer.__version__ import __version__
 
 act_choices = ["aposentadoria",
                 "reversoes",
@@ -19,7 +19,7 @@ act_choices = ["aposentadoria",
                 "efetivos_nome",
                 "efetivos_exo"]
 
-class CLI(object):
+class CLI():
     """CLI Class contains all parameters to handle arguments.
 
     Set Command Line Input groups and arguments.
@@ -55,8 +55,11 @@ class CLI(object):
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.save_path = './'
+        self.download_parser = None
+        self.extract_content_parser = None
 
-    def _new_group(self, name, subparser):
+    @classmethod
+    def _new_group(cls, name, subparser):
         """Create new argument group.
 
         Args:
@@ -118,6 +121,9 @@ class CLI(object):
 
         group.add_argument('-x', '--xml', dest='xml', default=False, nargs='*',
                             type=bool, help="Generate TeamTat XML Annotations")
+
+    def get_parser(self):
+        return self.parser
 
     def parse(self):
         """Create parser and parse the arguments.

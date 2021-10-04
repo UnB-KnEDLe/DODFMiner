@@ -31,13 +31,13 @@ def xml_multiple(path, backend):
 
     print(files)
     print("[XMLFy] Make yourself a coffee! This may take a while")
-    bar = tqdm.tqdm(total=len(files), desc="[XMLFy] Progress")
+    progress_bar = tqdm.tqdm(total=len(files), desc="[XMLFy] Progress")
     i = 1
     for file in files:
         xml = ActsExtractor.get_xml(file, backend, i)
         xml.save_to_disc(path)
         i += 1
-        bar.update(1)
+        progress_bar.update(1)
 
 def extract_multiple_acts(path, types, backend):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
@@ -57,18 +57,18 @@ def extract_multiple_acts(path, types, backend):
 
     if os.path.isfile(path):
         ContentExtractor.extract_text(path, single=True)
-        for type in types:
-            df, _= extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
-            df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
+        for act_type in types:
+            data_frame, _= extract_single(path.replace('.pdf', '.txt'), act_type, backend=backend)
+            data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
-        for type in types:
-            df = extract_multiple(files, type, backend)
-            df.to_csv(os.path.join(path, type+".csv"))
+        for act_type in types:
+            data_frame = extract_multiple(files, act_type, backend)
+            data_frame.to_csv(os.path.join(path, act_type + ".csv"))
 
 
-def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
+def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./results"):
     """Extract Act from Multiple DODF to a single DataFrame.
 
     Note:
@@ -77,7 +77,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
 
     Args:
         files ([str]): List of dodfs files path.
-        type (str): Type of the act, see the core class to view
+        act_type (str): Type of the act, see the core class to view
                     avaiables types.
         backend (str): what backend will be used to extract Acts {regex, ner}
         txt_out (bool): Boolean indicating if acts should be saved on
@@ -91,11 +91,14 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
-        res_df, res_txt = extract_single(file, type, backend)
+        res_obj = ActsExtractor.get_act_obj(act_type, file, backend)
+        # print(res_obj._backend)
+        res_df = res_obj.data_frame
+        res_txt = res_obj.acts_str
         if not res_df.empty:
             res.append(res_df)
             if txt_out:
-                build_act_txt(res_txt, type, txt_path)
+                build_act_txt(res_txt, act_type, txt_path)
 
     if len(res) == 0:
         res_final = pd.DataFrame()
@@ -105,7 +108,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     return res_final
 
 
-def extract_single(file, type, backend):
+def extract_single(file, act_type, backend):
     """Extract Act from a single DODF to a single DataFrame.
 
     Note:
@@ -123,7 +126,7 @@ def extract_single(file, type, backend):
         including the texts found, and a list of the segmented text blocks, and .
 
     """
-    res_obj = ActsExtractor.get_act_obj(type, file, backend)
+    res_obj = ActsExtractor.get_act_obj(act_type, file, backend)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str
     res_df['text'] = res_txt
@@ -144,14 +147,13 @@ def build_act_txt(acts, name, save_path="./results/"):
 
     """
     if len(acts) > 0:
-        file = open(f"{save_path}{name}.txt", "a")
-        for act in acts:
-            file.write(act)
-            file.write("\n\n\n")
-        file.close
+        with open(f"{save_path}{name}.txt", "a", encoding='utf-8') as file:
+            for act in acts:
+                file.write(act)
+                file.write("\n\n\n")
 
 
-def print_dataframe(df):
+def print_dataframe(data_frame):
     """Style a Dataframe.
 
     Args:
@@ -161,13 +163,13 @@ def print_dataframe(df):
         The styled dataframe
 
     """
-    style_df = (df.style.set_properties(**{'text-align': 'left'})
+    style_df = (data_frame.style.set_properties(**{'text-align': 'left'})
                 .set_table_styles([dict(selector='th',
                                         props=[('text-align', 'left')])]))
     return style_df
 
 
-def get_files_path(path, type):
+def get_files_path(path, file_type):
     """Get all files path inside a folder.
 
     Works with nested folders.
@@ -182,7 +184,9 @@ def get_files_path(path, type):
     """
     files_path = []
     for root, _, files in os.walk(path):
+        # sort file names to avoid unpredictable results
+        files.sort()
         for file in files:
-            if file.endswith("."+type):
+            if file.endswith("."+file_type):
                 files_path.append(os.path.join(root, file))
     return files_path
