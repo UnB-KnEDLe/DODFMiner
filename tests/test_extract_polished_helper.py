@@ -32,7 +32,7 @@ def test_helper_xml_multiple(folder_path):
         xml_multiple(folder_path, "regex")
         xml_files_list = list(filter(lambda x : ".xml" in x, os.listdir(folder_path)))
 
-        assert "1_2.1.2019.xml" in xml_files_list
+        assert "1_1.1.2019.xml" in xml_files_list
     except AssertionError:
         assert False
 

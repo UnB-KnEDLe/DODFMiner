@@ -184,6 +184,8 @@ def get_files_path(path, file_type):
     """
     files_path = []
     for root, _, files in os.walk(path):
+        # sort file names to avoid unpredictable results
+        files.sort()
         for file in files:
             if file.endswith("."+file_type):
                 files_path.append(os.path.join(root, file))
