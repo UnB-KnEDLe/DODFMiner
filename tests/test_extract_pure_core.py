@@ -6,49 +6,58 @@ from glob import glob
 from dodfminer.extract.pure.core import ContentExtractor
 
 EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-DODF_FILE_PATH = file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+DODF_FILE_PATH = file = "" + \
+    os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+
 
 def test_pure_extract_text_single():
-    txt_file = DODF_FILE_PATH.replace("pdf", "txt")
-    
+    txt_file_path = DODF_FILE_PATH.replace("pdf", "txt")
+
     ContentExtractor.extract_text(DODF_FILE_PATH, single=True)
-    
-    assert os.path.isfile(txt_file)
-    assert EXPECTED_EXTRACTED_TEXT in open(txt_file).read()
-    
-    os.remove(txt_file)
+
+    assert os.path.isfile(txt_file_path)
+    with open(txt_file_path, encoding='utf-8') as txt_file:
+        assert EXPECTED_EXTRACTED_TEXT in txt_file.read()
+
+    os.remove(txt_file_path)
 
 
 def test_pure_extract_text_return_text():
-    assert EXPECTED_EXTRACTED_TEXT in ContentExtractor.extract_text(DODF_FILE_PATH)
+    assert EXPECTED_EXTRACTED_TEXT in ContentExtractor.extract_text(
+        DODF_FILE_PATH)
 
 
 def test_pure_extract_text_return_list():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+    file_pdf = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
     # generated_txt = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
-    assert len(ContentExtractor.extract_text(file, block=True)) > 0
+    assert len(ContentExtractor.extract_text(file_pdf, block=True)) > 0
 
 
 def test_pure_extract_text_single_return_list():
-    json_file = DODF_FILE_PATH.replace("pdf", "json")
-    
+    json_file_path = DODF_FILE_PATH.replace("pdf", "json")
+
     ContentExtractor.extract_text(DODF_FILE_PATH, single=True, block=True)
-    
-    assert os.path.isfile(json_file)
-    assert len(json.loads(open(json_file).read())) > 0
-    
-    os.remove(json_file)
+
+    assert os.path.isfile(json_file_path)
+    with open(json_file_path, encoding='utf-8') as json_file:
+        assert len(json.loads(json_file.read())) > 0
+
+    os.remove(json_file_path)
+
 
 def test_pure_extract_text_json_false_saves_txt_file():
-    txt_file = DODF_FILE_PATH.replace("pdf", "txt")
-    
-    ContentExtractor.extract_text(DODF_FILE_PATH, single=True, block=True, is_json=False)
-    
-    assert os.path.isfile(txt_file)
-    assert type(open(txt_file).read()) is str
-    assert len(open(txt_file).read()) > 0
-    
-    os.remove(txt_file)
+    txt_file_path = DODF_FILE_PATH.replace("pdf", "txt")
+
+    ContentExtractor.extract_text(
+        DODF_FILE_PATH, single=True, block=True, is_json=False)
+
+    assert os.path.isfile(txt_file_path)
+    with open(txt_file_path, encoding='utf-8') as txt_file:
+        content = txt_file.read()
+        assert isinstance(content, str)
+        assert len(content) > 0
+
+    os.remove(txt_file_path)
 
 
 # def test_pure_extract_text_norm():
@@ -58,17 +67,18 @@ def test_pure_extract_text_json_false_saves_txt_file():
 
 
 def test_pure_extract_structure_single():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    ContentExtractor.extract_structure(file, single=True)
-    assert os.path.isfile(file.replace("pdf", "json"))
-    with open(file.replace("pdf", "json"), encoding='utf-8') as json_file:
+    file_pdf_path = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+    ContentExtractor.extract_structure(file_pdf_path, single=True)
+    assert os.path.isfile(file_pdf_path.replace("pdf", "json"))
+    with open(file_pdf_path.replace("pdf", "json"), encoding='utf-8') as json_file:
         assert 'PODER EXECUTIVO' in json.loads(json_file.read()).keys()
-    os.remove(file.replace("pdf", "json"))
+    os.remove(file_pdf_path.replace("pdf", "json"))
 
 
 def test_pure_extract_structure():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    assert ContentExtractor.extract_structure(file).get('PODER EXECUTIVO') is not None
+    file_pdf_path = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+    assert ContentExtractor.extract_structure(
+        file_pdf_path).get('PODER EXECUTIVO') is not None
 
 
 def test_pure_extract_to_txt():
