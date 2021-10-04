@@ -6,7 +6,7 @@ import shutil
 from glob import glob
 from dodfminer.extract.pure.core import ContentExtractor
 
-EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
+EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SUMARIO SECAO I"
 DODF_FILE_PATH = file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
 
 def test_pure_extract_text_single():

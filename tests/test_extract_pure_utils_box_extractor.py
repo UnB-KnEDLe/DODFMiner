@@ -1,11 +1,10 @@
 import os
-import re
 import json
 import pytest
-import joblib
-import sklearn_crfsuite
 from unittest.mock import patch
 from pathlib import Path
+
+from collections import Counter
 
 import fitz
 from dodfminer.extract.pure.utils import box_extractor
@@ -57,12 +56,15 @@ def test_extract_page_lines_content_49(pdf_fitz):
 
 
 def test_get_doc_text_boxes(pdf_fitz):
+    concat = lambda box_list: [box for page in box_list for box in page]
+
     ground_truth = json.load(
         open(GET_DOC_TEXT_BOXES_PATH.as_posix())
     )
+
     assert (
-        tuplefy(ground_truth) 
-        == tuplefy(box_extractor.get_doc_text_boxes(pdf_fitz))
+        Counter(tuplefy(ground_truth)) 
+        == Counter(tuplefy(box_extractor.get_doc_text_boxes(pdf_fitz)))
     )
 
 

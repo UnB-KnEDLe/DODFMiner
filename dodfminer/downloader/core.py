@@ -239,7 +239,7 @@ class Downloader(object):
                         dodf_name_path = os.path.join(dodf_path, f'{dodf_name} {x}')
 
                     if not self._file_exist(dodf_name_path):
-                        self._log("Downloding "+ os.path.basename(dodf_name_path))
+                        self._log("Downloading "+ os.path.basename(dodf_name_path))
                         self._download_pdf(download_link, dodf_name_path)
                     else:
                         self._log("Jumping to the next")
