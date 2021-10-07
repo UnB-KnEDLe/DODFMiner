@@ -18,6 +18,7 @@ import os
 import tqdm
 import pandas as pd
 import pickle
+import sys
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
@@ -156,8 +157,13 @@ def committee_classification(all_acts, path, types, backend):
     Returns:
         None
     """
-    model_path = os.path.dirname(__file__)
-    with open(model_path + '/acts/type_classification/committee.pickle', 'rb') as file:
+    parent_folder = os.path.dirname(__file__)
+    version = float(str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
+    if version >= 3.8:
+        model_path = 'committee_3.8.pickle'
+    else:
+        model_path = 'committee_3.7.pickle'
+    with open(parent_folder + '/acts/type_classification/' + model_path, 'rb') as file:
         committee = pickle.load(file)
     new_types = committee.transform(all_acts['text'], all_acts['type'])
 
