@@ -8,11 +8,10 @@ pandas==1.1.5
 PyMuPDF==1.17.0
 python-dateutil==2.8.1
 pytz==2020.1
-requests==2.23.0
+requests==2.26.0
 six==1.15.0
 soupsieve==2.0.1
 tqdm==4.46.1
-urllib3==1.25.9
 utils==1.0.1
 joblib==0.16.0
 sklearn_crfsuite==0.3.6
