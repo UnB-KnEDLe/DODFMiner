@@ -28,7 +28,7 @@ class Retirements(Atos):
                 "Fundamento Legal", "Orgao", "Vigencia", "Matricula SIAPE"]
 
     def _rule_for_inst(self):
-        start = r"(APOSENTAR|CONCEDER,\sAPOSENTADORIA|CONCEDER\sAPOSENTADORIA,?\s?)"
+        start = r"(APOSENTAR[^-]|CONCEDER,\sAPOSENTADORIA|CONCEDER\sAPOSENTADORIA,?\s?)"
         body = r"([\s\S]*?"
         end = r"(?<!lei)\s(?:[0-9|\s]*?[.|-]\s?)+?"
         end2 = r"[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*[.|,])"

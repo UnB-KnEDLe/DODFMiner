@@ -25,7 +25,7 @@ class NomeacaoComissionados(Atos):
     def _rule_for_inst(self):
         start = r"(NOMEAR)"
         body = r"([\s\S]*?)"
-        end = r"\.\s"
+        end = r"((\.\s)|(?=(EXONERAR|NOMEAR)))"
         return start + body + end
 
     def _prop_rules(self):

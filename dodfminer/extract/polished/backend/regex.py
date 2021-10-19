@@ -78,7 +78,7 @@ class ActRegex:
         found = re.findall(self._inst_rule, self._text, flags=self._flags)
         results = []
         for instance in found:
-            head, body = instance
+            head, body, *_ = instance
             # pylint: disable=no-member
             self._acts_str.append(head+body)
             results.append(body)
