@@ -157,15 +157,20 @@ def committee_classification(all_acts, path, types, backend):
     Returns:
         None
     """
-    parent_folder = os.path.dirname(__file__)
-    version = float(str(sys.version_info[0]) + '.' + str(sys.version_info[1]))
-    if version >= 3.8:
-        model_path = 'committee_3.8.pickle'
+
+    type_classification_folder = os.path.dirname(__file__) + '/acts/type_classification/'
+    
+    # The file used is different for Python 3.8+ due to changes to CodeType in Python 3.8
+    if sys.version_info < (3, 8, 0):
+        preprocessing_filename = 'preprocess_py36.pickle'
     else:
-        model_path = 'committee_3.7.pickle'
-    with open(parent_folder + '/acts/type_classification/' + model_path, 'rb') as file:
+        preprocessing_filename = 'preprocess_py38.pickle'
+    models_filename = 'models.pickle'    
+
+    with open(type_classification_folder + preprocessing_filename, 'rb') as file:
         committee = pickle.load(file)
-    new_types = committee.transform(all_acts['text'], all_acts['type'])
+        
+    new_types = committee.transform(all_acts['text'], all_acts['type'], type_classification_folder + models_filename)
 
     all_acts['type']  = new_types
 
