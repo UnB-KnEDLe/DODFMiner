@@ -6,7 +6,7 @@ import shutil
 from glob import glob
 from dodfminer.extract.pure.core import ContentExtractor
 
-EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SUMARIO SECAO I"
+EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020 SECAO I SUMARIO"
 DODF_FILE_PATH = file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
 
 def test_pure_extract_text_single():
@@ -54,14 +54,23 @@ def test_pure_extract_text_json_false_saves_txt_file():
 
 def test_pure_extract_structure_single():
     file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+    json_file = file.replace("pdf", "json")
+
     ContentExtractor.extract_structure(file, single=True)
-    assert os.path.isfile(file.replace("pdf", "json"))
-    assert 'PODER EXECUTIVO' in json.loads(open(file.replace("pdf", "json")).read()).keys()
+
+    assert os.path.isfile(json_file)
+    
+    fp = open(json_file).read()
+    assert 'SECAO I' in json.loads(fp).keys()
+    assert 'PODER EXECUTIVO' in json.loads(fp)['SECAO I'].keys()
+    
     os.remove(file.replace("pdf", "json"))
 
 def test_pure_extract_structure():
     file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(file).keys()
+
+    assert 'SECAO I' in ContentExtractor.extract_structure(file).keys()
+    assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(file)['SECAO I'].keys()
 
 def test_pure_extract_to_txt():
     folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"

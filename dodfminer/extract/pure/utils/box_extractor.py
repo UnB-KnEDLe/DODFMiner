@@ -89,7 +89,7 @@ def compare_blocks(block1, block2):
 def clean_section_boxes(page):
     blocks = page.getTextBlocks()
 
-    section_blocks = list(filter(lambda x: "SEÇÃO" in x[4], blocks))
+    section_blocks = list(filter(lambda x: re.match("SEÇÃO (I|II|III)", x[4]), blocks))
 
     if section_blocks:
         separated_section_blocks = map(
@@ -97,7 +97,7 @@ def clean_section_boxes(page):
         joined_section_blocks = reduce(operator.add, separated_section_blocks)
         section_blocks = list(filter(None, joined_section_blocks))
 
-    not_section_blocks = list(filter(lambda x: not "SEÇÃO" in x[4], blocks))
+    not_section_blocks = list(filter(lambda x: not re.match("SEÇÃO (I|II|III)", x[4]), blocks))
 
     return not_section_blocks + section_blocks
 
