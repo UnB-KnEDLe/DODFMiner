@@ -360,6 +360,14 @@ def get_doc_img_boxes(doc: fitz.Document):
     img_ll = _get_doc_img(doc)
     for idx, img_lis in enumerate(img_ll):
         page = doc[idx]
-        img_ll[idx] = [page.getImageBbox(img) for img in img_lis]
+        img_list_altered = []
+
+        for img in img_lis:
+            img = img[:9] + (0,)
+            img_list_altered.append(img)
+
+        img_ll[idx] = [page.getImageBbox(img) for img in img_list_altered]
+
+    breakpoint()
 
     return img_ll
