@@ -61,6 +61,7 @@ def extract_multiple_acts(path, types, backend):
             df, _= extract_single(path.replace('.pdf', '.txt'), type, backend=backend)
             df.to_csv(os.path.join(os.path.dirname(path), type+'.csv'))
     else:
+        breakpoint()
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
         for type in types:
@@ -91,6 +92,7 @@ def extract_multiple(files, type, backend, txt_out=False, txt_path="./results"):
     """
     res = []
     for file in files:
+        breakpoint()
         res_df, res_txt = extract_single(file, type, backend)
         if not res_df.empty:
             res.append(res_df)
@@ -123,6 +125,7 @@ def extract_single(file, type, backend):
         including the texts found, and a list of the segmented text blocks, and .
 
     """
+    breakpoint()
     res_obj = ActsExtractor.get_act_obj(type, file, backend)
     res_df = res_obj.data_frame
     res_txt = res_obj.acts_str

@@ -81,16 +81,16 @@ def doc_2020():
     return fitz.open(PDF_2020_PATH)
 
 def test_load_blocks_list_1():
-    functions_with_path('load_blocks_list', PDF_2001_PATH)
+    functions_with_path_cmp_first_el('load_blocks_list', PDF_2001_PATH)
 
 def test_load_blocks_list_2():
-    functions_with_path('load_blocks_list', PDF_2017_PATH)
+    functions_with_path_cmp_first_el('load_blocks_list', PDF_2017_PATH)
 
 def test_load_blocks_list_3():
-    functions_with_path('load_blocks_list', PDF_2018_PATH)
+    functions_with_path_cmp_first_el('load_blocks_list', PDF_2018_PATH)
 
 def test_load_blocks_list_4():
-    functions_with_path('load_blocks_list', PDF_2020_PATH)
+    functions_with_path_cmp_first_el('load_blocks_list', PDF_2020_PATH)
 
 
 def functions_with_path(name, pdf_path):
@@ -105,6 +105,15 @@ def functions_with_path(name, pdf_path):
         )
     )
 
+def functions_with_path_cmp_first_el(name, pdf_path):
+    """ Similar to functions_with_path but compares specific structure of the first elements 
+        ont the load_blocks_list dictionary attributes list
+    """
+    with open(pdf_path.as_posix()[:-4] + '/' f'{name}.json', encoding='utf-8') as json_file:
+        assert jsdump(getattr(title_extractor, name)(pdf_path)[0][0]['lines'][0]['spans'][0]['text']) \
+        == \
+        jsdump(json.load(json_file)[0][0]['lines'][0]['spans'][0]['text'])
+
 def functions_with_kargs(name, pdf_path, **kargs):
     """Wrapper for member functions of title_extractor which
          expects to receive a `pathlib.Path` (indidicating a file path).
@@ -117,17 +126,16 @@ def functions_with_kargs(name, pdf_path, **kargs):
         )
     )
 
+def functions_doc_bold_text(name, doc):
+    desired_keys = ["text", "bbox", "page"]
 
-def functions_whole_doc(name, doc):
-    assert (
-        jsdump(getattr(title_extractor, name)(doc))
-        == 
-        jsdump(json.load(open(
-            doc.name[:-4] + '/' f'{name}.json'))
-        )
-    )
+    select_key = lambda x: dict((key,value) for key, value in x.items() if key in desired_keys)
+    select_dict_keys_on_list = lambda x:list(map(lambda page: list(map(select_key, page)), x))
 
+    received = select_dict_keys_on_list(getattr(title_extractor, name)(doc))
+    expected = select_dict_keys_on_list(json.load(open(doc.name[:-4] + '/' f'{name}.json')))
 
+    assert (jsdump(received) == jsdump(expected))
 
 
 @pytest.fixture(scope='module')
@@ -256,16 +264,16 @@ def test_extract_bold_upper_page():
     pass
 
 def test_extract_bold_upper_pdf_1(doc_2001):
-    functions_whole_doc('_extract_bold_upper_pdf', doc_2001)
+    functions_doc_bold_text('_extract_bold_upper_pdf', doc_2001)
 
 def test_extract_bold_upper_pdf_2(doc_2017):
-    functions_whole_doc('_extract_bold_upper_pdf', doc_2017)
+    functions_doc_bold_text('_extract_bold_upper_pdf', doc_2017)
 
 def test_extract_bold_upper_pdf_3(doc_2018):
-    functions_whole_doc('_extract_bold_upper_pdf', doc_2018)
+    functions_doc_bold_text('_extract_bold_upper_pdf', doc_2018)
 
 def test_extract_bold_upper_pdf_4(doc_2020):
-    functions_whole_doc('_extract_bold_upper_pdf', doc_2020)
+    functions_doc_bold_text('_extract_bold_upper_pdf', doc_2020)
 
 
 def test_sort_2column():

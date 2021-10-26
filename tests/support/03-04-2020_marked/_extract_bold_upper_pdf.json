@@ -1,1 +1,1385 @@
-[[{"size": 8.199999809265137, "font": "Times-Bold", "text": "ANO XLIX EDIÇÃO Nº 64                BRASÍLIA - DF, SEXTA-FEIRA, 3 DE ABRIL DE 2020", "bbox": [132.76199340820312, 161.4102020263672, 460.7372741699219, 172.7672119140625], "page": 0}, {"size": 8.199999809265137, "font": "Times-Bold", "text": "SUMÁRIO", "bbox": [95.26699829101562, 193.11021423339844, 134.89759826660156, 204.46722412109375], "page": 0}, {"size": 12.0, "font": "Times-Bold", "text": "SEÇÃO I", "bbox": [140.9530029296875, 537.3109741210938, 189.96099853515625, 553.9309692382812], "page": 0}, {"size": 10.5, "font": "Times-Bold", "text": "PODER EXECUTIVO", "bbox": [115.10099792480469, 563.0029907226562, 218.06394958496094, 577.5454711914062], "page": 0}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE GOVERNO", "bbox": [330.4490051269531, 355.76300048828125, 536.3855590820312, 370.3055114746094], "page": 0}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DAS CIDADES", "bbox": [343.1659851074219, 384.291015625, 521.4197387695312, 396.7560119628906], "page": 0}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ECONOMIA", "bbox": [327.5360107421875, 535.02001953125, 539.2999877929688, 549.5625], "page": 0}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DE GESTÃO ", "bbox": [344.97198486328125, 562.7990112304688, 519.239013671875, 575.2639770507812], "page": 0}, {"size": 9.0, "font": "Times-Bold", "text": "ADMINISTRATIVA", "bbox": [391.0199890136719, 573.93603515625, 473.4899597167969, 586.4010009765625], "page": 0}], [{"size": 26.200000762939453, "font": "Times-Bold", "text": "DIÁRIO OFICIAL", "bbox": [66.375, 632.2432250976562, 282.5250244140625, 668.5302124023438], "page": 1}, {"size": 17.200000762939453, "font": "Times-Bold", "text": "DO DISTRITO FEDERAL", "bbox": [66.375, 663.8392333984375, 267.0646057128906, 687.6611938476562], "page": 1}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DE FAZENDA", "bbox": [76.30599975585938, 53.859004974365234, 254.30799865722656, 66.32400512695312], "page": 1}], [{"size": 9.0, "font": "Times-Bold", "text": "UNIDADE DE CORREGEDORIA FAZENDÁRIA", "bbox": [66.86199951171875, 344.3190002441406, 264.052001953125, 356.78399658203125], "page": 2}, {"size": 9.0, "font": "Times-Bold", "text": "INSTITUTO DE PREVIDÊNCIA DOS SERVIDORES", "bbox": [58.84600067138672, 612.5269775390625, 272.0680236816406, 624.991943359375], "page": 2}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE EDUCAÇÃO", "bbox": [327.24700927734375, 394.6679992675781, 539.5885620117188, 409.21051025390625], "page": 2}, {"size": 9.0, "font": "Times-Bold", "text": "CORREGEDORIA", "bbox": [394.5419921875, 421.6969909667969, 470.0429382324219, 434.1619873046875], "page": 2}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [104.74600219726562, 60.467994689941406, 230.219482421875, 75.01049041748047], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "DE SEGURANÇA PÚBLICA", "bbox": [104.74199676513672, 71.60599517822266, 229.77296447753906, 86.14849090576172], "page": 3}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DO SISTEMA PENITENCIÁRIO", "bbox": [60.071998596191406, 97.134033203125, 270.8430480957031, 109.59902954101562], "page": 3}, {"size": 9.0, "font": "Times-Bold", "text": "POLÍCIA CIVIL", "bbox": [131.63099670410156, 256.08099365234375, 199.28402709960938, 268.5459899902344], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 171.22799682617188, 509.259033203125, 185.7705078125], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "TRANSPORTE E MOBILIDADE", "bbox": [356.4110107421875, 182.36599731445312, 510.425048828125, 196.90850830078125], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 300.7229919433594, 509.259033203125, 315.2655029296875], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "OBRAS E INFRAESTRUTURA", "bbox": [360.20599365234375, 311.8599853515625, 506.6285095214844, 326.4024963378906], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ", "bbox": [321.5870056152344, 504.4679870605469, 547.047607421875, 519.010498046875], "page": 3}, {"size": 10.5, "font": "Times-Bold", "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL", "bbox": [312.0950012207031, 515.6060180664062, 555.9409790039062, 530.1484985351562], "page": 3}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE DESENVOLVIMENTO ", "bbox": [45.00600051879883, 148.15798950195312, 290.8589782714844, 162.70050048828125], "page": 4}, {"size": 10.5, "font": "Times-Bold", "text": "DA REGIÃO METROPOLITANA", "bbox": [93.16300201416016, 159.29598999023438, 241.35098266601562, 173.8385009765625], "page": 4}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 339.76800537109375, 509.259033203125, 354.3105163574219], "page": 4}, {"size": 10.5, "font": "Times-Bold", "text": "DESENVOLVIMENTO ECONÔMICO", "bbox": [343.4330139160156, 350.9049987792969, 523.403076171875, 365.447509765625], "page": 4}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [99.34600067138672, 60.467994689941406, 233.81944274902344, 75.01049041748047], "page": 5}, {"size": 10.5, "font": "Times-Bold", "text": "DE ESPORTE E LAZER", "bbox": [109.25800323486328, 71.60599517822266, 223.90745544433594, 86.14849090576172], "page": 5}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [99.34600067138672, 259.0229797363281, 233.81944274902344, 273.56549072265625], "page": 5}, {"size": 10.5, "font": "Times-Bold", "text": "DE MEIO AMBIENTE", "bbox": [113.49400329589844, 270.1609802246094, 219.66998291015625, 284.7034912109375], "page": 5}, {"size": 9.0, "font": "Times-Bold", "text": "AGÊNCIA REGULADORA DE ÁGUAS, ENERGIA E ", "bbox": [57.83100128173828, 295.6889953613281, 273.0840148925781, 308.15399169921875], "page": 5}, {"size": 9.0, "font": "Times-Bold", "text": "SANEAMENTO BÁSICO", "bbox": [114.8280029296875, 306.8269958496094, 216.0870361328125, 319.2919921875], "page": 5}, {"size": 9.0, "font": "Times-Bold", "text": "INSTITUTO DO MEIO AMBIENTE E DOS RECURSOS ", "bbox": [317.0639953613281, 351.7740173339844, 546.9210815429688, 364.239013671875], "page": 5}, {"size": 9.0, "font": "Times-Bold", "text": "HÍDRICOS", "bbox": [409.239990234375, 362.9110107421875, 455.2689514160156, 375.3760070800781], "page": 5}], [{"size": 12.0, "font": "Times-Bold", "text": "SEÇÃO II", "bbox": [138.61900329589844, 58.68598937988281, 192.2949981689453, 75.30599212646484], "page": 6}, {"size": 10.5, "font": "Times-Bold", "text": "PODER EXECUTIVO", "bbox": [115.10099792480469, 85.8780288696289, 218.06394958496094, 100.42052459716797], "page": 6}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE GOVERNO", "bbox": [330.4490051269531, 516.5130004882812, 536.3855590820312, 531.0554809570312], "page": 6}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DAS CIDADES", "bbox": [339.2279968261719, 546.5419921875, 524.4569702148438, 559.0069580078125], "page": 6}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ECONOMIA", "bbox": [60.70000076293945, 569.4480590820312, 272.4639587402344, 583.9905395507812], "page": 7}], [], [{"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DE GESTÃO ", "bbox": [79.4489974975586, 283.448974609375, 251.46604919433594, 295.9139709472656], "page": 9}, {"size": 9.0, "font": "Times-Bold", "text": "ADMINISTRATIVA", "bbox": [124.70999908447266, 294.58599853515625, 206.2050323486328, 307.0509948730469], "page": 9}], [{"size": 9.0, "font": "Times-Bold", "text": "UNIDADE DE CORREGEDORIA FAZENDÁRIA", "bbox": [69.86199951171875, 544.8389892578125, 261.6520690917969, 557.303955078125], "page": 10}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE SAÚDE", "bbox": [339.78399658203125, 461.5679931640625, 527.051513671875, 476.1105041503906], "page": 10}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [328.91400146484375, 487.84600830078125, 535.6707763671875, 500.3110046386719], "page": 10}], [], [], [], [], [{"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE GESTÃO DE PESSOAS", "bbox": [71.43900299072266, 541.8089599609375, 259.47601318359375, 554.27392578125], "page": 15}], [], [{"size": 9.0, "font": "Times-Bold", "text": "SUPERINTENDÊNCIA DA REGIÃO DE SAÚDE NORTE", "bbox": [50.82899856567383, 480.1289978027344, 280.08599853515625, 492.593994140625], "page": 17}], [{"size": 9.0, "font": "Times-Bold", "text": "SUPERINTENDÊNCIA DA REGIÃO DE SAÚDE OESTE", "bbox": [318.65899658203125, 149.04901123046875, 545.9267578125, 161.51400756835938], "page": 18}], [{"size": 9.0, "font": "Times-Bold", "text": "HOSPITAL MATERNO INFANTIL", "bbox": [358.25, 587.3489990234375, 505.66094970703125, 599.81396484375], "page": 19}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE EDUCAÇÃO", "bbox": [60.4119987487793, 60.467994689941406, 272.7534484863281, 75.01049041748047], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA", "bbox": [107.83100128173828, 85.99700927734375, 223.08505249023438, 98.46200561523438], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [62.07899856567383, 322.9739990234375, 268.83599853515625, 335.4389953613281], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "CORREGEDORIA", "bbox": [127.70700073242188, 455.9410095214844, 203.20802307128906, 468.406005859375], "page": 20}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [99.34600067138672, 613.3380126953125, 233.81944274902344, 627.8804931640625], "page": 20}, {"size": 10.5, "font": "Times-Bold", "text": "DE SEGURANÇA PÚBLICA", "bbox": [99.79199981689453, 624.4750366210938, 233.37294006347656, 639.0175170898438], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [63.54100036621094, 650.0040283203125, 267.67303466796875, 662.468994140625], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "POLÍCIA MILITAR DO DISTRITO FEDERAL", "bbox": [338.0360107421875, 53.859004974365234, 526.5498657226562, 66.32400512695312], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "POLÍCIA CIVIL", "bbox": [398.9159851074219, 552.3170166015625, 465.6689453125, 564.781982421875], "page": 20}, {"size": 9.0, "font": "Times-Bold", "text": "CORPO DE BOMBEIROS MILITAR", "bbox": [358.4119873046875, 679.3740234375, 506.1739196777344, 691.8389892578125], "page": 20}], [{"size": 9.0, "font": "Times-Bold", "text": "DEPARTAMENTO DE TRÂNSITO", "bbox": [361.53900146484375, 708.1439819335938, 503.04583740234375, 720.6089477539062], "page": 21}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 60.467994689941406, 509.259033203125, 75.01049041748047], "page": 22}, {"size": 10.5, "font": "Times-Bold", "text": "TRANSPORTE E MOBILIDADE", "bbox": [356.4110107421875, 71.60599517822266, 510.425048828125, 86.14849090576172], "page": 22}], [{"size": 9.0, "font": "Times-Bold", "text": "DEPARTAMENTO DE ESTRADAS DE RODAGEM", "bbox": [61.70600128173828, 53.859004974365234, 269.21002197265625, 66.32400512695312], "page": 23}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [99.34600067138672, 212.74099731445312, 233.81944274902344, 227.28350830078125], "page": 23}, {"size": 10.5, "font": "Times-Bold", "text": "DE JUSTIÇA E CIDADANIA", "bbox": [98.77300262451172, 223.87802124023438, 234.3909454345703, 238.4205322265625], "page": 23}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [62.07899856567383, 249.406982421875, 268.83599853515625, 261.8719787597656], "page": 23}, {"size": 9.0, "font": "Times-Bold", "text": "INSTITUTO DE DEFESA DO CONSUMIDOR", "bbox": [340.2860107421875, 53.859004974365234, 524.2998657226562, 66.32400512695312], "page": 23}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 594.468017578125, 509.259033203125, 609.010498046875], "page": 23}, {"size": 10.5, "font": "Times-Bold", "text": "OBRAS E INFRAESTRUTURA", "bbox": [360.20599365234375, 605.6060180664062, 506.6285095214844, 620.1484985351562], "page": 23}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ", "bbox": [62.62699890136719, 119.94303131103516, 274.58758544921875, 134.48553466796875], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL", "bbox": [52.7599983215332, 131.08102416992188, 283.1060791015625, 145.62353515625], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [90.74099731445312, 417.24298095703125, 242.42393493652344, 431.7854919433594], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "CULTURA E ECONOMIA CRIATIVA", "bbox": [76.60800170898438, 428.3809814453125, 256.5569763183594, 442.9234924316406], "page": 24}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA", "bbox": [107.83100128173828, 455.40899658203125, 223.08505249023438, 467.8739929199219], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [90.74099731445312, 679.7050170898438, 242.42393493652344, 694.2474975585938], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "DESENVOLVIMENTO ECONÔMICO", "bbox": [76.59700012207031, 690.843017578125, 256.5669860839844, 705.385498046875], "page": 24}, {"size": 9.0, "font": "Times-Bold", "text": "COMPANHIA IMOBILIÁRIA DE BRASÍLIA", "bbox": [340.3169860839844, 356.8890075683594, 523.9679565429688, 369.35400390625], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 576.6849975585938, 509.259033203125, 591.2274780273438], "page": 24}, {"size": 10.5, "font": "Times-Bold", "text": "DESENVOLVIMENTO SOCIAL", "bbox": [357.4289855957031, 587.8230590820312, 509.4060363769531, 602.3655395507812], "page": 24}, {"size": 9.0, "font": "Times-Bold", "text": "CHEFIA DE GABINETE", "bbox": [382.5360107421875, 616.3519897460938, 482.0489196777344, 628.8169555664062], "page": 24}], [{"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [62.07899856567383, 53.859004974365234, 268.83599853515625, 66.32400512695312], "page": 25}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 60.467994689941406, 509.259033203125, 75.01049041748047], "page": 25}, {"size": 10.5, "font": "Times-Bold", "text": "DESENVOLVIMENTO URBANO E HABITAÇÃO", "bbox": [316.3059997558594, 71.60599517822266, 550.5294799804688, 86.14849090576172], "page": 25}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [330.37701416015625, 98.634033203125, 534.509033203125, 111.09902954101562], "page": 25}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [366.1809997558594, 213.72299194335938, 500.654541015625, 228.2655029296875], "page": 25}, {"size": 10.5, "font": "Times-Bold", "text": "DE MEIO AMBIENTE", "bbox": [380.3299865722656, 224.86001586914062, 486.5060119628906, 239.40252685546875], "page": 25}, {"size": 9.0, "font": "Times-Bold", "text": "AGÊNCIA REGULADORA DE ÁGUAS, ENERGIA E ", "bbox": [324.6659851074219, 251.88897705078125, 539.9187622070312, 264.3539733886719], "page": 25}, {"size": 9.0, "font": "Times-Bold", "text": "SANEAMENTO BÁSICO", "bbox": [381.6629943847656, 263.0260009765625, 482.9219055175781, 275.4909973144531], "page": 25}, {"size": 10.5, "font": "Times-Bold", "text": "CONTROLADORIA GERAL", "bbox": [365.6029968261719, 614.3060302734375, 501.23150634765625, 628.8485107421875], "page": 25}, {"size": 9.0, "font": "Times-Bold", "text": "CONTROLADORIA GERAL ADJUNTA", "bbox": [351.5450134277344, 641.333984375, 513.0408325195312, 653.7989501953125], "page": 25}], [{"size": 12.0, "font": "Times-Bold", "text": "SEÇÃO III", "bbox": [136.28599548339844, 58.68598937988281, 194.62998962402344, 75.30599212646484], "page": 26}, {"size": 10.5, "font": "Times-Bold", "text": "PODER LEGISLATIVO", "bbox": [110.13500213623047, 84.3780288696289, 223.0309600830078, 98.92052459716797], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "CÂMARA LEGISLATIVA", "bbox": [113.29499816894531, 111.406982421875, 217.77000427246094, 123.87197875976562], "page": 26}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE GOVERNO", "bbox": [63.61399841308594, 320.8529968261719, 269.55047607421875, 335.3955078125], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DAS CIDADES", "bbox": [76.33100128173828, 346.38201904296875, 254.58505249023438, 358.8470153808594], "page": 26}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ECONOMIA", "bbox": [60.70000076293945, 567.6480102539062, 272.4639587402344, 582.1904907226562], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA DE GESTÃO ", "bbox": [79.4489974975586, 593.177001953125, 251.46604919433594, 605.6419677734375], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "ADMINISTRATIVA", "bbox": [124.70999908447266, 604.3140258789062, 206.2050323486328, 616.7789916992188], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "BANCO DE BRASÍLIA S/A", "bbox": [377.6629943847656, 53.859004974365234, 486.9228820800781, 66.32400512695312], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "SOCIEDADE DE ABASTECIMENTO DE BRASÍLIA - EM ", "bbox": [314.6579895019531, 204.64703369140625, 549.9266967773438, 217.11203002929688], "page": 26}, {"size": 9.0, "font": "Times-Bold", "text": "LIQUIDAÇÃO", "bbox": [402.5429992675781, 215.78399658203125, 462.0419616699219, 228.24899291992188], "page": 26}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE SAÚDE", "bbox": [339.78399658203125, 558.8810424804688, 527.051513671875, 573.4235229492188], "page": 26}], [{"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [328.91400146484375, 440.5480041503906, 535.6707763671875, 453.01300048828125], "page": 27}], [], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [99.34600067138672, 605.748046875, 233.81944274902344, 620.29052734375], "page": 29}, {"size": 10.5, "font": "Times-Bold", "text": "DE SEGURANÇA PÚBLICA", "bbox": [99.79199981689453, 616.8860473632812, 233.37294006347656, 631.4285278320312], "page": 29}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [328.91400146484375, 238.14898681640625, 535.6707763671875, 250.61398315429688], "page": 29}, {"size": 9.0, "font": "Times-Bold", "text": "POLÍCIA MILITAR DO DISTRITO FEDERAL", "bbox": [338.0360107421875, 415.6669921875, 526.5498657226562, 428.1319885253906], "page": 29}], [], [{"size": 9.0, "font": "Times-Bold", "text": "CORPO DE BOMBEIROS MILITAR", "bbox": [91.57599639892578, 391.02899169921875, 239.3380584716797, 403.4939880371094], "page": 31}, {"size": 9.0, "font": "Times-Bold", "text": "DEPARTAMENTO DE TRÂNSITO", "bbox": [94.7040023803711, 668.89697265625, 236.21104431152344, 681.3619384765625], "page": 31}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 209.11801147460938, 509.259033203125, 223.6605224609375], "page": 31}, {"size": 10.5, "font": "Times-Bold", "text": "TRANSPORTE E MOBILIDADE", "bbox": [356.4110107421875, 220.25497436523438, 510.425048828125, 234.7974853515625], "page": 31}, {"size": 9.0, "font": "Times-Bold", "text": "DEPARTAMENTO DE ESTRADAS DE RODAGEM", "bbox": [328.5409851074219, 553.3140258789062, 536.0447387695312, 565.7789916992188], "page": 31}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO ", "bbox": [366.1809997558594, 564.0330200195312, 500.654541015625, 578.5755004882812], "page": 32}, {"size": 10.5, "font": "Times-Bold", "text": "DE JUSTIÇA E CIDADANIA", "bbox": [365.6090087890625, 575.1700439453125, 501.22698974609375, 589.7125244140625], "page": 32}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA EXECUTIVA", "bbox": [373.09100341796875, 601.448974609375, 491.1951599121094, 613.9139404296875], "page": 32}], [{"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [62.07899856567383, 298.1940002441406, 268.83599853515625, 310.65899658203125], "page": 33}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [90.74099731445312, 490.50299072265625, 242.42393493652344, 505.0455017089844], "page": 33}, {"size": 10.5, "font": "Times-Bold", "text": "OBRAS E INFRAESTRUTURA", "bbox": [93.37100219726562, 501.6410217285156, 239.79342651367188, 516.1835327148438], "page": 33}, {"size": 9.0, "font": "Times-Bold", "text": "COMPANHIA DE SANEAMENTO AMBIENTAL", "bbox": [67.08300018310547, 527.1690063476562, 263.83203125, 539.6339721679688], "page": 33}, {"size": 9.0, "font": "Times-Bold", "text": "COMPANHIA ENERGÉTICA DE BRASÍLIA", "bbox": [335.35198974609375, 380.7090148925781, 527.7327880859375, 393.17401123046875], "page": 33}], [{"size": 9.0, "font": "Times-Bold", "text": "COMPANHIA URBANIZADORA DA NOVA CAPITAL ", "bbox": [43.944000244140625, 132.63897705078125, 284.27093505859375, 145.10397338867188], "page": 34}, {"size": 9.0, "font": "Times-Bold", "text": "DO BRASIL", "bbox": [138.57899475097656, 143.7769775390625, 191.4359893798828, 156.24197387695312], "page": 34}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ", "bbox": [327.8869934082031, 221.45797729492188, 542.5474243164062, 236.00048828125], "page": 34}, {"size": 10.5, "font": "Times-Bold", "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL", "bbox": [318.0950012207031, 231.55697631835938, 551.1410522460938, 246.0994873046875], "page": 34}, {"size": 9.0, "font": "Times-Bold", "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL", "bbox": [328.91400146484375, 262.19403076171875, 535.6707763671875, 274.6590270996094], "page": 34}, {"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [357.57598876953125, 542.6229858398438, 509.259033203125, 557.1654663085938], "page": 34}, {"size": 10.5, "font": "Times-Bold", "text": "CULTURA E ECONOMIA CRIATIVA", "bbox": [343.4429931640625, 552.7210083007812, 523.3919677734375, 567.2634887695312], "page": 34}], [{"size": 10.5, "font": "Times-Bold", "text": "SECRETARIA DE ESTADO DE ", "bbox": [90.74099731445312, 428.8979797363281, 242.42393493652344, 443.44049072265625], "page": 35}, {"size": 10.5, "font": "Times-Bold", "text": "DESENVOLVIMENTO ECONÔMICO", "bbox": [76.59700012207031, 440.0350036621094, 256.5669860839844, 454.5775146484375], "page": 35}, {"size": 9.0, "font": "Times-Bold", "text": "COMPANHIA IMOBILIÁRIA DE BRASÍLIA", "bbox": [72.13200378417969, 467.0639953613281, 258.1829528808594, 479.52899169921875], "page": 35}], [{"size": 10.5, "font": "Times-Bold", "text": "PROCURADORIA-GERAL", "bbox": [369.2569885253906, 234.31100463867188, 497.57745361328125, 248.853515625], "page": 36}, {"size": 9.0, "font": "Times-Bold", "text": "SECRETARIA GERAL", "bbox": [384.3890075683594, 456.7359924316406, 479.8971252441406, 469.20098876953125], "page": 36}]]
+[
+  [
+    {
+      "size": 8.199999809265137,
+      "font": "Times-Bold",
+      "text": "ANO XLIX EDIÇÃO Nº 64                BRASÍLIA - DF, SEXTA-FEIRA, 3 DE ABRIL DE 2020",
+      "bbox": [
+        132.76199340820312, 161.4102020263672, 460.7372741699219,
+        172.7672119140625
+      ],
+      "page": 0
+    },
+    {
+      "size": 8.199999809265137,
+      "font": "Times-Bold",
+      "text": "SUMÁRIO",
+      "bbox": [
+        95.26699829101562, 193.11021423339844, 134.89759826660156,
+        204.46722412109375
+      ],
+      "page": 0
+    },
+    {
+      "size": 12.0,
+      "font": "Times-Bold",
+      "text": "SEÇÃO I",
+      "bbox": [
+        140.9530029296875, 537.3109741210938, 189.96099853515625,
+        553.9309692382812
+      ],
+      "page": 0
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "PODER EXECUTIVO",
+      "bbox": [
+        115.10099792480469, 563.0029907226562, 218.06394958496094,
+        577.5454711914062
+      ],
+      "page": 0
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE GOVERNO",
+      "bbox": [
+        330.4490051269531, 355.76300048828125, 536.3855590820312,
+        370.3055114746094
+      ],
+      "page": 0
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DAS CIDADES",
+      "bbox": [
+        343.1659851074219, 384.291015625, 521.4197387695312, 396.7560119628906
+      ],
+      "page": 0
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ECONOMIA",
+      "bbox": [327.5360107421875, 535.02001953125, 539.2999877929688, 549.5625],
+      "page": 0
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DE GESTÃO ",
+      "bbox": [
+        344.97198486328125, 562.7990112304688, 519.239013671875,
+        575.2639770507812
+      ],
+      "page": 0
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "ADMINISTRATIVA",
+      "bbox": [
+        391.0199890136719, 573.93603515625, 473.4899597167969, 586.4010009765625
+      ],
+      "page": 0
+    }
+  ],
+  [
+    {
+      "size": 26.200000762939453,
+      "font": "Times-Bold",
+      "text": "DIÁRIO OFICIAL",
+      "bbox": [66.375, 632.2432250976562, 282.5250244140625, 668.5302124023438],
+      "page": 1
+    },
+    {
+      "size": 17.200000762939453,
+      "font": "Times-Bold",
+      "text": "DO DISTRITO FEDERAL",
+      "bbox": [66.375, 663.8392333984375, 267.0646057128906, 687.6611938476562],
+      "page": 1
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DE FAZENDA",
+      "bbox": [
+        76.30599975585938, 53.859004974365234, 254.30799865722656,
+        66.32400512695312
+      ],
+      "page": 1
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "UNIDADE DE CORREGEDORIA FAZENDÁRIA",
+      "bbox": [
+        66.86199951171875, 344.3190002441406, 264.052001953125,
+        356.78399658203125
+      ],
+      "page": 2
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "INSTITUTO DE PREVIDÊNCIA DOS SERVIDORES",
+      "bbox": [
+        58.84600067138672, 612.5269775390625, 272.0680236816406,
+        624.991943359375
+      ],
+      "page": 2
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE EDUCAÇÃO",
+      "bbox": [
+        327.24700927734375, 394.6679992675781, 539.5885620117188,
+        409.21051025390625
+      ],
+      "page": 2
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CORREGEDORIA",
+      "bbox": [
+        394.5419921875, 421.6969909667969, 470.0429382324219, 434.1619873046875
+      ],
+      "page": 2
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        104.74600219726562, 60.467994689941406, 230.219482421875,
+        75.01049041748047
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE SEGURANÇA PÚBLICA",
+      "bbox": [
+        104.74199676513672, 71.60599517822266, 229.77296447753906,
+        86.14849090576172
+      ],
+      "page": 3
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DO SISTEMA PENITENCIÁRIO",
+      "bbox": [
+        60.071998596191406, 97.134033203125, 270.8430480957031,
+        109.59902954101562
+      ],
+      "page": 3
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "POLÍCIA CIVIL",
+      "bbox": [
+        131.63099670410156, 256.08099365234375, 199.28402709960938,
+        268.5459899902344
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 171.22799682617188, 509.259033203125, 185.7705078125
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "TRANSPORTE E MOBILIDADE",
+      "bbox": [
+        356.4110107421875, 182.36599731445312, 510.425048828125,
+        196.90850830078125
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 300.7229919433594, 509.259033203125,
+        315.2655029296875
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "OBRAS E INFRAESTRUTURA",
+      "bbox": [
+        360.20599365234375, 311.8599853515625, 506.6285095214844,
+        326.4024963378906
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ",
+      "bbox": [
+        321.5870056152344, 504.4679870605469, 547.047607421875, 519.010498046875
+      ],
+      "page": 3
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL",
+      "bbox": [
+        312.0950012207031, 515.6060180664062, 555.9409790039062,
+        530.1484985351562
+      ],
+      "page": 3
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE DESENVOLVIMENTO ",
+      "bbox": [
+        45.00600051879883, 148.15798950195312, 290.8589782714844,
+        162.70050048828125
+      ],
+      "page": 4
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DA REGIÃO METROPOLITANA",
+      "bbox": [
+        93.16300201416016, 159.29598999023438, 241.35098266601562,
+        173.8385009765625
+      ],
+      "page": 4
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 339.76800537109375, 509.259033203125,
+        354.3105163574219
+      ],
+      "page": 4
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DESENVOLVIMENTO ECONÔMICO",
+      "bbox": [
+        343.4330139160156, 350.9049987792969, 523.403076171875, 365.447509765625
+      ],
+      "page": 4
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        99.34600067138672, 60.467994689941406, 233.81944274902344,
+        75.01049041748047
+      ],
+      "page": 5
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE ESPORTE E LAZER",
+      "bbox": [
+        109.25800323486328, 71.60599517822266, 223.90745544433594,
+        86.14849090576172
+      ],
+      "page": 5
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        99.34600067138672, 259.0229797363281, 233.81944274902344,
+        273.56549072265625
+      ],
+      "page": 5
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE MEIO AMBIENTE",
+      "bbox": [
+        113.49400329589844, 270.1609802246094, 219.66998291015625,
+        284.7034912109375
+      ],
+      "page": 5
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "AGÊNCIA REGULADORA DE ÁGUAS, ENERGIA E ",
+      "bbox": [
+        57.83100128173828, 295.6889953613281, 273.0840148925781,
+        308.15399169921875
+      ],
+      "page": 5
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SANEAMENTO BÁSICO",
+      "bbox": [
+        114.8280029296875, 306.8269958496094, 216.0870361328125, 319.2919921875
+      ],
+      "page": 5
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "INSTITUTO DO MEIO AMBIENTE E DOS RECURSOS ",
+      "bbox": [
+        317.0639953613281, 351.7740173339844, 546.9210815429688,
+        364.239013671875
+      ],
+      "page": 5
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "HÍDRICOS",
+      "bbox": [
+        409.239990234375, 362.9110107421875, 455.2689514160156,
+        375.3760070800781
+      ],
+      "page": 5
+    }
+  ],
+  [
+    {
+      "size": 12.0,
+      "font": "Times-Bold",
+      "text": "SEÇÃO II",
+      "bbox": [
+        138.61900329589844, 58.68598937988281, 192.2949981689453,
+        75.30599212646484
+      ],
+      "page": 6
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "PODER EXECUTIVO",
+      "bbox": [
+        115.10099792480469, 85.8780288696289, 218.06394958496094,
+        100.42052459716797
+      ],
+      "page": 6
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE GOVERNO",
+      "bbox": [
+        330.4490051269531, 516.5130004882812, 536.3855590820312,
+        531.0554809570312
+      ],
+      "page": 6
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DAS CIDADES",
+      "bbox": [
+        339.2279968261719, 546.5419921875, 524.4569702148438, 559.0069580078125
+      ],
+      "page": 6
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ECONOMIA",
+      "bbox": [
+        60.70000076293945, 569.4480590820312, 272.4639587402344,
+        583.9905395507812
+      ],
+      "page": 7
+    }
+  ],
+  [],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DE GESTÃO ",
+      "bbox": [
+        79.4489974975586, 283.448974609375, 251.46604919433594,
+        295.9139709472656
+      ],
+      "page": 9
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "ADMINISTRATIVA",
+      "bbox": [
+        124.70999908447266, 294.58599853515625, 206.2050323486328,
+        307.0509948730469
+      ],
+      "page": 9
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "UNIDADE DE CORREGEDORIA FAZENDÁRIA",
+      "bbox": [
+        69.86199951171875, 544.8389892578125, 261.6520690917969,
+        557.303955078125
+      ],
+      "page": 10
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE SAÚDE",
+      "bbox": [
+        339.78399658203125, 461.5679931640625, 527.051513671875,
+        476.1105041503906
+      ],
+      "page": 10
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        328.91400146484375, 487.84600830078125, 535.6707763671875,
+        500.3110046386719
+      ],
+      "page": 10
+    }
+  ],
+  [],
+  [],
+  [],
+  [],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE GESTÃO DE PESSOAS",
+      "bbox": [
+        71.43900299072266, 541.8089599609375, 259.47601318359375,
+        554.27392578125
+      ],
+      "page": 15
+    }
+  ],
+  [],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUPERINTENDÊNCIA DA REGIÃO DE SAÚDE NORTE",
+      "bbox": [
+        50.82899856567383, 480.1289978027344, 280.08599853515625,
+        492.593994140625
+      ],
+      "page": 17
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUPERINTENDÊNCIA DA REGIÃO DE SAÚDE OESTE",
+      "bbox": [
+        318.65899658203125, 149.04901123046875, 545.9267578125,
+        161.51400756835938
+      ],
+      "page": 18
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "HOSPITAL MATERNO INFANTIL",
+      "bbox": [358.25, 587.3489990234375, 505.66094970703125, 599.81396484375],
+      "page": 19
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE EDUCAÇÃO",
+      "bbox": [
+        60.4119987487793, 60.467994689941406, 272.7534484863281,
+        75.01049041748047
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA",
+      "bbox": [
+        107.83100128173828, 85.99700927734375, 223.08505249023438,
+        98.46200561523438
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        62.07899856567383, 322.9739990234375, 268.83599853515625,
+        335.4389953613281
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CORREGEDORIA",
+      "bbox": [
+        127.70700073242188, 455.9410095214844, 203.20802307128906,
+        468.406005859375
+      ],
+      "page": 20
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        99.34600067138672, 613.3380126953125, 233.81944274902344,
+        627.8804931640625
+      ],
+      "page": 20
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE SEGURANÇA PÚBLICA",
+      "bbox": [
+        99.79199981689453, 624.4750366210938, 233.37294006347656,
+        639.0175170898438
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        63.54100036621094, 650.0040283203125, 267.67303466796875,
+        662.468994140625
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "POLÍCIA MILITAR DO DISTRITO FEDERAL",
+      "bbox": [
+        338.0360107421875, 53.859004974365234, 526.5498657226562,
+        66.32400512695312
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "POLÍCIA CIVIL",
+      "bbox": [
+        398.9159851074219, 552.3170166015625, 465.6689453125, 564.781982421875
+      ],
+      "page": 20
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CORPO DE BOMBEIROS MILITAR",
+      "bbox": [
+        358.4119873046875, 679.3740234375, 506.1739196777344, 691.8389892578125
+      ],
+      "page": 20
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "DEPARTAMENTO DE TRÂNSITO",
+      "bbox": [
+        361.53900146484375, 708.1439819335938, 503.04583740234375,
+        720.6089477539062
+      ],
+      "page": 21
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 60.467994689941406, 509.259033203125,
+        75.01049041748047
+      ],
+      "page": 22
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "TRANSPORTE E MOBILIDADE",
+      "bbox": [
+        356.4110107421875, 71.60599517822266, 510.425048828125,
+        86.14849090576172
+      ],
+      "page": 22
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "DEPARTAMENTO DE ESTRADAS DE RODAGEM",
+      "bbox": [
+        61.70600128173828, 53.859004974365234, 269.21002197265625,
+        66.32400512695312
+      ],
+      "page": 23
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        99.34600067138672, 212.74099731445312, 233.81944274902344,
+        227.28350830078125
+      ],
+      "page": 23
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE JUSTIÇA E CIDADANIA",
+      "bbox": [
+        98.77300262451172, 223.87802124023438, 234.3909454345703,
+        238.4205322265625
+      ],
+      "page": 23
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        62.07899856567383, 249.406982421875, 268.83599853515625,
+        261.8719787597656
+      ],
+      "page": 23
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "INSTITUTO DE DEFESA DO CONSUMIDOR",
+      "bbox": [
+        340.2860107421875, 53.859004974365234, 524.2998657226562,
+        66.32400512695312
+      ],
+      "page": 23
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 594.468017578125, 509.259033203125, 609.010498046875
+      ],
+      "page": 23
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "OBRAS E INFRAESTRUTURA",
+      "bbox": [
+        360.20599365234375, 605.6060180664062, 506.6285095214844,
+        620.1484985351562
+      ],
+      "page": 23
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ",
+      "bbox": [
+        62.62699890136719, 119.94303131103516, 274.58758544921875,
+        134.48553466796875
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL",
+      "bbox": [
+        52.7599983215332, 131.08102416992188, 283.1060791015625, 145.62353515625
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        90.74099731445312, 417.24298095703125, 242.42393493652344,
+        431.7854919433594
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "CULTURA E ECONOMIA CRIATIVA",
+      "bbox": [
+        76.60800170898438, 428.3809814453125, 256.5569763183594,
+        442.9234924316406
+      ],
+      "page": 24
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA",
+      "bbox": [
+        107.83100128173828, 455.40899658203125, 223.08505249023438,
+        467.8739929199219
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        90.74099731445312, 679.7050170898438, 242.42393493652344,
+        694.2474975585938
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DESENVOLVIMENTO ECONÔMICO",
+      "bbox": [
+        76.59700012207031, 690.843017578125, 256.5669860839844, 705.385498046875
+      ],
+      "page": 24
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "COMPANHIA IMOBILIÁRIA DE BRASÍLIA",
+      "bbox": [
+        340.3169860839844, 356.8890075683594, 523.9679565429688, 369.35400390625
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 576.6849975585938, 509.259033203125,
+        591.2274780273438
+      ],
+      "page": 24
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DESENVOLVIMENTO SOCIAL",
+      "bbox": [
+        357.4289855957031, 587.8230590820312, 509.4060363769531,
+        602.3655395507812
+      ],
+      "page": 24
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CHEFIA DE GABINETE",
+      "bbox": [
+        382.5360107421875, 616.3519897460938, 482.0489196777344,
+        628.8169555664062
+      ],
+      "page": 24
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        62.07899856567383, 53.859004974365234, 268.83599853515625,
+        66.32400512695312
+      ],
+      "page": 25
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 60.467994689941406, 509.259033203125,
+        75.01049041748047
+      ],
+      "page": 25
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DESENVOLVIMENTO URBANO E HABITAÇÃO",
+      "bbox": [
+        316.3059997558594, 71.60599517822266, 550.5294799804688,
+        86.14849090576172
+      ],
+      "page": 25
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        330.37701416015625, 98.634033203125, 534.509033203125,
+        111.09902954101562
+      ],
+      "page": 25
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        366.1809997558594, 213.72299194335938, 500.654541015625,
+        228.2655029296875
+      ],
+      "page": 25
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE MEIO AMBIENTE",
+      "bbox": [
+        380.3299865722656, 224.86001586914062, 486.5060119628906,
+        239.40252685546875
+      ],
+      "page": 25
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "AGÊNCIA REGULADORA DE ÁGUAS, ENERGIA E ",
+      "bbox": [
+        324.6659851074219, 251.88897705078125, 539.9187622070312,
+        264.3539733886719
+      ],
+      "page": 25
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SANEAMENTO BÁSICO",
+      "bbox": [
+        381.6629943847656, 263.0260009765625, 482.9219055175781,
+        275.4909973144531
+      ],
+      "page": 25
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "CONTROLADORIA GERAL",
+      "bbox": [
+        365.6029968261719, 614.3060302734375, 501.23150634765625,
+        628.8485107421875
+      ],
+      "page": 25
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CONTROLADORIA GERAL ADJUNTA",
+      "bbox": [
+        351.5450134277344, 641.333984375, 513.0408325195312, 653.7989501953125
+      ],
+      "page": 25
+    }
+  ],
+  [
+    {
+      "size": 12.0,
+      "font": "Times-Bold",
+      "text": "SEÇÃO III",
+      "bbox": [
+        136.28599548339844, 58.68598937988281, 194.62998962402344,
+        75.30599212646484
+      ],
+      "page": 26
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "PODER LEGISLATIVO",
+      "bbox": [
+        110.13500213623047, 84.3780288696289, 223.0309600830078,
+        98.92052459716797
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CÂMARA LEGISLATIVA",
+      "bbox": [
+        113.29499816894531, 111.406982421875, 217.77000427246094,
+        123.87197875976562
+      ],
+      "page": 26
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE GOVERNO",
+      "bbox": [
+        63.61399841308594, 320.8529968261719, 269.55047607421875, 335.3955078125
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DAS CIDADES",
+      "bbox": [
+        76.33100128173828, 346.38201904296875, 254.58505249023438,
+        358.8470153808594
+      ],
+      "page": 26
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ECONOMIA",
+      "bbox": [
+        60.70000076293945, 567.6480102539062, 272.4639587402344,
+        582.1904907226562
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA DE GESTÃO ",
+      "bbox": [
+        79.4489974975586, 593.177001953125, 251.46604919433594,
+        605.6419677734375
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "ADMINISTRATIVA",
+      "bbox": [
+        124.70999908447266, 604.3140258789062, 206.2050323486328,
+        616.7789916992188
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "BANCO DE BRASÍLIA S/A",
+      "bbox": [
+        377.6629943847656, 53.859004974365234, 486.9228820800781,
+        66.32400512695312
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SOCIEDADE DE ABASTECIMENTO DE BRASÍLIA - EM ",
+      "bbox": [
+        314.6579895019531, 204.64703369140625, 549.9266967773438,
+        217.11203002929688
+      ],
+      "page": 26
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "LIQUIDAÇÃO",
+      "bbox": [
+        402.5429992675781, 215.78399658203125, 462.0419616699219,
+        228.24899291992188
+      ],
+      "page": 26
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE SAÚDE",
+      "bbox": [
+        339.78399658203125, 558.8810424804688, 527.051513671875,
+        573.4235229492188
+      ],
+      "page": 26
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        328.91400146484375, 440.5480041503906, 535.6707763671875,
+        453.01300048828125
+      ],
+      "page": 27
+    }
+  ],
+  [],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        99.34600067138672, 605.748046875, 233.81944274902344, 620.29052734375
+      ],
+      "page": 29
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE SEGURANÇA PÚBLICA",
+      "bbox": [
+        99.79199981689453, 616.8860473632812, 233.37294006347656,
+        631.4285278320312
+      ],
+      "page": 29
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        328.91400146484375, 238.14898681640625, 535.6707763671875,
+        250.61398315429688
+      ],
+      "page": 29
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "POLÍCIA MILITAR DO DISTRITO FEDERAL",
+      "bbox": [
+        338.0360107421875, 415.6669921875, 526.5498657226562, 428.1319885253906
+      ],
+      "page": 29
+    }
+  ],
+  [],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "CORPO DE BOMBEIROS MILITAR",
+      "bbox": [
+        91.57599639892578, 391.02899169921875, 239.3380584716797,
+        403.4939880371094
+      ],
+      "page": 31
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "DEPARTAMENTO DE TRÂNSITO",
+      "bbox": [
+        94.7040023803711, 668.89697265625, 236.21104431152344, 681.3619384765625
+      ],
+      "page": 31
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 209.11801147460938, 509.259033203125,
+        223.6605224609375
+      ],
+      "page": 31
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "TRANSPORTE E MOBILIDADE",
+      "bbox": [
+        356.4110107421875, 220.25497436523438, 510.425048828125,
+        234.7974853515625
+      ],
+      "page": 31
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "DEPARTAMENTO DE ESTRADAS DE RODAGEM",
+      "bbox": [
+        328.5409851074219, 553.3140258789062, 536.0447387695312,
+        565.7789916992188
+      ],
+      "page": 31
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO ",
+      "bbox": [
+        366.1809997558594, 564.0330200195312, 500.654541015625,
+        578.5755004882812
+      ],
+      "page": 32
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DE JUSTIÇA E CIDADANIA",
+      "bbox": [
+        365.6090087890625, 575.1700439453125, 501.22698974609375,
+        589.7125244140625
+      ],
+      "page": 32
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA EXECUTIVA",
+      "bbox": [
+        373.09100341796875, 601.448974609375, 491.1951599121094,
+        613.9139404296875
+      ],
+      "page": 32
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        62.07899856567383, 298.1940002441406, 268.83599853515625,
+        310.65899658203125
+      ],
+      "page": 33
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        90.74099731445312, 490.50299072265625, 242.42393493652344,
+        505.0455017089844
+      ],
+      "page": 33
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "OBRAS E INFRAESTRUTURA",
+      "bbox": [
+        93.37100219726562, 501.6410217285156, 239.79342651367188,
+        516.1835327148438
+      ],
+      "page": 33
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "COMPANHIA DE SANEAMENTO AMBIENTAL",
+      "bbox": [
+        67.08300018310547, 527.1690063476562, 263.83203125, 539.6339721679688
+      ],
+      "page": 33
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "COMPANHIA ENERGÉTICA DE BRASÍLIA",
+      "bbox": [
+        335.35198974609375, 380.7090148925781, 527.7327880859375,
+        393.17401123046875
+      ],
+      "page": 33
+    }
+  ],
+  [
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "COMPANHIA URBANIZADORA DA NOVA CAPITAL ",
+      "bbox": [
+        43.944000244140625, 132.63897705078125, 284.27093505859375,
+        145.10397338867188
+      ],
+      "page": 34
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "DO BRASIL",
+      "bbox": [
+        138.57899475097656, 143.7769775390625, 191.4359893798828,
+        156.24197387695312
+      ],
+      "page": 34
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE AGRICULTURA, ",
+      "bbox": [
+        327.8869934082031, 221.45797729492188, 542.5474243164062,
+        236.00048828125
+      ],
+      "page": 34
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "ABASTECIMENTO E DESENVOLVIMENTO RURAL",
+      "bbox": [
+        318.0950012207031, 231.55697631835938, 551.1410522460938,
+        246.0994873046875
+      ],
+      "page": 34
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SUBSECRETARIA DE ADMINISTRAÇÃO GERAL",
+      "bbox": [
+        328.91400146484375, 262.19403076171875, 535.6707763671875,
+        274.6590270996094
+      ],
+      "page": 34
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        357.57598876953125, 542.6229858398438, 509.259033203125,
+        557.1654663085938
+      ],
+      "page": 34
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "CULTURA E ECONOMIA CRIATIVA",
+      "bbox": [
+        343.4429931640625, 552.7210083007812, 523.3919677734375,
+        567.2634887695312
+      ],
+      "page": 34
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "SECRETARIA DE ESTADO DE ",
+      "bbox": [
+        90.74099731445312, 428.8979797363281, 242.42393493652344,
+        443.44049072265625
+      ],
+      "page": 35
+    },
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "DESENVOLVIMENTO ECONÔMICO",
+      "bbox": [
+        76.59700012207031, 440.0350036621094, 256.5669860839844,
+        454.5775146484375
+      ],
+      "page": 35
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "COMPANHIA IMOBILIÁRIA DE BRASÍLIA",
+      "bbox": [
+        72.13200378417969, 467.0639953613281, 258.1829528808594,
+        479.52899169921875
+      ],
+      "page": 35
+    }
+  ],
+  [
+    {
+      "size": 10.5,
+      "font": "Times-Bold",
+      "text": "PROCURADORIA-GERAL",
+      "bbox": [
+        369.2569885253906, 234.31100463867188, 497.57745361328125, 248.853515625
+      ],
+      "page": 36
+    },
+    {
+      "size": 9.0,
+      "font": "Times-Bold",
+      "text": "SECRETARIA GERAL",
+      "bbox": [
+        384.3890075683594, 456.7359924316406, 479.8971252441406,
+        469.20098876953125
+      ],
+      "page": 36
+    }
+  ]
+]

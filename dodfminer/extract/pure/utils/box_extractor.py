@@ -368,6 +368,4 @@ def get_doc_img_boxes(doc: fitz.Document):
 
         img_ll[idx] = [page.getImageBbox(img) for img in img_list_altered]
 
-    breakpoint()
-
     return img_ll

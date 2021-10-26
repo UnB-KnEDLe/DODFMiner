@@ -62,11 +62,17 @@ def test_run_extract_single_file_pure_text():
 def test_run_extract_single_file_with_titles():
   file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
   targets = ["cmd", "extract", "-s", file, "-t", "with-titles"]
+
   with patch.object(sys, 'argv', targets):
     run()
+
     assert os.path.exists(file.replace('pdf', 'json'))
+    
     res_dict = json.loads(open(file.replace('pdf', 'json')).read())
-    assert "PODER EXECUTIVO" in res_dict.keys()
+
+    assert "SECAO I" in res_dict.keys()
+    assert "PODER EXECUTIVO" in res_dict['SECAO I'].keys()
+
     os.remove(file.replace('pdf', 'json'))
 
 def test_run_extract_single_file_blocks():
@@ -118,6 +124,7 @@ def test_run_extract_input_folder_one_act():
     os.remove(folder+"/aposentadoria.csv")
 
 def test_run_extract_input_folder_two_act():
+  breakpoint()
   folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
   targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria", "abono"]
   with patch.object(sys, 'argv', targets):
