@@ -16,7 +16,7 @@ from dodfminer.extract.pure.core import ContentExtractor
 from dodfminer.extract.polished.helper import extract_multiple_acts, xml_multiple
 
 
-class Miner(object):
+class Miner():
     """Main DODFMiner class.
 
     The Miner class is a interface that handles download, pre-extraction,
@@ -53,28 +53,32 @@ class Miner(object):
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
             elif self.args.act != 'all':
                 extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
-            elif self.args.xml != False:
+            elif self.args.xml is not False:
                 xml_multiple(self.args.input_folder, self.args.backend)
             else:
                 self.cli.extract_content_parser.print_help()
         elif self.args.single_file is not None:
-            if self.args.type_of_extr is not None:
-                if self.args.type_of_extr == 'pure-text':
-                    ContentExtractor.extract_text(self.args.single_file,
-                                                  single=True)
-                elif self.args.type_of_extr == 'with-titles':
-                    ContentExtractor.extract_structure(self.args.single_file,
-                                                       single=True)
-                elif self.args.type_of_extr == 'blocks':
-                    ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
-            elif self.args.act != 'all':
-                extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
-            elif self.args.xml != False:
-                xml_multiple(self.args.single_file, self.args.backend)
-            else:
-                self.cli.extract_content_parser.print_help()
+            self._extract_single_file()
 
-    def _log(self, msg):
+    def _extract_single_file(self):
+        if self.args.type_of_extr is not None:
+            if self.args.type_of_extr == 'pure-text':
+                ContentExtractor.extract_text(self.args.single_file,
+                                                single=True)
+            elif self.args.type_of_extr == 'with-titles':
+                ContentExtractor.extract_structure(self.args.single_file,
+                                                    single=True)
+            elif self.args.type_of_extr == 'blocks':
+                ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
+        elif self.args.act != 'all':
+            extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
+        elif self.args.xml is not False:
+            xml_multiple(self.args.single_file, self.args.backend)
+        else:
+            self.cli.extract_content_parser.print_help()
+
+    @classmethod
+    def _log(cls, msg):
         print(f"[DODFMiner] {msg}")
 
 

@@ -5,7 +5,7 @@ chardet==3.0.4
 idna==2.9
 numpy==1.18.5
 pandas==1.1.5
-PyMuPDF==1.17.0
+PyMuPDF==1.18.0
 python-dateutil==2.8.1
 pytz==2020.1
 requests==2.23.0
@@ -22,3 +22,5 @@ pytest-cov==2.10.1
 pytest-mock==3.3.1
 Jinja2==2.11.3
 coveralls==2.1.2
+requests-mock==1.9.3
+pylint==2.11.1

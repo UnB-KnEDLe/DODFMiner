@@ -20,7 +20,6 @@ from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.create_xml import XMLFy
 
-
 _acts_ids = {"aposentadoria": Retirements,
              "reversoes": Revertions,
              "nomeacao": NomeacaoComissionados,
@@ -80,8 +79,8 @@ class ActsExtractor:
 
         """
         res = {}
-        for key in _acts_ids:
-            res[key] = _acts_ids[key](file, backend)
+        for key, act in _acts_ids.items():
+            res[key] = act(file, backend)
 
         return res
 
@@ -117,13 +116,13 @@ class ActsExtractor:
 
         """
         res = {}
-        for key in _acts_ids:
-            res[key] = _acts_ids[key](file, backend).data_frame
+        for key, act in _acts_ids.items():
+            res[key] = act(file, backend).data_frame
 
         return res
 
     @staticmethod
-    def get_xml(file, backend, i):
+    def get_xml(file, _, i):
         """Extract all act types from a single DODF.
 
         Dataframe format.
@@ -138,4 +137,3 @@ class ActsExtractor:
         """
         res = XMLFy(file, _acts_ids, i)
         return res
-
