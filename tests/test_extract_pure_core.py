@@ -67,7 +67,6 @@ def test_pure_extract_text_json_false_saves_txt_file():
 
 
 def test_pure_extract_structure_single():
-<<<<<<< HEAD
     file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
     json_file = file.replace("pdf", "json")
 
@@ -86,20 +85,6 @@ def test_pure_extract_structure():
 
     assert 'SECAO I' in ContentExtractor.extract_structure(file).keys()
     assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(file)['SECAO I'].keys()
-=======
-    file_pdf_path = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    ContentExtractor.extract_structure(file_pdf_path, single=True)
-    assert os.path.isfile(file_pdf_path.replace("pdf", "json"))
-    with open(file_pdf_path.replace("pdf", "json"), encoding='utf-8') as json_file:
-        assert 'PODER EXECUTIVO' in json.loads(json_file.read()).keys()
-    os.remove(file_pdf_path.replace("pdf", "json"))
-
-
-def test_pure_extract_structure():
-    file_pdf_path = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
-    assert ContentExtractor.extract_structure(
-        file_pdf_path).get('PODER EXECUTIVO') is not None
->>>>>>> origin/main
 
 
 def test_pure_extract_to_txt():
