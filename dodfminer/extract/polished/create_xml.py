@@ -1,22 +1,21 @@
-import math
 import os
 import datetime
-import numpy as np
-from lxml import etree
 import re
+from lxml import etree
 from dodfminer.extract.pure.core import ContentExtractor as ce
 
 class XMLFy:
+    '''Cria um xml com informações de um ato'''
 
-    def __init__(self, file, acts_ids, id):
+    def __init__(self, file, acts_ids, id_xml):
         self._file = file
         self._acts_ids = acts_ids
-        self._xml_id = self.build_xml_id(id)
+        self._xml_id = self.build_xml_id(id_xml)
         self._annotation_id = 1
         self._relations_id = 1
         self.xml = self._create_xml()
 
-    def build_xml_id(self, id):
+    def build_xml_id(self, id_xml):
         file_name = self._file.split('/')[-1]
 
         str2int2str = lambda x : str(int(x))
@@ -24,7 +23,7 @@ class XMLFy:
 
         file_id = ".".join(list(file_numbers_list)[1:])
 
-        return f"{id}_{file_id}"
+        return f"{id_xml}_{file_id}"
 
     def print_tree(self):
         print(etree.tostring(self.xml, pretty_print=True).decode())
@@ -96,6 +95,7 @@ class XMLFy:
             root.append(child)
             offset += len(text)-1
 
+    # pylint: disable=protected-access
     def execute_regex(self, text):
         res = {}
         for key in self._acts_ids:
@@ -116,37 +116,37 @@ class XMLFy:
         root_passage.append(child_text)
 
         # relations = []
-        if an_dict:
-            for act_type in an_dict:
-                for act_inst in an_dict[act_type]:
-                    relations_ids = []
-                    for prop_type, value in act_inst.items():
-                        if type(value) == str:
-                            offset_sum = text.find(value)
-                            text = text.replace(value, '_'*len(value), 1)
-                            if offset_sum != -1:
-                                offset_prop = offset + offset_sum
-                                child_annotation = self._annotate(prop_type,
-                                                                  value, offset_prop)
-                                root_passage.append(child_annotation)
-                                # relations_ids.append(self._annotation_id)
-                                self._annotation_id += 1
-                    # child_rel = self._create_relation("Ato_"+act_type.capitalize(), relations_ids)
-                    # relations.append(child_rel)
-                    # self._relations_id += 1
+        # if an_dict:
+        for act_type in an_dict:
+            for act_inst in an_dict[act_type]:
+                # relations_ids = []
+                for prop_type, value in act_inst.items():
+                    if isinstance(value, str):
+                        offset_sum = text.find(value)
+                        text = text.replace(value, '_'*len(value), 1)
+                        if offset_sum != -1:
+                            offset_prop = offset + offset_sum
+                            child_annotation = self._annotate(prop_type,
+                                                                value, offset_prop)
+                            root_passage.append(child_annotation)
+                            # relations_ids.append(self._annotation_id)
+                            self._annotation_id += 1
+                # child_rel = self._create_relation("Ato_"+act_type.capitalize(), relations_ids)
+                # relations.append(child_rel)
+                # self._relations_id += 1
 
         # for relation in relations:
         #     root_passage.append(relation)
 
         return root_passage
 
-    def _annotate(self, type, text, offset):
+    def _annotate(self, annotation_type, text, offset):
         root_annotate = etree.Element('annotation')
         root_annotate.set("id", str(self._annotation_id))
 
         infon = etree.Element('infon')
         infon.set("key", "type")
-        infon.text = type
+        infon.text = annotation_type
         root_annotate.append(infon)
 
         infon = etree.Element('infon')
@@ -174,13 +174,13 @@ class XMLFy:
 
         return root_annotate
 
-    def _create_relation(self, type, annotations):
+    def _create_relation(self, relation_type, annotations):
         root_relation = etree.Element('relation')
         root_relation.set("id", "R"+str(self._relations_id))
 
         infon = etree.Element('infon')
         infon.set("key", "type")
-        infon.text = type
+        infon.text = relation_type
         root_relation.append(infon)
 
         infon = etree.Element('infon')

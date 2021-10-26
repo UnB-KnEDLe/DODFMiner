@@ -1,8 +1,11 @@
+# pylint: disable=protected-access
+
 import os
 import json
 import pytest
 from unittest.mock import patch
 from pathlib import Path
+import pytest
 
 from collections import Counter
 
@@ -20,25 +23,29 @@ GET_DOC_TEXT_LINES_PATH = BASE_PATH/'03-12-2018_get_doc_text_lines.json'
 GET_DOC_IMG_PATH = BASE_PATH/'03-12-2018_get_doc_img.json'
 GET_DOC_IMG_BOXES_PATH = BASE_PATH/'03-12-2018_get_doc_img_boxes.json'
 
+
 def tuplefy(lis):
     """Turn iterables into tuples. Makes comparison easier."""
     try:
-        return tuple([tuplefy(i) for i in lis])
-    except:
-        return tuple([tuple(i) for i in lis])
+        return tuple(tuplefy(i) for i in lis)
+    except TypeError:
+        return tuple(tuple(i) for i in lis)
 
-@pytest.fixture(scope='module')
-def pdf_fitz():
+
+@pytest.fixture(scope='module', name='pdf_fitz')
+def fixture_pdf_fitz():
     return fitz.open(PDF_PATH.as_posix())
+
 
 def wrapper_extract_page_lines_content(pdf_fitz, page_num, path):
     # Can be a title
     as_tup = tuplefy(
         box_extractor._extract_page_lines_content(pdf_fitz[page_num])
     )
-    ground_truth = json.load(open(path))
-    ground_truth = tuplefy(ground_truth)
-    assert as_tup == ground_truth
+    with open(path, encoding='utf-8') as json_file:
+        ground_truth = json.load(json_file)
+        ground_truth = tuplefy(ground_truth)
+        assert as_tup == ground_truth
 
 
 def test_extract_page_lines_content_1(pdf_fitz):
@@ -60,42 +67,27 @@ def test_get_doc_text_boxes(pdf_fitz):
 
 
 def test_doc_text_lines(pdf_fitz):
-    ground_truth = json.load(
-        open(GET_DOC_TEXT_LINES_PATH.as_posix())
-    )
-    assert (
-        tuplefy(ground_truth) 
-        == tuplefy(box_extractor.get_doc_text_lines(pdf_fitz))
-    )
+    with open(GET_DOC_TEXT_LINES_PATH.as_posix(), encoding='utf-8') as json_file:
+        ground_truth = json.load(json_file)
+        assert (
+            tuplefy(ground_truth)
+            == tuplefy(box_extractor.get_doc_text_lines(pdf_fitz))
+        )
 
 
 def test_get_doc_img(pdf_fitz):
-    ground_truth = json.load(
-        open(GET_DOC_IMG_PATH.as_posix())
-    )
-    assert (
-        tuplefy(ground_truth) 
-        == tuplefy(box_extractor._get_doc_img(pdf_fitz))
-    )
-
-
-def test_get_doc_img(pdf_fitz):
-    ground_truth = json.load(
-        open(GET_DOC_IMG_PATH.as_posix())
-    )
-    assert (
-        tuplefy(ground_truth) 
-        == tuplefy(box_extractor._get_doc_img(pdf_fitz))
-    )
+    with open(GET_DOC_IMG_PATH.as_posix(), encoding='utf-8') as json_file:
+        ground_truth = json.load(json_file)
+        assert (
+            tuplefy(ground_truth)
+            == tuplefy(box_extractor._get_doc_img(pdf_fitz))
+        )
 
 
 def test_get_doc_img_boxes(pdf_fitz):
-    ground_truth = json.load(
-        open(GET_DOC_IMG_BOXES_PATH.as_posix())
-    )
-    assert (
-        tuplefy(ground_truth) 
-        == tuplefy(box_extractor.get_doc_img_boxes(pdf_fitz))
-    )
-
-
+    with open(GET_DOC_IMG_BOXES_PATH.as_posix(), encoding='utf-8') as json_file:
+        ground_truth = json.load(json_file)
+        assert (
+            tuplefy(ground_truth)
+            == tuplefy(box_extractor.get_doc_img_boxes(pdf_fitz))
+        )

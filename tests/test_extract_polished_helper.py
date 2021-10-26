@@ -4,22 +4,22 @@ import pytest
 import pandas as pd
 from pandas.core.frame import DataFrame
 
-from dodfminer.extract.pure.core import ContentExtractor
-from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados
-from dodfminer.extract.polished.helper import xml_multiple, get_files_path, print_dataframe, build_act_txt, extract_single, extract_multiple, extract_multiple_acts
+from tests.helpers.decorators import clean_extra_files
 
-from decorators import clean_extra_files
+from dodfminer.extract.pure.core import ContentExtractor
+from dodfminer.extract.polished.helper import xml_multiple, get_files_path, build_act_txt, extract_single, extract_multiple, extract_multiple_acts
+
 
 FOLDER_PATH = f"{os.path.dirname(__file__)}/support/polished"
 
 ###################### FIXTURES ######################
 
-@pytest.fixture
-def folder_path():
+@pytest.fixture(name="folder_path")
+def fixture_folder_path():
     return FOLDER_PATH
 
-@pytest.fixture
-def file_path(folder_path):
+@pytest.fixture(name="file_path")
+def fixture_file_path(folder_path):
     def _file_path(extension="pdf"):
         return f"{folder_path}/DODF 001 01-01-2019 EDICAO ESPECIAL.{extension}"
     return _file_path
@@ -33,26 +33,26 @@ def test_helper_xml_multiple(folder_path):
         xml_files_list = list(filter(lambda x : ".xml" in x, os.listdir(folder_path)))
 
         assert "1_1.1.2019.xml" in xml_files_list
-    except:
+    except AssertionError:
         assert False
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_multiple(folder_path):
     ContentExtractor.extract_to_txt(folder_path)
     files = get_files_path(f"{folder_path}/results/txt", 'txt')
-    df = extract_multiple(files, "nomeacao", "regex", txt_path="./results")
+    data_frame = extract_multiple(files, "nomeacao", "regex", txt_path="./results")
 
-    assert len(df) > 0
+    assert len(data_frame) > 0
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_single(file_path):
     ContentExtractor.extract_text(file_path(extension="pdf"), single=True)
-    df, texts = extract_single(file_path(extension="txt"), "nomeacao", "regex")
+    data_frame, texts = extract_single(file_path(extension="txt"), "nomeacao", "regex")
 
-    assert type(df) is DataFrame
-    assert type (texts) is list
+    assert isinstance(data_frame, DataFrame)
+    assert isinstance(texts, list)
 
-    assert len(df) > 0
+    assert len(data_frame) > 0
     assert len(texts) > 0
 
 @clean_extra_files(FOLDER_PATH)
@@ -68,12 +68,10 @@ def test_helper_extract_multiple_acts(folder_path, file_path):
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_build_act_txt():
-    dir = ""+os.path.dirname(__file__)+"/support/"
-    build_act_txt(["aposentadoria"], "crioutxt", save_path=dir)
-    
-    assert "crioutxt.txt" in os.listdir(dir)
-
-    os.remove(os.path.join(dir, "crioutxt.txt"))
+    directory = ""+os.path.dirname(__file__)+"/support/"
+    build_act_txt(["aposentadoria"], "crioutxt", save_path=directory)
+    assert "crioutxt.txt" in os.listdir(directory)
+    os.remove(os.path.join(directory, "crioutxt.txt"))
 
 # def test_helper_print_dataframe():
 #     df = print_dataframe(pd.DataFrame())
@@ -84,4 +82,3 @@ def test_helper_get_files_path(folder_path):
     assert len(files) > 0
     files = get_files_path(folder_path, "pdf")
     assert len(files) > 0
-
