@@ -124,7 +124,6 @@ def test_run_extract_input_folder_one_act():
     os.remove(folder+"/aposentadoria.csv")
 
 def test_run_extract_input_folder_two_act():
-  breakpoint()
   folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
   targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria", "abono"]
   with patch.object(sys, 'argv', targets):

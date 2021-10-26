@@ -87,6 +87,15 @@ def compare_blocks(block1, block2):
 
 
 def clean_section_boxes(page):
+    """Makes sure that a section title text is always separated into
+       a single block, which does not contain additional tex.
+
+    Args:
+        page: fitz.fitz.Page object to have its bold content extracted.
+
+    Returns:
+        List[List[tuple(float, float, float, float, str, int, int, int)]]
+    """
     blocks = page.getTextBlocks()
 
     section_blocks = list(filter(lambda x: re.match("SEÇÃO (I|II|III)", x[4]), blocks))
@@ -103,6 +112,17 @@ def clean_section_boxes(page):
 
 
 def separate_section_blocks(page, box):
+    """Separates, within a single box text, a section title text from any 
+       other kind of text into different boxes.
+
+    Args:
+        page: fitz.fitz.Page object to have its bold content extracted.
+        box: Box tuple, representing an area of text.
+
+    Returns:
+        Separated boxes if necessary. If not, the same box received.
+        List[tuple(float, float, float, float, str, int, int, int)]
+    """
     rect = fitz.Rect(box[:4])
 
     def extract_box(x): return x['bbox'] + (x['text'], box[5], box[6])
@@ -122,79 +142,6 @@ def separate_section_blocks(page, box):
             list(filter(lambda x: not x[4] in SECTION_TITLES, boxes))
 
     return [_fuse_blocks(rest_box) if rest_box else (), section_box[0]]
-
-
-def identify_text_boxes(doc_boxes):
-    """Insert id component into block tuple for block aggrupation.
-
-    Args:
-        doc_boxes: the list of blocks on a document, separated by pages.
-
-    Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
-    """
-    id = 0
-    incomplete_block = None
-    doc_blocks = []
-    page_blocks = []
-
-    for page in doc_boxes:
-        for box in page:
-            x0, _, x1, _, text, *_ = box
-
-            if incomplete_block != None and _is_a_valid_box(x0, x1):
-                box = box + (incomplete_block[7],)
-                incomplete_block = None
-
-            else:
-                box = box + (id,)
-                id += 1
-
-            if not _is_a_complete_text(text) and _is_a_valid_box(x0, x1):
-                incomplete_block = box
-
-            page_blocks.append(box)
-
-        doc_blocks.append(page_blocks)
-        page_blocks = []
-
-    return doc_blocks
-
-
-def group_blocks_by_identifier(doc_boxes):
-    """Group blocks in a same page by a id component
-
-    Args:
-        doc_boxes: the list of blocks on a document, separated by pages.
-
-    Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
-    """
-    def remove_duplicates(x): return list(set(x))
-    doc_blocks = []
-    page_blocks = []
-
-    for page in doc_boxes:
-        def get_id(x): return x[7]
-        page_ids = remove_duplicates(list(map(get_id, page)))
-
-        for id in page_ids:
-            blocks_left = list(
-                filter(lambda x: int(x[0]) < 418 and x[7] == id, page))
-            blocks_right = list(
-                filter(lambda x: int(x[0]) >= 418 and x[7] == id, page))
-
-            if len(blocks_left):
-                page_blocks.append(
-                    _return_fused_block_if_possible(blocks_left))
-            if len(blocks_right):
-                page_blocks.append(
-                    _return_fused_block_if_possible(blocks_right))
-
-        doc_blocks.append(page_blocks)
-        page_blocks = []
-
-    return doc_blocks
 
 
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
@@ -228,22 +175,6 @@ def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
         doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
 
 
-def _return_fused_block_if_possible(blocks):
-    """Fuse a list of blocks if necessary
-
-    Args:
-        blocks: a list of blocks to be fused.
-
-    Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
-    """
-    if len(blocks) > 1:
-        new_block = _fuse_blocks(blocks)
-        return new_block
-    else:
-        return blocks[0]
-
-
 def _fuse_blocks(blocks):
     """Transform a list of block into one fused block.
        The block coordinates and text are changed to represent the
@@ -266,48 +197,6 @@ def _fuse_blocks(blocks):
 
     fused_block = (x0, y0, x1, y1, fused_text) + blocks[0][5:]
     return fused_block
-
-
-def _is_a_valid_box(x0, x1):
-    """Determines conditions for id sharing in the identifying 
-       process of blocks
-
-    Args:
-        x0: x0 coordinate of a block.
-        x1: x1 coordinate of a block.
-
-    Returns:
-        bool
-    """
-    in_column1_bounds = x0 >= 55 and x1 <= 405
-    in_column2_bounds = x0 >= 417 and x1 <= 766
-
-    is_inbounds = (in_column1_bounds or in_column2_bounds)
-    is_column_text = (x0 >= 55 and x0 <= 57) or (x0 >= 417 and x0 <= 419)
-
-    return is_inbounds and is_column_text
-
-
-def _is_a_complete_text(text):
-    """Heuristic to determine if a text contains a complete information.
-
-    Args:
-        text: a string.
-
-    Returns:
-        bool
-    """
-    rest_of_text = text[text.rfind('.')+1:]
-    supposed_author = rest_of_text.strip().split(
-        '\n')[0] if '\n' in rest_of_text else ""
-    last_char = text[-1]
-    is_summary_text = "...." in text
-
-    supposed_author_dotless = re.search("(\n[A-Z-ÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ. ]+$)", text)
-    supposed_author_dotless = supposed_author_dotless.group(
-        0) if supposed_author_dotless else ""
-
-    return is_summary_text or last_char == '.' or "\nBrasília" in rest_of_text or supposed_author.isupper() or supposed_author_dotless.isupper()
 
 
 def get_doc_text_lines(doc: fitz.Document):
