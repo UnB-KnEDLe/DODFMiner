@@ -17,12 +17,12 @@ Functions
 import os
 import tqdm
 import pandas as pd
-import pickle
-import sys
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
 from dodfminer.extract.pure.core import ContentExtractor
+
+from dodfminer.extract.polished.acts.type_classification.committee import Committee
 
 def xml_multiple(path, backend):
     files = []
@@ -110,7 +110,7 @@ def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./result
                               ignore_index=True)
     return res_final
 
-def extract_multiple_acts_with_classification(path, types, backend):
+def extract_multiple_acts_with_committee(path, types, backend):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
     Uses committee_classification to find act types.
 
@@ -158,19 +158,14 @@ def committee_classification(all_acts, path, types, backend):
         None
     """
 
-    type_classification_folder = os.path.dirname(__file__) + '/acts/type_classification/'
-    
-    # The file used is different for Python 3.8+ due to changes to CodeType in Python 3.8
-    if sys.version_info < (3, 8, 0):
-        preprocessing_filename = 'preprocess_py36.pickle'
-    else:
-        preprocessing_filename = 'preprocess_py38.pickle'
-    models_filename = 'models.pickle'    
+    classification_folder = os.path.dirname(__file__) + '/acts/type_classification/'
+    models_path = classification_folder + 'models/models.pkl'
 
-    with open(type_classification_folder + preprocessing_filename, 'rb') as file:
-        committee = pickle.load(file)
-        
-    new_types = committee.transform(all_acts['text'], all_acts['type'], type_classification_folder + models_filename)
+    committee = Committee()
+
+    committee.load_models(models_path)
+    
+    new_types = committee.transform(all_acts['text'], all_acts['type'])
 
     all_acts['type']  = new_types
 
