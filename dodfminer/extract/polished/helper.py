@@ -161,9 +161,7 @@ def committee_classification(all_acts, path, types, backend):
     classification_folder = os.path.dirname(__file__) + '/acts/type_classification/'
     models_path = classification_folder + 'models/models.pkl'
 
-    committee = Committee()
-
-    committee.load_models(models_path)
+    committee = Committee(models_path)
     
     new_types = committee.transform(all_acts['text'], all_acts['type'])
 
