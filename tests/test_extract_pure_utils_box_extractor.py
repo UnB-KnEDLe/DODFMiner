@@ -2,14 +2,10 @@
 
 import os
 import json
-import pytest
-from unittest.mock import patch
 from pathlib import Path
 import pytest
-
-from collections import Counter
-
 import fitz
+
 from dodfminer.extract.pure.utils import box_extractor
 
 BASE_PATH = Path(

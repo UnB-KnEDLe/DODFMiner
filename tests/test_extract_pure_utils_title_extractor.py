@@ -104,7 +104,7 @@ def functions_with_path(name, pdf_path):
 
 
 def functions_with_path_cmp_first_el(name, pdf_path):
-    """ Similar to functions_with_path but compares specific structure of the first elements 
+    """ Similar to functions_with_path but compares specific structure of the first elements
         ont the load_blocks_list dictionary attributes list
     """
     with open(pdf_path.as_posix()[:-4] + '/' f'{name}.json', encoding='utf-8') as json_file:
@@ -128,7 +128,8 @@ def functions_doc_bold_text(name, doc):
     select_dict_keys_on_list = lambda x:list(map(lambda page: list(map(select_key, page)), x))
 
     received = select_dict_keys_on_list(getattr(title_extractor, name)(doc))
-    expected = select_dict_keys_on_list(json.load(open(doc.name[:-4] + '/' f'{name}.json')))
+    with open(doc.name[:-4] + '/' f'{name}.json', encoding='utf-8') as json_pointer:
+        expected = select_dict_keys_on_list(json.load(json_pointer))
 
     assert (jsdump(received) == jsdump(expected))
 
