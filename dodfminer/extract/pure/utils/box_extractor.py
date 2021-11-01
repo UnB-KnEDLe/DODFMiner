@@ -41,7 +41,7 @@ def get_doc_text_boxes(doc: fitz.Document):
 
     """
 
-    text_blocks = [sort_blocks(clean_section_boxes(page)) for page in doc]
+    text_blocks = [sort_blocks(page.getTextBlocks()) for page in doc]
     return text_blocks
 
 
@@ -75,7 +75,7 @@ def compare_blocks(block1, block2):
     b1_y = max([b1_y0, b1_y1])
     b2_y = max([b2_y0, b2_y1])
 
-    if (b1_x0 >= 55 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
+    if (b1_x0 >= 49 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
        (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766) or \
        (b1_x1-b1_x0 > 350) or \
        (b2_x1-b2_x0 > 350) or \

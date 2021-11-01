@@ -168,22 +168,26 @@ class ContentExtractor:
 
             for box in boxes:
                 text = box[4]
-                for title in title_base:
-                    is_title = True
-                    title = title.replace("\n", " ")
-                    normalized_title = cls._normalize_text(title, norm)
+                is_title = True
 
-                    if text in ["SECAO I", "SECAO II", "SECAO III"]:
-                        section = text
-                        if section not in content_dict.keys():
-                            content_dict.update({section: {}})
-                    elif text == normalized_title:
-                        first_title = True
-                        actual_title = normalized_title
-                        if title not in content_dict[section].keys():
-                            content_dict[section].update({normalized_title: []})
-                    else:
-                        is_title = False
+                if text in ["SECAO I", "SECAO II", "SECAO III"]:
+                    section = text
+                    if section not in content_dict.keys():
+                        content_dict.update({section: {}})
+                else:
+                    for title in title_base:
+                        text = text.replace("\n", " ")
+                        title = title.replace("\n", " ")
+                        normalized_title = cls._normalize_text(title, norm)
+
+                        if text == normalized_title:
+                            first_title = True
+                            actual_title = normalized_title
+                            if title not in content_dict[section].keys():
+                                content_dict[section].update({normalized_title: []})
+                            break
+                        else:
+                            is_title = False
 
                 if first_title and not is_title:
                     if int(box[1]) != 55 and int(box[1]) != 881:
