@@ -13,7 +13,7 @@ Usage example::
 from dodfminer.cli import CLI
 from dodfminer.downloader.core import Downloader
 from dodfminer.extract.pure.core import ContentExtractor
-from dodfminer.extract.polished.helper import extract_multiple_acts, extract_multiple_acts_with_classification, xml_multiple
+from dodfminer.extract.polished.helper import extract_multiple_acts, extract_multiple_acts_with_committee, xml_multiple
 
 
 class Miner():
@@ -53,7 +53,7 @@ class Miner():
                     ContentExtractor.extract_to_json(folder=self.args.input_folder)
             elif self.args.act != 'all':
                 if self.args.committee:
-                    extract_multiple_acts_with_classification(self.args.input_folder, self.args.act, self.args.backend)
+                    extract_multiple_acts_with_committee(self.args.input_folder, self.args.act, self.args.backend)
                 else:
                     extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
             elif self.args.xml is not False:
@@ -75,7 +75,7 @@ class Miner():
                 ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
         elif self.args.act != 'all':
             if self.args.committee:
-                extract_multiple_acts_with_classification(self.args.single_file, self.args.act, self.args.backend)
+                extract_multiple_acts_with_committee(self.args.single_file, self.args.act, self.args.backend)
             else:
                 extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
         elif self.args.xml is not False:

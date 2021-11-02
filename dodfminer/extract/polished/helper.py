@@ -17,11 +17,12 @@ Functions
 import os
 import tqdm
 import pandas as pd
-import pickle
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
 from dodfminer.extract.pure.core import ContentExtractor
+
+from dodfminer.extract.polished.acts.type_classification.committee import Committee
 
 def xml_multiple(path, backend):
     files = []
@@ -109,7 +110,7 @@ def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./result
                               ignore_index=True)
     return res_final
 
-def extract_multiple_acts_with_classification(path, types, backend):
+def extract_multiple_acts_with_committee(path, types, backend):
     """Extract multple Acts from Multiple DODFs to act named CSVs.
     Uses committee_classification to find act types.
 
@@ -156,31 +157,13 @@ def committee_classification(all_acts, path, types, backend):
     Returns:
         None
     """
-    model_path = os.path.dirname(__file__)
-    with open(model_path + '/acts/type_classification/committee_3.8.pickle', 'rb') as file:
-        committee = pickle.load(file)
+
+    classification_folder = os.path.dirname(__file__) + '/acts/type_classification/'
+    models_path = classification_folder + 'models/models.pkl'
+
+    committee = Committee(models_path)
+    
     new_types = committee.transform(all_acts['text'], all_acts['type'])
-
-    changed_text = []
-    changed_original = []
-    changed_new = []
-
-    for i in range(0, len(all_acts)):
-        original = all_acts['type'][i]
-        new_type = new_types[i]
-
-        if(original != new_type):
-            changed_text.append(all_acts['text'][i])
-            changed_original.append(original)
-            changed_new.append(new_type)
-
-    changed = pd.DataFrame(list(zip(changed_text, changed_original, changed_new)))
-    changed.columns = ['text', 'regex', 'classificador']
-
-    if os.path.isfile(path):
-        changed.to_csv(os.path.join(os.path.dirname(path), 'changed.csv'))
-    else:
-        changed.to_csv(os.path.join(path, 'changed.csv'))
 
     all_acts['type']  = new_types
 
