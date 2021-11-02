@@ -60,7 +60,7 @@ class NomeacaoEfetivos(Atos):
 
     def _rule_for_inst(self):
         start = r"(NOMEAR\s)"
-        body = r"((?:[ao]s\scandidat[ao]s\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*).|(?:[ao]\scandidat[oa]\sabaixo(?:[a-zA-Z_0-9,\s\/-\:\-\(\);]*)))(?:\s[a-zA-Z_\s]*(?:deficiencia|especiais):(?:\s[\sA-Zo]+,\s?\d{1,4}o?;?)+)?(?:\s)?(?:[\r\n\t\f\sa-zA-Z_\s]*classificacao:(?:\s[\sA-Zo]+,\s?\d{1,4}o?[,;]?)+)?)"
+        body = r"((?:[ao]s\scandidat[ao]s\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*).|(?:[ao]\scandidat[oa]\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*)))(?:\s[a-zA-Z_\s]*(?:deficiencia|especiais):(?:\s[\sA-Zo]+,\s?\d{1,4}o?;?)+)?(?:\s)?(?:[\r\n\t\f\sa-zA-Z_\s]*classificacao:(?:\s[\sA-Zo]+,\s?\d{1,4}o?[,;]?)+)?)"
         end = ""
         return start + body + end
 
