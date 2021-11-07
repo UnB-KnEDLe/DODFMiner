@@ -41,7 +41,7 @@ def get_doc_text_boxes(doc: fitz.Document):
 
     """
 
-    text_blocks = [sort_blocks(clean_section_boxes(page)) for page in doc]
+    text_blocks = [sort_blocks(page.getTextBlocks()) for page in doc]
     return text_blocks
 
 
@@ -75,7 +75,7 @@ def compare_blocks(block1, block2):
     b1_y = max([b1_y0, b1_y1])
     b2_y = max([b2_y0, b2_y1])
 
-    if (b1_x0 >= 55 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
+    if (b1_x0 >= 49 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
        (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766) or \
        (b1_x1-b1_x0 > 350) or \
        (b2_x1-b2_x0 > 350) or \
@@ -84,65 +84,6 @@ def compare_blocks(block1, block2):
         return b1_y-b2_y
     else:
         return b1_x0-b2_x0
-
-
-def clean_section_boxes(page):
-    """Makes sure that a section title text is always separated into
-       a single block, which does not contain additional tex.
-
-    Args:
-        page: fitz.fitz.Page object to have its bold content extracted.
-
-    Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
-    """
-    blocks = page.getTextBlocks()
-
-    section_blocks = list(filter(lambda x: re.match("SEÇÃO (I|II|III)", x[4]), blocks))
-
-    if section_blocks:
-        separated_section_blocks = map(
-            lambda x: separate_section_blocks(page, x), section_blocks)
-        joined_section_blocks = reduce(operator.add, separated_section_blocks)
-        section_blocks = list(filter(None, joined_section_blocks))
-
-    not_section_blocks = list(filter(lambda x: not re.match("SEÇÃO (I|II|III)", x[4]), blocks))
-
-    return not_section_blocks + section_blocks
-
-
-def separate_section_blocks(page, box):
-    """Separates, within a single box text, a section title text from any 
-       other kind of text into different boxes.
-
-    Args:
-        page: fitz.fitz.Page object to have its bold content extracted.
-        box: Box tuple, representing an area of text.
-
-    Returns:
-        Separated boxes if necessary. If not, the same box received.
-        List[tuple(float, float, float, float, str, int, int, int)]
-    """
-    rect = fitz.Rect(box[:4])
-
-    def extract_box(x): return x['bbox'] + (x['text'], box[5], box[6])
-
-    section_box = []
-    rest_box = []
-
-    box_dict = page.getText('dict', clip=rect)['blocks'][0]['lines']
-
-    for span_dict in box_dict:
-        span_list = span_dict['spans']
-        boxes = list(map(extract_box, span_list))
-
-        section_box = section_box + \
-            list(filter(lambda x: x[4] in SECTION_TITLES, boxes))
-        rest_box = rest_box + \
-            list(filter(lambda x: not x[4] in SECTION_TITLES, boxes))
-
-    return [_fuse_blocks(rest_box) if rest_box else (), section_box[0]]
-
 
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
     """Draw extracted text blocks rectangles.
@@ -173,30 +114,6 @@ def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
         doc.save(f"{save_path}/BOXES_{doc_name}")
     else:
         doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
-
-
-def _fuse_blocks(blocks):
-    """Transform a list of block into one fused block.
-       The block coordinates and text are changed to represent the
-       multiple blocks as a single one.
-
-    Args:
-        blocks: a list of blocks to be fused.
-
-    Returns:
-        List[List[tuple(float, float, float, float, str, int, int, int)]]
-    """
-    texts = list(map(lambda x: x[4], blocks))
-    fused_text = " ".join(texts)
-
-    x0_1, y0, x1_1, *_ = blocks[0]
-    x0_2, _, x1_2, y1, *_ = blocks[-1]
-
-    x0 = min([x0_1, x0_2])
-    x1 = max([x1_1, x1_2])
-
-    fused_block = (x0, y0, x1, y1, fused_text) + blocks[0][5:]
-    return fused_block
 
 
 def get_doc_text_lines(doc: fitz.Document):
