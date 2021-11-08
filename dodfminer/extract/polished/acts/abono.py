@@ -32,12 +32,7 @@ class AbonoPermanencia(Atos):
     def _rule_for_inst(self):
         start = r"(Abono\sDE\sPERMANENCIA\s[(ao|equiva)][\s\S]*?)\s"
         body = r"([\s\S]*?"
-        # processo SEI 00060-00415446/2019-30
-        # end = r"[P|p]rocesso [S|s][E|e][I|i] [\s\S]*?\. | \.\n)"
-        # end = r"(Processo: \d+\.\d+\/\d+-\d+)|(\.\n))"
-        # end = r"Processo: \d+\.\d+\/\d+-\d+)"
         end = r"\d+\s*[\.|\-]\s*\d+\s*\/\s*\d+\s*\-\s*\d+)"
-        # end = r"\.\n)"
         return start + body + end
 
     def _prop_rules(self):

@@ -53,7 +53,6 @@ class ExoneracaoEfetivos(Atos):
     def _find_instances(self):
         _instances = []
         pattern = r"([cC]omiss[aã]o|[nN]atureza\s?[eE]special)"
-        # _all = re.findall(self._inst_rule, self._text, flags=self._flags)
         iterator = re.finditer(self._inst_rule, self._text, flags=self._flags)
         for _ in iterator:
             _m = re.findall(pattern, _[0], 0)
