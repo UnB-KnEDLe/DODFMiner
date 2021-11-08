@@ -1,9 +1,7 @@
 import re
-import os
-import joblib
+from typing import List, Match
 import pandas as pd
 import numpy as np
-from typing import List, Match
 
 from dodfminer.extract.polished.acts.base import Atos
 
@@ -144,7 +142,7 @@ class Cessoes(Atos):
                 raise ValueError("Named regex must have AT MOST ONE NAMED GROUP.")
             if self._debug:
                 print('key: ', keys[0])
-            return match.group(keys[0]),
+            return (match.group(keys[0]),)
         else:
             return np.nan
 

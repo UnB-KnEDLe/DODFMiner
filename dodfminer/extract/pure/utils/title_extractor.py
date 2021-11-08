@@ -1,4 +1,6 @@
-"""Extract Title and Subtitles."""
+"""
+    Extract Title and Subtitles.
+"""
 
 # TODO: Improve docummentation
 # TODO: Remove global variables and functions
@@ -13,7 +15,7 @@ import json
 import operator
 import fitz
 
-import dodfminer.extract.pure.utils.title_filter as title_filter
+from dodfminer.extract.pure.utils import title_filter
 
 Box = namedtuple("Box", "x0 y0 x1 y1")
 BBox = namedtuple("BBox", "bbox")
@@ -119,7 +121,7 @@ def sort_by_column(elements, width):
     return reduce(operator.add, ordenado)
 
 
-def _invert_TextTypeBboxPageTuple(textTypeBboxPageTuple):
+def _invertTextTypeBboxPageTuple(textTypeBboxPageTuple):
     """Reverses the type between _TYPE_TITLE and _TYPE_SUBTITLE.
 
     Args:
@@ -279,7 +281,7 @@ def _get_titles_subtitles(elements, width_lis):
     # Happens mostly when there are only one title and other stuffs.
 
     if not titles and sub_titles:
-        return TitlesSubtitles([_invert_TextTypeBboxPageTuple(i) for i in sub_titles], titles)
+        return TitlesSubtitles([_invertTextTypeBboxPageTuple(i) for i in sub_titles], titles)
     else:
         return TitlesSubtitles(titles, sub_titles)
 
@@ -521,10 +523,10 @@ class ExtractorTitleSubtitle(object):
             be done. Its suffixed with ".json" if it's not.
 
         """
-        json.dump(self.json,
-                  open("{}{}".format(
-                      path, (not path.endswith(".json")) * ".json"), 'w'),
-                  ensure_ascii=False, indent='  ')
+        with open("{}{}".format(path, (not path.endswith(".json")) * ".json"), 'w', encoding='utf-8') as jsonFile:
+            json.dump(self.json,
+                      jsonFile,
+                      ensure_ascii=False, indent='  ')
 
     def reset(self):
         """Sets cache to False and reset others internal attributes.
@@ -551,7 +553,7 @@ def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
     base_name = "{}/{}".format(
         dir_path, base_name + (not base_name.endswith(".json")) * ".json")
     if os.path.exists(base_name) and not forced:
-        print("Error: {} already exists".format(base_name))
+        print(f"Error: {base_name} already exists")
         return None
     elif os.path.isdir(base_name):
         print("Error: {} ir a directory".format(base_name))
@@ -578,6 +580,7 @@ def gen_hierarchy_base(dir_path=".",
         base_name: titles' base file name
         forced: proceed even if folder `base_name` already exists
         indent: how many spaces used will be used for indent
+
     Returns:
         List[Dict[str, List[Dict[str, List[Dict[str, str]]]]]]
         e.g:

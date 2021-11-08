@@ -14,9 +14,11 @@ FOLDER_PATH = f"{os.path.dirname(__file__)}/support/polished"
 
 ###################### FIXTURES ######################
 
+
 @pytest.fixture(name="folder_path")
 def fixture_folder_path():
     return FOLDER_PATH
+
 
 @pytest.fixture(name="file_path")
 def fixture_file_path(folder_path):
@@ -30,30 +32,36 @@ def fixture_file_path(folder_path):
 def test_helper_xml_multiple(folder_path):
     try:
         xml_multiple(folder_path, "regex")
-        xml_files_list = list(filter(lambda x : ".xml" in x, os.listdir(folder_path)))
+        xml_files_list = list(
+            filter(lambda x: ".xml" in x, os.listdir(folder_path)))
 
         assert "1_1.1.2019.xml" in xml_files_list
     except AssertionError:
         assert False
 
+
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_multiple(folder_path):
     ContentExtractor.extract_to_txt(folder_path)
     files = get_files_path(f"{folder_path}/results/txt", 'txt')
-    data_frame = extract_multiple(files, "nomeacao", "regex", txt_path="./results")
+    data_frame = extract_multiple(
+        files, "nomeacao", "regex", txt_path="./results")
 
     assert len(data_frame) > 0
+
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_single(file_path):
     ContentExtractor.extract_text(file_path(extension="pdf"), single=True)
-    data_frame, texts = extract_single(file_path(extension="txt"), "nomeacao", "regex")
+    data_frame, texts = extract_single(
+        file_path(extension="txt"), "nomeacao", "regex")
 
     assert isinstance(data_frame, DataFrame)
     assert isinstance(texts, list)
 
     assert len(data_frame) > 0
     assert len(texts) > 0
+
 
 @clean_extra_files(FOLDER_PATH)
 def test_helper_extract_multiple_acts(folder_path, file_path):
@@ -66,6 +74,7 @@ def test_helper_extract_multiple_acts(folder_path, file_path):
     assert len(single_file_df) > 0
     assert len(multiple_files_df) > len(single_file_df)
 
+
 @clean_extra_files(FOLDER_PATH)
 def test_helper_build_act_txt():
     directory = ""+os.path.dirname(__file__)+"/support/"
@@ -76,6 +85,7 @@ def test_helper_build_act_txt():
 # def test_helper_print_dataframe():
 #     df = print_dataframe(pd.DataFrame())
 #     assert isinstance(df, pd.io.formats.style.Styler)
+
 
 def test_helper_get_files_path(folder_path):
     files = get_files_path(folder_path, "txt")

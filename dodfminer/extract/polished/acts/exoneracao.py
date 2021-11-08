@@ -1,5 +1,6 @@
 """Regras regex para ato de Exoneração."""
 
+import re
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -18,8 +19,8 @@ class Exoneracao(Atos):
 
     def _rule_for_inst(self):
         start = r"(EXONERAR)"
-        body = r"([\s\S]*?)"
-        end = r"\."
+        body = r'((?=.*Comissao|.*\n.*Comissao|.*Especial|.*\n.*Especial )[\s\S]*?'
+        end = r"(?:\.\n|NOMEAR|\d+\-\d+\/\d+\-\d+\.))"
         return start + body + end
 
     def _prop_rules(self):
@@ -39,7 +40,6 @@ class Exoneracao(Atos):
                  "cargo_efetivo": r"",
                  "matricula_SIAPE": siape,
                  "motivo": r""}
-
         return rules
 
 class ExoneracaoEfetivos(Atos):
@@ -53,20 +53,37 @@ class ExoneracaoEfetivos(Atos):
     def _find_instances(self):
         _instances = []
         pattern = r"([cC]omiss[aã]o|[nN]atureza\s?[eE]special)"
-        _all = re.findall(self._inst_rule, self._text, flags=self._flags)
-        it = re.finditer(self._inst_rule, self._text, flags=self._flags)
-        for _ in it:
+        # _all = re.findall(self._inst_rule, self._text, flags=self._flags)
+        iterator = re.finditer(self._inst_rule, self._text, flags=self._flags)
+        for _ in iterator:
             _m = re.findall(pattern, _[0], 0)
             if not _m:
                 _instances.append(_.groups())
         return _instances
 
     def _props_names(self):
-        return ['tipo', 'nome','matricula','cargo_efetivo','classe','padrao','carreira','quadro', 'SEI','data','pedido', 'motivo', 'SIAPE', 'fundalamento_legal']
+        return [
+            'tipo',
+            'nome',
+            'matricula',
+            'cargo_efetivo',
+            'classe',
+            'padrao',
+            'carreira',
+            'quadro',
+            'SEI',
+            'data',
+            'pedido',
+            'motivo',
+            'SIAPE',
+            'fundalamento_legal'
+        ]
 
     def _rule_for_inst(self):
         start = r"(EXONERAR,\s?)"
-        body = r"((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.-])+)[,\sa-zA-Z0-9\\\/-]*)"
+        # body = r"((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.-])+)[,\sa-zA-Z0-9\\\/-]*)"
+        body = r'((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.,X-])+)\s'+ \
+            r'(?!.*\n?.*Cargo\sem\s+Comissao,|.*\n?.*Natureza\sEspecial,)[,\sa-zA-Z0-9\\\/-]*)'
         end = ""
         return start + body + end
 

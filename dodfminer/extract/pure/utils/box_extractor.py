@@ -16,8 +16,8 @@ def _extract_page_lines_content(page):
 
     """
     lis = []
-    for bl in page.getTextPage().extractDICT()['blocks']:
-        for line in bl['lines']:
+    for block in page.getTextPage().extractDICT()['blocks']:
+        for line in block['lines']:
             for span in line['spans']:
                 del span['color']
                 del span['flags']
@@ -68,7 +68,7 @@ def _get_doc_img(doc: fitz.Document):
     Returns:
         List[List[tuple(int, int, int, int, str, str, str, str, int)]]
         (xref, smask, width, height, bpc, colorspace,
-         alt. colorspace, filter, invoker)
+        alt. colorspace, filter, invoker)
     """
 
     return [page.getImageList(full=True) for page in doc]

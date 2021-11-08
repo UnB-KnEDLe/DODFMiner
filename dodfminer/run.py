@@ -10,6 +10,7 @@ Usage example::
 
 """
 
+
 from dodfminer.cli import CLI
 from dodfminer.downloader.core import Downloader
 from dodfminer.extract.pure.core import ContentExtractor
@@ -45,14 +46,18 @@ class Miner():
         if self.args.single_file is None:
             if self.args.type_of_extr is not None:
                 if self.args.type_of_extr == 'pure-text':
-                    ContentExtractor.extract_to_txt(folder=self.args.input_folder)
+                    ContentExtractor.extract_to_txt(
+                        folder=self.args.input_folder)
                 elif self.args.type_of_extr == 'with-titles':
                     ContentExtractor.extract_to_json(folder=self.args.input_folder,
                                                      titles_with_boxes=True)
                 elif self.args.type_of_extr == 'blocks':
-                    ContentExtractor.extract_to_json(folder=self.args.input_folder)
+                    ContentExtractor.extract_to_json(
+                        folder=self.args.input_folder)
             elif self.args.act != 'all':
-                extract_multiple_acts(self.args.input_folder, self.args.act, self.args.backend)
+                extract_multiple_acts(
+                    self.args.input_folder, self.args.act, self.args.backend)
+                # extract_multiple_acts_with_classification(self.args.input_folder, self.args.act, self.args.backend)
             elif self.args.xml is not False:
                 xml_multiple(self.args.input_folder, self.args.backend)
             else:
@@ -64,14 +69,17 @@ class Miner():
         if self.args.type_of_extr is not None:
             if self.args.type_of_extr == 'pure-text':
                 ContentExtractor.extract_text(self.args.single_file,
-                                                single=True)
+                                              single=True)
             elif self.args.type_of_extr == 'with-titles':
                 ContentExtractor.extract_structure(self.args.single_file,
-                                                    single=True)
+                                                   single=True)
             elif self.args.type_of_extr == 'blocks':
-                ContentExtractor.extract_text(self.args.single_file, single=True, block=True)
+                ContentExtractor.extract_text(
+                    self.args.single_file, single=True, block=True)
         elif self.args.act != 'all':
-            extract_multiple_acts(self.args.single_file, self.args.act, self.args.backend)
+            extract_multiple_acts(self.args.single_file,
+                                  self.args.act, self.args.backend)
+            # extract_multiple_acts_with_classification(self.args.single_file, self.args.act, self.args.backend)
         elif self.args.xml is not False:
             xml_multiple(self.args.single_file, self.args.backend)
         else:
@@ -90,6 +98,7 @@ def run():
         miner.extract_content()
     else:
         miner.cli.parser.print_help()
+
 
 if __name__ == '__main__':
     run()
