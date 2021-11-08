@@ -119,6 +119,9 @@ class CLI():
                            type=str, choices=['regex', 'ner'],
                            help="The backend to be used in CSV extraction")
 
+        group.add_argument('-c', '--committee', dest='committee', action='store_true',
+                            help="Use committee classification for acts")
+
         group.add_argument('-x', '--xml', dest='xml', default=False, nargs='*',
                             type=bool, help="Generate TeamTat XML Annotations")
 

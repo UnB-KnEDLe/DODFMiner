@@ -167,6 +167,26 @@ def test_run_extract_input_folder_one_act_back_end_ner():
         os.remove(folder+"/aposentadoria.csv")
 
 
+def test_run_extract_single_file_committee_classification():
+    folder = ""+os.path.dirname(__file__)+"/support/"
+    file = folder+"dodfminer_sf.pdf"
+    targets = ["cmd", "extract", "-s", file, "-a", "-c"]
+    with patch.object(sys, 'argv', targets):
+        run()
+        for act in act_choices:
+            assert os.path.isfile(folder+act+".csv")
+            os.remove(folder+act+".csv")
+
+def test_run_extract_input_folder_committee_classification():
+    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
+    targets = ["cmd", "extract", "-i", folder, "-a", "-c"]
+    with patch.object(sys, 'argv', targets):
+        run()
+        for act in act_choices:
+            assert os.path.isfile(folder+act+".csv")
+            os.remove(folder+act+".csv")
+    shutil.rmtree(folder + '/results')
+
 def test_run_extract_input_folder_xml():
     folder = ""+os.path.dirname(__file__)+"/support/xml_extract"
     targets = ["cmd", "extract", "-i", folder, "-x"]

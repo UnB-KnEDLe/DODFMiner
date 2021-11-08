@@ -41,7 +41,7 @@ def test_retirement_prop_names(act_ret):
 
 def test_retirement_rule(act_ret):
     assert act_ret._rule_for_inst(
-    ) == r"(APOSENTAR|CONCEDER,\sAPOSENTADORIA|CONCEDER\sAPOSENTADORIA,?\s?)([\s\S]*?(?<!lei)\s(?:[0-9|\s]*" + \
+    ) == r"(APOSENTAR[^-]|CONCEDER,\sAPOSENTADORIA|CONCEDER\sAPOSENTADORIA,?\s?)([\s\S]*?(?<!lei)\s(?:[0-9|\s]*" + \
         r"?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*[.|,])"
 
 
@@ -594,7 +594,7 @@ def test_nom_com_prop_names(act_nomcom):
 
 
 def test_nom_com_rule(act_nomcom):
-    assert act_nomcom._rule_for_inst() == r"(NOMEAR)([\s\S]*?)\.\s"
+    assert act_nomcom._rule_for_inst() == r"(NOMEAR)([\s\S]*?)((\.\s)|(?=(EXONERAR|NOMEAR)))"
 
 
 def test_nom_com_prop_rules_names(act_nomcom):
@@ -680,8 +680,8 @@ def test_nom_efet_prop_names(act_nom_efet):
 
 def test_nom_efet_rule(act_nom_efet):
     assert act_nom_efet._rule_for_inst(
-    ) == r"(NOMEAR\s)((?:[ao]s\scandidat[ao]s\sabaixo(?:[a-zA-Z_0-9,\s\/-\:\-\(\);]*).|" + \
-        r"(?:[ao]\scandidat[oa]\sabaixo(?:[a-zA-Z_0-9,\s\/-\:\-\(\)]*)))(?:\s[a-zA-Z_\s]*(?:deficiencia|especiais):(?:\s[\sA-Zo]+" + \
+    ) == r"(NOMEAR\s)((?:[ao]s\scandidat[ao]s\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*).|" + \
+        r"(?:[ao]\scandidat[oa]\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*)))(?:\s[a-zA-Z_\s]*(?:deficiencia|especiais):(?:\s[\sA-Zo]+" + \
         r",\s?\d{1,4}o?;?)+)?(?:\s)?(?:[\r\n\t\f\sa-zA-Z_\s]*classificacao:(?:\s[\sA-Zo]+,\s?\d{1,4}o?[,;]?)+)?)"
 
 

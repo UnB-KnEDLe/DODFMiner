@@ -24,3 +24,5 @@ Jinja2==2.11.3
 coveralls==2.1.2
 requests-mock==1.9.3
 pylint==2.11.1
+scikit-learn==0.24.2
+nltk==3.6.2
