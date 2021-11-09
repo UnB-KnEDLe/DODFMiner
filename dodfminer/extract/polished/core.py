@@ -21,7 +21,6 @@ from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.create_xml import XMLFy
 
-
 _acts_ids = {"aposentadoria": Retirements,
              "reversoes": Revertions,
              "nomeacao": NomeacaoComissionados,

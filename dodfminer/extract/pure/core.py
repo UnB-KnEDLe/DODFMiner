@@ -17,13 +17,14 @@ Usage example::
 import os
 import json
 import unicodedata
+import numpy as np
 
 from pathlib import Path
 
 import fitz
 
 from dodfminer.extract.pure.utils.title_extractor import ExtractorTitleSubtitle
-from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes
+from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes, sort_blocks
 
 RESULTS_PATH = "results/"
 RESULTS_PATH_JSON = "results/json"
@@ -96,8 +97,9 @@ class ContentExtractor:
         drawboxes_text = ''
         list_of_boxes = []
         pymu_file = fitz.open(file)
-        for textboxes in get_doc_text_boxes(pymu_file):
-            for text in textboxes:
+
+        for page_boxes in get_doc_text_boxes(pymu_file):
+            for text in page_boxes:
                 if int(text[1]) != 55 and int(text[1]) != 881:
                     if block:
                         norm_text = cls._normalize_text(text[4], norm)
@@ -149,6 +151,7 @@ class ContentExtractor:
 
         """
         content_dict = {}
+
         try:
             title_base = cls._extract_titles(file).json.keys()
             # Aqui eh realmente necessario pegar um eception generica
@@ -161,22 +164,34 @@ class ContentExtractor:
             first_title = False
             is_title = False
             actual_title = ''
+            section = None
+
             for box in boxes:
                 text = box[4]
-                for title in title_base:
-                    title.replace("\n", "")
-                    if text == title:
-                        first_title = True
-                        is_title = True
-                        actual_title = title
-                        if title not in content_dict.keys():
-                            content_dict.update({title: []})
-                    else:
-                        is_title = False
+                is_title = True
+
+                if text in ["SECAO I", "SECAO II", "SECAO III"]:
+                    section = text
+                    if section not in content_dict.keys():
+                        content_dict.update({section: {}})
+                else:
+                    for title in title_base:
+                        text = text.replace("\n", " ")
+                        title = title.replace("\n", " ")
+                        normalized_title = cls._normalize_text(title, norm)
+
+                        if text == normalized_title:
+                            first_title = True
+                            actual_title = normalized_title
+                            if title not in content_dict[section].keys():
+                                content_dict[section].update({normalized_title: []})
+                            break
+                        else:
+                            is_title = False
 
                 if first_title and not is_title:
                     if int(box[1]) != 55 and int(box[1]) != 881:
-                        content_dict[actual_title].append(box[:5])
+                        content_dict[section][actual_title].append(box[:5])
 
             return content_dict if not single else cls._save_single_file(file, 'json', json.dumps(content_dict))
 

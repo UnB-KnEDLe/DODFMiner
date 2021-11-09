@@ -61,16 +61,22 @@ def test_run_extract_single_file_pure_text():
 
 
 def test_run_extract_single_file_with_titles():
-    file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
+    file = "" + os.path.dirname(__file__) + "/support/dodfminer_sf.pdf"
     targets = ["cmd", "extract", "-s", file, "-t", "with-titles"]
+
     with patch.object(sys, 'argv', targets):
         run()
-        assert os.path.exists(file.replace('pdf', 'json'))
-        with open(file.replace('pdf', 'json'), encoding='utf-8') as json_file:
-            res_dict = json.loads(json_file.read())
-            assert "PODER EXECUTIVO" in res_dict.keys()
-        os.remove(file.replace('pdf', 'json'))
 
+        assert os.path.exists(file.replace('pdf', 'json'))
+
+        with open(file.replace('pdf', 'json'), encoding='utf-8') as json_pointer:
+            json_file = json_pointer.read()
+            res_dict = json.loads(json_file)
+
+        assert "SECAO I" in res_dict.keys()
+        assert "PODER EXECUTIVO" in res_dict['SECAO I'].keys()
+
+        os.remove(file.replace('pdf', 'json'))
 
 def test_run_extract_single_file_blocks():
     file = ""+os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
@@ -129,10 +135,13 @@ def test_run_extract_input_folder_one_act():
 def test_run_extract_input_folder_two_act():
     folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
     targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria", "abono"]
+
     with patch.object(sys, 'argv', targets):
         run()
+
         assert os.path.isfile(folder+"/aposentadoria.csv")
         assert os.path.isfile(folder+"/abono.csv")
+
         os.remove(folder+"/aposentadoria.csv")
         os.remove(folder+"/abono.csv")
 
