@@ -1,4 +1,5 @@
-"""Pure extractor core module.
+"""
+Pure extractor core module.
 
 This module contains the ActsExtractor class, which have all that is necessary to
 extract a single act or all the acts from a DODF.
@@ -48,7 +49,8 @@ class ActsExtractor:
 
     @staticmethod
     def get_act_obj(ato_id, file, backend):
-        """Extract a single act type from a single.
+        """
+        Extract a single act type from a single DODF.
 
         Object format.
 
@@ -65,7 +67,8 @@ class ActsExtractor:
 
     @staticmethod
     def get_all_obj(file, backend):
-        """Extract all act types from a single DODF.
+        """
+        Extract all act types from a single DODF object.
 
         Object format.
 
@@ -86,7 +89,8 @@ class ActsExtractor:
 
     @staticmethod
     def get_act_df(ato_id, file, backend):
-        """Extract a single act type from a single DODF.
+        """
+        Extract a single act type from a single DODF.
 
         Dataframe format.
 
@@ -103,7 +107,8 @@ class ActsExtractor:
 
     @staticmethod
     def get_all_df(file, backend):
-        """Extract all act types from a single DODF.
+        """
+        Extract all act types from a single DODF file.
 
         Dataframe format.
 
@@ -123,7 +128,8 @@ class ActsExtractor:
 
     @staticmethod
     def get_xml(file, _, i):
-        """Extract all act types from a single DODF.
+        """
+        Extract all act types from a single DODF in xml.
 
         Dataframe format.
 

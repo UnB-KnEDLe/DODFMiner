@@ -12,7 +12,7 @@ class AbonoPermanencia(Atos):
         super().__init__(file, backend)
 
     def _regex_flags(self):
-        return re.IGNORECASE
+        return re.IGNORECASE | re.MULTILINE
 
     def _act_name(self):
         return "Abono de Permanência"
@@ -32,7 +32,7 @@ class AbonoPermanencia(Atos):
     def _rule_for_inst(self):
         start = r"(Abono\sDE\sPERMANENCIA\s[(ao|equiva)][\s\S]*?)\s"
         body = r"([\s\S]*?"
-        end = r"\.\n)"
+        end = r"\d+\s*[\.|\-]\s*\d+\s*\/\s*\d+\s*\-\s*\d+)"
         return start + body + end
 
     def _prop_rules(self):

@@ -1,4 +1,6 @@
-"""Extract Title and Subtitles."""
+"""
+    Extract Title and Subtitles.
+"""
 
 # TODO: Improve docummentation
 # TODO: Remove global variables and functions
@@ -13,7 +15,7 @@ import json
 import operator
 import fitz
 
-import dodfminer.extract.pure.utils.title_filter as title_filter
+from dodfminer.extract.pure.utils import title_filter
 
 Box = namedtuple("Box", "x0 y0 x1 y1")
 BBox = namedtuple("BBox", "bbox")
@@ -64,9 +66,9 @@ def group_by_column(elements, width):
 
     """
     left_right = [[], []]
-    MID_W = width / 2
+    mid_width = width / 2
     for i in elements:
-        if i.bbox.x0 <= MID_W:
+        if i.bbox.x0 <= mid_width:
             left_right[0].append(i)
         else:
             left_right[1].append(i)
@@ -89,8 +91,8 @@ def group_by_page(elements):
     page_elements = {}
     for page_num in set(map(lambda x: x.page, elements)):
         page_elements[page_num] = []
-    for el in elements:
-        page_elements[el.page].append(el)
+    for element in elements:
+        page_elements[element.page].append(element)
     return page_elements
 
 
@@ -119,7 +121,7 @@ def sort_by_column(elements, width):
     return reduce(operator.add, ordenado)
 
 
-def _invert_TextTypeBboxPageTuple(textTypeBboxPageTuple):
+def invert_text_type_bbox_page_tuple(text_type_bbox_page_tuple):
     """Reverses the type between _TYPE_TITLE and _TYPE_SUBTITLE.
 
     Args:
@@ -129,7 +131,7 @@ def _invert_TextTypeBboxPageTuple(textTypeBboxPageTuple):
         copy of textTypeBboxPageTuple with its type field reversed.
 
     """
-    text, _type, bbox, page = textTypeBboxPageTuple
+    text, _type, bbox, page = text_type_bbox_page_tuple
     return TextTypeBboxPageTuple(text, _TYPE_TITLE if _type is _TYPE_SUBTITLE
                                  else _TYPE_SUBTITLE, bbox, page)
 
@@ -146,8 +148,8 @@ def _extract_bold_upper_page(page):
 
     """
     lis = []
-    for bl in page.getTextPage().extractDICT()['blocks']:
-        for line in bl['lines']:
+    for block in page.getTextPage().extractDICT()['blocks']:
+        for line in block['lines']:
             for span in line['spans']:
                 flags = span['flags']
                 txt: str = span['text']
@@ -279,7 +281,7 @@ def _get_titles_subtitles(elements, width_lis):
     # Happens mostly when there are only one title and other stuffs.
 
     if not titles and sub_titles:
-        return TitlesSubtitles([_invert_TextTypeBboxPageTuple(i) for i in sub_titles], titles)
+        return TitlesSubtitles([invert_text_type_bbox_page_tuple(i) for i in sub_titles], titles)
     else:
         return TitlesSubtitles(titles, sub_titles)
 
@@ -521,10 +523,10 @@ class ExtractorTitleSubtitle(object):
             be done. Its suffixed with ".json" if it's not.
 
         """
-        json.dump(self.json,
-                  open("{}{}".format(
-                      path, (not path.endswith(".json")) * ".json"), 'w'),
-                  ensure_ascii=False, indent='  ')
+        with open(f"{path}{(not path.endswith('.json')) * '.json'}", 'w', encoding='utf-8') as json_file:
+            json.dump(self.json,
+                      json_file,
+                      ensure_ascii=False, indent='  ')
 
     def reset(self):
         """Sets cache to False and reset others internal attributes.
@@ -548,25 +550,25 @@ def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
         dict containing "titles" as key and a list of titles,
             the same stored at base_name[.json]
     """
-    base_name = "{}/{}".format(
-        dir_path, base_name + (not base_name.endswith(".json")) * ".json")
+    base_name = f"{dir_path}/{base_name + (not base_name.endswith('.json')) * '.json'}"
     if os.path.exists(base_name) and not forced:
-        print("Error: {} already exists".format(base_name))
+        print(f"Error: {base_name} already exists")
         return None
     elif os.path.isdir(base_name):
-        print("Error: {} ir a directory".format(base_name))
+        print(f"Error: {base_name} ir a directory")
         return None
 
     titles = set()
     for file in filter(lambda x: not os.path.isdir(x) and x.endswith('.pdf'), os.listdir(dir_path)):
-        et = ExtractorTitleSubtitle(file)
-        titles_text = map(lambda x: x.text, et.titles)
+        extractor = ExtractorTitleSubtitle(file)
+        titles_text = map(lambda x: x.text, extractor.titles)
         titles.update(titles_text)
-    js = {"titles": list(titles)}
-    json.dump(js, open("{}".format(base_name), 'w'),
-              ensure_ascii=False, indent=indent*' ')
+    json_content = {"titles": list(titles)}
+    with open(f"{base_name}", 'w', encoding='uft-8') as json_file:
+        json.dump(json_content, json_file,
+                  ensure_ascii=False, indent=indent*' ')
 
-    return js
+    return json_content
 
 
 def gen_hierarchy_base(dir_path=".",
@@ -578,6 +580,7 @@ def gen_hierarchy_base(dir_path=".",
         base_name: titles' base file name
         forced: proceed even if folder `base_name` already exists
         indent: how many spaces used will be used for indent
+
     Returns:
         List[Dict[str, List[Dict[str, List[Dict[str, str]]]]]]
         e.g:
@@ -603,7 +606,7 @@ def gen_hierarchy_base(dir_path=".",
         dir_path = "."
     try:
         os.makedirs(folder, exist_ok=forced)
-    except Exception as error:
+    except OSError as error:
         print(error)
         return None
 

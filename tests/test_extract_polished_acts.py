@@ -182,7 +182,7 @@ def test_abono_name(act_abono):
 
 
 def test_abono_flags(act_abono):
-    assert act_abono._regex_flags() == re.IGNORECASE
+    assert act_abono._regex_flags() == re.IGNORECASE | re.MULTILINE
 
 
 def test_abono_prop_names(act_abono):
@@ -195,7 +195,7 @@ def test_abono_prop_names(act_abono):
 
 def test_abono_rule(act_abono):
     assert act_abono._rule_for_inst(
-    ) == r"(Abono\sDE\sPERMANENCIA\s[(ao|equiva)][\s\S]*?)\s([\s\S]*?\.\n)"
+    ) == r"(Abono\sDE\sPERMANENCIA\s[(ao|equiva)][\s\S]*?)\s([\s\S]*?\d+\s*[\.|\-]\s*\d+\s*\/\s*\d+\s*\-\s*\d+)"
 
 
 def test_abono_prop_rules_names(act_abono):
@@ -271,7 +271,8 @@ def test_exoneracao_prop_names(act_exoneracao):
 
 
 def test_exoneracao_rule(act_exoneracao):
-    assert act_exoneracao._rule_for_inst() == r"(EXONERAR)([\s\S]*?)\."
+    assert act_exoneracao._rule_for_inst() == r"(EXONERAR)((?=.*Comissao|.*\n.*Comissao|.*Especial|.*\n.*Especial )" + \
+        r"[\s\S]*?(?:\.\n|NOMEAR|\d+\-\d+\/\d+\-\d+\.))"
 
 
 def test_exoneracao_prop_rules_names(act_exoneracao):
@@ -348,7 +349,8 @@ def test_exo_efet_prop_names(act_exo_efet):
 
 def test_exo_efet_rule(act_exo_efet):
     assert act_exo_efet._rule_for_inst(
-    ) == r"(EXONERAR,\s?)((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.-])+)[,\sa-zA-Z0-9\\\/-]*)"
+    ) == r"(EXONERAR,\s?)((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.,X-])+)\s" + \
+        r"(?!.*\n?.*Cargo\sem\s+Comissao,|.*\n?.*Natureza\sEspecial,)[,\sa-zA-Z0-9\\\/-]*)"
 
 
 def test_exo_efet_prop_rules_names(act_exo_efet):
