@@ -278,8 +278,7 @@ signature-mutators=
 
 # List of note tags to take in consideration, separated by a comma.
 notes=FIXME,
-      XXX,
-      TODO
+      XXX
 
 # Regular expression of note tags to take in consideration.
 #notes-rgx=

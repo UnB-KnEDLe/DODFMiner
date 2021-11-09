@@ -1,7 +1,5 @@
 """Find titles using a Filter."""
 
-import functools
-
 
 class BoldUpperCase:
     """Filter functions useful for bold and upper case text.
@@ -20,7 +18,7 @@ class BoldUpperCase:
     BOLD_FLAGS = [16, 20]
 
     @classmethod
-    def dict_text(cls, d):
+    def dict_text(cls, data):
         """Check if text is title.
 
         Evaluates to true if d['text'] matches the following conditions:
@@ -32,14 +30,14 @@ class BoldUpperCase:
         Returns:
             Boolean indicating if text is title.
         """
-        t = d['text'].strip().strip('.')
-        cond1 = 4 * " " not in t
-        cond2 = len(t) > cls.TEXT_MIN
-        cond3 = t == t.upper()
+        text = data['text'].strip().strip('.')
+        cond1 = 4 * " " not in text
+        cond2 = len(text) > cls.TEXT_MIN
+        cond3 = text == text.upper()
         return cond1 and cond2 and cond3
 
     @classmethod
-    def dict_bold(cls, d):
+    def dict_bold(cls, data):
         """Hmm.
 
         Evaluates do True if d['flags'] matches the following conditions:
@@ -47,5 +45,5 @@ class BoldUpperCase:
             - is one of the values in BoldUpperCase.BOLD_FLAGS
 
         """
-        flags = d['flags']
+        flags = data['flags']
         return flags in cls.BOLD_FLAGS

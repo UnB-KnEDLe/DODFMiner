@@ -231,19 +231,19 @@ def test_sort_by_column(elements_and_width, elements_expected_sort):
 def test_invert_text_type_bbox_page_tuple_1():
     tup = Tuple('texto', title_extractor._TYPE_SUBTITLE, 123, 34)
     inv_tup = Tuple('texto', title_extractor._TYPE_TITLE, 123, 34)
-    assert inv_tup == title_extractor._invert_TextTypeBboxPageTuple(tup)
+    assert inv_tup == title_extractor.invert_text_type_bbox_page_tuple(tup)
 
 
 def test_invert_text_type_bbox_page_tuple_2():
     tup = Tuple('nadaver', title_extractor._TYPE_TITLE, 123, 34)
     inv_tup = Tuple('nadaver', title_extractor._TYPE_SUBTITLE, 123, 34)
-    assert inv_tup == title_extractor._invert_TextTypeBboxPageTuple(tup)
+    assert inv_tup == title_extractor.invert_text_type_bbox_page_tuple(tup)
 
 
 def test_invert_text_type_bbox_page_tuple_3():
     tup = Tuple('nadaver', title_extractor._TYPE_TITLE, 123, 34)
     inv_tup = Tuple('nadaperder', title_extractor._TYPE_SUBTITLE, 123, 34)
-    assert inv_tup != title_extractor._invert_TextTypeBboxPageTuple(tup)
+    assert inv_tup != title_extractor.invert_text_type_bbox_page_tuple(tup)
 
 
 def test_extract_bold_upper_page():

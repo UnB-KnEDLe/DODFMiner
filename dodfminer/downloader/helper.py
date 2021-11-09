@@ -11,9 +11,8 @@ def req1(year):
     url1 = LISTAR_URL+f'dir={str(year)}'
     return url1
 
+
 # req2 returns list with available DODFs for the given month
-
-
 def req2(url1, month):
     if "_" in month:
         url2 = url1 + '/' + month

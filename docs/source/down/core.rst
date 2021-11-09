@@ -33,11 +33,11 @@ URL Making
 ----------
 
 Methods that construct an URL to further make the download request.
-
+..
 .. automethod:: dodfminer.downloader.core.Downloader._make_url
-
+..
 .. automethod:: dodfminer.downloader.core.Downloader._make_href_url
-
+..
 .. automethod:: dodfminer.downloader.core.Downloader._make_download_url
 
 Web Requests
@@ -46,8 +46,8 @@ Web Requests
 Methods that handle the download request and its execution.
 
 .. automethod:: dodfminer.downloader.core.Downloader._fail_request_message
-    
-.. automethod:: dodfminer.downloader.core.Downloader._get_soup_link
+..   
+   automethod:: dodfminer.downloader.core.Downloader._get_soup_link
 
 .. automethod:: dodfminer.downloader.core.Downloader._download_pdf 
 
