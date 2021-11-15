@@ -1,6 +1,8 @@
 """Regras regex para atos de Reversões."""
 
 import re
+import os
+import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -14,6 +16,11 @@ class Revertions(Atos):
 
     def _act_name(self):
         return "Reversão"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/reversao.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ["Tipo do Ato", "SEI", "Nome", "Matricula", "Cargo", "Classe",

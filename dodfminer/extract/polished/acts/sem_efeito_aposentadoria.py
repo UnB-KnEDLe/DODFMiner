@@ -1,4 +1,6 @@
 import re
+import os
+import joblib
 from typing import List, Match
 import pandas as pd
 import numpy as np
@@ -79,6 +81,11 @@ class SemEfeitoAposentadoria(Atos):
         self._raw_matches = []
         self._nlp = nlp
         super().__init__(file, backend)
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/sem_efeito_apo.pkl'
+        return joblib.load(f_path)
 
     def _act_name(self):
         return "Atos tornados sem efeito - aposentadoria"

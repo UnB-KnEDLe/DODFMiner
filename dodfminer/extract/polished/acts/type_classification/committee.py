@@ -48,6 +48,9 @@ class Committee:
     def transform(self, X, y):
         """ Initializes the pipeline for preprocessing and classification. """
         self.y = y
+
+        if len(y) == 0:
+            return []
         
         return self.pipe.transform(X)
     
