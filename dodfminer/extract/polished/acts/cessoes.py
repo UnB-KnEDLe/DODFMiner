@@ -1,4 +1,6 @@
 import re
+import os
+import joblib
 from typing import List, Match
 import pandas as pd
 import numpy as np
@@ -47,6 +49,11 @@ class Cessoes(Atos):
         # self._processed_text = remove_crossed_words(open(file).read())
         self._raw_matches = []
         super().__init__(file, backend)
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/cessao.pkl'
+        return joblib.load(f_path)
 
     def _act_name(self):
         return "Cessoes"

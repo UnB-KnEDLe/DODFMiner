@@ -1,6 +1,8 @@
 """Regras regex para ato de Substituição."""
 
 import re
+import os
+import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -16,6 +18,11 @@ class Substituicao(Atos):
 
     def _regex_flags(self):
         return re.IGNORECASE
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/substituicao.pkl'
+        return joblib.load(f_path)
 
     def _act_name(self):
         return "Substituição de Funções"

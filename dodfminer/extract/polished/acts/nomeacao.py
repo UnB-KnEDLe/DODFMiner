@@ -15,7 +15,7 @@ class NomeacaoComissionados(Atos):
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/models/nomeacao_ner.pkl'
+        f_path += '/models/comissionados_nome.pkl'
         return joblib.load(f_path)
 
     def _props_names(self):
@@ -54,6 +54,11 @@ class NomeacaoEfetivos(Atos):
 
     def _act_name(self):
         return "Nomeação de Efetivos"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/efetivos_nome.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ['tipo','edital_normativo','data_do_edital_normativo','DODF_edital_normativo','data_DODF_edital_normativo','edital_resultado_final','data_edital_resultado_final','cargo','especialiade','carreira','orgao','nome_candidato','classificacao','pne','sei','reposicionamento']
