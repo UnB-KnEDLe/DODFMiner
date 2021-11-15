@@ -257,10 +257,8 @@ class ActNER:
             for value in ato:
                 value = ' '.join(value)
                 values.append(value)
-            if len(values) == 1:
+            if len(values) >= 1:
                 dict_ato[key] = values[0]
-            else:
-                dict_ato[key] = values
 
 
             if dict_ato[key] == []:
