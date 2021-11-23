@@ -6,6 +6,9 @@ extract an act and, its proprieties, using a trained ner model.
 """
 
 import numpy as np
+import os
+import joblib
+from nltk import word_tokenize
 
 # pylint: disable=too-few-public-methods
 class ActNER:
@@ -47,7 +50,23 @@ class ActNER:
             self._backend = 'regex'
 
     @classmethod
-    def _get_features(cls, act):
+    def number_of_digits(self, s):
+        """ Returns number of digits in string. """
+        return sum(c.isdigit() for c in s)
+
+    @classmethod
+    def get_base_feat(self, word):
+        """ Returns base features of a word. """
+        d = {
+            'word': word.lower(),
+            'is_title': word.istitle(),
+            'is_upper': word.isupper(),
+            'num_digits': str(self.number_of_digits(word)),
+        }
+        return d
+
+    @classmethod
+    def _get_features(cls, sentence):
         """Create features for each word in act.
 
         Create a list of dict of words features to be used in the predictor module.
@@ -60,19 +79,104 @@ class ActNER:
 
         """
         sent_features = []
-        for i, _ in enumerate(act):
+
+        for i in range(len(sentence)):
+            word = sentence[i]
+    
+            
+            word_before = '' if i == 0 else sentence[i-1]
+            word_before2 = '' if i <= 1 else sentence[i-2]
+            word_before3 = '' if i <= 2 else sentence[i-3]
+            
+            word_after = '' if i+1 == len(sentence) else sentence[i+1]
+            word_after2 = '' if i+2 >= len(sentence) else sentence[i+2]
+            word_after3 = '' if i+3 >= len(sentence) else sentence[i+3]
+        
+            word_before = cls.get_base_feat(word_before)
+            word_before2 = cls.get_base_feat(word_before2)
+            word_before3 = cls.get_base_feat(word_before3)
+            word_after = cls.get_base_feat(word_after)
+            word_after2 = cls.get_base_feat(word_after2)
+            word_after3 = cls.get_base_feat(word_after3)
+            
             word_feat = {
-                'word': act[i].lower(),
-                'capital_letter': act[i][0].isupper(),
-                'all_capital': act[i].isupper(),
-                'isdigit': act[i].isdigit(),
-                'word_before': act[i].lower() if i == 0 else act[i-1].lower(),
-                'word_after:': act[i].lower() if i+1 >= len(act) else act[i+1].lower(),
-                'BOS': i == 0,
-                'EOS': i == len(act)-1
+                'bias': 1.0,
+                'word': word.lower(),
+                'is_title': word.istitle(),
+                'is_upper': word.isupper(),
+                'is_digit': word.isdigit(),
+                
+                'num_digits': str(cls.number_of_digits(word)),
+                'has_hyphen': '-' in word,
+                'has_dot': '.' in word,
+                'has_slash': '/' in word,
             }
+            
+            if i > 0:
+                word_feat.update({
+                    '-1:word': word_before['word'].lower(),
+                    '-1:title': word_before['is_title'],
+                    '-1:upper': word_before['is_upper'],
+                    '-1:num_digits': word_before['num_digits'],
+                })
+            else:
+                word_feat['BOS'] = True
+                
+            if i > 1:
+                word_feat.update({
+                    '-2:word': word_before2['word'].lower(),
+                    '-2:title': word_before2['is_title'],
+                    '-2:upper': word_before2['is_upper'],
+                    '-2:num_digits': word_before2['num_digits'],
+                })
+                
+            if i > 2:
+                word_feat.update({
+                    '-3:word': word_before3['word'].lower(),
+                    '-3:title': word_before3['is_title'],
+                    '-3:upper': word_before3['is_upper'],
+                    '-3:num_digits': word_before3['num_digits'],
+                })
+                
+            if i < len(sentence) - 1:
+                word_feat.update({
+                    '+1:word': word_after['word'].lower(),
+                    '+1:title': word_after['is_title'],
+                    '+1:upper': word_after['is_upper'],
+                    '+1:num_digits': word_after['num_digits'],
+                })
+            else:
+                word_feat['EOS'] = True
+                
+            if i < len(sentence) - 2:
+                word_feat.update({
+                    '+2:word': word_after2['word'].lower(),
+                    '+2:title': word_after2['is_title'],
+                    '+2:upper': word_after2['is_upper'],
+                    '+2:num_digits': word_after2['num_digits'],
+                })
+                
+            if i < len(sentence) - 3:
+                word_feat.update({
+                    '+3:word': word_after3['word'].lower(),
+                    '+3:title': word_after3['is_title'],
+                    '+3:upper': word_after3['is_upper'],
+                    '+3:num_digits': word_after3['num_digits'],
+                })
+                
             sent_features.append(word_feat)
+        
         return sent_features
+
+    def add_common_attributes(self, feats):
+        f_path = os.path.dirname(os.path.dirname(__file__))
+        f_path += '/acts/models/atributos_gerais.pkl'
+        crf = joblib.load(f_path)
+
+        predictions = crf.predict_single(feats)
+
+        for i in range(len(feats)):
+            feats[i]['predicao'] = predictions[i]
 
     def _prediction(self, act):
         """Predict classes for a single act.
@@ -86,7 +190,10 @@ class ActNER:
         """
         print("Predicting")
         act = self._preprocess(act)
+
         feats = self._get_features(act)
+        self.add_common_attributes(feats)
+
         predictions = self._model.predict_single(feats)
         return self._predictions_dict(act, predictions)
 
@@ -99,12 +206,9 @@ class ActNER:
 
         Returns:
             The list of words in the act.
-        """
-        sentence = sentence.replace(',', ' , ').replace(';', ' ; '). \
-                   replace(':', ' : ').replace('. ', ' . ').replace('\n', ' ')
-        if sentence[len(sentence)-2:] == '. ':
-            sentence = sentence[:len(sentence)-2] + " ."
-        return sentence.split()
+        """ 
+        sentence = word_tokenize(sentence.replace('/', ' / ').replace(':', ' : ').replace('``', ' ').replace("''", ' '))
+        return sentence
 
     def _predictions_dict(self, sentence, prediction):
         """Create dictionary of proprieties.
@@ -153,10 +257,8 @@ class ActNER:
             for value in ato:
                 value = ' '.join(value)
                 values.append(value)
-            if len(values) == 1:
+            if len(values) >= 1:
                 dict_ato[key] = values[0]
-            else:
-                dict_ato[key] = values
 
 
             if dict_ato[key] == []:

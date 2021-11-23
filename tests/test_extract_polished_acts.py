@@ -11,6 +11,8 @@ from dodfminer.extract.polished.acts.exoneracao import Exoneracao, ExoneracaoEfe
 from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
+from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 
 file = ""+os.path.dirname(__file__)+"/support/valid.txt"
 
@@ -157,7 +159,7 @@ def test_act_retretirement_consistence_rule(act_retapos):
 
 def test_act_retretirement_ner():
     act = RetAposentadoria(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
 #
@@ -312,9 +314,9 @@ def test_act_exoneracao_consistence_rule(act_exoneracao):
         1 == len(act_exoneracao._prop_rules())
 
 
-def test_act_exo_name_ner():
+def test_act_exo_com_ner():
     act = Exoneracao(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
 #
@@ -396,7 +398,7 @@ def test_act_exo_efet_consistence_rule(act_exo_efet):
 
 def test_act_exo_efet_ner():
     act = ExoneracaoEfetivos(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 
 #
@@ -485,7 +487,7 @@ def test_act_substitution_consistence_rule(act_subs):
 
 def test_act_substituicao_ner():
     act = Substituicao(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
 #
@@ -562,7 +564,7 @@ def test_act_revertions_consistence_rule(act_revert):
 
 def test_act_revertions_ner():
     act = Revertions(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
 #
@@ -629,7 +631,7 @@ def test_act_nom_com_consistence_rule(act_nomcom):
     assert len(act_nomcom._props_names())-1 == len(act_nomcom._prop_rules())
 
 
-def test_act_nomcom_ner():
+def test_act_nom_com_ner():
     act = NomeacaoComissionados(file, 'ner')
     assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
@@ -735,4 +737,17 @@ def test_act_nom_efet_consistence_rule(act_nom_efet):
 
 def test_act_nom_efet_ner():
     act = NomeacaoEfetivos(file, 'ner')
-    assert act._load_model() is None
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+
+#
+#
+#
+#
+
+def test_act_cessao_ner():
+    act = Cessoes(file, 'ner')
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+
+def test_act_sem_efeito_apo_ner():
+    act = SemEfeitoAposentadoria(file, 'ner')
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)

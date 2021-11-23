@@ -19,7 +19,7 @@ class AbonoPermanencia(Atos):
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/models/abono_ner.pkl'
+        f_path += '/models/abono.pkl'
         return joblib.load(f_path)
 
     def _props_names(self):

@@ -1,6 +1,8 @@
 """Regras regex para ato de Exoneração."""
 
 import re
+import os
+import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -11,6 +13,11 @@ class Exoneracao(Atos):
 
     def _act_name(self):
         return "Exoneração"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/comissionados_exo.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ['Tipo do Ato', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
@@ -49,6 +56,11 @@ class ExoneracaoEfetivos(Atos):
 
     def _act_name(self):
         return "Exoneração Efetivos"
+
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/efetivos_exo.pkl'
+        return joblib.load(f_path)
 
     def _find_instances(self):
         _instances = []

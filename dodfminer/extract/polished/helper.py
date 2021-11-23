@@ -143,6 +143,10 @@ def extract_multiple_acts_with_committee(path, types, backend):
             all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
 
     dataframe = pd.concat(all_acts, ignore_index = True)
+
+    if len(dataframe) == 0:
+        dataframe = pd.DataFrame(columns = ['text', 'type'])
+
     committee_classification(dataframe, path, types, backend)
 
 def committee_classification(all_acts, path, types, backend):
@@ -162,7 +166,7 @@ def committee_classification(all_acts, path, types, backend):
     models_path = classification_folder + 'models/models.pkl'
 
     committee = Committee(models_path)
-    
+
     new_types = committee.transform(all_acts['text'], all_acts['type'])
 
     all_acts['type']  = new_types
