@@ -67,24 +67,6 @@ class ActRegex:
         """Flag of the regex search"""
         return 0
 
-    def _regex_instances(self):
-        """Search for all instances of the act using the defined rule.
-
-        Returns:
-            List of all act instances in the text.
-        """
-
-        # pylint: disable=no-member
-        found = re.findall(self._inst_rule, self._text, flags=self._flags)
-        results = []
-        for instance in found:
-            head, body, *_ = instance
-            # pylint: disable=no-member
-            self._acts_str.append(head+body)
-            results.append(body)
-
-        return results
-
     def _find_prop_value(self, rule, act):
         """Find a single proprietie in an single act.
 
