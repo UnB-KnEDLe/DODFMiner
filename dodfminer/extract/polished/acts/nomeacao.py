@@ -18,6 +18,11 @@ class NomeacaoComissionados(Atos):
         f_path += '/models/comissionados_nome.pkl'
         return joblib.load(f_path)
 
+    def _load_seg_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/seg_models/Ato_Nomeacao_Comissionado.pkl'
+        self._seg_model = joblib.load(f_path)
+
     def _props_names(self):
         return ['Tipo do Ato', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
                 'Simbolo', 'Cargo Comissao', 'Lotacao', 'Orgao']

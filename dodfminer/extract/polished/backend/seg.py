@@ -22,10 +22,9 @@ class ActSeg:
             else:
                 print(f"Act {self._name} does not have a segmentation model: Using regex for segmentation")
                 self._segfunction = self._regex_instances
-        elif self._backend == 'regex':
-            self._segfunction = self._regex_instances
         else:
-            raise NotImplementedError("Non-existent backend option")
+            self._backend = 'regex'
+            self._segfunction = self._regex_instances
 
     def _load_seg_model(self):
         """Load Model from models/folder.
@@ -64,8 +63,9 @@ class ActSeg:
         """
         text = self._preprocess(self._text)
         feats = self._get_features(text)
-        pred = self._seg_model.predict_single(feats)
+        pred = self._seg_model['clf'].predict_single(feats)
         acts = self._extract_acts(text, pred)
+        self._acts_str += acts
         return acts
 
     def _preprocess(self, text):
@@ -201,7 +201,7 @@ class ActSeg:
         current_act = []
         reading_act = False
         for i in range(len(prediction)):
-            if prediction[i] == 'B-ato':
+            if prediction[i][0] == 'B': #B-ato
                 reading_act = True
                 current_act.append(text[i])
                 continue
@@ -209,7 +209,7 @@ class ActSeg:
             if reading_act:
                 current_act.append(text[i])
                 
-            if reading_act and prediction[i] == 'E-ato':
+            if reading_act and prediction[i][0] == 'E': #E-ato
                 acts.append(' '.join(current_act))
                 current_act = []
                 reading_act = False
