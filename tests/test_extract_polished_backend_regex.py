@@ -43,16 +43,6 @@ def test_act_regex_regex_props(act_regex):
     assert act == {"tipo_ato": "Teste", "numeros": "1232",
                    "capitalizado": "Renato", "nao_encontra": np.nan}
 
-
-def test_act_regex_regex_instances(act_regex):
-    act_regex._text = "fghngfnfgnfgnfgnrr MENSAGEM: O Renato testa esse codigo 1232 vezes por dia. qeqcnoecqucqpwxqrthrweqqeprto MENSAGEM: " + \
-        "O Joao testa esse codigo 2 vezes por dia. wsfhsn wenrwermrkne MENSAGEM: O Lucas testa esse codigo 0 vezes por dia. efwefwefwfwefwetrynyujuju"
-    act_regex.acts_str = []
-    act = act_regex._regex_instances()
-    assert act == [' O Renato testa esse codigo 1232 vezes por dia',
-                   ' O Joao testa esse codigo 2 vezes por dia', ' O Lucas testa esse codigo 0 vezes por dia']
-
-
 def test_act_regex_find_prop_value(act_regex):
     res = act_regex._find_prop_value("(de)", "String de teste")
     assert res == ('de',)
@@ -83,3 +73,11 @@ def test_no_prop_rule_act_regex(_):
 def test_not_implemented_functions_act_regex():
     with pytest.raises(Exception):
         ActRegex()
+
+#def test_act_seg_regex_instances(act_seg):
+#    act_seg._text = "fghngfnfgnfgnfgnrr MENSAGEM: O Renato testa esse codigo 1232 vezes por dia. qeqcnoecqucqpwxqrthrweqqeprto MENSAGEM: " + \
+#        "O Joao testa esse codigo 2 vezes por dia. wsfhsn wenrwermrkne MENSAGEM: O Lucas testa esse codigo 0 vezes por dia. efwefwefwfwefwetrynyujuju"
+#    act_seg.acts_str = []
+#    act = act_seg._regex_instances()
+#    assert act == [' O Renato testa esse codigo 1232 vezes por dia',
+#                   ' O Joao testa esse codigo 2 vezes por dia', ' O Lucas testa esse codigo 0 vezes por dia']

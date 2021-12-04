@@ -58,7 +58,7 @@ def test_act_base_invalid_file(*_):
 @patch.object(Atos, '_props_names', return_value=props)
 @patch.object(Atos, '_rule_for_inst', return_value=RULE_PROP)
 @patch.object(Atos, '_prop_rules', return_value=rule_dict)
-def test_act_non_existiong_backend(*_):
+def test_act_non_existing_backend(*_):
     ato = Atos(valid_file, 'lol')
     assert ato._backend == 'regex'
 
@@ -142,13 +142,13 @@ def test_act_file_name(act_base_regex):
 def test_act_base_raw_acts_regex(act_base_regex):
     act_base_regex._backend = 'regex'
     act_base_regex._text = TEXT
-    assert act_base_regex._extract_instances() == act
+    assert act_base_regex._regex_instances() == act
 
 
 def test_act_base_raw_acts_ner(act_base_regex):
     act_base_regex._backend = 'ner'
     act_base_regex._text = TEXT
-    assert act_base_regex._extract_instances() == act
+    assert act_base_regex._regex_instances() == act
 
 
 def test_act_base_raw_acts_error(act_base_regex):

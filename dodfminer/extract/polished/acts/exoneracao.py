@@ -21,8 +21,8 @@ class Exoneracao(Atos):
 
     def _load_seg_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/Ato_Exoneracao_Comissionado.pkl'
-        self._seg_model = joblib.load(f_path)
+        f_path += '/seg_models/comissionados_exo.pkl'
+        return joblib.load(f_path)
 
     def _props_names(self):
         return ['Tipo do Ato', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
@@ -69,8 +69,8 @@ class ExoneracaoEfetivos(Atos):
 
     def _load_seg_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/Ato_Exoneracao_Efetivo.pkl'
-        self._seg_model = joblib.load(f_path)
+        f_path += '/seg_models/efetivos_exo.pkl'
+        return joblib.load(f_path)
 
     def _find_instances(self):
         _instances = []

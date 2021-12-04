@@ -21,8 +21,8 @@ class Retirements(Atos):
 
     def _load_seg_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/Ato_Aposentadoria.pkl'
-        self._seg_model = joblib.load(f_path)
+        f_path += '/seg_models/aposentadoria.pkl'
+        return joblib.load(f_path)
 
     def _act_name(self):
         return "Aposentadoria"

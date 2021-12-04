@@ -54,7 +54,7 @@ class Atos(ActRegex, ActNER, ActSeg):
         self._acts_str = []
         self._columns = self._props_names()
 
-        self._raw_acts = self._segfunction()
+        self._raw_acts = self._seg_function()
         self._acts = self._extract_props()
         self._data_frame = self._build_dataframe()
 

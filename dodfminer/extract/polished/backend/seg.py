@@ -10,24 +10,40 @@ from nltk import word_tokenize
 class ActSeg:
     """Base class for act segmentation.
 
+    This class encapsulate all functions, and attributes related
+    to the process of segmentation of an act.
+
+    Note:
+        This class is one of the fathers of the Base act class.
+
+    Attributes:
+        _seg_function: Function for segmentation.
+
     """
 
     def __init__(self):
-        """Initialize the Segmentation class.
+        self._seg_function = self._load_seg_function()
+
+    def _load_seg_function(self):
+        """Load segmentation function into the _seg_function variable.
+
+        If the segmentation backend is ner and a NER model is available, loads the function _crf_instances.
+        Otherwise, loads the function _regex_instances.
+
         """
         if self._backend == 'ner':
-            self._load_seg_model()
+            self._seg_model = self._load_seg_model()
             if self._seg_model is not None:
-                self._segfunction = self._crf_instances
+                return self._crf_instances
             else:
                 print(f"Act {self._name} does not have a segmentation model: Using regex for segmentation")
-                self._segfunction = self._regex_instances
+                return self._regex_instances
         else:
             self._backend = 'regex'
-            self._segfunction = self._regex_instances
-
+            return self._regex_instances
+    
     def _load_seg_model(self):
-        """Load Model from models/folder.
+        """Load Segmentation Model from models/folder.
 
         Note:
             This function needs to be overwriten in
@@ -35,7 +51,7 @@ class ActSeg:
             overwrite the segmentation backend will fall back to regex.
 
         """
-        self._seg_model = None
+        return None
 
     def _regex_instances(self):
         """Search for all instances of the act using the defined rule.
@@ -63,18 +79,21 @@ class ActSeg:
         """
         text = self._preprocess(self._text)
         feats = self._get_features(text)
-        pred = self._seg_model['clf'].predict_single(feats)
+        pred = self._seg_model.predict_single(feats)
         acts = self._extract_acts(text, pred)
         self._acts_str += acts
         return acts
 
     def _preprocess(self, text):
+        """Preprocess text for CRF model."""
         return word_tokenize(text.replace('-', ' - ').replace('/', ' / ').replace('.', ' . ').replace(',', ' , '))
 
     def _number_of_digits(self, s):
+        """Returns number of digits in a string."""
         return sum(c.isdigit() for c in s)
 
     def _get_base_feat(self, word):
+        """Returns basic features for a word, used in the CRF model."""
         d = {
             'word': word.lower(),
             'is_title': word.istitle(),
@@ -83,7 +102,7 @@ class ActSeg:
         }
         return d
 
-    def _geat_features(self, text):
+    def _get_features(self, text):
         """Create features for each word in a text.
 
         Args:
@@ -196,6 +215,13 @@ class ActSeg:
         return features
 
     def _extract_acts(self, text, prediction):
+        """Extract and join words predicted to be part of an act.
+        
+        Args:
+            text (list): List of words in an act.
+            prediction (list): Predictions made for each word in the act.
+            
+        """
         acts = []
         
         current_act = []
@@ -213,5 +239,8 @@ class ActSeg:
                 acts.append(' '.join(current_act))
                 current_act = []
                 reading_act = False
+                
+        if reading_act:
+            acts.append(' '.join(current_act))
             
         return acts

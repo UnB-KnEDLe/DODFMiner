@@ -89,8 +89,8 @@ class SemEfeitoAposentadoria(Atos):
 
     def _load_seg_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/Ato_Tornado_Sem_Efeito_Apo.pkl'
-        self._seg_model = joblib.load(f_path)
+        f_path += '/seg_models/sem_efeito_apo.pkl'
+        return joblib.load(f_path)
 
     def _act_name(self):
         return "Atos tornados sem efeito - aposentadoria"
