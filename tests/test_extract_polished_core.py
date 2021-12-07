@@ -10,6 +10,7 @@ from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
+from dodfminer.extract.polished.acts.contrato import Contratos
 
 
 from dodfminer.extract.polished.create_xml import XMLFy
@@ -27,7 +28,8 @@ def test_polished_core_acts():
         "efetivos_nome": NomeacaoEfetivos,
         "efetivos_exo": ExoneracaoEfetivos,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-        "cessoes": Cessoes
+        "cessoes": Cessoes,
+        "contrato": Contratos
     }
 
 
@@ -54,7 +56,9 @@ def test_polished_core_act_obj():
         "sem_efeito_aposentadoria", "", "regex"), SemEfeitoAposentadoria)
     assert isinstance(ActsExtractor.get_act_obj(
         "cessoes", "", "regex"), Cessoes)
-    assert len(_acts_ids) == 11
+    assert isinstance(ActsExtractor.get_act_obj(
+        "contrato", "", "regex"), Contratos)
+    assert len(_acts_ids) == 12
 
 
 def test_polished_core_get_all_obj():
@@ -70,9 +74,10 @@ def test_polished_core_get_all_obj():
         "reversoes": Revertions("", "regex"),
         "substituicao": Substituicao("", "regex"),
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex"),
-        "cessoes": Cessoes("", "regex")
+        "cessoes": Cessoes("", "regex"),
+        "contrato": Contratos("", "regex")
     }
-    assert len(objs) == 11
+    assert len(objs) == 12
     assert len(objs) == len(needed)
 
 
@@ -88,7 +93,8 @@ def test_polished_core_act_df():
     assert isinstance(ActsExtractor.get_act_df("exoneracao", "", "regex"), type(Exoneracao("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("sem_efeito_aposentadoria", "", "regex"), type(SemEfeitoAposentadoria("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("cessoes", "", "regex"), type(Cessoes("", "regex").data_frame))
-    assert len(_acts_ids) == 11
+    assert isinstance(ActsExtractor.get_act_df("contrato", "", "regex"), type(Contratos("", "regex").data_frame))
+    assert len(_acts_ids) == 12
 
 
 def test_polished_core_get_all_df():
@@ -104,9 +110,10 @@ def test_polished_core_get_all_df():
         "reversoes": Revertions("", "regex").data_frame,
         "substituicao": Substituicao("", "regex").data_frame,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex").data_frame,
-        "cessoes": Cessoes("", "regex").data_frame
+        "cessoes": Cessoes("", "regex").data_frame,
+        "contrato": Contratos("", "regex").data_frame
     }
-    assert len(data_frames) == 11
+    assert len(data_frames) == 12
     assert len(data_frames) == len(dataframes)
 
 
