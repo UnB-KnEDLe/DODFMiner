@@ -169,7 +169,7 @@ class Cessoes(Atos):
         return acts
 
 
-    def _extract_instances(self) -> List[Match]:
+    def _regex_instances(self) -> List[Match]:
         found = self._find_instances()
         self._acts_str = found.copy()
         return found
