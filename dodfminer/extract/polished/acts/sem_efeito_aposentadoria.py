@@ -87,6 +87,11 @@ class SemEfeitoAposentadoria(Atos):
         f_path += '/models/sem_efeito_apo.pkl'
         return joblib.load(f_path)
 
+    def _load_seg_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/seg_models/sem_efeito_apo.pkl'
+        return joblib.load(f_path)
+
     def _act_name(self):
         return "Atos tornados sem efeito - aposentadoria"
 
@@ -271,7 +276,7 @@ class SemEfeitoAposentadoria(Atos):
             self._get_special_acts(acts)
         return acts
 
-    def _extract_instances(self) -> List[Match]:
+    def _regex_instances(self) -> List[Match]:
         found = self._find_instances()
         self._acts_str = found.copy()
         return found
