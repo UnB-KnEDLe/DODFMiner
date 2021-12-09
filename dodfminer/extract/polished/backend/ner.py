@@ -27,7 +27,7 @@ class ActNER:
 
     def __init__(self):
         # self._backend = 'regex'
-        # super().__init__()
+        super().__init__()
 
 
         # pylint: disable=assignment-from-no-return
@@ -44,7 +44,7 @@ class ActNER:
         """
         # pylint: disable=access-member-before-definition
         if self._backend == 'ner':
-            print(f"Act {self._name} does not have an model: FALLING BACK TO REGEX")
+            print(f"Act {self._name} does not have a model: FALLING BACK TO REGEX")
             self._backend = 'regex'
         else:
             self._backend = 'regex'

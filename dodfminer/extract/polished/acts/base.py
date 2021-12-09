@@ -8,9 +8,10 @@ import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
 from dodfminer.extract.polished.backend.ner import ActNER
+from dodfminer.extract.polished.backend.seg import ActSeg
 
 
-class Atos(ActRegex, ActNER):
+class Atos(ActRegex, ActNER, ActSeg):
     """Base class for extracting an act and its proprieties to a dataframe.
 
     Note:
@@ -53,7 +54,7 @@ class Atos(ActRegex, ActNER):
         self._acts_str = []
         self._columns = self._props_names()
 
-        self._raw_acts = self._extract_instances()
+        self._raw_acts = self._seg_function()
         self._acts = self._extract_props()
         self._data_frame = self._build_dataframe()
 
@@ -129,23 +130,3 @@ class Atos(ActRegex, ActNER):
                 raise NotImplementedError("Non-existent backend option")
             acts.append(act)
         return acts
-
-    def _extract_instances(self):
-        """Extract instances of an act.
-
-        Warning:
-            Instance must have an head and an body.
-
-        Returns:
-            All the instances of the act found.
-
-        """
-        instances = []
-        if self._backend == 'regex':
-            instances = self._regex_instances()
-        elif self._backend == 'ner':
-            instances = self._regex_instances()
-        else:
-            raise NotImplementedError("Non-existent backend option")
-
-        return instances
