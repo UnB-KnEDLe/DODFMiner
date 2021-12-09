@@ -24,6 +24,11 @@ class Substituicao(Atos):
         f_path += '/models/substituicao.pkl'
         return joblib.load(f_path)
 
+    def _load_seg_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/seg_models/substituicao.pkl'
+        return joblib.load(f_path)
+
     def _act_name(self):
         return "Substituição de Funções"
 
