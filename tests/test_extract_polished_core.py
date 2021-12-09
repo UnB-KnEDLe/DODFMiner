@@ -4,13 +4,13 @@ from dodfminer.extract.polished.core import ActsExtractor, _acts_ids
 
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
 from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados, NomeacaoEfetivos
 from dodfminer.extract.polished.acts.exoneracao import Exoneracao, ExoneracaoEfetivos
 from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
-from dodfminer.extract.polished.acts.contrato import Contratos
 
 
 from dodfminer.extract.polished.create_xml import XMLFy

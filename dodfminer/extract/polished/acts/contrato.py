@@ -6,38 +6,56 @@ import joblib
 import pandas as pd
 from dodfminer.extract.polished.acts.base import Atos
 
+from nltk import word_tokenize
 
 class Contratos(Atos):
-     
+
     def __init__(self, file, backend):
         super().__init__(file, backend)
-
+        
     def _regex_flags(self):
         return re.IGNORECASE
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/models/efetivos_ret.pkl'
+        f_path += '/models/contratos_lbfgs.pkl'
+        #f_path += '/models/contratos_l2sgd.pkl'
         return joblib.load(f_path)
 
     def _act_name(self):
         return "Contrato"
 
     def _props_names(self):
-        return ["Tipo do Ato", "Objeto"]
+        return ["Tipo do Ato", "CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR", "LEI_ORC.", "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
 
     def _rule_for_inst(self):
-        start = r"(EXTRATO DO CONTRATO\s)"
-        body = r"([\s\S]*?"
+        start = r"()"
+        body = r"(EXTRATO D[O|E] CONTRATO\s[\s\S]*?"
         end = r"<EOB>)"
+
         return start + body + end
 
     def _prop_rules(self):
-        regra_objeto = r"(?:OBJETO:)([\s\S]*?)[.]"
-
-        rules = {'Objeto':regra_objeto
-                 }
+        rules = {
+            "CONTRATO": r"EXTRATO D[E|O] CONTRATO[\s\S]*?(\d+\/\d{4})", 
+            "PROCESSO": r"[P|p][R|r][O|o][C|c][E|e][S|s][S|s][O|o][\s\S].*?(\d*[^;|,|a-zA-Z]*)", 
+            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
+            "OBJETO": r"[O|o][B|b][J|j][E|e][T|t][O|o][\s\S].*?(\d*[^;|.|]*)", 
+            "VALOR": r"[v|V][a|A][l|L][o|O][r|R].*?[\s\S].*?([R$ \d\.]*,\d{2})", 
+            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
+            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
+            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o].*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
+            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S].*?(\d*[^;|,|–|(|a-zA-Z]*)", 
+            "NOTA_EMP.": r"(\d+NE\d+)", 
+            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:.*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})", 
+            "SIGNATARIOS": r"Signat[á|a]rios:([^;|.]*)|SIGNAT[Á|A]RIOS:([^;|.]*)|Assinantes:([^;|.]*)|ASSINANTES:([^;|.]*)",
+            "VIGENCIA": r"Vig[e|ê]ncia:[\s\S]([^;|.]*)|VIG[E|Ê]NCIA:[\s\S]([^;|.]*)", 
+            }
         return rules
+
+    def _preprocess(cls, sentence):
+        sentence = word_tokenize(sentence.replace(':', ' : ').replace('``', ' ').replace("''", ' '))
+        return sentence
 
     def _regex_instances(self):
         results = ContractExtractorREGEX.extract_text(self._text)
@@ -46,21 +64,16 @@ class Contratos(Atos):
 
 class ContractExtractorREGEX:
     """Extract contract statements from a string and returns the contracts found in a list.
-
     Extracts contract statements from DODF dataframe through REGEX patterns.
-
     Note:
         This class is not constructable, it cannot generate objects.
-
     """
     
     @classmethod
     def extract_text(cls, txt_string):
         """Extract texts of contract statements from dataframe or file
-
         Args:
             txt_string: The string from where to extract the contracts.
-
         Returns:
             List with the contracts extracted from the string passed.
         """
