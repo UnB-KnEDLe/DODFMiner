@@ -16,11 +16,11 @@ from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 
 file = ""+os.path.dirname(__file__)+"/support/valid.txt"
-file_fabricio = ""+os.path.dirname(__file__)+"/support/valid_2.txt"
+file_2 = ""+os.path.dirname(__file__)+"/support/valid_2.txt"
 
 @pytest.fixture(name='act_cont')
 def fixture_act_cont():
-    return Contratos(file_fabricio, 'regex')
+    return Contratos(file_2, 'regex')
 
 
 def test_contrato_backend(act_cont):
