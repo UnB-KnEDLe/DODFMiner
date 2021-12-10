@@ -674,7 +674,8 @@ def test_nom_com_prop_names(act_nomcom):
 
 
 def test_nom_com_rule(act_nomcom):
-    assert act_nomcom._rule_for_inst() == r"(NOMEAR)([\s\S]*?)((\.\s)|(?=(EXONERAR|NOMEAR)))"
+    assert act_nomcom._rule_for_inst(
+    ) == r"(NOMEAR)([\s\S]*?)((\.\s)|(?=(EXONERAR|NOMEAR)))"
 
 
 def test_nom_com_prop_rules_names(act_nomcom):
@@ -820,9 +821,11 @@ def test_act_nom_efet_ner():
 #
 #
 
+
 def test_act_cessao_ner():
     act = Cessoes(file, 'ner')
     assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+
 
 def test_act_sem_efeito_apo_ner():
     act = SemEfeitoAposentadoria(file, 'ner')

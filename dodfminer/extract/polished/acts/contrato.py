@@ -64,6 +64,7 @@ class Contratos(Atos):
 
         return results
 
+
 class ContractExtractorREGEX:
     """Extract contract statements from a string and returns the contracts found in a list.
 
@@ -73,7 +74,7 @@ class ContractExtractorREGEX:
         This class is not constructable, it cannot generate objects.
 
     """
-    
+
     @classmethod
     def extract_text(cls, txt_string):
         """Extract texts of contract statements from dataframe or file
@@ -84,7 +85,7 @@ class ContractExtractorREGEX:
         Returns:
             List with the contracts extracted from the string passed.
         """
-        
+
         base_str = txt_string
 
         contract_pattern_1 = r"(\nxx([a-z]{0,10})\sEXTRAT([A-Z]{0,3})\sD([A-Z]{0,3})\sCONTRAT([A-Z]{0,3}))"
@@ -101,7 +102,8 @@ class ContractExtractorREGEX:
         nl_pattern = r"\n"
         p_nl = re.compile(nl_pattern)
 
-        extracted_texts = cls._extract_text_blocks(base_str, p_ext, p_blk, p_nl)
+        extracted_texts = cls._extract_text_blocks(
+            base_str, p_ext, p_blk, p_nl)
 
         # Padrões de começo e fim de página abarcam apenas os padrões observados entre 2000 e 2021
         start_page_patterns = [r"\nPÁGINA\s([0-9]{1,5})", r"\nDIÁRIO\sOFICIAL\sDO\sDISTRITO\sFEDERAL",
@@ -109,54 +111,59 @@ class ContractExtractorREGEX:
                                r"\nDiário Oficial do Distrito Federal"]
 
         end_page_patterns = [r"Documento assinado digitalmente conforme MP nº 2.200-2 de 24/08/2001, que institui a",
-                                r"Infraestrutura de Chaves Públicas Brasileira ICP-Brasil",
-                                r"Este documento pode ser verificado no endereço eletrônico",
-                                r"http://wwwin.gov.br/autenticidade.html",
-                                r"http://www.in.gov.br/autenticidade.html",
-                                r"pelo código ([0-9]{15,18})",
-                                r"\nDocumento assinado digitalmente, original em https://www.dodf.df.gov.br"]
+                             r"Infraestrutura de Chaves Públicas Brasileira ICP-Brasil",
+                             r"Este documento pode ser verificado no endereço eletrônico",
+                             r"http://wwwin.gov.br/autenticidade.html",
+                             r"http://www.in.gov.br/autenticidade.html",
+                             r"pelo código ([0-9]{15,18})",
+                             r"\nDocumento assinado digitalmente, original em https://www.dodf.df.gov.br"]
 
         middle_page_patterns = [r"xx([a-z]{1,10}) ", r" xx([a-z]{1,10})", r"\n-\n",
-                             r"xx([a-z]{1,10})", r"\n- -\n", r"\n- - -\n",
-                            r"\n[\.\,\-\—]\n", r"— -"]
+                                r"xx([a-z]{1,10})", r"\n- -\n", r"\n- - -\n",
+                                r"\n[\.\,\-\—]\n", r"— -"]
 
         if len(extracted_texts) > 0:
-            contract_texts = cls._clean_text(extracted_texts, start_page_patterns, end_page_patterns, middle_page_patterns)
+            contract_texts = cls._clean_text(
+                extracted_texts, start_page_patterns, end_page_patterns, middle_page_patterns)
         else:
             contract_texts = extracted_texts
-            
+
         return contract_texts
-    
+
     @classmethod
     def _extract_text_blocks(cls, base_str, contract_pattern, block_pattern, newline_pattern):
-        matched_text = cls._row_list_regex(base_str, contract_pattern, block_pattern, newline_pattern)
-        
+        matched_text = cls._row_list_regex(
+            base_str, contract_pattern, block_pattern, newline_pattern)
+
         if matched_text != None:
             ext_blk_list = cls._mapped_positions_regex(matched_text)
-            extracted_texts = cls._extract_texts_from_mapped_positions(ext_blk_list, base_str)
+            extracted_texts = cls._extract_texts_from_mapped_positions(
+                ext_blk_list, base_str)
         else:
             extracted_texts = []
 
         return extracted_texts
-    
+
     @classmethod
     def _clean_text(cls, ext_texts, start_page_patterns, end_page_patterns, middle_page_patterns):
         start_page_patterns = "|".join(start_page_patterns)
         middle_page_patterns = "|".join(middle_page_patterns)
         end_page_patterns = "|".join(end_page_patterns)
 
-        page_patterns = [start_page_patterns, middle_page_patterns, end_page_patterns]
+        page_patterns = [start_page_patterns,
+                         middle_page_patterns, end_page_patterns]
         page_patterns = "|".join(page_patterns)
 
-        ext_texts = pd.Series(ext_texts).str.replace(page_patterns, "", regex=True)
-        
+        ext_texts = pd.Series(ext_texts).str.replace(
+            page_patterns, "", regex=True)
+
         ext_texts_list = []
-        
+
         for text in ext_texts:
             ext_texts_list.append(cls._remove_empty_line(text))
-        
+
         return ext_texts_list
-    
+
     @classmethod
     def _remove_empty_line(cls, text):
         return "\n".join([line for line in text.split("\n") if line.strip() != ""])
@@ -164,12 +171,13 @@ class ContractExtractorREGEX:
     @classmethod
     def _row_list_regex(cls, text, pattern_ext, pattern_blk, pattern_nl):
         # Lista com as buscas por regex. O findall permite ver se no documento há pelo menos 1 extrato detectado
-        row_list = [re.findall(pattern_ext, text), re.finditer(pattern_ext, text), re.finditer(pattern_blk, text), re.finditer(pattern_nl, text)]
+        row_list = [re.findall(pattern_ext, text), re.finditer(
+            pattern_ext, text), re.finditer(pattern_blk, text), re.finditer(pattern_nl, text)]
 
         # Se findall não achou nenhum, então o documento não tem nada que interessa
         if len(row_list[0]) == 0:
             return None
-        
+
         return row_list
 
     @classmethod
