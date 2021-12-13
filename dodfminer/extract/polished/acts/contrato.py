@@ -1,4 +1,4 @@
-"""Regras regex para ato de Aposentadoria."""
+"""Regras regex para ato de Extrato de Contrato."""
 
 import re
 import os

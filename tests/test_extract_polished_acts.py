@@ -24,7 +24,6 @@ def fixture_act_cont():
 
 
 def test_contrato_backend(act_cont):
-    print(act_cont)
     assert act_cont._backend == "regex"
 
 
