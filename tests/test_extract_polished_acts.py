@@ -12,9 +12,50 @@ from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 
 file = ""+os.path.dirname(__file__)+"/support/valid.txt"
+file_2 = ""+os.path.dirname(__file__)+"/support/valid_2.txt"
+
+@pytest.fixture(name='act_cont')
+def fixture_act_cont():
+    return Contratos(file_2, 'regex')
+
+
+def test_contrato_backend(act_cont):
+    assert act_cont._backend == "regex"
+
+
+def test_contrato_name(act_cont):
+    assert act_cont._name == "Contrato"
+    assert act_cont.name == "Contrato"
+    assert act_cont._act_name() == "Contrato"
+
+
+def test_contrato_flags(act_cont):
+    assert act_cont._regex_flags() == re.IGNORECASE
+
+
+def test_contrato_prop_names(act_cont):
+    assert act_cont._props_names() == ["Tipo do Ato", "Objeto"]
+
+
+def test_contrato_rule(act_cont):
+    assert act_cont._rule_for_inst(
+    ) == r"(EXTRATO DO CONTRATO\s)" + r"([\s\S]*?" + r"<EOB>)"
+
+
+def test_contrato_prop_rules_names(act_cont):
+    assert list(act_cont._prop_rules()) == ["Objeto"]
+
+
+def test_contrato_prop_rules_rules(act_cont):
+    assert list(act_cont._prop_rules().values()) == [r"(?:OBJETO:)([\s\S]*?)[.]"]
+
+
+def test_act_contrato_consistence_rule(act_cont):
+    assert len(act_cont._props_names())-1 == len(act_cont._prop_rules())
 
 
 @pytest.fixture(name='act_ret')
