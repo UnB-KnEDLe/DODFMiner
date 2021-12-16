@@ -1,4 +1,4 @@
-"""Regras regex para ato de Aposentadoria."""
+"""Regras regex para ato de Extrato de Contrato."""
 
 import re
 import os
@@ -245,12 +245,12 @@ class ContractExtractorREGEX:
                 prox_blk_index = blk.index(t)+1
                 prox_nl_index = nl.index(t)+1
 
-                # Se o fim do documento não tiver sido alcançado
+                # Se o fim do documento não tiver sido alcançado, então:
                 if prox_blk_index < len(blk):
                     prox_blk = blk[prox_blk_index]
                     prox_nl = nl[prox_nl_index]
 
-                    # Se a próxima linha for vista como um próximo bloco
+                    # Se a próxima linha for vista como um próximo bloco:
                     if prox_blk == prox_nl:
                         t = prox_blk
                         tl.append(t)
