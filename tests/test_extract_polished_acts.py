@@ -18,6 +18,7 @@ from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAp
 file = ""+os.path.dirname(__file__)+"/support/valid.txt"
 file_2 = ""+os.path.dirname(__file__)+"/support/valid_2.txt"
 
+
 @pytest.fixture(name='act_cont')
 def fixture_act_cont():
     return Contratos(file_2, 'regex')
@@ -38,24 +39,56 @@ def test_contrato_flags(act_cont):
 
 
 def test_contrato_prop_names(act_cont):
-    assert act_cont._props_names() == ["Tipo do Ato", "Objeto"]
+    assert act_cont._props_names() == ["Tipo do Ato", "CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR",
+                                       "LEI_ORC.", "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
 
 
 def test_contrato_rule(act_cont):
     assert act_cont._rule_for_inst(
-    ) == r"(EXTRATO DO CONTRATO\s)" + r"([\s\S]*?" + r"<EOB>)"
+    ) == r"()" + r"(EXTRATO D[O|E] CONTRATO\s[\s\S]*?" + r"<EOB>)"
 
 
 def test_contrato_prop_rules_names(act_cont):
-    assert list(act_cont._prop_rules()) == ["Objeto"]
+    assert list(act_cont._prop_rules()) == ["CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR", "LEI_ORC.",
+                                            "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
 
 
 def test_contrato_prop_rules_rules(act_cont):
-    assert list(act_cont._prop_rules().values()) == [r"(?:OBJETO:)([\s\S]*?)[.]"]
+    assert list(act_cont._prop_rules().values()) == [
+        r"EXTRATO D[E|O] CONTRATO[\s\S]*?(\d+\/\d{4})",
+        r"[P|p][R|r][O|o][C|c][E|e][S|s][S|s][O|o][\s\S].*?(\d*[^;|,|a-zA-Z]*)",
+        r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)|" +
+        r"Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
+        r"[O|o][B|b][J|j][E|e][T|t][O|o][\s\S].*?(\d*[^;|.|]*)",
+        r"[v|V][a|A][l|L][o|O][r|R].*?[\s\S].*?([R$ \d\.]*,\d{2})",
+        r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?" +
+        r"[\s\S].*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
+        r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S]" +
+        r".*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
+        r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o].*?" +
+        r"[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
+        r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A]" +
+        r"[:|\s|\S][\s\S].*?(\d*[^;|,|–|(|a-zA-Z]*)",
+        r"(\d+NE\d+)",
+        r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:.*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
+        r"Signat[á|a]rios:([^;|.]*)|SIGNAT[Á|A]RIOS:([^;|.]*)|Assinantes:([^;|.]*)|ASSINANTES:([^;|.]*)",
+        r"Vig[e|ê]ncia:[\s\S]([^;|.]*)|VIG[E|Ê]NCIA:[\s\S]([^;|.]*)",
+    ]
 
 
 def test_act_contrato_consistence_rule(act_cont):
     assert len(act_cont._props_names())-1 == len(act_cont._prop_rules())
+
+
+def test_act_contrato_ner():
+    act = Contratos(file_2, 'ner')
+    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+
+#
+#
+#
+#
+#
 
 
 @pytest.fixture(name='act_ret')
@@ -639,7 +672,8 @@ def test_nom_com_prop_names(act_nomcom):
 
 
 def test_nom_com_rule(act_nomcom):
-    assert act_nomcom._rule_for_inst() == r"(NOMEAR)([\s\S]*?)((\.\s)|(?=(EXONERAR|NOMEAR)))"
+    assert act_nomcom._rule_for_inst(
+    ) == r"(NOMEAR)([\s\S]*?)((\.\s)|(?=(EXONERAR|NOMEAR)))"
 
 
 def test_nom_com_prop_rules_names(act_nomcom):
@@ -785,9 +819,11 @@ def test_act_nom_efet_ner():
 #
 #
 
+
 def test_act_cessao_ner():
     act = Cessoes(file, 'ner')
     assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+
 
 def test_act_sem_efeito_apo_ner():
     act = SemEfeitoAposentadoria(file, 'ner')

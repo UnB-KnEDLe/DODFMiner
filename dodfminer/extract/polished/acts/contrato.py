@@ -6,9 +6,11 @@ import joblib
 import pandas as pd
 from dodfminer.extract.polished.acts.base import Atos
 
+from nltk import word_tokenize
+
 
 class Contratos(Atos):
-     
+
     def __init__(self, file, backend):
         super().__init__(file, backend)
 
@@ -17,32 +19,51 @@ class Contratos(Atos):
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
-        f_path += '/models/efetivos_ret.pkl'
+        f_path += '/models/contratos_lbfgs.pkl'
+        #f_path += '/models/contratos_l2sgd.pkl'
         return joblib.load(f_path)
 
     def _act_name(self):
         return "Contrato"
 
     def _props_names(self):
-        return ["Tipo do Ato", "Objeto"]
+        return ["Tipo do Ato", "CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR", "LEI_ORC.", "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
 
     def _rule_for_inst(self):
-        start = r"(EXTRATO DO CONTRATO\s)"
-        body = r"([\s\S]*?"
+        start = r"()"
+        body = r"(EXTRATO D[O|E] CONTRATO\s[\s\S]*?"
         end = r"<EOB>)"
+
         return start + body + end
 
     def _prop_rules(self):
-        regra_objeto = r"(?:OBJETO:)([\s\S]*?)[.]"
-
-        rules = {'Objeto':regra_objeto
-                 }
+        rules = {
+            "CONTRATO": r"EXTRATO D[E|O] CONTRATO[\s\S]*?(\d+\/\d{4})",
+            "PROCESSO": r"[P|p][R|r][O|o][C|c][E|e][S|s][S|s][O|o][\s\S].*?(\d*[^;|,|a-zA-Z]*)",
+            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
+            "OBJETO": r"[O|o][B|b][J|j][E|e][T|t][O|o][\s\S].*?(\d*[^;|.|]*)",
+            "VALOR": r"[v|V][a|A][l|L][o|O][r|R].*?[\s\S].*?([R$ \d\.]*,\d{2})",
+            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
+            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
+            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o].*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
+            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S].*?(\d*[^;|,|–|(|a-zA-Z]*)",
+            "NOTA_EMP.": r"(\d+NE\d+)",
+            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:.*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
+            "SIGNATARIOS": r"Signat[á|a]rios:([^;|.]*)|SIGNAT[Á|A]RIOS:([^;|.]*)|Assinantes:([^;|.]*)|ASSINANTES:([^;|.]*)",
+            "VIGENCIA": r"Vig[e|ê]ncia:[\s\S]([^;|.]*)|VIG[E|Ê]NCIA:[\s\S]([^;|.]*)",
+        }
         return rules
+
+    def _preprocess(cls, sentence):
+        sentence = word_tokenize(sentence.replace(
+            ':', ' : ').replace('``', ' ').replace("''", ' '))
+        return sentence
 
     def _regex_instances(self):
         results = ContractExtractorREGEX.extract_text(self._text)
 
         return results
+
 
 class ContractExtractorREGEX:
     """Extract contract statements from a string and returns the contracts found in a list.
@@ -53,7 +74,7 @@ class ContractExtractorREGEX:
         This class is not constructable, it cannot generate objects.
 
     """
-    
+
     @classmethod
     def extract_text(cls, txt_string):
         """Extract texts of contract statements from dataframe or file
@@ -64,7 +85,7 @@ class ContractExtractorREGEX:
         Returns:
             List with the contracts extracted from the string passed.
         """
-        
+
         base_str = txt_string
 
         contract_pattern_1 = r"(\nxx([a-z]{0,10})\sEXTRAT([A-Z]{0,3})\sD([A-Z]{0,3})\sCONTRAT([A-Z]{0,3}))"
@@ -81,7 +102,8 @@ class ContractExtractorREGEX:
         nl_pattern = r"\n"
         p_nl = re.compile(nl_pattern)
 
-        extracted_texts = cls._extract_text_blocks(base_str, p_ext, p_blk, p_nl)
+        extracted_texts = cls._extract_text_blocks(
+            base_str, p_ext, p_blk, p_nl)
 
         # Padrões de começo e fim de página abarcam apenas os padrões observados entre 2000 e 2021
         start_page_patterns = [r"\nPÁGINA\s([0-9]{1,5})", r"\nDIÁRIO\sOFICIAL\sDO\sDISTRITO\sFEDERAL",
@@ -89,54 +111,59 @@ class ContractExtractorREGEX:
                                r"\nDiário Oficial do Distrito Federal"]
 
         end_page_patterns = [r"Documento assinado digitalmente conforme MP nº 2.200-2 de 24/08/2001, que institui a",
-                                r"Infraestrutura de Chaves Públicas Brasileira ICP-Brasil",
-                                r"Este documento pode ser verificado no endereço eletrônico",
-                                r"http://wwwin.gov.br/autenticidade.html",
-                                r"http://www.in.gov.br/autenticidade.html",
-                                r"pelo código ([0-9]{15,18})",
-                                r"\nDocumento assinado digitalmente, original em https://www.dodf.df.gov.br"]
+                             r"Infraestrutura de Chaves Públicas Brasileira ICP-Brasil",
+                             r"Este documento pode ser verificado no endereço eletrônico",
+                             r"http://wwwin.gov.br/autenticidade.html",
+                             r"http://www.in.gov.br/autenticidade.html",
+                             r"pelo código ([0-9]{15,18})",
+                             r"\nDocumento assinado digitalmente, original em https://www.dodf.df.gov.br"]
 
         middle_page_patterns = [r"xx([a-z]{1,10}) ", r" xx([a-z]{1,10})", r"\n-\n",
-                             r"xx([a-z]{1,10})", r"\n- -\n", r"\n- - -\n",
-                            r"\n[\.\,\-\—]\n", r"— -"]
+                                r"xx([a-z]{1,10})", r"\n- -\n", r"\n- - -\n",
+                                r"\n[\.\,\-\—]\n", r"— -"]
 
         if len(extracted_texts) > 0:
-            contract_texts = cls._clean_text(extracted_texts, start_page_patterns, end_page_patterns, middle_page_patterns)
+            contract_texts = cls._clean_text(
+                extracted_texts, start_page_patterns, end_page_patterns, middle_page_patterns)
         else:
             contract_texts = extracted_texts
-            
+
         return contract_texts
-    
+
     @classmethod
     def _extract_text_blocks(cls, base_str, contract_pattern, block_pattern, newline_pattern):
-        matched_text = cls._row_list_regex(base_str, contract_pattern, block_pattern, newline_pattern)
-        
+        matched_text = cls._row_list_regex(
+            base_str, contract_pattern, block_pattern, newline_pattern)
+
         if matched_text != None:
             ext_blk_list = cls._mapped_positions_regex(matched_text)
-            extracted_texts = cls._extract_texts_from_mapped_positions(ext_blk_list, base_str)
+            extracted_texts = cls._extract_texts_from_mapped_positions(
+                ext_blk_list, base_str)
         else:
             extracted_texts = []
 
         return extracted_texts
-    
+
     @classmethod
     def _clean_text(cls, ext_texts, start_page_patterns, end_page_patterns, middle_page_patterns):
         start_page_patterns = "|".join(start_page_patterns)
         middle_page_patterns = "|".join(middle_page_patterns)
         end_page_patterns = "|".join(end_page_patterns)
 
-        page_patterns = [start_page_patterns, middle_page_patterns, end_page_patterns]
+        page_patterns = [start_page_patterns,
+                         middle_page_patterns, end_page_patterns]
         page_patterns = "|".join(page_patterns)
 
-        ext_texts = pd.Series(ext_texts).str.replace(page_patterns, "", regex=True)
-        
+        ext_texts = pd.Series(ext_texts).str.replace(
+            page_patterns, "", regex=True)
+
         ext_texts_list = []
-        
+
         for text in ext_texts:
             ext_texts_list.append(cls._remove_empty_line(text))
-        
+
         return ext_texts_list
-    
+
     @classmethod
     def _remove_empty_line(cls, text):
         return "\n".join([line for line in text.split("\n") if line.strip() != ""])
@@ -144,12 +171,13 @@ class ContractExtractorREGEX:
     @classmethod
     def _row_list_regex(cls, text, pattern_ext, pattern_blk, pattern_nl):
         # Lista com as buscas por regex. O findall permite ver se no documento há pelo menos 1 extrato detectado
-        row_list = [re.findall(pattern_ext, text), re.finditer(pattern_ext, text), re.finditer(pattern_blk, text), re.finditer(pattern_nl, text)]
+        row_list = [re.findall(pattern_ext, text), re.finditer(
+            pattern_ext, text), re.finditer(pattern_blk, text), re.finditer(pattern_nl, text)]
 
         # Se findall não achou nenhum, então o documento não tem nada que interessa
         if len(row_list[0]) == 0:
             return None
-        
+
         return row_list
 
     @classmethod
