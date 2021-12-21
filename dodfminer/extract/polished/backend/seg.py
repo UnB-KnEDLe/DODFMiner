@@ -7,6 +7,7 @@ extract acts from a block of text.
 import re
 from nltk import word_tokenize
 
+
 class ActSeg:
     """Base class for act segmentation.
 
@@ -36,12 +37,13 @@ class ActSeg:
             if self._seg_model is not None:
                 return self._crf_instances
             else:
-                print(f"Act {self._name} does not have a segmentation model: Using regex for segmentation")
+                print(
+                    f"Act {self._name} does not have a segmentation model: Using regex for segmentation")
                 return self._regex_instances
         else:
             self._backend = 'regex'
             return self._regex_instances
-    
+
     def _load_seg_model(self):
         """Load Segmentation Model from models/folder.
 
@@ -73,7 +75,7 @@ class ActSeg:
 
     def _crf_instances(self):
         """Search for all instances of the act using a CRF model.
-        
+
         Returns:
             List of all act instances in the text.
         """
@@ -111,20 +113,20 @@ class ActSeg:
             A list with a dictionary of features for each of the words.
         """
         features = []
-            
+
         for i in range(len(text)):
             word = text[i]
-            
+
             word_before = '' if i == 0 else text[i-1]
             word_before2 = '' if i <= 1 else text[i-2]
             word_before3 = '' if i <= 2 else text[i-3]
             word_before4 = '' if i <= 3 else text[i-4]
-            
+
             word_after = '' if i+1 == len(text) else text[i+1]
             word_after2 = '' if i+2 >= len(text) else text[i+2]
             word_after3 = '' if i+3 >= len(text) else text[i+3]
             word_after4 = '' if i+4 >= len(text) else text[i+4]
-            
+
             word_before = self._get_base_feat(word_before)
             word_before2 = self._get_base_feat(word_before2)
             word_before3 = self._get_base_feat(word_before3)
@@ -133,7 +135,7 @@ class ActSeg:
             word_after2 = self._get_base_feat(word_after2)
             word_after3 = self._get_base_feat(word_after3)
             word_after4 = self._get_base_feat(word_after4)
-            
+
             word_feat = {
                 'bias': 1.0,
                 'word': word.lower(),
@@ -141,7 +143,7 @@ class ActSeg:
                 'is_upper': word.isupper(),
                 'num_digits': str(self._number_of_digits(word)),
             }
-            
+
             if i > 0:
                 word_feat.update({
                     '-1:word': word_before['word'].lower(),
@@ -151,7 +153,7 @@ class ActSeg:
                 })
             else:
                 word_feat['BOS'] = True
-                
+
             if i > 1:
                 word_feat.update({
                     '-2:word': word_before2['word'].lower(),
@@ -159,7 +161,7 @@ class ActSeg:
                     '-2:upper': word_before2['is_upper'],
                     '-2:num_digits': word_before2['num_digits'],
                 })
-                
+
             if i > 2:
                 word_feat.update({
                     '-3:word': word_before3['word'].lower(),
@@ -175,7 +177,7 @@ class ActSeg:
                     '-4:upper': word_before4['is_upper'],
                     '-4:num_digits': word_before4['num_digits'],
                 })
-                
+
             if i < len(text) - 1:
                 word_feat.update({
                     '+1:word': word_after['word'].lower(),
@@ -185,7 +187,7 @@ class ActSeg:
                 })
             else:
                 word_feat['EOS'] = True
-                
+
             if i < len(text) - 2:
                 word_feat.update({
                     '+2:word': word_after2['word'].lower(),
@@ -193,7 +195,7 @@ class ActSeg:
                     '+2:upper': word_after2['is_upper'],
                     '+2:num_digits': word_after2['num_digits'],
                 })
-                
+
             if i < len(text) - 3:
                 word_feat.update({
                     '+3:word': word_after3['word'].lower(),
@@ -209,38 +211,38 @@ class ActSeg:
                     '+4:upper': word_after4['is_upper'],
                     '+4:num_digits': word_after4['num_digits'],
                 })
-                
+
             features.append(word_feat)
-        
+
         return features
 
     def _extract_acts(self, text, prediction):
         """Extract and join words predicted to be part of an act.
-        
+
         Args:
             text (list): List of words in an act.
             prediction (list): Predictions made for each word in the act.
-            
+
         """
         acts = []
-        
+
         current_act = []
         reading_act = False
         for i in range(len(prediction)):
-            if prediction[i][0] == 'B': #B-ato
+            if prediction[i][0] == 'B':  # B-ato
                 reading_act = True
                 current_act.append(text[i])
                 continue
-                
+
             if reading_act:
                 current_act.append(text[i])
-                
-            if reading_act and prediction[i][0] == 'E': #E-ato
+
+            if reading_act and prediction[i][0] == 'E':  # E-ato
                 acts.append(' '.join(current_act))
                 current_act = []
                 reading_act = False
-                
+
         if reading_act:
             acts.append(' '.join(current_act))
-            
+
         return acts

@@ -5,12 +5,14 @@ extract an act and, its proprieties, using a trained ner model.
 
 """
 
-import numpy as np
 import os
+import numpy as np
 import joblib
 from nltk import word_tokenize
 
 # pylint: disable=too-few-public-methods
+
+
 class ActNER:
     """Act NER Class.
 
@@ -29,7 +31,6 @@ class ActNER:
         # self._backend = 'regex'
         super().__init__()
 
-
         # pylint: disable=assignment-from-no-return
         self._model = self._load_model()
 
@@ -44,7 +45,8 @@ class ActNER:
         """
         # pylint: disable=access-member-before-definition
         if self._backend == 'ner':
-            print(f"Act {self._name} does not have a model: FALLING BACK TO REGEX")
+            print(
+                f"Act {self._name} does not have a model: FALLING BACK TO REGEX")
             self._backend = 'regex'
         else:
             self._backend = 'regex'
@@ -82,36 +84,35 @@ class ActNER:
 
         for i in range(len(sentence)):
             word = sentence[i]
-    
-            
+
             word_before = '' if i == 0 else sentence[i-1]
             word_before2 = '' if i <= 1 else sentence[i-2]
             word_before3 = '' if i <= 2 else sentence[i-3]
-            
+
             word_after = '' if i+1 == len(sentence) else sentence[i+1]
             word_after2 = '' if i+2 >= len(sentence) else sentence[i+2]
             word_after3 = '' if i+3 >= len(sentence) else sentence[i+3]
-        
+
             word_before = cls.get_base_feat(word_before)
             word_before2 = cls.get_base_feat(word_before2)
             word_before3 = cls.get_base_feat(word_before3)
             word_after = cls.get_base_feat(word_after)
             word_after2 = cls.get_base_feat(word_after2)
             word_after3 = cls.get_base_feat(word_after3)
-            
+
             word_feat = {
                 'bias': 1.0,
                 'word': word.lower(),
                 'is_title': word.istitle(),
                 'is_upper': word.isupper(),
                 'is_digit': word.isdigit(),
-                
+
                 'num_digits': str(cls.number_of_digits(word)),
                 'has_hyphen': '-' in word,
                 'has_dot': '.' in word,
                 'has_slash': '/' in word,
             }
-            
+
             if i > 0:
                 word_feat.update({
                     '-1:word': word_before['word'].lower(),
@@ -121,7 +122,7 @@ class ActNER:
                 })
             else:
                 word_feat['BOS'] = True
-                
+
             if i > 1:
                 word_feat.update({
                     '-2:word': word_before2['word'].lower(),
@@ -129,7 +130,7 @@ class ActNER:
                     '-2:upper': word_before2['is_upper'],
                     '-2:num_digits': word_before2['num_digits'],
                 })
-                
+
             if i > 2:
                 word_feat.update({
                     '-3:word': word_before3['word'].lower(),
@@ -137,7 +138,7 @@ class ActNER:
                     '-3:upper': word_before3['is_upper'],
                     '-3:num_digits': word_before3['num_digits'],
                 })
-                
+
             if i < len(sentence) - 1:
                 word_feat.update({
                     '+1:word': word_after['word'].lower(),
@@ -147,7 +148,7 @@ class ActNER:
                 })
             else:
                 word_feat['EOS'] = True
-                
+
             if i < len(sentence) - 2:
                 word_feat.update({
                     '+2:word': word_after2['word'].lower(),
@@ -155,7 +156,7 @@ class ActNER:
                     '+2:upper': word_after2['is_upper'],
                     '+2:num_digits': word_after2['num_digits'],
                 })
-                
+
             if i < len(sentence) - 3:
                 word_feat.update({
                     '+3:word': word_after3['word'].lower(),
@@ -163,9 +164,9 @@ class ActNER:
                     '+3:upper': word_after3['is_upper'],
                     '+3:num_digits': word_after3['num_digits'],
                 })
-                
+
             sent_features.append(word_feat)
-        
+
         return sent_features
 
     def add_common_attributes(self, feats):
@@ -206,8 +207,9 @@ class ActNER:
 
         Returns:
             The list of words in the act.
-        """ 
-        sentence = word_tokenize(sentence.replace('/', ' / ').replace(':', ' : ').replace('``', ' ').replace("''", ' '))
+        """
+        sentence = word_tokenize(sentence.replace(
+            '/', ' / ').replace(':', ' : ').replace('``', ' ').replace("''", ' '))
         return sentence
 
     def _predictions_dict(self, sentence, prediction):
@@ -260,12 +262,10 @@ class ActNER:
             if len(values) >= 1:
                 dict_ato[key] = values[0]
 
-
             if dict_ato[key] == []:
                 dict_ato[key] = np.nan
 
         # pylint: disable=no-member
         dict_ato["Tipo do Ato"] = self._name
-
 
         return dict_ato
