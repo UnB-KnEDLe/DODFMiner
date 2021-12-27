@@ -66,12 +66,12 @@ def test_act_seg_reverting_to_regex(act_seg_reverting_to_regex):
 #
 
 def test_act_seg_preprocess(act_seg_ner):
-	sentence = "teste com\npalavras."
-	assert act_seg_ner._preprocess(sentence) == 'teste com palavras.'
+    sentence = "teste com\npalavras."
+    assert act_seg_ner._preprocess(sentence) == 'teste com palavras.'
 
 def test_act_seg_limits(act_seg_ner):
-	sentence = "teste com palavras.123"
-	assert act_seg_ner._limits(sentence) == [0, 6, 10, 18, 19]
+    sentence = "teste com palavras.123"
+    assert act_seg_ner._limits(sentence) == [0, 6, 10, 18, 19]
 
 def test_act_seg_regex_instances(act_seg_regex):
     act_seg_regex._text =  "fghngfnfgnfgnfgnrr MENSAGEM: O Renato testa esse codigo 1232 vezes por dia. qeqcnoecqucqpwxqrthrweqqeprto MENSAGEM: " + \
@@ -83,7 +83,7 @@ def test_act_seg_regex_instances(act_seg_regex):
                    ' O Joao testa esse codigo 2 vezes por dia', ' O Lucas testa esse codigo 0 vezes por dia']
 
 def test_act_seg_crf_instances(act_seg_ner):
-    act_seg_ner._text = "Decide: CONCEDER, aposentadoria voluntaria integral, ao servidor ELIAS SANTOS MONTEIRO, matrícula nº 24.679-4, no cargo de " + \
+    act_seg_ner._text = ": CONCEDER, aposentadoria voluntaria integral, ao servidor ELIAS SANTOS MONTEIRO, matrícula nº 24.679-4, no cargo de " + \
         "Analista em Políticas Públicas e Gestão Governamental, Classe Especial, Padrão V, do Quadro de Pessoal do Distrito Federal, nos termos " + \
         "do artigo 3º, incisos I, II e III, e Parágrafo único da Emenda Constitucional nº 47 de 05/07/2005, combinado com o artigo 44 da Lei " + \
         "Complementar nº 769, de 30/06/2008, e com a vantagem pessoal prevista no artigo 5º da Lei nº 4.584, de 08/07/2011. Lotação: " + \
@@ -102,10 +102,10 @@ def test_act_seg_crf_instances(act_seg_ner):
 def test_act_seg_split_sentences(act_seg_ner):
     text = "CONCEDER, aposentadoria voluntária integral, ao servidor ELIAS SANTOS MONTEIRO, matrícula nº 24.679-4, no cargo de " + \
         "Analista em Políticas Públicas e Gestão Governamental, nos termos..."
-    preprocessed_text = ['CONCEDER', ',', 'aposentadoria', 'volunt', 'á', 'ria', 'integral', ',', 'ao', 'servidor', 'ELIAS', 'SANTOS', 'MONTEIRO', ',',
-        'matr', 'í', 'cula', 'n', 'º', '24', '.', '679', '-', '4', ',', 'no', 'cargo', 'de', 'Analista', 'em', 'Pol', 'í', 'ticas', 'P', 'ú', 'blicas', 'e', 
-        'Gest', 'ã', 'o', 'Governamental', ',', 'nos', 'termos', '.', '.', '.']
-    assert act_seg_ner._split_sentence(text) == preprocessed_text
+    preprocessed = ['CONCEDER', ',', 'aposentadoria', 'volunt', 'á', 'ria', 'integral', ',', 'ao', 'servidor', 'ELIAS', 'SANTOS', 'MONTEIRO', ',',
+        'matr', 'í', 'cula', 'n', 'º', '24', '.', '679', '-', '4', ',', 'no', 'cargo', 'de', 'Analista', 'em', 'Pol', 'í', 'ticas', 'P', 'ú',
+        'blicas', 'e', 'Gest', 'ã', 'o', 'Governamental', ',', 'nos', 'termos', '.', '.', '.']
+    assert act_seg_ner._split_sentence(text) == preprocessed
 
 def test_act_seg_get_base_feat(act_seg_ner):
     word = "NER"
@@ -117,140 +117,140 @@ def test_act_seg_get_base_feat(act_seg_ner):
     }
 
 def test_act_seg_add_base_feat(act_seg_ner):
-	features = {'': 0}
-	sentence = ["Teste001", "."]
-	index = 1
-	prefix = '+1:'
+    features = {'': 0}
+    sentence = ["Teste001", "."]
+    index = 1
+    prefix = '+1:'
 
-	d = {'': 0, '+1:word': '.', '+1:is_title': False, '+1:is_upper': False, '+1:num_digits': '0'}
+    feat_target = {'': 0, '+1:word': '.', '+1:is_title': False, '+1:is_upper': False, '+1:num_digits': '0'}
 
-	act_seg_ner._add_base_feat(features, sentence, index, prefix)
+    act_seg_ner._add_base_feat(features, sentence, index, prefix)
 
-	assert features == d
+    assert features == feat_target
 
 def test_act_seg_get_features(act_seg_ner):
-    sentence = ["Art", ".", "4", ",", "ATOS"]
+    sentence = ["Art", ".", "5", ",", "ATOS"]
     features_1 = [
-		{
-			'bias': 1.0,
-			'text_position': 0.0,
-			'word': 'art',
-			'is_title': True,
-			'is_upper': False,
-			'num_digits': '0',
-			'+1:word': '.',
-			'+1:is_title': False,
-			'+1:is_upper': False,
-			'+1:num_digits': '0',
-			'+2:word': '4',
-			'+2:is_title': False,
-			'+2:is_upper': False,
-			'+2:num_digits': '1',
-			'+3:word': ',',
-			'+3:is_title': False,
-			'+3:is_upper': False,
-			'+3:num_digits': '0',
-			'+4:word': 'atos',
-			'+4:is_title': False,
-			'+4:is_upper': True,
-			'+4:num_digits': '0'
-		},
-		{
-			'bias': 1.0,
-			'text_position': 0.2,
-			'-1:word': 'art',
-			'-1:is_title': True,
-			'-1:is_upper': False,
-			'-1:num_digits': '0',
-			'word': '.',
-			'is_title': False,
-			'is_upper': False,
-			'num_digits': '0',
-			'+1:word': '4',
-			'+1:is_title': False,
-			'+1:is_upper': False,
-			'+1:num_digits': '1',
-			'+2:word': ',',
-			'+2:is_title': False,
-			'+2:is_upper': False,
-			'+2:num_digits': '0',
-			'+3:word': 'atos',
-			'+3:is_title': False,
-			'+3:is_upper': True,
-			'+3:num_digits': '0'
-		},
-		{
-			'bias': 1.0,
-			'text_position': 0.4,
-			'-2:word': 'art',
-			'-2:is_title': True,
-			'-2:is_upper': False,
-			'-2:num_digits': '0',
-			'-1:word': '.',
-			'-1:is_title': False,
-			'-1:is_upper': False,
-			'-1:num_digits': '0',
-			'word': '4',
-			'is_title': False,
-			'is_upper': False,
-			'num_digits': '1',
-			'+1:word': ',',
-			'+1:is_title': False,
-			'+1:is_upper': False,
-			'+1:num_digits': '0',
-			'+2:word': 'atos',
-			'+2:is_title': False,
-			'+2:is_upper': True,
-			'+2:num_digits': '0'
-		},
-		{
-			'bias': 1.0,
-			'text_position': 0.6,
-			'-3:word': 'art',
-			'-3:is_title': True,
-			'-3:is_upper': False,
-			'-3:num_digits': '0',
-			'-2:word': '.',
-			'-2:is_title': False,
-			'-2:is_upper': False,
-			'-2:num_digits': '0',
-			'-1:word': '4',
-			'-1:is_title': False,
-			'-1:is_upper': False,
-			'-1:num_digits': '1',
-			'word': ',',
-			'is_title': False,
-			'is_upper': False,
-			'num_digits': '0',
-			'+1:word': 'atos',
-			'+1:is_title': False,
-			'+1:is_upper': True,
-			'+1:num_digits': '0'
-		},
-		{
-			'bias': 1.0,
-			'text_position': 0.8,
-			'-4:word': 'art',
-			'-4:is_title': True,
-			'-4:is_upper': False,
-			'-4:num_digits': '0',
-			'-3:word': '.',
-			'-3:is_title': False,
-			'-3:is_upper': False,
-			'-3:num_digits': '0',
-			'-2:word': '4',
-			'-2:is_title': False,
-			'-2:is_upper': False,
-			'-2:num_digits': '1',
-			'-1:word': ',',
-			'-1:is_title': False,
-			'-1:is_upper': False,
-			'-1:num_digits': '0',
-			'word': 'atos',
-			'is_title': False,
-			'is_upper': True,
-			'num_digits': '0'
-		}
+        {
+            'bias': 1.0,
+            'text_position': 0.0,
+            'word': 'art',
+            'is_title': True,
+            'is_upper': False,
+            'num_digits': '0',
+            '+1:word': '.',
+            '+1:is_title': False,
+            '+1:is_upper': False,
+            '+1:num_digits': '0',
+            '+2:word': '5',
+            '+2:is_title': False,
+            '+2:is_upper': False,
+            '+2:num_digits': '1',
+            '+3:word': ',',
+            '+3:is_title': False,
+            '+3:is_upper': False,
+            '+3:num_digits': '0',
+            '+4:word': 'atos',
+            '+4:is_title': False,
+            '+4:is_upper': True,
+            '+4:num_digits': '0'
+        },
+        {
+            'bias': 1.0,
+            'text_position': 0.2,
+            '-1:word': 'art',
+            '-1:is_title': True,
+            '-1:is_upper': False,
+            '-1:num_digits': '0',
+            'word': '.',
+            'is_title': False,
+            'is_upper': False,
+            'num_digits': '0',
+            '+1:word': '5',
+            '+1:is_title': False,
+            '+1:is_upper': False,
+            '+1:num_digits': '1',
+            '+2:word': ',',
+            '+2:is_title': False,
+            '+2:is_upper': False,
+            '+2:num_digits': '0',
+            '+3:word': 'atos',
+            '+3:is_title': False,
+            '+3:is_upper': True,
+            '+3:num_digits': '0'
+        },
+        {
+            'bias': 1.0,
+            'text_position': 0.4,
+            '-2:word': 'art',
+            '-2:is_title': True,
+            '-2:is_upper': False,
+            '-2:num_digits': '0',
+            '-1:word': '.',
+            '-1:is_title': False,
+            '-1:is_upper': False,
+            '-1:num_digits': '0',
+            'word': '5',
+            'is_title': False,
+            'is_upper': False,
+            'num_digits': '1',
+            '+1:word': ',',
+            '+1:is_title': False,
+            '+1:is_upper': False,
+            '+1:num_digits': '0',
+            '+2:word': 'atos',
+            '+2:is_title': False,
+            '+2:is_upper': True,
+            '+2:num_digits': '0'
+        },
+        {
+            'bias': 1.0,
+            'text_position': 0.6,
+            '-3:word': 'art',
+            '-3:is_title': True,
+            '-3:is_upper': False,
+            '-3:num_digits': '0',
+            '-2:word': '.',
+            '-2:is_title': False,
+            '-2:is_upper': False,
+            '-2:num_digits': '0',
+            '-1:word': '5',
+            '-1:is_title': False,
+            '-1:is_upper': False,
+            '-1:num_digits': '1',
+            'word': ',',
+            'is_title': False,
+            'is_upper': False,
+            'num_digits': '0',
+            '+1:word': 'atos',
+            '+1:is_title': False,
+            '+1:is_upper': True,
+            '+1:num_digits': '0'
+        },
+        {
+            'bias': 1.0,
+            'text_position': 0.8,
+            '-4:word': 'art',
+            '-4:is_title': True,
+            '-4:is_upper': False,
+            '-4:num_digits': '0',
+            '-3:word': '.',
+            '-3:is_title': False,
+            '-3:is_upper': False,
+            '-3:num_digits': '0',
+            '-2:word': '5',
+            '-2:is_title': False,
+            '-2:is_upper': False,
+            '-2:num_digits': '1',
+            '-1:word': ',',
+            '-1:is_title': False,
+            '-1:is_upper': False,
+            '-1:num_digits': '0',
+            'word': 'atos',
+            'is_title': False,
+            'is_upper': True,
+            'num_digits': '0'
+        }
     ]
     assert features_1 == act_seg_ner._get_features(sentence)
 
