@@ -7,6 +7,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class Retirements(Atos):
+    '''
+    Classe para atos de aposentadoria
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -59,6 +62,9 @@ class Retirements(Atos):
         return rules
 
 class RetAposentadoria(Atos):
+    '''
+    Classe para atos de retificação de aposentadoria
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -100,7 +106,7 @@ class RetAposentadoria(Atos):
         data_dodf = r"dodf[\s\S]*?(?:[0-9]*?)"
         data_dodf2 = r"([0-9]*?[/|.][0-9]*?[/|.][0-9]*?)[,|\s]"
 
-        le = r"\sle[,|:|;]\s?([\s\S]*?),?\sleia[\s\S]*?"
+        le1 = r"\sle[,|:|;]\s?([\s\S]*?),?\sleia[\s\S]*?"
         le2 = r"[,|:|;]\s(?:[\s\S]*?)[.]\s"
 
         leia = r"\sle[,|:|;]\s?(?:[\s\S]*?),"
@@ -118,6 +124,6 @@ class RetAposentadoria(Atos):
                  "classe": r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
                  "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
                  "matricula_SIAPE": r"siape\sn?o?\s([\s\S]*?)[,| | .]",
-                 "informacao_errada": le+le2,
+                 "informacao_errada": le1+le2,
                  "informacao_corrigida": leia+leia2}
         return rules

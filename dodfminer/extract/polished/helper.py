@@ -177,12 +177,12 @@ def committee_classification(all_acts, path, types, backend):
         for act in df_act:
             all_strings += act + ".\n"
 
-        df, _ = extract_single(all_strings, act_type, backend=backend)
+        data_frame, _ = extract_single(all_strings, act_type, backend=backend)
 
         if os.path.isfile(path):
-            df.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
+            data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
         else:
-            df.to_csv(os.path.join(path, act_type+".csv"))
+            data_frame.to_csv(os.path.join(path, act_type+".csv"))
 
 def extract_single(file, act_type, backend):
     """Extract Act from a single DODF to a single DataFrame.

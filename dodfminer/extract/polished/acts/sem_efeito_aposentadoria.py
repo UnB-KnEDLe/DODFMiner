@@ -1,7 +1,7 @@
 import re
 import os
-import joblib
 from typing import List, Match
+import joblib
 import pandas as pd
 import numpy as np
 from dodfminer.extract.polished.acts.base import Atos
@@ -47,6 +47,10 @@ TIPO_DOCUMENTO = r"(?i:portaria|ordem de servi.o|instru..o)"
 EMPTY_MATCH = r'(?!x)x'
 
 class SemEfeitoAposentadoria(Atos):
+    '''
+    Classe para atos que tornam aposentadoria sem efeito
+    '''
+
     _special_acts = [
         'data_documento',
         'tipo_edicao',
@@ -67,9 +71,9 @@ class SemEfeitoAposentadoria(Atos):
         "RETIFICAR",
     ]
 
-    def _pre_process_text(self, s):
+    def _pre_process_text(self, text):
         # Make sure words splitted accross lines are joined together
-        no_split_word = s.replace('-\n', '-')
+        no_split_word = text.replace('-\n', '-')
         return no_split_word.replace('\n', ' ')
 
     def __init__(self, file, backend, debug=False, extra_search=True,

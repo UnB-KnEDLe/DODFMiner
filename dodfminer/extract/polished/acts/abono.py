@@ -7,6 +7,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class AbonoPermanencia(Atos):
+    '''
+    Classe para atos de abono
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)

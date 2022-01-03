@@ -1,17 +1,18 @@
 import re
 import os
-import joblib
 from typing import List, Match
+import joblib
 import pandas as pd
 import numpy as np
 
 from dodfminer.extract.polished.acts.base import Atos
 
 
-def remove_crossed_words(s: str):
-    """Any hyfen followed by 1+ spaces are removed.
-    """
-    return re.sub(r'-\s+', '', s)
+def remove_crossed_words(string: str):
+    '''
+    Any hyfen followed by 1+ spaces are removed.
+    '''
+    return re.sub(r'-\s+', '', string)
 
 
 LOWER_LETTER = r"[áàâäéèẽëíìîïóòôöúùûüça-z]"
@@ -32,7 +33,7 @@ SERVIDOR_NOME_COMPLETO = r"(servidor.?|empregad.)[^A-ZÀ-Ž]{0,40}(?P<name>[A-Z�
 NOME_COMPLETO = r"(?P<name>['A-ZÀ-Ž][.'A-ZÀ-Ž\s]{6,}(?=[,.:;]))"
 
 PROCESSO_NUM = r"(?P<processo>[-0-9/.]+)"
-INTERESSADO = r"(?i:interessad.):\s*{}".format(NOME_COMPLETO)
+INTERESSADO = rf"(?i:interessad.):\s*{NOME_COMPLETO}"
 # INTERESSADO = r"(?i:interessad.):\s*{}".format(NOME_COMPLETO)
 # INTERESSADO = r"(?i:interessad.):\s*" + NOME_COMPLETO
 
@@ -41,6 +42,10 @@ ONUS = r"(?P<onus>\b[oôOÔ](?i:nus)\b[^.]+[.])"
 
 
 class Cessoes(Atos):
+    '''
+    Classe para atos de Cessoes
+    '''
+
     _special_acts = ['matricula', 'cargo']
 
     def __init__(self, file, backend, debug=False, extra_search=True):
@@ -90,7 +95,7 @@ class Cessoes(Atos):
             'orgao_cessionario': "",
             'onus': ONUS,
             'fundamento legal': "",
-            'processo_SEI': r"[^0-9]+?{}".format(PROCESSO_NUM),
+            'processo_SEI': rf"[^0-9]+?{PROCESSO_NUM}",
             'vigencia': "",
             'matricula_SIAPE': SIAPE,
             'cargo_orgao_cessionario': r",(?P<cargo>[^,]+)",
@@ -110,30 +115,30 @@ class Cessoes(Atos):
             # Makes difficult to mark XML later despite improving results.
             # re.finditer(self._inst_rule, self._processed_text, flags=self._flags)
         )
-        l = [i.group() for i in self._raw_matches]
+        list_matches = [i.group() for i in self._raw_matches]
         if self._debug:
-            print("DEBUG:", len(l), 'matches')
-        return l
+            print("DEBUG:", len(list_matches), 'matches')
+        return list_matches
 
     def _get_special_acts(self, lis_matches):
         for i, match in enumerate(self._raw_matches):
             act = match.group()
             matricula = re.search(MATRICULA, act) or \
-                    re.search(MATRICULA_GENERICO, act) or \
-                    re.search(MATRICULA_ENTRE_VIRGULAS, act)
+                re.search(MATRICULA_GENERICO, act) or \
+                re.search(MATRICULA_ENTRE_VIRGULAS, act)
 
             nome = re.search(self._rules['nome'], act)
             if matricula and nome:
                 offset = matricula.end()-1 if 0 <= (matricula.start() - nome.end()) <= 5 \
-                            else nome.end() - 1
-                cargo, = self._find_prop_value(r",(?P<cargo>[^,]+)", act[offset:])
+                    else nome.end() - 1
+                cargo, = self._find_prop_value(
+                    r",(?P<cargo>[^,]+)", act[offset:])
             else:
                 cargo = np.nan
 
             lis_matches[i]['matricula'] = matricula.group('matricula') if matricula \
-                                        else np.nan
+                else np.nan
             lis_matches[i]['cargo'] = cargo
-
 
     def _find_prop_value(self, rule, act):
         """Returns named group, or the whole match if no named groups
@@ -150,14 +155,13 @@ class Cessoes(Atos):
             keys = list(match.groupdict().keys())
             if len(keys) == 0:
                 return match.group()
-            elif len(keys) > 1:
-                raise ValueError("Named regex must have AT MOST ONE NAMED GROUP.")
+            if len(keys) > 1:
+                raise ValueError(
+                    "Named regex must have AT MOST ONE NAMED GROUP.")
             if self._debug:
                 print('key: ', keys[0])
             return (match.group(keys[0]),)
-        else:
-            return np.nan
-
+        return np.nan
 
     def _extract_props(self):
         acts = []
@@ -167,7 +171,6 @@ class Cessoes(Atos):
         if self._extra_search:
             self._get_special_acts(acts)
         return acts
-
 
     def _regex_instances(self) -> List[Match]:
         found = self._find_instances()
@@ -181,5 +184,5 @@ class Cessoes(Atos):
             The dataframe created
         """
         self._columns = self._prop_rules().keys()
-        return (pd.DataFrame() if not self._acts else 
-            pd.DataFrame(self._acts, columns = self._columns))
+        return (pd.DataFrame() if not self._acts else
+                pd.DataFrame(self._acts, columns=self._columns))

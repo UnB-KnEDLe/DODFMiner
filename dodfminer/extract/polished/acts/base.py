@@ -37,18 +37,18 @@ class Atos(ActRegex, ActNER, ActSeg):
 
     """
 
-    def __init__(self, file, backend='regex'):
+    def __init__(self, file_name, backend='regex'):
         self._backend = backend
         self._name = self._act_name()
         super().__init__()
 
         try:
-            with open(file, "r", encoding='utf-8') as fp:
-                self._text = fp.read()
-                fp.close()
-                self._file_name = file
+            with open(file_name, "r", encoding='utf-8') as file:
+                self._text = file.read()
+                file.close()
+                self._file_name = file_name
         except IOError:
-            self._text = file
+            self._text = file_name
             self._file_name = None
 
         self._acts_str = []
@@ -109,7 +109,8 @@ class Atos(ActRegex, ActNER, ActSeg):
             if self._backend == 'regex':
                 data_frame.columns = self._columns
             else:
-                data_frame.columns = [x.capitalize() for x in data_frame.columns]
+                data_frame.columns = [x.capitalize()
+                                      for x in data_frame.columns]
             return data_frame
         return pd.DataFrame()
 
