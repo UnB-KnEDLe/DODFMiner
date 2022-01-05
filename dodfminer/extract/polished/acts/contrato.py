@@ -55,8 +55,8 @@ class Contratos(Atos):
         return rules
 
     def _preprocess(cls, sentence):
-        sentence = word_tokenize(sentence.replace(
-            ':', ' : ').replace('``', ' ').replace("''", ' '))
+        sentence = sentence.replace(
+            ':', ' : ').replace('``', ' ').replace("''", ' ')
         return sentence
 
     def _regex_instances(self):
