@@ -6,6 +6,7 @@ extract an act and, its proprieties, using a trained ner model.
 """
 
 import os
+import nltk
 import numpy as np
 import joblib
 from nltk import word_tokenize
@@ -29,6 +30,7 @@ class ActNER:
 
     def __init__(self):
         # self._backend = 'regex'
+        nltk.download('punkt', quiet=True)
         super().__init__()
 
         # pylint: disable=assignment-from-no-return
