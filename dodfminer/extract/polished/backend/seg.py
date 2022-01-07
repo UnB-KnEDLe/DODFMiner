@@ -36,7 +36,7 @@ class ActSeg:
             if self._seg_model is not None:
                 return self._crf_instances
             else:
-                print(f"Act {self._name} does not have a segmentation model: Using regex for segmentation")
+                print(f"Act {self._name} does not have a segmentation model: FALLING BACK TO REGEX")
                 return self._regex_instances
         else:
             self._backend = 'regex'
