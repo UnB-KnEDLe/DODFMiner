@@ -7,6 +7,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class Exoneracao(Atos):
+    '''
+        Classe para atos de exoneração não-efetivos
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -55,6 +58,9 @@ class Exoneracao(Atos):
         return rules
 
 class ExoneracaoEfetivos(Atos):
+    '''
+        Classe para atos de exoneração efetivos
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)

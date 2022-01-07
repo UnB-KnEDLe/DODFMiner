@@ -7,6 +7,7 @@ extract acts from a block of text.
 import re
 from nltk import word_tokenize
 
+
 class ActSeg:
     """Base class for act segmentation.
 
@@ -41,7 +42,7 @@ class ActSeg:
         else:
             self._backend = 'regex'
             return self._regex_instances
-    
+
     def _load_seg_model(self):
         """Load Segmentation Model from models/folder.
 
@@ -73,7 +74,7 @@ class ActSeg:
 
     def _crf_instances(self):
         """Search for all instances of the act using a CRF model.
-        
+
         Returns:
             List of all act instances in the text.
         """
@@ -205,7 +206,7 @@ class ActSeg:
 
     def _extract_acts(self, text, prediction):
         """Extract and join words predicted to be part of an act.
-        
+
         Args:
             text (list): List of words in the text of a DODF.
             prediction (list): Predictions made for each word in the text.

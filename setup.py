@@ -3,14 +3,14 @@ from dodfminer.__version__ import __version__
 
 def requirements_list():
     list_of_req = []
-    with open('requirements.txt') as req:
+    with open('requirements.txt', 'r', encoding='utf-8') as req:
         for line in req:
             list_of_req.append(line)
 
     return list_of_req
 
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding='utf-8') as fh:
     long_description = fh.read()
 
 print(requirements_list())
@@ -35,6 +35,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    package_data={'dodfminer': ['extract/polished/acts/models/*.pkl']},
+    package_data={'dodfminer': [
+        'extract/polished/acts/models/*.pkl', 
+        'extract/polished/acts/seg_models/*.pkl']},
     include_package_data = True,
 )
