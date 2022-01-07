@@ -226,7 +226,10 @@ class ActSeg:
                 act_start = limits[i]
             elif prediction[i][0] == 'E' and act_start != -1: #E-act
                 act_end = limits[i+1]
-                acts.append(text[act_start:act_end].strip())
+
+                act = text[act_start:act_end]
+                if act.count('.') <= len(act)//5:
+                    acts.append(text[act_start:act_end].strip())
                 act_start = -1
             
         if act_start != -1:
