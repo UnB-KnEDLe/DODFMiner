@@ -214,7 +214,6 @@ class ActSeg:
             List of acts in the text.
         """
 
-        print(prediction)
         acts = []
         limits = self._limits(text)
 

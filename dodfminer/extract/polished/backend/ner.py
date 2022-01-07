@@ -86,8 +86,6 @@ class ActNER:
         symbols = ['(', ',', '.', '/', '-']
         all = letters + numbers + symbols + [' ']
 
-        print(sentence)
-
         lim = []
         if sentence[0] != ' ':
             lim.append(0)
