@@ -228,7 +228,7 @@ class ActSeg:
                 act_end = limits[i+1]
 
                 act = text[act_start:act_end]
-                if act.count('.') <= len(act)//5:
+                if act.count('.') <= len(act)/3:
                     acts.append(text[act_start:act_end].strip())
                 act_start = -1
             
