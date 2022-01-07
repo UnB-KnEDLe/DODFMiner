@@ -196,6 +196,6 @@ def test_act_ner_predictions_dict(act_ner_with_model):
         'Processo GDF/SEI': np.nan,
         'orgao': np.nan
     }
-    print(act_ner_with_model._predictions_dict(sentence, prediction))
+
     assert entidades == act_ner_with_model._predictions_dict(
         sentence, prediction)

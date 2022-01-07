@@ -47,8 +47,7 @@ class ActNER:
         """
         # pylint: disable=access-member-before-definition
         if self._backend == 'ner':
-            print(
-                f"Act {self._name} does not have a model: FALLING BACK TO REGEX")
+            print(f"Act {self._name} does not have an entity extraction model: FALLING BACK TO REGEX")
             self._backend = 'regex'
         else:
             self._backend = 'regex'
@@ -89,8 +88,6 @@ class ActNER:
         numbers = [chr(c) for c in range(ord('0'), ord('9') + 1)]
         symbols = ['(', ',', '.', '/', '-']
         all = letters + numbers + symbols + [' ']
-
-        # print(sentence)
 
         lim = []
         if sentence[0] != ' ':

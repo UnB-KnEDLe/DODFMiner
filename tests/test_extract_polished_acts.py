@@ -233,7 +233,7 @@ def test_act_retretirement_consistence_rule(act_retapos):
 
 def test_act_retretirement_ner():
     act = RetAposentadoria(file, 'ner')
-    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+    assert act._backend == 'regex'
 
 #
 #

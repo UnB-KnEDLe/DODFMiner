@@ -95,7 +95,6 @@ def test_act_seg_crf_instances(act_seg_ner):
         "00133-00002735/2020-97."
     act_seg_ner._acts_str = []
     act = act_seg_ner._seg_function()
-    print(act)
 
     assert len(act) == 2
 
