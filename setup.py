@@ -35,6 +35,8 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    package_data={'dodfminer': ['extract/polished/acts/models/*.pkl']},
+    package_data={'dodfminer': [
+        'extract/polished/acts/models/*.pkl', 
+        'extract/polished/acts/seg_models/*.pkl']},
     include_package_data = True,
 )
