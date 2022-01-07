@@ -2,7 +2,7 @@ bs4==0.0.1
 certifi==2020.4.5.2
 chardet==3.0.4
 idna==2.9
-numpy==1.18.5
+numpy==1.21.0
 pandas==1.1.5
 PyMuPDF==1.17.0
 python-dateutil==2.8.1
