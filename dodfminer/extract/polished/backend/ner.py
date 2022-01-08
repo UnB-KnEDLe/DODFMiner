@@ -5,12 +5,15 @@ extract an act and, its proprieties, using a trained ner model.
 
 """
 
-import numpy as np
 import os
+import nltk
+import numpy as np
 import joblib
 import re
 
 # pylint: disable=too-few-public-methods
+
+
 class ActNER:
     """Act NER Class.
 
@@ -27,8 +30,8 @@ class ActNER:
 
     def __init__(self):
         # self._backend = 'regex'
+        nltk.download('punkt', quiet=True)
         super().__init__()
-
 
         # pylint: disable=assignment-from-no-return
         self._model = self._load_model()
@@ -186,7 +189,7 @@ class ActNER:
             self._add_base_feat(word_feat, sentence, i+4, '+4:')
                 
             sent_features.append(word_feat)
-        
+
         return sent_features
 
     def _predictions_dict(self, sentence, prediction):
@@ -233,6 +236,5 @@ class ActNER:
                 dict_ato[i] = np.nan
             elif len(dict_ato[i]) == 1:
                 dict_ato[i] = dict_ato[i][0]
-
 
         return dict_ato

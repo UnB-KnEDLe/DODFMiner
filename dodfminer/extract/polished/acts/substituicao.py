@@ -7,6 +7,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class Substituicao(Atos):
+    '''
+    Classe para atos de substituição
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)

@@ -4,12 +4,14 @@ import re
 import os
 import joblib
 import pandas as pd
-from dodfminer.extract.polished.acts.base import Atos
-
 from nltk import word_tokenize
 
+from dodfminer.extract.polished.acts.base import Atos
 
 class Contratos(Atos):
+    '''
+    Classe para contratos
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -27,7 +29,22 @@ class Contratos(Atos):
         return "Contrato"
 
     def _props_names(self):
-        return ["Tipo do Ato", "CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR", "LEI_ORC.", "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
+        return [
+            "Tipo do Ato",
+            "CONTRATO",
+            "PROCESSO",
+            "PARTES",
+            "OBJETO",
+            "VALOR",
+            "LEI_ORC.",
+            "UNI_ORC.",
+            "PROG_TRAB.",
+            "NAT_DESP.",
+            "NOTA_EMP.",
+            "DATA_ASS.",
+            "SIGNATARIOS",
+            "VIGENCIA"
+        ]
 
     def _rule_for_inst(self):
         start = r"()"
@@ -40,20 +57,27 @@ class Contratos(Atos):
         rules = {
             "CONTRATO": r"EXTRATO D[E|O] CONTRATO[\s\S]*?(\d+\/\d{4})",
             "PROCESSO": r"[P|p][R|r][O|o][C|c][E|e][S|s][S|s][O|o][\s\S].*?(\d*[^;|,|a-zA-Z]*)",
-            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
+            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)" +\
+                r"|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
             "OBJETO": r"[O|o][B|b][J|j][E|e][T|t][O|o][\s\S].*?(\d*[^;|.|]*)",
             "VALOR": r"[v|V][a|A][l|L][o|O][r|R].*?[\s\S].*?([R$ \d\.]*,\d{2})",
-            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
-            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
-            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o].*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
-            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S].*?(\d*[^;|,|–|(|a-zA-Z]*)",
+            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S]" +\
+                r".*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
+            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A]" +\
+                r".*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
+            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o]" +\
+                r".*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
+            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S]" +\
+                r".*?(\d*[^;|,|–|(|a-zA-Z]*)",
             "NOTA_EMP.": r"(\d+NE\d+)",
-            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:.*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
+            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:" +\
+                r".*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
             "SIGNATARIOS": r"Signat[á|a]rios:([^;|.]*)|SIGNAT[Á|A]RIOS:([^;|.]*)|Assinantes:([^;|.]*)|ASSINANTES:([^;|.]*)",
             "VIGENCIA": r"Vig[e|ê]ncia:[\s\S]([^;|.]*)|VIG[E|Ê]NCIA:[\s\S]([^;|.]*)",
         }
         return rules
 
+    @classmethod
     def _preprocess(cls, sentence):
         sentence = sentence.replace(
             ':', ' : ').replace('``', ' ').replace("''", ' ')
@@ -135,7 +159,7 @@ class ContractExtractorREGEX:
         matched_text = cls._row_list_regex(
             base_str, contract_pattern, block_pattern, newline_pattern)
 
-        if matched_text != None:
+        if matched_text is not None:
             ext_blk_list = cls._mapped_positions_regex(matched_text)
             extracted_texts = cls._extract_texts_from_mapped_positions(
                 ext_blk_list, base_str)

@@ -7,6 +7,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class Revertions(Atos):
+    '''
+        Classe com atos de reversão
+    '''
 
     def __init__(self, text, backend):
         super().__init__(text, backend)

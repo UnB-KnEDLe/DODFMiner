@@ -6,6 +6,9 @@ from dodfminer.extract.polished.acts.base import Atos
 
 
 class NomeacaoComissionados(Atos):
+    '''
+        Classe para atos de nomeação de comissionados
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -52,7 +55,11 @@ class NomeacaoComissionados(Atos):
                  "orgao": org + org2}
         return rules
 
+
 class NomeacaoEfetivos(Atos):
+    '''
+    Classe para atos de nomeação de efetivos
+    '''
 
     def __init__(self, file, backend):
         super().__init__(file, backend)
@@ -71,11 +78,31 @@ class NomeacaoEfetivos(Atos):
         return joblib.load(f_path)
 
     def _props_names(self):
-        return ['tipo','edital_normativo','data_do_edital_normativo','DODF_edital_normativo','data_DODF_edital_normativo','edital_resultado_final','data_edital_resultado_final','cargo','especialiade','carreira','orgao','nome_candidato','classificacao','pne','sei','reposicionamento']
+        return [
+            'tipo',
+            'edital_normativo',
+            'data_do_edital_normativo',
+            'DODF_edital_normativo',
+            'data_DODF_edital_normativo',
+            'edital_resultado_final',
+            'data_edital_resultado_final',
+            'cargo',
+            'especialiade',
+            'carreira',
+            'orgao',
+            'nome_candidato',
+            'classificacao',
+            'pne',
+            'sei',
+            'reposicionamento'
+        ]
 
     def _rule_for_inst(self):
         start = r"(NOMEAR\s)"
-        body = r"((?:[ao]s\scandidat[ao]s\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*).|(?:[ao]\scandidat[oa]\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*)))(?:\s[a-zA-Z_\s]*(?:deficiencia|especiais):(?:\s[\sA-Zo]+,\s?\d{1,4}o?;?)+)?(?:\s)?(?:[\r\n\t\f\sa-zA-Z_\s]*classificacao:(?:\s[\sA-Zo]+,\s?\d{1,4}o?[,;]?)+)?)"
+        body = r"((?:[ao]s\scandidat[ao]s\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*).|" +\
+            r"(?:[ao]\scandidat[oa]\sabaixo(?:([a-zA-Z_0-9,\s\/-\:\-\(\);](no?\.)?)*)))(?:\s[a-zA-Z_\s]*" +\
+            r"(?:deficiencia|especiais):(?:\s[\sA-Zo]+,\s?\d{1,4}o?;?)+)?(?:\s)?(?:[\r\n\t\f\sa-zA-Z_\s]*"+\
+            r"classificacao:(?:\s[\sA-Zo]+,\s?\d{1,4}o?[,;]?)+)?)"
         end = ""
         return start + body + end
 
