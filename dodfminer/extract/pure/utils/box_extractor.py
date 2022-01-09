@@ -1,9 +1,7 @@
 """Functions to extract boxes from text."""
 
+from functools import cmp_to_key
 import fitz
-import re
-from functools import cmp_to_key, reduce
-import operator
 
 SECTION_TITLES = ["SEÇÃO I", "SEÇÃO II", "SEÇÃO III"]
 
@@ -59,7 +57,7 @@ def sort_blocks(page_blocks):
 
 def compare_blocks(block1, block2):
     """Implements a comparison heuristic between blocks.
-       Blocks that are in the uppermost and leftmost positions 
+       Blocks that are in the uppermost and leftmost positions
        should be inserted before the other block in comparison.
 
     Args:
@@ -85,6 +83,7 @@ def compare_blocks(block1, block2):
     else:
         return b1_x0-b2_x0
 
+
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
     """Draw extracted text blocks rectangles.
        In result, a pdf file with rectangles shapes added, representing the extracted blocks,
@@ -93,7 +92,7 @@ def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
     Args:
         doc: an opened fitz document
         doc_boxes: the list of blocks on a document, separated by pages
-        save_path: a custom path for saving the result pdf 
+        save_path: a custom path for saving the result pdf
 
     Returns:
         None
@@ -102,18 +101,18 @@ def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
 
     for page in doc:
         for page_box in doc_boxes[page.number]:
-            x0, y0, x1, y1, *_ = page_box
-            rect = fitz.Rect(x0, y0, x1, y1)
+            x_0, y_0, x_1, y_1, *_ = page_box
+            rect = fitz.Rect(x_0, y_0, x_1, y_1)
 
             page.drawRect(rect, color, width=2)
 
     doc_path = '/'.join(doc.name.split('/')[0:-1])
     doc_name = doc.name.split('/')[-1]
 
-    if save_path != None:
+    if save_path is not None:
         doc.save(f"{save_path}/BOXES_{doc_name}")
     else:
-        doc.save(f"{doc_path}{'/' if len(doc_path) else ''}BOXES_{doc_name}")
+        doc.save(f"{doc_path}{'/' if doc_path else ''}BOXES_{doc_name}")
 
 
 def get_doc_text_lines(doc: fitz.Document):
