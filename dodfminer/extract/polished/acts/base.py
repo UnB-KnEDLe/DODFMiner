@@ -51,7 +51,6 @@ class Atos(ActRegex, ActNER, ActSeg):
             self._text = file_name
             self._file_name = None
 
-        self._acts_str = []
         self._columns = self._props_names()
 
         self._raw_acts = self._seg_function()
