@@ -73,6 +73,7 @@ def compare_blocks(block1, block2):
     b1_y = max([b1_y0, b1_y1])
     b2_y = max([b2_y0, b2_y1])
 
+    # pylint: disable=too-many-boolean-expressions
     if (b1_x0 >= 49 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
        (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766) or \
        (b1_x1-b1_x0 > 350) or \
@@ -80,8 +81,8 @@ def compare_blocks(block1, block2):
        (b1_y < 80) or \
        (b2_y < 80):
         return b1_y-b2_y
-    else:
-        return b1_x0-b2_x0
+
+    return b1_x0-b2_x0
 
 
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):

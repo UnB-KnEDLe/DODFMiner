@@ -31,7 +31,7 @@ class ActSeg: # pylint: disable=too-few-public-methods
         Otherwise, loads the function _regex_instances.
 
         """
-        if self._backend == 'ner':
+        if self._backend == 'ner': # pylint: disable=access-member-before-definition
             self._seg_model = self._load_seg_model() # pylint: disable=assignment-from-none
 
             if self._seg_model is not None:
@@ -79,11 +79,11 @@ class ActSeg: # pylint: disable=too-few-public-methods
         Returns:
             List of all act instances in the text.
         """
-        text = self._preprocess(self._text)
+        text = self._preprocess(self._text) # pylint: disable=no-member
         feats = self._get_features(self._split_sentence(text))
         pred = self._seg_model.predict_single(feats)
         acts = self._extract_acts(text, pred)
-        self._acts_str += acts
+        self._acts_str += acts # pylint: disable=no-member
         return acts
 
     def _preprocess(self, text):

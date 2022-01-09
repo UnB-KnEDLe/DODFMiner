@@ -122,7 +122,7 @@ class ContentExtractor:
         return drawboxes_text if not single else cls._save_single_file(file, 'txt', drawboxes_text)
 
     @classmethod
-    def extract_structure(cls, file, single=False, norm='NFKD'):
+    def extract_structure(cls, file, single=False, norm='NFKD'): # pylint: disable=too-many-locals
         """Extract boxes of text with their respective titles.
 
         Args:
