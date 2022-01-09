@@ -250,9 +250,7 @@ def _get_titles_subtitles(elements, width_lis):
                                current_element['bbox'],
                                current_element['page']])
             elements = elements[1:]
-        else:
-            break
-        previous_element = current_element
+            previous_element = current_element
 
     # Titles with more than one line should be a single string
 
@@ -271,9 +269,7 @@ def _get_titles_subtitles(elements, width_lis):
                 sub_titles.append((current_element['text'], _TYPE_SUBTITLE,
                                    current_element['bbox'],
                                    current_element['page']))
-            else:   # this and next elements has others font sizes;
-                break
-            elements = elements[1:]
+                elements = elements[1:]
         sub_titles = [TextTypeBboxPageTuple(*i) for i in sub_titles]
 
     # Sometimes heuristic fails. However, the fix below seems to work on most
@@ -282,8 +278,8 @@ def _get_titles_subtitles(elements, width_lis):
 
     if not titles and sub_titles:
         return TitlesSubtitles([invert_text_type_bbox_page_tuple(i) for i in sub_titles], titles)
-    else:
-        return TitlesSubtitles(titles, sub_titles)
+
+    return TitlesSubtitles(titles, sub_titles)
 
 
 def _get_titles_subtitles_smart(doc, width_lis):
@@ -340,7 +336,7 @@ def extract_titles_subtitles(path):
 # instance through appending elements to its internals lists)
 
 
-class ExtractorTitleSubtitle(object):
+class ExtractorTitleSubtitle:
     """Use this class like that:
     >> path = "path_to_pdf"
     >> extractor = ExtractorTitleSubtitle(path)
@@ -535,7 +531,7 @@ class ExtractorTitleSubtitle(object):
         """
         self._json = {}
         self._hierarchy = []
-        self._cache = False
+        self._cached = False
 
 
 def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
@@ -554,7 +550,8 @@ def gen_title_base(dir_path=".", base_name="titles", indent=4, forced=False):
     if os.path.exists(base_name) and not forced:
         print(f"Error: {base_name} already exists")
         return None
-    elif os.path.isdir(base_name):
+
+    if os.path.isdir(base_name):
         print(f"Error: {base_name} ir a directory")
         return None
 
@@ -601,7 +598,7 @@ def gen_hierarchy_base(dir_path=".",
         In case of error trying to create `base_name` folder,
         returns None.
     """
-    folder = "{}/{}".format(dir_path, folder)
+    folder = f"{dir_path}/{folder}"
     if not dir_path:
         dir_path = "."
     try:
@@ -612,8 +609,8 @@ def gen_hierarchy_base(dir_path=".",
 
     hierarchies = []
     for file in filter(lambda x: x.endswith('.pdf'), os.listdir(dir_path)):
-        et = ExtractorTitleSubtitle("{}/{}".format(dir_path, file))
-        hierarchy = et.titles_subtitles_hierarchy
+        extractor = ExtractorTitleSubtitle(f"{dir_path}/{file}")
+        hierarchy = extractor.titles_subtitles_hierarchy
         hierarchy = [
             ({d[0]: [dict([(i, '')]) for i in d[1]]})
             for d in hierarchy
@@ -621,9 +618,9 @@ def gen_hierarchy_base(dir_path=".",
         hierarchy = {file.rstrip('.pdf'): hierarchy}
         hierarchies.append(hierarchy)
 
-        json.dump(hierarchy,
-                  open("{}/{}.json".format(
-                      folder, file.rstrip('.pdf')), 'w'),
-                  ensure_ascii=False, indent=indent*' ')
+        with open(f"{folder}/{file.rstrip('.pdf')}.json", 'w', encoding='utf-8') as json_path:
+            json.dump(hierarchy,
+                      json_path,
+                      ensure_ascii=False, indent=indent*' ')
 
     return hierarchies
