@@ -229,7 +229,10 @@ class ActSeg: # pylint: disable=too-few-public-methods
                 act_start = limits[i]
             elif prediction[i][0] == 'E' and act_start != -1:  # E-act
                 act_end = limits[i+1]
-                acts.append(text[act_start:act_end].strip())
+
+                act = text[act_start:act_end].strip()
+                if act.count('.') <= len(act)/3:
+                    acts.append(act)
                 act_start = -1
 
         if act_start != -1:
