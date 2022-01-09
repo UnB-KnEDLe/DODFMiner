@@ -23,9 +23,6 @@ class ActSeg: # pylint: disable=too-few-public-methods
 
     def __init__(self):
         self._seg_function = self._load_seg_function()
-        self._backend = ""
-        self._text = ""
-        self._acts_str = []
 
     def _load_seg_function(self):
         """Load segmentation function into the _seg_function variable.

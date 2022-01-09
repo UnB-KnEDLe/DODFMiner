@@ -251,6 +251,8 @@ def _get_titles_subtitles(elements, width_lis):
                                current_element['page']])
             elements = elements[1:]
             previous_element = current_element
+            continue
+        break
 
     # Titles with more than one line should be a single string
 
@@ -270,6 +272,8 @@ def _get_titles_subtitles(elements, width_lis):
                                    current_element['bbox'],
                                    current_element['page']))
                 elements = elements[1:]
+                continue
+            break
         sub_titles = [TextTypeBboxPageTuple(*i) for i in sub_titles]
 
     # Sometimes heuristic fails. However, the fix below seems to work on most

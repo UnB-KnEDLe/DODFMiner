@@ -409,5 +409,5 @@ def test_reset(extractor_2001):
     extractor_2001.reset()
     assert (not extractor_2001._json
             and not extractor_2001._hierarchy
-            and not extractor_2001._cache
+            and not extractor_2001._cached
             )

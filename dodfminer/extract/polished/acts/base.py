@@ -11,7 +11,7 @@ from dodfminer.extract.polished.backend.ner import ActNER
 from dodfminer.extract.polished.backend.seg import ActSeg
 
 
-class Atos(ActRegex, ActNER, ActSeg):
+class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attributes
     """Base class for extracting an act and its proprieties to a dataframe.
 
     Note:
@@ -51,6 +51,7 @@ class Atos(ActRegex, ActNER, ActSeg):
             self._text = file_name
             self._file_name = None
 
+        self._acts_str = []
         self._columns = self._props_names()
 
         self._raw_acts = self._seg_function()

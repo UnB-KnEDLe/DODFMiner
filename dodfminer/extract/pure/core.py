@@ -162,7 +162,7 @@ class ContentExtractor:
         boxes = cls.extract_text(file, block=True, norm=norm)
         first_title = False
         is_title = False
-        normalized_title = ''
+        actual_title = ''
         section = None
 
         for box in boxes:
@@ -181,6 +181,7 @@ class ContentExtractor:
 
                     if text == normalized_title:
                         first_title = True
+                        actual_title = normalized_title
                         if title not in content_dict[section].keys():
                             content_dict[section].update(
                                 {normalized_title: []})
@@ -189,7 +190,7 @@ class ContentExtractor:
 
             if first_title and not is_title:
                 if int(box[1]) != 55 and int(box[1]) != 881:
-                    content_dict[section][normalized_title].append(box[:5])
+                    content_dict[section][actual_title].append(box[:5])
 
         return content_dict if not single else cls._save_single_file(file, 'json', json.dumps(content_dict))
 
