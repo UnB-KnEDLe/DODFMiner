@@ -46,6 +46,7 @@ TIPO_DOCUMENTO = r"(?i:portaria|ordem de servi.o|instru..o)"
 
 EMPTY_MATCH = r'(?!x)x'
 
+
 class SemEfeitoAposentadoria(Atos):
     '''
     Classe para atos que tornam aposentadoria sem efeito
@@ -71,11 +72,13 @@ class SemEfeitoAposentadoria(Atos):
         "RETIFICAR",
     ]
 
-    def _pre_process_text(self, text):
+    @classmethod
+    def _pre_process_text(cls, text):
         # Make sure words splitted accross lines are joined together
         no_split_word = text.replace('-\n', '-')
         return no_split_word.replace('\n', ' ')
 
+    # pylint: disable=too-many-arguments
     def __init__(self, file, backend, debug=False, extra_search=True,
                  nlp=None, max_length=2000):
         self._max_length = max_length
@@ -151,8 +154,8 @@ class SemEfeitoAposentadoria(Atos):
         for raw_match in lis:
             flag = True
             for bad in self._BAD_MATCH_WORDS:
-                s = raw_match.group()
-                if len(s) > self._max_length or bad in s:
+                grouped_match = raw_match.group()
+                if len(grouped_match) > self._max_length or bad in grouped_match:
                     flag = False
                     break
             if flag:
@@ -164,6 +167,7 @@ class SemEfeitoAposentadoria(Atos):
             print("DEBUG:", len(self._raw_matches), 'true matches')
         return [i.group() for i in self._raw_matches]
 
+    # pylint: disable=too-many-locals,too-many-statements
     def _get_special_acts(self, lis_dict):
         for i, match in enumerate(self._raw_matches):
             act = match.group()
@@ -174,7 +178,6 @@ class SemEfeitoAposentadoria(Atos):
                     FLEX_DATE, self._raw_acts[i]
                 )
                 curr_dict['data_dodf'] = data_dodf
-
 
             numero_dodf = data_dodf and re.search(DODF_NUM, data_dodf.group())
             data_documento = data_dodf and \
@@ -198,13 +201,17 @@ class SemEfeitoAposentadoria(Atos):
                     # Appeal to spacy
                     all_cands = re.findall(NOME_COMPLETO, act)
                     cand_text = 'SEM-SERVIDOR'
+                    cand = None
+
                     for cand in self._nlp(', '.join([c.strip().title() for c in all_cands])).ents:
                         cand_text = cand.text
 
                         if cand.label_ == 'PER':
                             break
+
                     nome = re.search(cand_text.upper(), act)
                     del all_cands, cand_text, cand
+
             end_employee = nome.end() if nome else 0
             matricula = re.search(MATRICULA, act[end_employee:]) or \
                 re.search(MATRICULA_GENERICO, act[end_employee:]) or \
@@ -252,9 +259,10 @@ class SemEfeitoAposentadoria(Atos):
             an exception if there are more than two groups.
         """
         match = re.search(rule, act, flags=self._flags)
-        return match,
+        return (match,)
 
-    def _group_solver(self, match):
+    @classmethod
+    def _group_solver(cls, match):
         """Returns named group, or the whole match if no named groups
                 are present on the match.
         Args:
@@ -265,11 +273,12 @@ class SemEfeitoAposentadoria(Atos):
         """
         if not match or isinstance(match, str):
             return np.nan
-        elif match.groupdict():
+
+        if match.groupdict():
             key = list(match.groupdict())[0]
             return match.group(key)
-        else:
-            return match.group()
+
+        return match.group()
 
     def _extract_props(self):
         acts = []
