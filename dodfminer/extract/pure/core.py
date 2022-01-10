@@ -17,14 +17,13 @@ Usage example::
 import os
 import json
 import unicodedata
-import numpy as np
 
 from pathlib import Path
 
 import fitz
 
 from dodfminer.extract.pure.utils.title_extractor import ExtractorTitleSubtitle
-from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes, sort_blocks
+from dodfminer.extract.pure.utils.box_extractor import get_doc_text_boxes
 
 RESULTS_PATH = "results/"
 RESULTS_PATH_JSON = "results/json"
@@ -123,7 +122,7 @@ class ContentExtractor:
         return drawboxes_text if not single else cls._save_single_file(file, 'txt', drawboxes_text)
 
     @classmethod
-    def extract_structure(cls, file, single=False, norm='NFKD'):
+    def extract_structure(cls, file, single=False, norm='NFKD'): # pylint: disable=too-many-locals
         """Extract boxes of text with their respective titles.
 
         Args:
@@ -159,41 +158,41 @@ class ContentExtractor:
         except Exception as excpt:
             cls._log(excpt)
             return None
-        else:
-            boxes = cls.extract_text(file, block=True, norm=norm)
-            first_title = False
-            is_title = False
-            actual_title = ''
-            section = None
 
-            for box in boxes:
-                text = box[4]
-                is_title = True
+        boxes = cls.extract_text(file, block=True, norm=norm)
+        first_title = False
+        is_title = False
+        actual_title = ''
+        section = None
 
-                if text in ["SECAO I", "SECAO II", "SECAO III"]:
-                    section = text
-                    if section not in content_dict.keys():
-                        content_dict.update({section: {}})
-                else:
-                    for title in title_base:
-                        text = text.replace("\n", " ")
-                        title = title.replace("\n", " ")
-                        normalized_title = cls._normalize_text(title, norm)
+        for box in boxes:
+            text = box[4]
+            is_title = True
 
-                        if text == normalized_title:
-                            first_title = True
-                            actual_title = normalized_title
-                            if title not in content_dict[section].keys():
-                                content_dict[section].update({normalized_title: []})
-                            break
-                        else:
-                            is_title = False
+            if text in ["SECAO I", "SECAO II", "SECAO III"]:
+                section = text
+                if section not in content_dict.keys():
+                    content_dict.update({section: {}})
+            else:
+                for title in title_base:
+                    text = text.replace("\n", " ")
+                    title = title.replace("\n", " ")
+                    normalized_title = cls._normalize_text(title, norm)
 
-                if first_title and not is_title:
-                    if int(box[1]) != 55 and int(box[1]) != 881:
-                        content_dict[section][actual_title].append(box[:5])
+                    if text == normalized_title:
+                        first_title = True
+                        actual_title = normalized_title
+                        if title not in content_dict[section].keys():
+                            content_dict[section].update(
+                                {normalized_title: []})
+                    else:
+                        is_title = False
 
-            return content_dict if not single else cls._save_single_file(file, 'json', json.dumps(content_dict))
+            if first_title and not is_title:
+                if int(box[1]) != 55 and int(box[1]) != 881:
+                    content_dict[section][actual_title].append(box[:5])
+
+        return content_dict if not single else cls._save_single_file(file, 'json', json.dumps(content_dict))
 
     @classmethod
     def extract_to_txt(cls, folder='./', norm='NFKD'):
@@ -262,7 +261,7 @@ class ContentExtractor:
                     j_path = cls._struct_subfolders(file, True, folder)
                     with open(j_path, "w", encoding="utf-8") as file:
                         json.dump(content, file,
-                                ensure_ascii=False)
+                                  ensure_ascii=False)
             else:
                 cls._log("JSON already exists")
 

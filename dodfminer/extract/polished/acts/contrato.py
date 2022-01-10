@@ -4,9 +4,9 @@ import re
 import os
 import joblib
 import pandas as pd
-from nltk import word_tokenize
 
 from dodfminer.extract.polished.acts.base import Atos
+
 
 class Contratos(Atos):
     '''
@@ -57,31 +57,31 @@ class Contratos(Atos):
         rules = {
             "CONTRATO": r"EXTRATO D[E|O] CONTRATO[\s\S]*?(\d+\/\d{4})",
             "PROCESSO": r"[P|p][R|r][O|o][C|c][E|e][S|s][S|s][O|o][\s\S].*?(\d*[^;|,|a-zA-Z]*)",
-            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)" +\
-                r"|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
+            "PARTES": r"Partes:[\s\S].*?([^;|.]*)|PARTES:[\s\S].*?([^;|.]*)|Contratante:[\s\S].*?([^;|.]*)" +
+            r"|Contratantes:[\s\S].*?([^;|.]*)|CONTRATANTE:[\s\S].*?([^;|.]*)|CONTRATANTES:[\s\S].*?([^;|.]*)",
             "OBJETO": r"[O|o][B|b][J|j][E|e][T|t][O|o][\s\S].*?(\d*[^;|.|]*)",
             "VALOR": r"[v|V][a|A][l|L][o|O][r|R].*?[\s\S].*?([R$ \d\.]*,\d{2})",
-            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S]" +\
-                r".*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
-            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A]" +\
-                r".*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
-            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o]" +\
-                r".*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
-            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S]" +\
-                r".*?(\d*[^;|,|–|(|a-zA-Z]*)",
+            "LEI_ORC.": r"[L|l][E|e][I|i][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A].*?[\s\S]" +
+            r".*?([N|n][o|O|º|°] \d+.\d+\/d{4}|[N|n][o|O|º|°] \d+.\d+)",
+            "UNI_ORC.": r"[u|U][n|N][i|I][d|D][a|A][d|D][e|E][\s\S][o|O][r|R][c|C|ç|Ç][a|A][m|M][e|E][n|N][t|T][a|A|á|Á][r|R][i|I][a|A]" +
+            r".*?[\s\S].*?(\d+.\d+)|[U][.][O].*?[\s\S].*?(\d+.\d+)|[U][O].*?[\s\S].*?(\d+.\d+)",
+            "PROG_TRAB.": r"[P|p][R|r][O|o][g|G][r|R][a|A][m|M][a|A][\s|\S][d|D][e|E|O|o|A|a][\s|\S][T|t][R|r][A|a][B|b][A|a][L|l][H|h][O|o]" +
+            r".*?[:|;|[\s\S].*?(\d*[^;|,|–|(|Nat|Not|Uni|Ent]*)",
+            "NAT_DESP.": r"[N|n][a|A][t|T][u|U][r|R][e|E][z|Z][a|A][\s\S][D|d][e|E|a|A][\s\S][d|D][e|E][s|S][p|P][e|E][s|S][a|A][:|\s|\S][\s\S]" +
+            r".*?(\d*[^;|,|–|(|a-zA-Z]*)",
             "NOTA_EMP.": r"(\d+NE\d+)",
-            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:" +\
-                r".*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
+            "DATA_ASS.": r"[A|a][S|s][S|s][I|i][N|n][A|a][T|t][U|u][R|r][A|a]:" +
+            r".*?[\s\S](\d{2}\/\d{2}\/\d{4}|\d{2}[\s\S]\w+[\s\S]\w+[\s\S]\w+[\s\S]\d{4})",
             "SIGNATARIOS": r"Signat[á|a]rios:([^;|.]*)|SIGNAT[Á|A]RIOS:([^;|.]*)|Assinantes:([^;|.]*)|ASSINANTES:([^;|.]*)",
             "VIGENCIA": r"Vig[e|ê]ncia:[\s\S]([^;|.]*)|VIG[E|Ê]NCIA:[\s\S]([^;|.]*)",
         }
         return rules
 
     @classmethod
-    def _preprocess(cls, sentence):
-        sentence = sentence.replace(
+    def _preprocess(cls, text):
+        text = text.replace(
             ':', ' : ').replace('``', ' ').replace("''", ' ')
-        return sentence
+        return text
 
     def _regex_instances(self):
         results = ContractExtractorREGEX.extract_text(self._text)
@@ -89,7 +89,7 @@ class Contratos(Atos):
         return results
 
 
-class ContractExtractorREGEX:
+class ContractExtractorREGEX: # pylint: disable=too-few-public-methods
     """Extract contract statements from a string and returns the contracts found in a list.
 
     Extracts contract statements from DODF dataframe through REGEX patterns.
@@ -110,8 +110,6 @@ class ContractExtractorREGEX:
             List with the contracts extracted from the string passed.
         """
 
-        base_str = txt_string
-
         contract_pattern_1 = r"(\nxx([a-z]{0,10})\sEXTRAT([A-Z]{0,3})\sD([A-Z]{0,3})\sCONTRAT([A-Z]{0,3}))"
         contract_pattern_2 = r"(\nxx([a-z]{0,10})\sEXTRAT([A-Z]{0,3})\sCONTRAT([A-Z]{0,3}))"
 
@@ -127,7 +125,7 @@ class ContractExtractorREGEX:
         p_nl = re.compile(nl_pattern)
 
         extracted_texts = cls._extract_text_blocks(
-            base_str, p_ext, p_blk, p_nl)
+            txt_string, p_ext, p_blk, p_nl)
 
         # Padrões de começo e fim de página abarcam apenas os padrões observados entre 2000 e 2021
         start_page_patterns = [r"\nPÁGINA\s([0-9]{1,5})", r"\nDIÁRIO\sOFICIAL\sDO\sDISTRITO\sFEDERAL",
@@ -234,15 +232,14 @@ class ContractExtractorREGEX:
 
         mapped_position = cls._extract_titles_blocks(mapped_positions)
 
-        for ia in mapped_position[0]:
-            ia_b = ia[0]
-            ia_e = ia[-1]
-            index_ia_b = mapped_position[1].index(ia_b)
+        for position_a in mapped_position[0]:
+            ia_b = position_a[0]
+            ia_e = position_a[-1]
             index_ia_e = mapped_position[1].index(ia_e)
 
             if (index_ia_e + 1) <= (len(mapped_position[1])-1):
-                ib = mapped_position[1][index_ia_e+1]
-                extracted_text = mapped_text[ia_b:ib]
+                position_b = mapped_position[1][index_ia_e+1]
+                extracted_text = mapped_text[ia_b:position_b]
             else:
                 extracted_text = mapped_text[ia_b:]
 
@@ -254,36 +251,36 @@ class ContractExtractorREGEX:
     def _extract_titles_blocks(cls, mapped_page):
         ext = mapped_page[0].copy()
         blk = mapped_page[1].copy()
-        nl = mapped_page[2].copy()
+        line = mapped_page[2].copy()
 
         tls = []
 
-        for t in ext:
-            tl = []
-            tl.append(t)
+        for t_ext in ext:
+            title = []
+            title.append(t_ext)
 
             loop_title = True
 
             # Um título acaba quando o próximo bloco não é a próxima linha
             while loop_title:
-                prox_blk_index = blk.index(t)+1
-                prox_nl_index = nl.index(t)+1
+                prox_blk_index = blk.index(t_ext)+1
+                prox_line_index = line.index(t_ext)+1
 
                 # Se o fim do documento não tiver sido alcançado, então:
                 if prox_blk_index < len(blk):
                     prox_blk = blk[prox_blk_index]
-                    prox_nl = nl[prox_nl_index]
+                    prox_line = line[prox_line_index]
 
                     # Se a próxima linha for vista como um próximo bloco:
-                    if prox_blk == prox_nl:
-                        t = prox_blk
-                        tl.append(t)
+                    if prox_blk == prox_line:
+                        t_ext = prox_blk
+                        title.append(t_ext)
                     else:
                         loop_title = False
 
                 else:
                     loop_title = False
 
-            tls.append(tl)
+            tls.append(title)
 
-        return [tls, blk, nl]
+        return [tls, blk, line]

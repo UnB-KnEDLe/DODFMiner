@@ -26,6 +26,7 @@ class Committee:
     """
 
     def __init__(self, path):
+        self.var_y = []
         self.pipe = make_pipeline(FunctionTransformer(self.remove_not_words),
                                   FunctionTransformer(self.embedding),
                                   FunctionTransformer(self.predict),
@@ -47,14 +48,14 @@ class Committee:
             self.vectorizer = joblib.load(file)
             self.vectorizer.tokenizer = self.tokenize
 
-    def transform(self, X, y):
+    def transform(self, var_x, var_y):
         """ Initializes the pipeline for preprocessing and classification. """
-        self.y = y
+        self.var_y = var_y
 
-        if len(y) == 0:
+        if len(var_y) == 0:
             return []
 
-        return self.pipe.transform(X)
+        return self.pipe.transform(var_x)
 
     def tokenize(self, text):
         """ Used by the vectorizer to tokenize text. """
@@ -62,7 +63,8 @@ class Committee:
                   for word in nltk.word_tokenize(text) if len(word) > 1]
         return [self.stemmer.stem(item) for item in tokens if item not in self.stopwords]
 
-    def remove_not_words(self, text):
+    @classmethod
+    def remove_not_words(cls, text):
         """ Removes everything that is not a word from a text. """
         return text.str.replace(r'\w*\d\w*|\W', ' ', regex=True).str.lower()
 
@@ -86,11 +88,11 @@ class Committee:
         the original label is maintained.
         """
         new_types = []
-        for i in range(0, len(results)):
-            d = dict(zip(*np.unique(results[i], return_counts=True)))
-            r = max(d, key=d.get)
-            if d[r] >= 0.5 and r != self.y[i]:
-                new_types.append(r)
+        for i,_ in enumerate(results):
+            results_dict = dict(zip(*np.unique(results[i], return_counts=True)))
+            res_max = max(results_dict, key=results_dict.get)
+            if results_dict[res_max] >= 0.5 and res_max != self.var_y[i]:
+                new_types.append(res_max)
             else:
-                new_types.append(self.y[i])
+                new_types.append(self.var_y[i])
         return new_types
