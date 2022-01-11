@@ -170,7 +170,8 @@ class ContentExtractor:
             is_title = True
 
             if text in ["SECAO I", "SECAO II", "SECAO III"]:
-                section = text
+                if content_dict.get(section) or not section:
+                    section = text
                 if section not in content_dict.keys():
                     content_dict.update({section: {}})
             else:
