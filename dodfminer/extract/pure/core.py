@@ -166,7 +166,7 @@ class ContentExtractor:
         section = None
 
         for box in boxes:
-            text = box[4]
+            text = box[4].strip()
             is_title = True
 
             if text in ["SECAO I", "SECAO II", "SECAO III"]:
