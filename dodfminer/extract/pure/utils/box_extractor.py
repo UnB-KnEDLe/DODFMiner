@@ -39,50 +39,8 @@ def get_doc_text_boxes(doc: fitz.Document):
 
     """
 
-    text_blocks = [sort_blocks(page.getTextBlocks()) for page in doc]
+    text_blocks = [page.get_text('blocks') for page in doc]
     return text_blocks
-
-
-def sort_blocks(page_blocks):
-    """Sort blocks by their vertical and horizontal position.
-
-        Args:
-            page_blocks: a list of blocks within a page.
-
-        Returns:
-            List[tuple(float, float, float, float, str, int, int)]
-    """
-    return sorted(page_blocks, key=cmp_to_key(compare_blocks))
-
-
-def compare_blocks(block1, block2):
-    """Implements a comparison heuristic between blocks.
-       Blocks that are in the uppermost and leftmost positions
-       should be inserted before the other block in comparison.
-
-    Args:
-        block1: a block tuple to be compared.
-        block2: a block tuple to be compared to.
-
-    Returns:
-        Int
-    """
-    b1_x0, b1_y0, b1_x1, b1_y1, *_ = block1
-    b2_x0, b2_y0, b2_x1, b2_y1, *_ = block2
-
-    b1_y = max([b1_y0, b1_y1])
-    b2_y = max([b2_y0, b2_y1])
-
-    # pylint: disable=too-many-boolean-expressions
-    if (b1_x0 >= 49 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
-       (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766) or \
-       (b1_x1-b1_x0 > 350) or \
-       (b2_x1-b2_x0 > 350) or \
-       (b1_y < 80) or \
-       (b2_y < 80):
-        return b1_y-b2_y
-
-    return b1_x0-b2_x0
 
 
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
