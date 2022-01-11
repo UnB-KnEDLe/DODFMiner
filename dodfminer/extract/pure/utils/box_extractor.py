@@ -39,7 +39,7 @@ def get_doc_text_boxes(doc: fitz.Document):
 
     """
 
-    text_blocks = [page.get_text('blocks') for page in doc]
+    text_blocks = [page.get_text('blocks', flags=0) for page in doc]
     return text_blocks
 
 
