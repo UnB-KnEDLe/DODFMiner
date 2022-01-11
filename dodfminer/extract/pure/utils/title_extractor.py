@@ -395,7 +395,8 @@ class ExtractorTitleSubtitle:
                     else:
                         break
             else:
-                raise ValueError("Does not begin with a title")
+                print("Does not begin with a title")
+                i += 1
         _json = {k: tuple(val) for k, val in _json.items()}
         self._json = _json
         return self._json
