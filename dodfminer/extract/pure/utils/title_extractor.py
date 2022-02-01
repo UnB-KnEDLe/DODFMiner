@@ -47,7 +47,7 @@ def load_blocks_list(path):
 
     """
     doc = fitz.open(path)
-    return [p.getTextPage().extractDICT()['blocks'] for p in doc]
+    return [p.get_textpage().extractDICT()['blocks'] for p in doc]
 
 
 def group_by_column(elements, width):
@@ -148,7 +148,7 @@ def _extract_bold_upper_page(page):
 
     """
     lis = []
-    for block in page.getTextPage().extractDICT()['blocks']:
+    for block in page.get_textpage().extractDICT()['blocks']:
         for line in block['lines']:
             for span in line['spans']:
                 flags = span['flags']
