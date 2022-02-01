@@ -174,6 +174,7 @@ class ContentExtractor:
                     section = text
                 if section not in content_dict.keys():
                     content_dict.update({section: {}})
+                    actual_title = None
             else:
                 for title in title_base:
                     text = text.replace("\n", " ")
@@ -183,13 +184,13 @@ class ContentExtractor:
                     if text == normalized_title:
                         first_title = True
                         actual_title = normalized_title
-                        if title not in content_dict[section].keys():
+                        if section and (title not in content_dict[section].keys()):
                             content_dict[section].update(
                                 {normalized_title: []})
                     else:
                         is_title = False
 
-            if first_title and not is_title:
+            if first_title and not is_title and section and actual_title:
                 if int(box[1]) != 55 and int(box[1]) != 881:
                     content_dict[section][actual_title].append(box[:5])
 
@@ -268,7 +269,10 @@ class ContentExtractor:
 
     @classmethod
     def _save_single_file(cls, file_path, file_type, content):
-        with open(file_path.replace('pdf', file_type), 'w+', encoding='utf-8') as file:
+        file_path, _, _ = file_path.rpartition('.pdf')
+        file_path = f"{file_path}.{file_type}"
+
+        with open(file_path, 'w+', encoding='utf-8') as file:
             file.write(content)
 
     @classmethod
