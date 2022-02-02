@@ -6,12 +6,12 @@ from pathlib import Path
 from functools import reduce
 import operator
 import pytest
+import numpy as np
 
 import fitz
 from dodfminer.extract.pure.utils import title_extractor
 from dodfminer.extract.pure.utils.title_extractor import Box, BBox
 from dodfminer.extract.pure.utils.title_extractor import TextTypeBboxPageTuple as Tuple
-
 
 BASE_PATH = Path(
     ""+os.path.dirname(__file__)+"/support"
@@ -92,16 +92,20 @@ def test_load_blocks_list_3():
 def test_load_blocks_list_4():
     functions_with_path_cmp_first_el('load_blocks_list', PDF_2020_PATH)
 
-
 def functions_with_path(name, pdf_path):
     """Wrapper for member functions of title_extractor which
          expects to receive a `pathlib.Path` (indidicating a file path).
     """
     with open(pdf_path.as_posix()[:-4] + '/' f'{name}.json', encoding='utf-8') as json_file:
-        assert jsdump(getattr(title_extractor, name)(pdf_path)) \
-        == \
-        jsdump(json.load(json_file))
+        generated_array = np.array(getattr(title_extractor, name)(pdf_path), dtype=object)
+        ground_truth_array = np.array(json.load(json_file), dtype=object)
 
+        # Asserting only extracted title/subtitle and its designated type
+        assert (generated_array[:,:2] == ground_truth_array[:,:2]).all()
+        # Asserting only page that title/subtitle was extracted from
+        assert (generated_array[:,3] == ground_truth_array[:,3]).all()
+        # These asserts ignore the block coordinates,
+        # because the precision varies throughout the pymu versions.
 
 def functions_with_path_cmp_first_el(name, pdf_path):
     """ Similar to functions_with_path but compares specific structure of the first elements
@@ -117,12 +121,21 @@ def functions_with_kargs(name, pdf_path, **kargs):
          expects to receive a `pathlib.Path` (indidicating a file path).
     """
     with open(pdf_path.as_posix()[:-4] + '/' f'{name}.json', encoding='utf-8') as json_file:
-        assert jsdump(getattr(title_extractor, name)(**kargs)) \
-            == \
-            jsdump(json.load(json_file))
+        # Suppressing VisibleDeprecationWarning
+        np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
+
+        generated_array = np.vstack(getattr(title_extractor, name)(**kargs))
+        ground_truth_array = np.vstack(json.load(json_file))
+
+        # Asserting only extracted title/subtitle and its designated type
+        assert (generated_array[:,:2] == ground_truth_array[:,:2]).all()
+        # Asserting only page that title/subtitle was extracted from
+        assert (generated_array[:,3] == ground_truth_array[:,3]).all()
+        # These asserts ignore the block coordinates,
+        # because the precision varies throughout the pymu versions.
 
 def functions_doc_bold_text(name, doc):
-    desired_keys = ["text", "bbox", "page"]
+    desired_keys = ["text", "page"]
 
     select_key = lambda x: dict((key,value) for key, value in x.items() if key in desired_keys)
     select_dict_keys_on_list = lambda x:list(map(lambda page: list(map(select_key, page)), x))
@@ -384,9 +397,17 @@ def test_json_4(extractor_2020):
 
 def wrapper_extractor_props(extractor, name):
     with open(Path(extractor._path[:-4])/f'{name}.json', encoding='utf-8') as json_file:
-        ground_truth = json.dumps(json.load(json_file))
-        hier = json.dumps(getattr(extractor, name))
-        assert ground_truth == hier
+        if name in ['titles', 'subtitles']:
+            ground_truth = np.array(json.load(json_file), dtype=object)
+            hier= np.array(getattr(extractor, name), dtype=object)
+
+            assert (hier[:,:2] == ground_truth[:,:2]).all()
+            assert (hier[:,3] == ground_truth[:,3]).all()
+        else:
+            ground_truth = json.dumps(json.load(json_file))
+            hier = json.dumps(getattr(extractor, name))
+
+            assert ground_truth == hier
 
 
 def test_titles_subtitles_hierarchy_1(extractor_2001):

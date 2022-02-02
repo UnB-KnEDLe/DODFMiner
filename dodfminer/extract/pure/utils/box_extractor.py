@@ -19,7 +19,7 @@ def _extract_page_lines_content(page):
 
     """
     lis = []
-    for block in page.getTextPage().extractDICT()['blocks']:
+    for block in page.get_textpage().extractDICT()['blocks']:
         for line in block['lines']:
             for span in line['spans']:
                 del span['color']
@@ -39,9 +39,8 @@ def get_doc_text_boxes(doc: fitz.Document):
 
     """
 
-    text_blocks = [sort_blocks(page.getTextBlocks()) for page in doc]
+    text_blocks = [sort_blocks(page.get_text('blocks', flags=0)) for page in doc]
     return text_blocks
-
 
 def sort_blocks(page_blocks):
     """Sort blocks by their vertical and horizontal position.
@@ -67,23 +66,28 @@ def compare_blocks(block1, block2):
     Returns:
         Int
     """
-    b1_x0, b1_y0, b1_x1, b1_y1, *_ = block1
-    b2_x0, b2_y0, b2_x1, b2_y1, *_ = block2
+    b1_x0, b1_y0, _, b1_y1, *_ = block1
+    b2_x0, b2_y0, _, b2_y1, *_ = block2
 
     b1_y = max([b1_y0, b1_y1])
     b2_y = max([b2_y0, b2_y1])
 
+    one_column_block = lambda block: block[2] - block[0] >= 500
+    first_column_block = lambda block: block[0] > 50 and block[0] < 400
+
+    res = None
     # pylint: disable=too-many-boolean-expressions
-    if (b1_x0 >= 49 and b1_x1 <= 405 and b2_x0 >= 55 and b2_x1 <= 405) or \
-       (b1_x0 >= 417 and b1_x1 <= 766 and b2_x0 >= 417 and b2_x1 <= 766) or \
-       (b1_x1-b1_x0 > 350) or \
-       (b2_x1-b2_x0 > 350) or \
-       (b1_y < 80) or \
-       (b2_y < 80):
-        return b1_y-b2_y
+    if one_column_block(block1) and one_column_block(block2) or\
+       one_column_block(block1) and not one_column_block(block2) or\
+       not one_column_block(block1) and one_column_block(block2):
+        res = b1_y-b2_y
+    elif first_column_block(block1) and first_column_block(block2) or\
+         not first_column_block(block1) and not first_column_block(block2):
+        res = b1_y-b2_y
+    else:
+        res = b1_x0-b2_x0
 
-    return b1_x0-b2_x0
-
+    return res
 
 def draw_doc_text_boxes(doc: fitz.Document, doc_boxes, save_path=None):
     """Draw extracted text blocks rectangles.
@@ -148,7 +152,7 @@ def _get_doc_img(doc: fitz.Document):
         alt. colorspace, filter, invoker)
     """
 
-    return [page.getImageList(full=True) for page in doc]
+    return [page.get_images(full=True) for page in doc]
 
 
 def get_doc_img_boxes(doc: fitz.Document):
@@ -172,6 +176,6 @@ def get_doc_img_boxes(doc: fitz.Document):
             img = img[:9] + (0,)
             img_list_altered.append(img)
 
-        img_ll[idx] = [page.getImageBbox(img) for img in img_list_altered]
+        img_ll[idx] = [page.get_image_bbox(img) for img in img_list_altered]
 
     return img_ll

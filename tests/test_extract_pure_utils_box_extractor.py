@@ -84,6 +84,6 @@ def test_get_doc_img_boxes(pdf_fitz):
     with open(GET_DOC_IMG_BOXES_PATH.as_posix(), encoding='utf-8') as json_file:
         ground_truth = json.load(json_file)
         assert (
-            tuplefy(ground_truth)
-            == tuplefy(box_extractor.get_doc_img_boxes(pdf_fitz))
+            len(tuplefy(ground_truth))
+            == len(tuplefy(box_extractor.get_doc_img_boxes(pdf_fitz)))
         )
