@@ -5,6 +5,7 @@ extract information from a specialized act.
 """
 
 import pandas as pd
+import re
 
 from dodfminer.extract.polished.backend.regex import ActRegex
 from dodfminer.extract.polished.backend.ner import ActNER
@@ -52,7 +53,7 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
             self._file_name = None
 
         self._acts_str = []
-        self._columns = self._props_names()
+        self._columns = self._props_names() + self._standard_props_names()
 
         self._raw_acts = self._seg_function()
         self._acts = self._extract_props()
@@ -98,6 +99,9 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
         """
         raise NotImplementedError
 
+    def _standard_props_names(self):
+        return ['DODF_Arquivo', 'DODF_Data']
+
     def _build_dataframe(self):
         """Create a dataframe with the extracted proprieties.
 
@@ -114,6 +118,18 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
             return data_frame
         return pd.DataFrame()
 
+    def _standard_props(self):
+        act = {}
+
+        file = self._file_name.split('/')[-1]
+        match = re.search(r'(\d+\-\d+\-\d+)',file)
+
+        act['DODF_Arquivo'] = file.replace('.txt', '.pdf')
+        act['DODF_Data'] = match.group(1).replace('-', '/')
+
+        return act
+
+
     def _extract_props(self):
         """Extract proprieties of all the acts.
 
@@ -129,5 +145,7 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
                 act = self._prediction(value)
             else:
                 raise NotImplementedError("Non-existent backend option")
+            # Merge act props to standard props
+            act = {**act, **(self._standard_props())}
             acts.append(act)
         return acts
