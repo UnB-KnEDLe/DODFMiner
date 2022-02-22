@@ -4,8 +4,8 @@ This module contains the Atos class, which have all that is necessary to
 extract information from a specialized act.
 """
 
-import pandas as pd
 import re
+import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
 from dodfminer.extract.polished.backend.ner import ActNER
@@ -99,8 +99,9 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
         """
         raise NotImplementedError
 
+    #pylint: disable=no-self-use
     def _standard_props_names(self):
-        return ['DODF_Arquivo', 'DODF_Data']
+        return ['DODF_Fonte_Arquivo', 'DODF_Fonte_Data', 'DODF_Fonte_Numero']
 
     def _build_dataframe(self):
         """Create a dataframe with the extracted proprieties.
@@ -121,11 +122,13 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
     def _standard_props(self):
         act = {}
 
-        file = self._file_name.split('/')[-1]
-        match = re.search(r'(\d+\-\d+\-\d+)',file)
+        file = self._file_name.split('/')[-1] if self._file_name else None
+        match = re.search(r'(\d+\-\d+\-\d+)',file) if file else None
+        file_split = file.split() if file else None
 
-        act['DODF_Arquivo'] = file.replace('.txt', '.pdf')
-        act['DODF_Data'] = match.group(1).replace('-', '/')
+        act['DODF_Fonte_Arquivo'] = file.replace('.txt', '.pdf') if file else None
+        act['DODF_Fonte_Data'] = match.group(1).replace('-', '/') if match else None
+        act['DODF_Fonte_Numero'] = file_split[1] if file_split and len(file_split)>=2 else None
 
         return act
 
@@ -145,7 +148,7 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
                 act = self._prediction(value)
             else:
                 raise NotImplementedError("Non-existent backend option")
-            # Merge act props to standard props
+            # Merge act props with standard props
             act = {**act, **(self._standard_props())}
             acts.append(act)
         return acts
