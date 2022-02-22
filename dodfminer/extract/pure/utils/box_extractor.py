@@ -1,6 +1,5 @@
 """Functions to extract boxes from text."""
 
-from functools import cmp_to_key
 import fitz
 
 SECTION_TITLES = ["SEÇÃO I", "SEÇÃO II", "SEÇÃO III"]
