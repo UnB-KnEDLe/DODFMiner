@@ -14,9 +14,207 @@ from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from dodfminer.extract.polished.acts.licitacao_abertura import AberturaLicitacao
+from dodfminer.extract.polished.acts.licitacao_suspensao import SuspensaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_revogacao_anulacao import RevogacaoAnulacaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_resultado import ResultadoLicitacao
 
 file = ""+os.path.dirname(__file__)+"/support/valid.txt"
 file_2 = ""+os.path.dirname(__file__)+"/support/valid_2.txt"
+file_3 = ""+os.path.dirname(__file__)+"/support/valid_3.txt"
+file_4 = ""+os.path.dirname(__file__)+"/support/valid_4.txt"
+file_5 = ""+os.path.dirname(__file__)+"/support/valid_5.txt"
+
+
+@pytest.fixture(name='act_lic_aber')
+def fixture_act_lic_aber():
+    return AberturaLicitacao(file_3, 'regex')
+
+
+def test_licitacao_abertura_backend(act_lic_aber):
+    assert act_lic_aber._backend == "regex"
+
+
+def test_licitacao_abertura_name(act_lic_aber):
+    assert act_lic_aber._name == "Abertura de Licitação"
+    assert act_lic_aber.name == "Abertura de Licitação"
+    assert act_lic_aber._act_name() == "Abertura de Licitação"
+
+
+def test_licitacao_abertura_flags(act_lic_aber):
+    assert act_lic_aber._regex_flags() == re.IGNORECASE
+
+
+def test_licitacao_abertura_prop_names(act_lic_aber):
+    assert act_lic_aber._props_names() == ["Tipo do Ato", "numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
+                                       "processo_GDF", "valor", "data_abertura", "uasg", "sistema_compra", "tipo_objeto", "texto"]
+
+
+def test_licitacao_abertura_prop_rules_names(act_lic_aber):
+    assert list(act_lic_aber._prop_rules()) == ["numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
+                                            "processo_GDF", "valor", "data_abertura", "uasg", "sistema_compra", "tipo_objeto", "texto"]
+
+
+def test_licitacao_abertura_prop_rules_rules(act_lic_aber):
+    assert list(act_lic_aber._prop_rules().values()) == [
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"([\s\S]+)",
+    ]
+
+
+#
+#
+#
+#
+#
+
+
+@pytest.fixture(name='act_lic_susp')
+def fixture_act_lic_susp():
+    return SuspensaoLicitacao(file_4, 'regex')
+
+
+def test_licitacao_suspensao_backend(act_lic_susp):
+    assert act_lic_susp._backend == "regex"
+
+
+def test_licitacao_suspensao_name(act_lic_susp):
+    assert act_lic_susp._name == "Suspensão de Licitação"
+    assert act_lic_susp.name == "Suspensão de Licitação"
+    assert act_lic_susp._act_name() == "Suspensão de Licitação"
+
+
+def test_licitacao_suspensao_flags(act_lic_susp):
+    assert act_lic_susp._regex_flags() == re.IGNORECASE
+
+
+def test_licitacao_suspensao_prop_names(act_lic_susp):
+    assert act_lic_susp._props_names() == ["Tipo do Ato", "numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
+                                           "processo_GDF", "prazo_suspensao", "decisao_TCDF", "texto"]
+
+
+def test_licitacao_suspensao_prop_rules_names(act_lic_susp):
+    assert list(act_lic_susp._prop_rules()) == [ "numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
+                                                 "processo_GDF", "prazo_suspensao", "decisao_TCDF", "texto"]
+
+
+def test_licitacao_suspensao_prop_rules_rules(act_lic_susp):
+    assert list(act_lic_susp._prop_rules().values()) == [
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"([\s\S]+)",
+    ]
+
+
+#
+#
+#
+#
+#
+
+
+@pytest.fixture(name='act_lic_rev_anl')
+def fixture_act_lic_rev_anl():
+    return RevogacaoAnulacaoLicitacao(file_5, 'regex')
+
+
+def test_licitacao_revogacao_anulacao_backend(act_lic_rev_anl):
+    assert act_lic_rev_anl._backend == "regex"
+
+
+def test_licitacao_revogacao_anulacao_name(act_lic_rev_anl):
+    assert act_lic_rev_anl._name == "Revogação/Anulação de Licitação"
+    assert act_lic_rev_anl.name == "Revogação/Anulação de Licitação"
+    assert act_lic_rev_anl._act_name() == "Revogação/Anulação de Licitação"
+
+
+def test_licitacao_revogacao_anulacao_flags(act_lic_rev_anl):
+    assert act_lic_rev_anl._regex_flags() == re.IGNORECASE
+
+
+def test_licitacao_revogacao_anulacao_prop_names(act_lic_rev_anl):
+    assert act_lic_rev_anl._props_names() == ["Tipo do Ato", "numero_licitacao", "nome_responsavel", "data_escrito", 
+                                              "modalidade_licitacao", "processo_GDF", "classificacao", "texto"]
+
+
+def test_licitacao_revogacao_anulacao_prop_rules_names(act_lic_rev_anl):
+    assert list(act_lic_rev_anl._prop_rules()) == ["numero_licitacao", "nome_responsavel", "data_escrito", 
+                                                   "modalidade_licitacao", "processo_GDF", "classificacao", "texto"]
+
+
+def test_licitacao_revogacao_anulacao_prop_rules_rules(act_lic_rev_anl):
+    assert list(act_lic_rev_anl._prop_rules().values()) == [
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"",
+        r"([\s\S]+)",
+    ]
+
+
+#
+#
+#
+#
+#
+
+
+@pytest.fixture(name='act_lic_res')
+def fixture_act_lic_res():
+    return ResultadoLicitacao(file_4, 'regex')
+
+
+def test_licitacao_resultado_backend(act_lic_res):
+    assert act_lic_res._backend == "regex"
+
+
+def test_licitacao_resultado_name(act_lic_res):
+    assert act_lic_res._name == "Resultado de Licitação"
+    assert act_lic_res.name == "Resultado de Licitação"
+    assert act_lic_res._act_name() == "Resultado de Licitação"
+
+
+def test_licitacao_resultado_flags(act_lic_res):
+    assert act_lic_res._regex_flags() == re.IGNORECASE
+
+
+def test_licitacao_resultado_prop_names(act_lic_res):
+    assert act_lic_res._props_names() == ["Tipo do Ato", "texto"]
+
+
+def test_licitacao_resultado_prop_rules_names(act_lic_res):
+    assert list(act_lic_res._prop_rules()) == ["texto"]
+
+
+def test_licitacao_resultado_prop_rules_rules(act_lic_res):
+    assert list(act_lic_res._prop_rules().values()) == [
+        r"([\s\S]+)",
+    ]
+
+
+#
+#
+#
+#
+#
 
 
 @pytest.fixture(name='act_cont')
@@ -41,16 +239,6 @@ def test_contrato_flags(act_cont):
 def test_contrato_prop_names(act_cont):
     assert act_cont._props_names() == ["Tipo do Ato", "CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR",
                                        "LEI_ORC.", "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
-
-
-def test_contrato_rule(act_cont):
-    assert act_cont._rule_for_inst(
-    ) == r"()" + r"(EXTRATO D[O|E] CONTRATO\s[\s\S]*?" + r"<EOB>)"
-
-
-def test_contrato_prop_rules_names(act_cont):
-    assert list(act_cont._prop_rules()) == ["CONTRATO", "PROCESSO", "PARTES", "OBJETO", "VALOR", "LEI_ORC.",
-                                            "UNI_ORC.", "PROG_TRAB.", "NAT_DESP.", "NOTA_EMP.", "DATA_ASS.", "SIGNATARIOS", "VIGENCIA"]
 
 
 def test_contrato_prop_rules_rules(act_cont):
