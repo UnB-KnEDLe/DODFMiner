@@ -5,7 +5,7 @@ import shutil
 from glob import glob
 from dodfminer.extract.pure.core import ContentExtractor
 
-EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020\n SUMARIO\nSECAO I"
+EXPECTED_EXTRACTED_TEXT = "BRASILIA - DF, QUINTA-FEIRA, 2 DE JANEIRO DE 2020"
 DODF_FILE_PATH = file = "" + \
     os.path.dirname(__file__)+"/support/dodfminer_sf.pdf"
 
@@ -88,12 +88,13 @@ def test_pure_extract_structure():
     assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(pdf_file)['SECAO I']
 
 def test_pure_extract_structure_key_correcteness():
-    pdf_file = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/2020/01_Janeiro/DODF 001 10-01-2020 EDICAO EXTRA.pdf"
+    pdf_file = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/2020/01_Janeiro/DODF 003 21-01-2020 EDICAO EXTRA.pdf"
+    structure = ContentExtractor.extract_structure(pdf_file)
 
-    assert 'SECAO I' in ContentExtractor.extract_structure(pdf_file)
-    assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(pdf_file)['SECAO I']
-    assert 'SECAO II' in ContentExtractor.extract_structure(pdf_file)
-    assert 'PODER EXECUTIVO' in ContentExtractor.extract_structure(pdf_file)['SECAO II']
+    assert 'SECAO II' in structure
+    assert 'PODER EXECUTIVO' in structure['SECAO II']
+    assert 'SECAO III' in structure
+    assert 'SECRETARIA DE ESTADO DO ESPORTE E LAZER' in structure['SECAO III']
 
 def test_pure_extract_to_txt():
     folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
