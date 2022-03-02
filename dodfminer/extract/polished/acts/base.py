@@ -12,7 +12,7 @@ from dodfminer.extract.polished.backend.ner import ActNER
 from dodfminer.extract.polished.backend.seg import ActSeg
 
 
-class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attributes
+class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attributes
     """Base class for extracting an act and its proprieties to a dataframe.
 
     Note:
@@ -116,6 +116,7 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
             else:
                 data_frame.columns = [x.capitalize()
                                       for x in data_frame.columns]
+            self._check_cols(data_frame.columns)
             return data_frame
         return pd.DataFrame()
 
@@ -132,6 +133,24 @@ class Atos(ActRegex, ActNER, ActSeg): # pylint: disable=too-many-instance-attrib
 
         return act
 
+    def get_expected_colunms(self) -> list:
+        '''
+        Get the expected columns for the dataframe
+        Raises:
+            NotImplementedError: Child class needs to overwrite this method.
+        '''
+        raise NotImplementedError
+
+    def _check_cols(self, columns: list) -> None:
+        '''
+            Check if dataframe columns are the expected ones
+            Raises:
+                NotImplementedError: Child class needs to overwrite this method.
+
+        '''
+        for col in self.get_expected_colunms():
+            if col not in columns:
+                raise KeyError(f'Key not present in dataframe -> {col}')
 
     def _extract_props(self):
         """Extract proprieties of all the acts.

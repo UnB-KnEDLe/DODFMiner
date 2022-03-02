@@ -127,6 +127,9 @@ def filter_standard_props(act_props_list, filtered_props):
 })
 def fixture_act_base_regex(*_):
     atos = Atos(valid_file, 'regex')
+    def _check_cols(_: list) -> None:
+        pass
+    atos._check_cols = _check_cols
     atos._name = "Aposentadoria"
     return atos
 

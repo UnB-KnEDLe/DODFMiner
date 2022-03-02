@@ -28,6 +28,23 @@ class Contratos(Atos):
     def _act_name(self):
         return "Contrato"
 
+    def get_expected_colunms(self) -> list:
+        return [
+            "CONTRATO",
+            "PROCESSO",
+            "PARTES",
+            "OBJETO",
+            "VALOR",
+            "LEI_ORC.",
+            "UNI_ORC.",
+            "PROG_TRAB.",
+            "NAT_DESP.",
+            "NOTA_EMP.",
+            "DATA_ASS.",
+            "SIGNATARIOS",
+            "VIGENCIA"
+        ]
+
     def _props_names(self):
         return [
             "Tipo do Ato",
@@ -89,7 +106,7 @@ class Contratos(Atos):
         return results
 
 
-class ContractExtractorREGEX: # pylint: disable=too-few-public-methods
+class ContractExtractorREGEX:  # pylint: disable=too-few-public-methods
     """Extract contract statements from a string and returns the contracts found in a list.
 
     Extracts contract statements from DODF dataframe through REGEX patterns.
