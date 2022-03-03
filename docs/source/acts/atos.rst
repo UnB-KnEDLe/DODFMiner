@@ -73,19 +73,186 @@ implementing the act needs more informations.
 
 .. automethod:: dodfminer.extract.polished.acts.base.Atos._build_dataframe
 
-Implemented Acts
+Implemented Acts and Properties
 ================
 
 - Abono
+    * Nome
+    * Matricula
+    * Cargo_efetivo
+    * Classe
+    * Padrao
+    * Quadro
+    * Fundamento_legal
+    * Orgao
+    * Processo_sei
+    * Vigencia
+    * Matricula_siape
+    * Cargo
+    * Lotacao
+
 - Aposentadoria
-- Exoneração
-- Nomeação
-- Retificações
+    * Ato
+    * Processo
+    * Nome_ato
+    * Cod_matricula_ato
+    * Cargo
+    * Classe
+    * Padrao
+    * Quadro
+    * Fund_legal
+    * Empresa_ato
+
+- Exoneração Efetivos
+    * Nome
+    * Matricula
+    * Cargo_efetivo
+    * Classe
+    * Padrao
+    * Carreira
+    * Quadro
+    * Processo_sei
+    * Vigencia
+    * A_pedido_ou_nao
+    * Motivo
+    * Fundamento_legal
+    * Orgao
+    * Simbolo
+    * Hierarquia_lotacao
+    * Cargo_comissionado
+
+- Exoneração Comissionados
+    * Nome
+    * Matricula
+    * Simbolo
+    * Cargo_comissionado
+    * Hierarquia_lotacao
+    * Orgao
+    * Vigencia
+    * Carreir
+    * Fundamento_legal
+    * A_pedido_ou_nao
+    * Cargo_efetivo
+    * Matricula_siape
+    * Motivo
+
+- Nomeação Efetivos
+    * Edital_normativo
+    * Data_edital_normativo
+    * Numero_dodf_edital_normativo
+    * Data_dodf_edital_normativo
+    * Edital_resultado_final
+    * Data_edital_resultado_final
+    * Numero_dodf_resultado_final
+    * Data_dodf_resultado_final
+    * Cargo
+    * Especialidade
+    * Carreira
+    * Orgao
+    * Candidato
+    * Classe
+    * Quadro
+    * Candidato_pne
+    * Padrao
+
+- Nomeação Comissionados
+    * Edital_normativo
+    * Data_edital_normativo
+    * Numero_dodf_edital_normativo
+    * Data_dodf_edital_normativo
+    * Edital_resultado_final
+    * Data_edital_resultado_final
+    * Numero_dodf_resultado_final
+    * Data_dodf_resultado_final
+    * Cargo
+    * Especialidade
+    * Carreira
+    * Orgao
+    * Candidato
+    * Classe
+    * Quadro
+    * Candidato_pne
+    * Padrao
+
+- Retificações de Aposentadoria
+    * Tipo do Ato,
+    * Tipo de Documento
+    * Número do documento
+    * Data do documento 
+    * Número do DODF
+    * Data do DODF
+    * Página do DODF
+    * Nome do Servidor
+    * Matrícula
+    * Cargo
+    * Classe
+    * Padrao
+    * Matricula SIAPE
+    * Informação Errada
+    * Informação Corrigida
+
+
 - Reversões
+    * Processo_sei
+    * Nome
+    * Matricula
+    * Cargo_efetivo
+    * Classe
+    * Padrao
+    * Quadro
+    * Fundamento_legal
+    * Orgao
+    * Vigencia
+
 - Substituições
+    * Nome_substituto
+    * Cargo_substituto
+    * Matricula_substituto
+    * Nome_substituido
+    * Matricula_substituido
+    * Simbolo_substitut
+    * Cargo_objeto_substituicao
+    * Simbolo_objeto_substituicao
+    * Hierarquia_lotacao
+    * Orgao
+    * Data_inicial
+    * Data_final
+    * Matricula_siape
+    * Motivo
+
 - Cessões
+    * nome
+    * matricula
+    * cargo_efetivo
+    * classe
+    * padrao
+    * orgao_cedente
+    * orgao_cessionario
+    * onus
+    * fundamento legal
+    * processo_SEI
+    * vigencia
+    * matricula_SIAPE
+    * cargo_orgao_cessionario
+    * simbolo
+    * hierarquia_lotaca
+
 - Tornar sem efeito Aposentadoria
-- Exoneração de Cargos Efetivos
+    * tipo_documento
+    * numero_documento
+    * data_documento
+    * numero_dodf
+    * data_dodf
+    * pagina_dodf
+    * nome
+    * matricula
+    * matricula_SIAPE
+    * cargo_efetivo
+    * classe
+    * padrao
+    * quadro
+    * orgao
+    * processo_SE
 
 
 

@@ -73,6 +73,9 @@ class Cessoes(Atos):
     #     f_path += '/models/cessoes_ner.pkl'
     #     return joblib.load(f_path)
 
+    def get_expected_colunms(self) -> list:
+        return list(self._prop_rules())
+
     def _props_names(self):
         return ["tipo"] + list(self._prop_rules())
 

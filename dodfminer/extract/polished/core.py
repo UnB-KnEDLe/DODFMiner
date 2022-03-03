@@ -22,18 +22,20 @@ from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAp
 from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.create_xml import XMLFy
 
-_acts_ids = {"aposentadoria": Retirements,
-             "reversoes": Revertions,
-             "nomeacao": NomeacaoComissionados,
-             "exoneracao": Exoneracao,
-             "abono": AbonoPermanencia,
-             "retificacoes": RetAposentadoria,
-             "substituicao": Substituicao,
-             "efetivos_nome": NomeacaoEfetivos,
-             "efetivos_exo": ExoneracaoEfetivos,
-             "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-             "cessoes": Cessoes,
-             "contrato": Contratos}
+_acts_ids = {
+    "aposentadoria": Retirements,
+    "reversoes": Revertions,
+    "nomeacao": NomeacaoComissionados,
+    "exoneracao": Exoneracao,
+    "abono": AbonoPermanencia,
+    "retificacoes": RetAposentadoria,
+    "substituicao": Substituicao,
+    "efetivos_nome": NomeacaoEfetivos,
+    "efetivos_exo": ExoneracaoEfetivos,
+    "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
+    "cessoes": Cessoes,
+    "contrato": Contratos
+}
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
 

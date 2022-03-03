@@ -102,6 +102,9 @@ class SemEfeitoAposentadoria(Atos):
     def _act_name(self):
         return "Atos tornados sem efeito - aposentadoria"
 
+    def get_expected_colunms(self) -> list:
+        return self._props_names()
+
     def _props_names(self):
         return list(self._prop_rules())
 
