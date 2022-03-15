@@ -152,12 +152,17 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             if col not in columns:
                 raise KeyError(f'Key not present in dataframe -> {col}')
 
+    def add_standard_props(self, act):
+        act = {**act, **(self._standard_props())}
+        return act
+
     def _extract_props(self):
         """Extract proprieties of all the acts.
 
         Returns:
             A vector of extracted acts dictionaries.
         """
+
         acts = []
         for value in self._raw_acts:
             act = {}
@@ -168,6 +173,6 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             else:
                 raise NotImplementedError("Non-existent backend option")
             # Merge act props with standard props
-            act = {**act, **(self._standard_props())}
-            acts.append(act)
+            acts.append(self.add_standard_props(act))
+
         return acts

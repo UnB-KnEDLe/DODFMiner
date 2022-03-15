@@ -168,9 +168,12 @@ class Cessoes(Atos):
 
     def _extract_props(self):
         acts = []
+
         for raw in self._raw_acts:
             act = self._regex_props(raw)
-            acts.append(act)
+            # Merge act props with standard props
+            acts.append(self.add_standard_props(act))
+
         if self._extra_search:
             self._get_special_acts(acts)
         return acts
@@ -186,6 +189,6 @@ class Cessoes(Atos):
         Returns:
             The dataframe created
         """
-        self._columns = self._prop_rules().keys()
+        self._columns = list(self._prop_rules().keys()) + [name.capitalize() for name in self._standard_props_names()]
         return (pd.DataFrame() if not self._acts else
                 pd.DataFrame(self._acts, columns=self._columns))
