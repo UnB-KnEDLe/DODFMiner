@@ -28,6 +28,7 @@ def xml_multiple(path, backend):
     files = []
     if os.path.isfile(path):
         files = [path]
+        path = './'
     else:
         files = get_files_path(path, 'pdf')
 
