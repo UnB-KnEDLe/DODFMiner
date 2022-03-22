@@ -403,7 +403,7 @@ class ContentExtractor:
         type_f = '.json' if json_f else '.txt'
         res_path = RESULTS_PATH_JSON if json_f else RESULTS_PATH_TXT
 
-        path = path.replace(folder, "")
+        path = path.replace(folder, "", 1)
         splited = path.split('/')
         basename = splited[-1].split('.')
         basename = basename[0] + type_f

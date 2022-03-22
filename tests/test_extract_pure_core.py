@@ -141,3 +141,11 @@ def test_pure_extract_to_txt_already_exists(capsys):
     captured = capsys.readouterr()
     assert "TXT already exists" in captured.out
     shutil.rmtree(folder + '/results/')
+
+# pylint: disable=protected-access
+def test_pure_struct_subfolders_in_current_folder():
+    folder = "." # test case with . signature meaning current folder
+    path = "./DODF 011 16-01-2019.pdf"
+
+    txt_path = ContentExtractor._struct_subfolders(path, False, folder)
+    assert txt_path == "./results/txt/DODF 011 16-01-2019.txt"

@@ -287,7 +287,8 @@ class SemEfeitoAposentadoria(Atos):
         acts = []
         for raw in self._raw_acts:
             act = self._regex_props(raw)
-            acts.append(act)
+            # Merge act props with standard props
+            acts.append(self.add_standard_props(act, capitalize=True))
         if self._extra_search:
             self._get_special_acts(acts)
         return acts
@@ -301,6 +302,9 @@ class SemEfeitoAposentadoria(Atos):
         _ = re.search(self._name, self._name)
         for dic in self._acts:
             dic["tipo_ato"] = _
-        data = [{k: self._group_solver(v) for k, v in act.items()}
+        data = [{k: ( self._group_solver(v)
+                      if k not in self._standard_props_names(capitalize=True)
+                      else v ) for k, v in act.items()}
                 for act in self._acts]
+
         return pd.DataFrame(data)
