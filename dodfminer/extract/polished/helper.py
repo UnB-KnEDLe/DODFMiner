@@ -15,6 +15,8 @@ Functions
 """
 
 import os
+import threading
+import time
 import tqdm
 import pandas as pd
 
@@ -55,6 +57,7 @@ def extract_multiple_acts(path, types, backend):
         None
     """
     print(types)
+    start = time.time()
     if len(types) == 0:
         types = _acts_ids.keys()
 
@@ -66,9 +69,28 @@ def extract_multiple_acts(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
+        threads_ref = []
+        result = {}
         for act_type in types:
-            data_frame = extract_multiple(files, act_type, backend)
-            data_frame.to_csv(os.path.join(path, act_type + ".csv"))
+            threads_ref.append(threading.Thread(target = run_thread_wrap_multiple, args=(files, act_type, backend, result)))
+
+        for thread in threads_ref:
+            thread.start()
+
+        for thread in threads_ref:
+            thread.join()
+
+        for item in result.items():
+            item[1].to_csv(os.path.join(path, item[0] + ".csv"))
+    end = time.time()
+    print('>>>' + str(end - start))
+
+def run_thread_wrap_multiple(files: list, act_type: str, backend: str, all_acts: dict) -> None:
+    '''
+    Run multiple extractions
+    '''
+    dataframe = extract_multiple(files, act_type, backend)
+    all_acts[act_type] = dataframe
 
 
 def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./results"):
@@ -138,10 +160,16 @@ def extract_multiple_acts_with_committee(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
+        threads_ref = []
         for act_type in types:
-            dataframe = extract_multiple(files, act_type, backend)
-            dataframe['type'] = act_type
-            all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
+            thread = threading.Thread(target = run_thread_wrap, args = (files, act_type, backend, all_acts))
+            threads_ref.append(thread)
+
+        for thread in threads_ref:
+            thread.start()
+
+        for thread in threads_ref:
+            thread.join()
 
     dataframe = pd.concat(all_acts, ignore_index = True)
 
@@ -149,6 +177,14 @@ def extract_multiple_acts_with_committee(path, types, backend):
         dataframe = pd.DataFrame(columns = ['text', 'type'])
 
     committee_classification(dataframe, path, types, backend)
+
+def run_thread_wrap(files: list, act_type: str, backend: str, all_acts: list) -> None:
+    '''
+    Run multiple extractions
+    '''
+    dataframe = extract_multiple(files, act_type, backend)
+    dataframe['type'] = act_type
+    all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
 
 def committee_classification(all_acts, path, types, backend):
     """Uses committee classification to find act types.
