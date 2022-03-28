@@ -14,8 +14,8 @@ Functions
 
 """
 
+import multiprocessing
 import os
-import threading
 import time
 import tqdm
 import pandas as pd
@@ -69,16 +69,16 @@ def extract_multiple_acts(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
-        threads_ref = []
+        process_ref = []
         result = {}
         for act_type in types:
-            threads_ref.append(threading.Thread(target = run_thread_wrap_multiple, args=(files, act_type, backend, result)))
+            process_ref.append(multiprocessing.Process(target = run_thread_wrap_multiple, args=(files, act_type, backend, result)))
 
-        for thread in threads_ref:
-            thread.start()
+        for process in process_ref:
+            process.start()
 
-        for thread in threads_ref:
-            thread.join()
+        for process in process_ref:
+            process.join()
 
         for item in result.items():
             item[1].to_csv(os.path.join(path, item[0] + ".csv"))
@@ -160,15 +160,15 @@ def extract_multiple_acts_with_committee(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
-        threads_ref = []
+        process_ref = []
         for act_type in types:
-            thread = threading.Thread(target = run_thread_wrap, args = (files, act_type, backend, all_acts))
-            threads_ref.append(thread)
+            process = multiprocessing.Process(target = run_thread_wrap, args = (files, act_type, backend, all_acts))
+            process_ref.append(process)
 
-        for thread in threads_ref:
+        for thread in process_ref:
             thread.start()
 
-        for thread in threads_ref:
+        for thread in process_ref:
             thread.join()
 
     dataframe = pd.concat(all_acts, ignore_index = True)
