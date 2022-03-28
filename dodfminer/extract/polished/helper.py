@@ -17,6 +17,7 @@ Functions
 import os
 import tqdm
 import pandas as pd
+import re
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
@@ -28,9 +29,17 @@ def xml_multiple(path, backend):
     files = []
     if os.path.isfile(path):
         files = [path]
-        path = './'
+        path_ = f'./'
     else:
-        files = get_files_path(path, 'pdf')
+        if(".pdf" in path):
+            rgx = r".*/"
+            path_ = re.findall(rgx, path)[0]
+            arq = re.sub(rgx,"", path)
+            files = [arq]
+        else:
+            path_ = path
+            files = get_files_path(path_, 'pdf')
+
 
     print(files)
     print("[XMLFy] Make yourself a coffee! This may take a while")
@@ -38,7 +47,7 @@ def xml_multiple(path, backend):
     i = 1
     for file in files:
         xml = ActsExtractor.get_xml(file, backend, i)
-        xml.save_to_disc(path)
+        xml.save_to_disc(path_)
         i += 1
         progress_bar.update(1)
 
