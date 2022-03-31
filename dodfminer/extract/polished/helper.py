@@ -15,9 +15,9 @@ Functions
 """
 
 import os
+import re
 import tqdm
 import pandas as pd
-import re
 
 from dodfminer.extract.polished.core import ActsExtractor
 from dodfminer.extract.polished.core import _acts_ids
@@ -31,7 +31,7 @@ def xml_multiple(path, backend):
         files = [path]
         path_ = './'
     else:
-        if(".pdf" in path):
+        if ".pdf" in path :
             rgx = r".*/"
             path_ = re.findall(rgx, path)[0]
             arq = re.sub(rgx,"", path)
