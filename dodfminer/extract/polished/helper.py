@@ -29,7 +29,7 @@ def xml_multiple(path, backend):
     files = []
     if os.path.isfile(path):
         files = [path]
-        path_ = f'./'
+        path_ = './'
     else:
         if(".pdf" in path):
             rgx = r".*/"
