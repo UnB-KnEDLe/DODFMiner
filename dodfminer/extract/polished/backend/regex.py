@@ -84,7 +84,7 @@ class ActRegex:
 
         return np.nan
 
-    def _regex_props(self, act_raw):
+    def _regex_props(self, act_raw) -> dict:
         """Create an act dict with all its proprieties.
 
         Args:

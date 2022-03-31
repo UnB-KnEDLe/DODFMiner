@@ -27,6 +27,20 @@ class SuspensaoLicitacao(Atos):
     def _act_name(self):
         return "Suspensão de Licitação"
 
+    def get_expected_colunms(self) -> list:
+        return [
+            "Tipo do Ato",
+            "numero_licitacao",
+            "nome_responsavel",
+            "data_escrito",
+            "objeto",
+            "modalidade_licitacao",
+            "processo_GDF",
+            "prazo_suspensao",
+            "decisao_TCDF",
+            "texto"
+        ]
+
     def _props_names(self):
         return [
             "Tipo do Ato",

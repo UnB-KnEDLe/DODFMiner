@@ -27,6 +27,23 @@ class AberturaLicitacao(Atos):
     def _act_name(self):
         return "Abertura de Licitação"
 
+    def get_expected_colunms(self) -> list:
+        return [
+            "Tipo do Ato",
+            "numero_licitacao",
+            "nome_responsavel",
+            "data_escrito",
+            "objeto",
+            "modalidade_licitacao",
+            "processo_GDF",
+            "valor",
+            "data_abertura",
+            "uasg",
+            "sistema_compra",
+            "tipo_objeto",
+            "texto"
+        ]
+
     def _props_names(self):
         return [
             "Tipo do Ato",

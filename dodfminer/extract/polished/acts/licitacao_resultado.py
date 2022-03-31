@@ -27,6 +27,12 @@ class ResultadoLicitacao(Atos):
     def _act_name(self):
         return "Resultado de Licitação"
 
+    def get_expected_colunms(self) -> list:
+        return [
+            "Tipo do Ato",
+            "texto"
+        ]
+
     def _props_names(self):
         return [
             "Tipo do Ato",

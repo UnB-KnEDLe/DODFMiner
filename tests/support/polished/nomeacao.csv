@@ -1,87 +1,87 @@
-,Tipo do Ato,Nome,Cargo Efetivo,Matricula,Siape,Simbolo,Cargo Comissao,Lotacao,Orgao,text
-0,Nomeação, EUMAR ROBERTO NOVACKI,,,,CNP-03, Secretario de Estado-Chefe,,,"NOMEAR EUMAR ROBERTO NOVACKI para exercer o Cargo de Natureza Politica,
+,Tipo do Ato,Nome,Cargo_efetivo,Matricula,Matricula_siape,Simbolo,Cargo_comissionado,Hierarquia_lotacao,Orgao,Cargo,Numero_dodf_resultado_final,Fundamento_legal,Carreira,DODF_Fonte_Arquivo,DODF_Fonte_Data,DODF_Fonte_Numero,text
+0,Nomeação, EUMAR ROBERTO NOVACKI,,,,CNP-03, Secretario de Estado-Chefe,,,,,,,,,,"NOMEAR EUMAR ROBERTO NOVACKI para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado-Chefe, da Casa Civil do Distrito Federal"
 1,Nomeação, ANDRE CLEMENTE LARA DE OLIVEIRA,,,,CNP-03, Secretario de Estado,"Secretaria de Estado de Fazenda,
-Planejamento",,"NOMEAR ANDRE CLEMENTE LARA DE OLIVEIRA para exercer o Cargo de Natureza
+Planejamento",,,,,,,,,"NOMEAR ANDRE CLEMENTE LARA DE OLIVEIRA para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Fazenda,
 Planejamento, Orcamento e Gestao do Distrito Federal"
-2,Nomeação, OSNEI OKUMOTO,,,,CNP-03, Secretario de Estado,,,"NOMEAR OSNEI OKUMOTO para exercer o Cargo de Natureza Politica, Simbolo CNP-03,
+2,Nomeação, OSNEI OKUMOTO,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR OSNEI OKUMOTO para exercer o Cargo de Natureza Politica, Simbolo CNP-03,
 de Secretario de Estado, da Secretaria de Estado de Saude do Distrito Federal"
-3,Nomeação, RAFAEL DE CARVALHO PULLEN PARENTE,,,,CNP-03, Secretario de Estado,,,"NOMEAR RAFAEL DE CARVALHO PULLEN PARENTE para exercer o Cargo de Na-
+3,Nomeação, RAFAEL DE CARVALHO PULLEN PARENTE,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR RAFAEL DE CARVALHO PULLEN PARENTE para exercer o Cargo de Na-
 tureza Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Educacao do
 Distrito Federal"
-4,Nomeação, VALTER CASIMIRO SILVEIRA,,,,CNP-03, Secretario de Estado,,,"NOMEAR VALTER CASIMIRO SILVEIRA para exercer o Cargo de Natureza Politica,
+4,Nomeação, VALTER CASIMIRO SILVEIRA,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR VALTER CASIMIRO SILVEIRA para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Transporte e Mo-
 bilidade do Distrito Federal"
-5,Nomeação, RUY COUTINHO DO NASCIMENTO,,,,CNP-03, Secretario de Estado,,,"NOMEAR RUY COUTINHO DO NASCIMENTO para exercer o Cargo de Natureza Po-
+5,Nomeação, RUY COUTINHO DO NASCIMENTO,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR RUY COUTINHO DO NASCIMENTO para exercer o Cargo de Natureza Po-
 litica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Desenvol-
 vimento Economico do Distrito Federal"
-6,Nomeação, JOAO PEDRO FERRAZ DOS PASSOS,,,,CNP-03, Secretario de Estado,,,"NOMEAR JOAO PEDRO FERRAZ DOS PASSOS para exercer o Cargo de Natureza
+6,Nomeação, JOAO PEDRO FERRAZ DOS PASSOS,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR JOAO PEDRO FERRAZ DOS PASSOS para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Trabalho do
 Distrito Federal"
-7,Nomeação, VITOR PAULO ARAUJO DOS SANTOS,,,,CNP-03, Secretario de Estado,,,"NOMEAR VITOR PAULO ARAUJO DOS SANTOS para exercer o Cargo de Natureza
+7,Nomeação, VITOR PAULO ARAUJO DOS SANTOS,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR VITOR PAULO ARAUJO DOS SANTOS para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Relacoes
 Institucionais do Distrito Federal"
-8,Nomeação, WELIGTON LUIZ MORAES,,,,,,,,"NOMEAR WELIGTON LUIZ MORAES para exercer o Cargo de Natureza Politica, Sim-
+8,Nomeação, WELIGTON LUIZ MORAES,,,,,,,,,,,,,,,"NOMEAR WELIGTON LUIZ MORAES para exercer o Cargo de Natureza Politica, Sim-
 bolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Comunicacao do Distrito
 Federal"
-9,Nomeação, DILSON RESENDE DE ALMEIDA,,,,CNP-03, Secretario de Estado,Secretaria de Estado de Agricultura,,"NOMEAR DILSON RESENDE DE ALMEIDA para exercer o Cargo de Natureza Politica,
+9,Nomeação, DILSON RESENDE DE ALMEIDA,,,,CNP-03, Secretario de Estado,Secretaria de Estado de Agricultura,,,,,,,,,"NOMEAR DILSON RESENDE DE ALMEIDA para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Agricultura, Abas-
 tecimento e Desenvolvimento Rural do Distrito Federal"
-10,Nomeação, GILVAM MAXIMO,,,,CNP-03, Secretario de Estado,Secretaria de Estado de Ciencia,,"NOMEAR GILVAM MAXIMO para exercer o Cargo de Natureza Politica, Simbolo CNP-03,
+10,Nomeação, GILVAM MAXIMO,,,,CNP-03, Secretario de Estado,Secretaria de Estado de Ciencia,,,,,,,,,"NOMEAR GILVAM MAXIMO para exercer o Cargo de Natureza Politica, Simbolo CNP-03,
 de Secretario de Estado, da Secretaria de Estado de Ciencia, Tecnologia e Informacao do
 Distrito Federal"
-11,Nomeação, ANDERSON GUSTAVO TORRES,,,,CNP-03, Secretario de Estado,,,"NOMEAR ANDERSON GUSTAVO TORRES para exercer o Cargo de Natureza Politica,
+11,Nomeação, ANDERSON GUSTAVO TORRES,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR ANDERSON GUSTAVO TORRES para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Seguranca Publica do
 Distrito Federal"
-12,Nomeação, GUSTAVO DO VALE ROCHA,,,,CNP-03, Secretario de Estado,,,"NOMEAR GUSTAVO DO VALE ROCHA para exercer o Cargo de Natureza Politica,
+12,Nomeação, GUSTAVO DO VALE ROCHA,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR GUSTAVO DO VALE ROCHA para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Justica e Cidadania do
 Distrito Federal"
-13,Nomeação, IZIDIO SANTOS JUNIOR,,,,CNP-03, Secretario de Estado,,,"NOMEAR IZIDIO SANTOS JUNIOR para exercer o Cargo de Natureza Politica, Simbolo
+13,Nomeação, IZIDIO SANTOS JUNIOR,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR IZIDIO SANTOS JUNIOR para exercer o Cargo de Natureza Politica, Simbolo
 CNP-03, de Secretario de Estado, da Secretaria de Estado de Obras e Infraestrutura do
 Distrito Federal"
-14,Nomeação, MATEUS LEANDRO DE OLIVEIRA,,,,CNP-03, Secretario de Estado,,,"NOMEAR MATEUS LEANDRO DE OLIVEIRA para exercer o Cargo de Natureza Politica,
+14,Nomeação, MATEUS LEANDRO DE OLIVEIRA,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR MATEUS LEANDRO DE OLIVEIRA para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Desenvolvimento
 Urbano e Habitacao do Distrito Federal"
-15,Nomeação, JOSE SARNEY FILHO,,,,CNP-03, Secretario de Estado,,,"NOMEAR JOSE SARNEY FILHO para exercer o Cargo de Natureza Politica, Simbolo
+15,Nomeação, JOSE SARNEY FILHO,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR JOSE SARNEY FILHO para exercer o Cargo de Natureza Politica, Simbolo
 CNP-03, de Secretario de Estado, da Secretaria de Estado de Meio Ambiente do Distrito
 Federal"
-16,Nomeação, EDUARDO ALEXANDRE ZARATZ VIEIRA DA CUNHA,,,,CNP-03, Secretario de Estado,,,"NOMEAR EDUARDO ALEXANDRE ZARATZ VIEIRA DA CUNHA para exercer o
+16,Nomeação, EDUARDO ALEXANDRE ZARATZ VIEIRA DA CUNHA,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR EDUARDO ALEXANDRE ZARATZ VIEIRA DA CUNHA para exercer o
 Cargo de Natureza Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de
 Estado de Desenvolvimento Social do Distrito Federal"
-17,Nomeação, ERICKA SIQUEIRA NOGUEIRA FILIPPELLI,,,,CNP-03, Secretaria de Estado,,,"NOMEAR ERICKA SIQUEIRA NOGUEIRA FILIPPELLI para exercer o Cargo de Na-
+17,Nomeação, ERICKA SIQUEIRA NOGUEIRA FILIPPELLI,,,,CNP-03, Secretaria de Estado,,,,,,,,,,"NOMEAR ERICKA SIQUEIRA NOGUEIRA FILIPPELLI para exercer o Cargo de Na-
 tureza Politica, Simbolo CNP-03, de Secretaria de Estado, da Secretaria de Estado da Mulher
 do Distrito Federal"
-18,Nomeação, LEOCADIO RODRIGUES BIJOS JUNIOR,,,,CNP-03, Secretario de Estado,,,"NOMEAR LEOCADIO RODRIGUES BIJOS JUNIOR para exercer o Cargo de Natureza
+18,Nomeação, LEOCADIO RODRIGUES BIJOS JUNIOR,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR LEOCADIO RODRIGUES BIJOS JUNIOR para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Juventude do
 Distrito Federal"
-19,Nomeação, LEANDRO CRUZ FROES DA SILVA,,,,CNP-03, Secretario de Estado,,,"NOMEAR LEANDRO CRUZ FROES DA SILVA para exercer o Cargo de Natureza Politica,
+19,Nomeação, LEANDRO CRUZ FROES DA SILVA,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR LEANDRO CRUZ FROES DA SILVA para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Esporte e Lazer do
 Distrito Federal"
-20,Nomeação, VANESSA CHAVES DE MENDONCA,,,,CNP-03, Secretaria de Estado,,,"NOMEAR VANESSA CHAVES DE MENDONCA para exercer o Cargo de Natureza Po-
+20,Nomeação, VANESSA CHAVES DE MENDONCA,,,,CNP-03, Secretaria de Estado,,,,,,,,,,"NOMEAR VANESSA CHAVES DE MENDONCA para exercer o Cargo de Natureza Po-
 litica, Simbolo CNP-03, de Secretaria de Estado, da Secretaria de Estado de Turismo do
 Distrito Federal"
-21,Nomeação, ADAO CANDIDO LOPES DOS SANTOS,,,,CNP-03, Secretario de Estado,,,"NOMEAR ADAO CANDIDO LOPES DOS SANTOS para exercer o Cargo de Natureza
+21,Nomeação, ADAO CANDIDO LOPES DOS SANTOS,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR ADAO CANDIDO LOPES DOS SANTOS para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Cultura do
 Distrito Federal"
-22,Nomeação, PAULO ROBERTO RORIZ,,,,CNP-03, Secretario de Estado,,,"NOMEAR PAULO ROBERTO RORIZ para exercer o Cargo de Natureza Politica, Simbolo
+22,Nomeação, PAULO ROBERTO RORIZ,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR PAULO ROBERTO RORIZ para exercer o Cargo de Natureza Politica, Simbolo
 CNP-03, de Secretario de Estado, da Secretaria de Estado de Desenvolvimento da Regiao
 Metropolitana do Distrito Federal"
-23,Nomeação, PEDRO LUIZ RODRIGUES,,,,CNP-03, Secretario de Estado,,,"NOMEAR PEDRO LUIZ RODRIGUES para exercer o Cargo de Natureza Politica, Simbolo
+23,Nomeação, PEDRO LUIZ RODRIGUES,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR PEDRO LUIZ RODRIGUES para exercer o Cargo de Natureza Politica, Simbolo
 CNP-03, de Secretario de Estado, da Secretaria Extraordinaria de Relacoes Internacionais do
 Distrito Federal"
-24,Nomeação, EVERARDO RIBEIRO GUEIROS FILHO,,,,CNP-03, Secretario de Estado,,,"NOMEAR EVERARDO RIBEIRO GUEIROS FILHO para exercer o Cargo de Natureza
+24,Nomeação, EVERARDO RIBEIRO GUEIROS FILHO,,,,CNP-03, Secretario de Estado,,,,,,,,,,"NOMEAR EVERARDO RIBEIRO GUEIROS FILHO para exercer o Cargo de Natureza
 Politica, Simbolo CNP-03, de Secretario de Estado, da Secretaria de Estado de Projetos
 Especiais do Distrito Federal"
-25,Nomeação, KALINE GONZAGA COSTA,,,,,,,,"NOMEAR KALINE GONZAGA COSTA para exercer o Cargo de Natureza Politica, Sim-
+25,Nomeação, KALINE GONZAGA COSTA,,,,,,,,,,,,,,,"NOMEAR KALINE GONZAGA COSTA para exercer o Cargo de Natureza Politica, Sim-
 bolo CNP-03, de Chefe de Gabinete, da Chefia de Gabinete, do Gabinete, do Governador do
 Distrito Federal"
-26,Nomeação, LUDMILA LAVOCAT GALVAO VIEIRA DE CARVALHO,,,,CNP-03, Procuradora-Geral,,,"NOMEAR LUDMILA LAVOCAT GALVAO VIEIRA DE CARVALHO para exercer o
+26,Nomeação, LUDMILA LAVOCAT GALVAO VIEIRA DE CARVALHO,,,,CNP-03, Procuradora-Geral,,,,,,,,,,"NOMEAR LUDMILA LAVOCAT GALVAO VIEIRA DE CARVALHO para exercer o
 Cargo de Natureza Politica, Simbolo CNP-03, de Procuradora-Geral, da Procuradoria-Geral
 do Distrito Federal"
 27,Nomeação, DANIEL BELTRAO DE ROSSITER CORREA,,,,CNP-03, Consultor Juridico,Consultoria Juridica,"Gabinete
-do Governador do Distrito Federal","NOMEAR DANIEL BELTRAO DE ROSSITER CORREA para exercer o Cargo de Na-
+do Governador do Distrito Federal",,,,,,,,"NOMEAR DANIEL BELTRAO DE ROSSITER CORREA para exercer o Cargo de Na-
 tureza Politica, Simbolo CNP-03, de Consultor Juridico, da Consultoria Juridica, do Gabinete
 do Governador do Distrito Federal"
-28,Nomeação, ALDEMARIO ARAUJO CASTRO,,,,CNP-03, Controlador-Geral,,,"NOMEAR ALDEMARIO ARAUJO CASTRO para exercer o Cargo de Natureza Politica,
+28,Nomeação, ALDEMARIO ARAUJO CASTRO,,,,CNP-03, Controlador-Geral,,,,,,,,,,"NOMEAR ALDEMARIO ARAUJO CASTRO para exercer o Cargo de Natureza Politica,
 Simbolo CNP-03, de Controlador-Geral, da Controladoria-Geral do Distrito Federal"

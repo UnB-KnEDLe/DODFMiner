@@ -269,7 +269,7 @@ def test_act_contrato_consistence_rule(act_cont):
 
 
 def test_act_contrato_ner():
-    act = Contratos(file_2, 'ner')
+    act = Contratos(file, 'ner')
     assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
@@ -299,8 +299,18 @@ def test_retirement_flags(act_ret):
 
 
 def test_retirement_prop_names(act_ret):
-    assert act_ret._props_names() == ["Tipo do Ato", "SEI", "Nome", "Matrícula", "Tipo de Aposentadoria",
-                                      "Cargo", "Classe", "Padrao", "Quadro", "Fundamento Legal", "Orgao", "Vigencia", "Matricula SIAPE"]
+    assert act_ret._props_names() == [
+        'Ato',
+        'Processo',
+        'Nome_ato',
+        'Cod_matricula_ato',
+        'Cargo',
+        'Classe',
+        'Padrao',
+        'Quadro',
+        'Fund_legal',
+        'Empresa_ato',
+    ]
 
 
 def test_retirement_rule(act_ret):
@@ -310,8 +320,20 @@ def test_retirement_rule(act_ret):
 
 
 def test_retirement_prop_rules_names(act_ret):
-    assert list(act_ret._prop_rules()) == ["processo_SEI", "nome", "matricula", "tipo_ret", "cargo_efetivo",
-                                           "classe", "padrao", "quadro", "fundamento_legal", "orgao", "vigencia", "matricula_SIAPE"]
+    assert list(act_ret._prop_rules()) == [
+        "processo_SEI",
+        "nome",
+        "matricula",
+        # "tipo_ret",
+        "cargo_efetivo",
+        "classe",
+        "padrao",
+        "quadro",
+        "fundamento_legal",
+        "orgao",
+        # "vigencia",
+        # "matricula_SIAPE"
+    ]
 
 
 def test_retirement_prop_rules_rules(act_ret):
@@ -319,15 +341,15 @@ def test_retirement_prop_rules_rules(act_ret):
         r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]",
         r"\s([^,]*?),\smatricula",
         r"matricula\s?n?o?\s([\s\S]*?)[,|\s]",
-        r"",
+        # r"",
         r"Cargo de([\s\S]*?)\,",
         r"[C|c]lasse\s([\s\S]*?)\,",
         r"[p|P]adr[a|ã]o\s([\s\S]*?),",
         r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
         r"nos\stermos\sdo\s[a|A]rtigo([\s\S]*?),\sa?\s",
         r"Lotacao:|Quadro\sde\sPessoal\sd[a|e|o]([\s\S]*?)[.|,]",
-        r"",
-        r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]"
+        # r"",
+        # r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]"
     ]
 
 
@@ -450,11 +472,23 @@ def test_abono_flags(act_abono):
 
 
 def test_abono_prop_names(act_abono):
-    assert act_abono._props_names() == ["Tipo do Ato", "Nome do Servidor", "Matrícula",
-                                        "Cargo Efetivo", "Classe", "Padrão",
-                                        "Quadro pessoal permanente ou Suplementar",
-                                        "Fundamento Legal do abono de permanência", "Órgão",
-                                        "Processo GDF/SEI", "Vigencia", "Matricula SIAPE"]
+    assert act_abono._props_names() == [
+        'Tipo do Ato',
+        'Nome',
+        'Matricula',
+        'Cargo_efetivo',
+        'Classe',
+        'Padrao',
+        'Quadro',
+        'Fundamento_legal',
+        'Orgao',
+        'Processo_sei',
+        'Vigencia',
+        'Matricula_siape',
+        # Problematicos que estão no modelos ner
+        'Cargo',
+        'Lotacao'
+    ]
 
 
 def test_abono_rule(act_abono):
@@ -474,7 +508,9 @@ def test_abono_prop_rules_names(act_abono):
         "orgao",
         "processo_SEI",
         "vigencia",
-        "matricula_SIAPE"
+        "matricula_SIAPE",
+        'cargo',
+        'lotacao'
     ]
 
 
@@ -490,7 +526,9 @@ def test_abono_prop_rules_rules(act_abono):
         r"Lotacao: ([\s\S]*?)[.]",
         r"Processo SEI: ([\s\S]*?)\.\n",
         r"a contar de ([\s\S]*?)\,",
-        r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]"
+        r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]?[o|O]?\s([\s\S]*?)[,| | .]",
+        r'',
+        r''
     ]
 
 
@@ -529,9 +567,22 @@ def test_exoneracao_flags(act_exoneracao):
 
 
 def test_exoneracao_prop_names(act_exoneracao):
-    assert act_exoneracao._props_names() == ['Tipo do Ato', 'nome', 'matricula', 'simbolo', 'cargo_comissao',
-                                             'lotacao', 'orgao', 'vigencia', 'pedido', 'cargo_efetivo',
-                                             'siape', 'motivo']
+    assert act_exoneracao._props_names() == [
+        'Tipo do Ato',
+        'Nome',
+        'Matricula',
+        'Simbolo',
+        'Cargo_comissionado',
+        'Hierarquia_lotacao',
+        'Orgao',
+        'Vigencia',
+        'Carreira',
+        'Fundamento_legal',
+        'A_pedido_ou_nao',
+        'Cargo_efetivo',
+        'Matricula_siape',
+        'Motivo'
+    ]
 
 
 def test_exoneracao_rule(act_exoneracao):
@@ -548,10 +599,12 @@ def test_exoneracao_prop_rules_names(act_exoneracao):
         "hierarqui_lotacao",
         "orgao",
         "vigencia",
+        'Carreira',
+        'Fundamento_legal',
         "a_pedido_ou_nao",
         "cargo_efetivo",
         "matricula_SIAPE",
-        "motivo"
+        "motivo",
     ]
 
 
@@ -564,6 +617,8 @@ def test_exoneracao_prop_rules_rules(act_exoneracao):
         r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s([\s\S]*,?),",
         r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s(?:[\s\S]*,?),\sd[a|e|o]\s([\s\S]*?)$",
         r"",
+        r'',
+        r'',
         r"(a pedido)",
         r"",
         r"[S|s][I|i][A|a][P|p][E|e]\s[N|n]*[o|O]*\s?([\s\S]*?)[,| | .]",
@@ -607,8 +662,25 @@ def test_exo_efet_flags(act_exo_efet):
 
 
 def test_exo_efet_prop_names(act_exo_efet):
-    assert act_exo_efet._props_names() == ['tipo', 'nome', 'matricula', 'cargo_efetivo', 'classe',
-                                           'padrao', 'carreira', 'quadro', 'SEI', 'data', 'pedido', 'motivo', 'SIAPE', 'fundalamento_legal']
+    assert act_exo_efet._props_names() == [
+        "tipo",
+        'Nome',
+        'Matricula',
+        'Cargo_efetivo',
+        'Classe',
+        'Padrao',
+        'Carreira',
+        'Quadro',
+        'Processo_sei',
+        'Vigencia',
+        'A_pedido_ou_nao',
+        'Motivo',
+        'Fundamento_legal',
+        'Orgao',
+        'Simbolo',
+        'Hierarquia_lotacao',
+        'Cargo_comissionado'
+    ]
 
 
 def test_exo_efet_rule(act_exo_efet):
@@ -630,8 +702,11 @@ def test_exo_efet_prop_rules_names(act_exo_efet):
         "data",
         "pedido",
         "motivo",
-        "matricula_SIAPE",
-        "fundamento_legal"
+        "fundamento_legal",
+        'Orgao',
+        'Simbolo',
+        'Hierarquia_lotacao',
+        'Cargo_comissionado',
     ]
 
 
@@ -648,8 +723,11 @@ def test_exo_efet_prop_rules_rules(act_exo_efet):
         r"a\scontar\sde\s([\s0-9\/]*)",
         r"(a\spedido,)?\s(?:[A-Z\\n\s]+)",
         r"",
-        r"",
-        r"nos\stermos\sdo[\n]?([a-zA-Z\s0-9\/]*)"
+        r"nos\stermos\sdo[\n]?([a-zA-Z\s0-9\/]*)",
+        r'',
+        r'',
+        r'',
+        r''
     ]
 
 
@@ -689,16 +767,23 @@ def test_substituicao_flags(act_subs):
 
 
 def test_substituicao_prop_names(act_subs):
-    assert act_subs._props_names() == ["Tipo do Ato", "Nome do Servidor Substituto",
-                                       "Matrícula do Servidor Substituto",
-                                       "Nome do Servidor a ser Substituido",
-                                       "Matrícula do Servidor a ser Substituido"
-                                       "Cargo", "Símbolo do cargo do servidor substituto",
-                                       "Cargo comissionado objeto da substituição",
-                                       "Símbolo do cargo do objeto da substituição",
-                                       "Símbolo do cargo comissionado objeto da substituição",
-                                       "Hierarquia da Lotação", "Órgão", "Data Inicial da Vigência",
-                                       "Data Final de Vigência", "Matrícula SIAPE", "Motivo"]
+    assert act_subs._props_names() == [
+        "Tipo do Ato",
+        'Nome_substituto',
+        'Cargo_substituto',
+        'Matricula_substituto',
+        'Nome_substituido',
+        'Matricula_substituido',
+        'Simbolo_substituto',
+        'Cargo_objeto_substituicao',
+        'Simbolo_objeto_substituicao',
+        'Hierarquia_lotacao',
+        'Orgao',
+        'Data_inicial',
+        'Data_final',
+        'Matricula_siape',
+        'Motivo',
+    ]
 
 
 def test_substituicao_rule(act_subs):
@@ -778,9 +863,19 @@ def test_revertions_flags(act_revert):
 
 
 def test_revertions_prop_names(act_revert):
-    assert act_revert._props_names() == ["Tipo do Ato", "SEI", "Nome", "Matricula", "Cargo", "Classe",
-                                         "Padrao", "Quadro", "Fundamento Legal", "Orgao",
-                                         "Vigencia", "Matricula SIAPE"]
+    assert act_revert._props_names() == [
+        "Tipo do Ato",
+        'Processo_sei',
+        'Nome',
+        'Matricula',
+        'Cargo_efetivo',
+        'Classe',
+        'Padrao',
+        'Quadro',
+        'Fundamento_legal',
+        'Orgao',
+        'Vigencia',
+    ]
 
 
 def test_revertions_rule(act_revert):
@@ -800,7 +895,7 @@ def test_revertions_prop_rules_names(act_revert):
         "fundamento_legal",
         "orgao",
         "vigencia",
-        "matriucla_SIAPE"
+        # "matriucla_SIAPE"
     ]
 
 
@@ -816,7 +911,7 @@ def test_revertions_prop_rules_rules(act_revert):
         r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
         r"Lotacao:|Quadro\sde\sPessoal\sd[a|e|o]([\s\S]*?)[.|,]",
         "",
-        r"siape\sn?o?\s([\s\S]*?)[,| | .]"
+        # r"siape\sn?o?\s([\s\S]*?)[,| | .]"
     ]
 
 
@@ -855,8 +950,21 @@ def test_nom_com_flags(act_nomcom):
 
 
 def test_nom_com_prop_names(act_nomcom):
-    assert act_nomcom._props_names() == ['Tipo do Ato', 'Nome', 'Cargo Efetivo', 'Matricula', 'Siape',
-                                         'Simbolo', 'Cargo Comissao', 'Lotacao', 'Orgao']
+    assert act_nomcom._props_names() == [
+        'Tipo do Ato',
+        'Nome',
+        'Cargo_efetivo',
+        'Matricula',
+        'Matricula_siape',
+        'Simbolo',
+        'Cargo_comissionado',
+        'Hierarquia_lotacao',
+        'Orgao',
+        'Cargo',
+        'Numero_dodf_resultado_final',
+        'Fundamento_legal',
+        'Carreira',
+    ]
 
 
 def test_nom_com_rule(act_nomcom):
@@ -873,7 +981,11 @@ def test_nom_com_prop_rules_names(act_nomcom):
         "simbolo",
         "cargo_comissionado",
         "hierarquia_lotacao",
-        "orgao"
+        "orgao",
+        'Cargo',
+        'Numero_dodf_resultado_final',
+        'Fundamento_legal',
+        'Carreira',
     ]
 
 
@@ -886,7 +998,11 @@ def test_nom_com_prop_rules_rules(act_nomcom):
         r"[S|s][í|i]mbolo\s?n?o?\s([\s\S]*?)[,|\s]",
         r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde([\s\S]*?),",
         r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s([\s\S]*,?),",
-        r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s(?:[\s\S]*,?),\sd[a|e|o]\s([\s\S]*?)$"
+        r"(?:[S|s][í|i]mbolo\s?n?o?\s(?:[\s\S]*?)[,|\s])\sde(?:[\s\S]*?),\sd[a|e|o]\s(?:[\s\S]*,?),\sd[a|e|o]\s([\s\S]*?)$",
+        r'',
+        r'',
+        r'',
+        r'',
     ]
 
 
@@ -927,21 +1043,23 @@ def test_nom_efet_flags(act_nom_efet):
 def test_nom_efet_prop_names(act_nom_efet):
     assert act_nom_efet._props_names() == [
         'tipo',
-        'edital_normativo',
-        'data_do_edital_normativo',
-        'DODF_edital_normativo',
-        'data_DODF_edital_normativo',
-        'edital_resultado_final',
-        'data_edital_resultado_final',
-        'cargo',
-        'especialiade',
-        'carreira',
-        'orgao',
-        'nome_candidato',
-        'classificacao',
-        'pne',
-        'sei',
-        'reposicionamento'
+        'Edital_normativo',
+        'Data_edital_normativo',
+        'Numero_dodf_edital_normativo',
+        'Data_dodf_edital_normativo',
+        'Edital_resultado_final',
+        'Data_edital_resultado_final',
+        'Numero_dodf_resultado_final',
+        'Data_dodf_resultado_final',
+        'Cargo',
+        'Especialidade',
+        'Carreira',
+        'Orgao',
+        'Candidato',
+        'Classe',
+        'Quadro',
+        'Candidato_pne',
+        'Padrao',
     ]
 
 
@@ -960,6 +1078,8 @@ def test_nom_efet_prop_rules_names(act_nom_efet):
         "data_dodf_edital_normativo",
         "edital_resultado_final",
         "data_edital_resultado_final",
+        'Numero_dodf_resultado_final',
+        'Data_dodf_resultado_final',
         "cargo",
         "especialiade",
         "carreira",
@@ -968,7 +1088,7 @@ def test_nom_efet_prop_rules_names(act_nom_efet):
         "classificacao",
         "pne",
         "processo_SEI",
-        "reposicionamento"
+        'Padrao',
     ]
 
 
@@ -980,6 +1100,8 @@ def test_nom_efet_prop_rules_rules(act_nom_efet):
         r"publicado\sno\sDODF\sno\s\d{1,3},\s?de([\s0-9a-or-vzç]*\d{4})",
         r"Resultado\sFinal\sno\s([\/\s\-a-zA-Z0-9_]+)",
         r"",
+        r'',
+        r'',
         r"DODF\sno\s\d{1,3}(?:,[\s0-9a-or-vzç]*\d{4}),[\sa-z]*([A-Z\s]+)",
         r"[\s,a-z\(\:\)]+([\sA-Z\-]*):",
         r"[cC]arreira\s(?:d[ae]\s)?([a-zA-Z\s]+)",
@@ -988,7 +1110,7 @@ def test_nom_efet_prop_rules_rules(act_nom_efet):
         r"",
         r"(?:deficiencia|especiais):\s([\sA-Z0-9\,o\;]+)",
         r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]",
-        r"lista\sde\sclassificacao:\s([\sA-Z0-9\,o\;]+)"
+        r''
     ]
 
 

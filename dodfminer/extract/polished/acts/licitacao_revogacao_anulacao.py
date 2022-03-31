@@ -27,6 +27,18 @@ class RevogacaoAnulacaoLicitacao(Atos):
     def _act_name(self):
         return "Revogação/Anulação de Licitação"
 
+    def get_expected_colunms(self) -> list:
+        return [
+            "Tipo do Ato",
+            "numero_licitacao",
+            "nome_responsavel",
+            "data_escrito",
+            "modalidade_licitacao",
+            "processo_GDF",
+            "classificacao",
+            "texto"
+        ]
+
     def _props_names(self):
         return [
             "Tipo do Ato",

@@ -110,6 +110,10 @@ def test_no_overwrite_5():
     with pytest.raises(Exception):
         Atos(valid_file, 'regex')
 
+def filter_standard_props(act_props_list, filtered_props):
+    filter_props = lambda dict: { key: val for key,val in dict.items()
+                                  if key not in filtered_props }
+    return [ filter_props(act_dict) for act_dict in act_props_list ]
 
 @pytest.fixture(name='act_base_regex')
 @patch.object(Atos, '_act_name', return_value="Aposentadoria")
@@ -123,6 +127,9 @@ def test_no_overwrite_5():
 })
 def fixture_act_base_regex(*_):
     atos = Atos(valid_file, 'regex')
+    def _check_cols(_: list) -> None:
+        pass
+    atos._check_cols = _check_cols
     atos._name = "Aposentadoria"
     return atos
 
@@ -162,7 +169,10 @@ def test_act_base_props_regex(act_base_regex):
     act_base_regex._backend = 'regex'
     act_base_regex._raw_acts = act
     print(act_base_regex._acts)
-    assert act_base_regex._extract_props() == res_act
+    extracted_props = filter_standard_props(act_base_regex._extract_props(),
+                                            act_base_regex._standard_props_names())
+
+    assert extracted_props == res_act
 
 
 def test_act_base_build_dataframes(act_base_regex):

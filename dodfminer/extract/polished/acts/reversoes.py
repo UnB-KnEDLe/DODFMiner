@@ -30,10 +30,34 @@ class Revertions(Atos):
         f_path += '/seg_models/reversao.pkl'
         return joblib.load(f_path)
 
+    def get_expected_colunms(self) -> list:
+        return [
+            'Processo_sei',
+            'Nome',
+            'Matricula',
+            'Cargo_efetivo',
+            'Classe',
+            'Padrao',
+            'Quadro',
+            'Fundamento_legal',
+            'Orgao',
+            'Vigencia',
+        ]
+
     def _props_names(self):
-        return ["Tipo do Ato", "SEI", "Nome", "Matricula", "Cargo", "Classe",
-                "Padrao", "Quadro", "Fundamento Legal", "Orgao",
-                "Vigencia", "Matricula SIAPE"]
+        return [
+            "Tipo do Ato",
+            "Processo_sei",
+            "Nome",
+            "Matricula",
+            "Cargo_efetivo",
+            "Classe",
+            "Padrao",
+            "Quadro",
+            "Fundamento_legal",
+            "Orgao",
+            "Vigencia"
+        ]
 
     def _rule_for_inst(self):
         start = r"(reverter\sa\satividade[,|\s])"
@@ -46,16 +70,18 @@ class Revertions(Atos):
         sei = r"(?<!lei)\s((?:[0-9|\s]*?[.|-]\s?)+?[0-9|\s]*/\s"
         sei2 = r"?[0-9|\s]*-?\s?[0-9|\s]*)[.|,]"
         org = r"Lotacao:|Quadro\sde\sPessoal\sd[a|e|o]([\s\S]*?)[.|,]"
-        rules = {"processo_SEI": sei + sei2,
-                 "nome": r"\s([^,]*?),\smatricula",
-                 "matricula": r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
-                 "cargo_efetivo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
-                 "classe": r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
-                 "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
-                 "quadro": r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
-                 "fundamento_legal": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
-                 "orgao": org,
-                 "vigencia": "",
-                 "matriucla_SIAPE": r"siape\sn?o?\s([\s\S]*?)[,| | .]"}
+        rules = {
+            "processo_SEI": sei + sei2,
+            "nome": r"\s([^,]*?),\smatricula",
+            "matricula": r"matricula\s?n?o?\s([\s\S]*?-[\s\S]*?)[,]",
+            "cargo_efetivo": r"(?:Cargo|Carreira)\sde([\s\S]*?)\,",
+            "classe": r"(?:([^,]*?)\sclasse,)?(?(1)|classe\s([\s\S]*?),)",
+            "padrao": r"[p|P]adr[a|ã]o\s([\s\S]*?),",
+            "quadro": r"d?[e|a|o]?(Quadro[\s\S]*?)[,|;|.]",
+            "fundamento_legal": r"nos\stermos\sdo\s([\s\S]*?),\sa?\s",
+            "orgao": org,
+            "vigencia": "",
+            # "matriucla_SIAPE": r"siape\sn?o?\s([\s\S]*?)[,| | .]"
+        }
 
         return rules

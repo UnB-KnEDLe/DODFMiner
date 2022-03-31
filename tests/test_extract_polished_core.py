@@ -11,6 +11,10 @@ from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.contrato import Contratos
+from dodfminer.extract.polished.acts.licitacao_abertura import AberturaLicitacao
+from dodfminer.extract.polished.acts.licitacao_suspensao import SuspensaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_revogacao_anulacao import RevogacaoAnulacaoLicitacao
+from dodfminer.extract.polished.acts.licitacao_resultado import ResultadoLicitacao
 
 
 from dodfminer.extract.polished.create_xml import XMLFy
@@ -29,7 +33,11 @@ def test_polished_core_acts():
         "efetivos_exo": ExoneracaoEfetivos,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
         "cessoes": Cessoes,
-        "contrato": Contratos
+        "contrato": Contratos,
+        "licitacao_abertura" :AberturaLicitacao,
+        "licitacao_suspensao" :SuspensaoLicitacao,
+        "licitacao_revogacao_anulacao" :RevogacaoAnulacaoLicitacao,
+        "licitacao_resultado" :ResultadoLicitacao
     }
 
 
@@ -58,7 +66,15 @@ def test_polished_core_act_obj():
         "cessoes", "", "regex"), Cessoes)
     assert isinstance(ActsExtractor.get_act_obj(
         "contrato", "", "regex"), Contratos)
-    assert len(_acts_ids) == 12
+    assert isinstance(ActsExtractor.get_act_obj(
+        "licitacao_abertura", "", "regex"), AberturaLicitacao)
+    assert isinstance(ActsExtractor.get_act_obj(
+        "licitacao_suspensao", "", "regex"), SuspensaoLicitacao)
+    assert isinstance(ActsExtractor.get_act_obj(
+        "licitacao_revogacao_anulacao", "", "regex"), RevogacaoAnulacaoLicitacao)
+    assert isinstance(ActsExtractor.get_act_obj(
+        "licitacao_resultado", "", "regex"), ResultadoLicitacao)
+    assert len(_acts_ids) == 16
 
 
 def test_polished_core_get_all_obj():
@@ -75,9 +91,13 @@ def test_polished_core_get_all_obj():
         "substituicao": Substituicao("", "regex"),
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex"),
         "cessoes": Cessoes("", "regex"),
-        "contrato": Contratos("", "regex")
+        "contrato": Contratos("", "regex"),
+        "licitacao_abertura": AberturaLicitacao("", "regex"),
+        "licitacao_suspensao": SuspensaoLicitacao("", "regex"),
+        "licitacao_revogacao_anulacao": RevogacaoAnulacaoLicitacao("", "regex"),
+        "licitacao_resultado": ResultadoLicitacao("", "regex")
     }
-    assert len(objs) == 12
+    assert len(objs) == 16
     assert len(objs) == len(needed)
 
 
@@ -94,7 +114,11 @@ def test_polished_core_act_df():
     assert isinstance(ActsExtractor.get_act_df("sem_efeito_aposentadoria", "", "regex"), type(SemEfeitoAposentadoria("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("cessoes", "", "regex"), type(Cessoes("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("contrato", "", "regex"), type(Contratos("", "regex").data_frame))
-    assert len(_acts_ids) == 12
+    assert isinstance(ActsExtractor.get_act_df("licitacao_abertura", "", "regex"), type(AberturaLicitacao("", "regex").data_frame))
+    assert isinstance(ActsExtractor.get_act_df("licitacao_suspensao", "", "regex"), type(SuspensaoLicitacao("", "regex").data_frame))
+    assert isinstance(ActsExtractor.get_act_df("licitacao_revogacao_anulacao", "", "regex"), type(RevogacaoAnulacaoLicitacao("", "regex").data_frame))
+    assert isinstance(ActsExtractor.get_act_df("licitacao_resultado", "", "regex"), type(ResultadoLicitacao("", "regex").data_frame))
+    assert len(_acts_ids) == 16
 
 
 def test_polished_core_get_all_df():
@@ -111,9 +135,13 @@ def test_polished_core_get_all_df():
         "substituicao": Substituicao("", "regex").data_frame,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex").data_frame,
         "cessoes": Cessoes("", "regex").data_frame,
-        "contrato": Contratos("", "regex").data_frame
+        "contrato": Contratos("", "regex").data_frame,
+        "licitacao_abertura": AberturaLicitacao("", "regex").data_frame,
+        "licitacao_suspensao": SuspensaoLicitacao("", "regex").data_frame,
+        "licitacao_revogacao_anulacao": RevogacaoAnulacaoLicitacao("", "regex").data_frame,
+        "licitacao_resultado": ResultadoLicitacao("", "regex").data_frame
     }
-    assert len(data_frames) == 12
+    assert len(data_frames) == 16
     assert len(data_frames) == len(dataframes)
 
 

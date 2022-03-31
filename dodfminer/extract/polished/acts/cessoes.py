@@ -73,6 +73,9 @@ class Cessoes(Atos):
     #     f_path += '/models/cessoes_ner.pkl'
     #     return joblib.load(f_path)
 
+    def get_expected_colunms(self) -> list:
+        return list(self._prop_rules())
+
     def _props_names(self):
         return ["tipo"] + list(self._prop_rules())
 
@@ -165,9 +168,11 @@ class Cessoes(Atos):
 
     def _extract_props(self):
         acts = []
+
         for raw in self._raw_acts:
             act = self._regex_props(raw)
-            acts.append(act)
+            # Merge act props with standard props
+            acts.append(self.add_standard_props(act, capitalize=True))
         if self._extra_search:
             self._get_special_acts(acts)
         return acts
@@ -183,6 +188,7 @@ class Cessoes(Atos):
         Returns:
             The dataframe created
         """
-        self._columns = self._prop_rules().keys()
+        self._columns = list(self._prop_rules().keys()) + self._standard_props_names(capitalize=True)
+
         return (pd.DataFrame() if not self._acts else
                 pd.DataFrame(self._acts, columns=self._columns))
