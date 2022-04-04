@@ -16,7 +16,6 @@ Functions
 
 import multiprocessing
 import os
-import time
 import tqdm
 import pandas as pd
 
@@ -57,7 +56,6 @@ def extract_multiple_acts(path, types, backend):
         None
     """
     print(types)
-    start = time.time()
     if len(types) == 0:
         types = _acts_ids.keys()
 
@@ -70,27 +68,26 @@ def extract_multiple_acts(path, types, backend):
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
         process_ref = []
-        result = {}
+        output = multiprocessing.Queue(len(types))
         for act_type in types:
-            process_ref.append(multiprocessing.Process(target = run_thread_wrap_multiple, args=(files, act_type, backend, result)))
+            process_ref.append(multiprocessing.Process(target = run_thread_wrap_multiple, args=(files, act_type, backend, output)))
 
         for process in process_ref:
             process.start()
 
+        results = [output.get() for _ in process_ref]
+        for item in results:
+            item[1].to_csv(os.path.join(path, item[0] + ".csv"))
+
         for process in process_ref:
             process.join()
 
-        for item in result.items():
-            item[1].to_csv(os.path.join(path, item[0] + ".csv"))
-    end = time.time()
-    print('>>>' + str(end - start))
-
-def run_thread_wrap_multiple(files: list, act_type: str, backend: str, all_acts: dict) -> None:
+def run_thread_wrap_multiple(files: list, act_type: str, backend: str, all_acts: multiprocessing.Queue) -> None:
     '''
     Run multiple extractions
     '''
     dataframe = extract_multiple(files, act_type, backend)
-    all_acts[act_type] = dataframe
+    all_acts.put([act_type, dataframe])
 
 
 def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./results"):
@@ -161,12 +158,15 @@ def extract_multiple_acts_with_committee(path, types, backend):
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
         process_ref = []
+        output = multiprocessing.Queue(len(types))
         for act_type in types:
-            process = multiprocessing.Process(target = run_thread_wrap, args = (files, act_type, backend, all_acts))
+            process = multiprocessing.Process(target = run_thread_wrap, args = (files, act_type, backend, output))
             process_ref.append(process)
 
         for thread in process_ref:
             thread.start()
+
+        all_acts = [output.get() for _ in process_ref]
 
         for thread in process_ref:
             thread.join()
@@ -178,13 +178,13 @@ def extract_multiple_acts_with_committee(path, types, backend):
 
     committee_classification(dataframe, path, types, backend)
 
-def run_thread_wrap(files: list, act_type: str, backend: str, all_acts: list) -> None:
+def run_thread_wrap(files: list, act_type: str, backend: str, all_acts: multiprocessing.Queue) -> None:
     '''
     Run multiple extractions
     '''
     dataframe = extract_multiple(files, act_type, backend)
     dataframe['type'] = act_type
-    all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
+    all_acts.put(dataframe.filter(['text', 'type'], axis = 1))
 
 def committee_classification(all_acts, path, types, backend):
     """Uses committee classification to find act types.
