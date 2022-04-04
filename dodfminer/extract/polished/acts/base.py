@@ -186,29 +186,3 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             acts.append(self.add_standard_props(act))
 
         return acts
-
-    # def _extract_props(self):
-    #     """Extract proprieties of all the acts.
-
-    #     Returns:
-    #         A vector of extracted acts dictionaries.
-    #     """
-
-    #     acts = []
-    #     with multiprocessing.Pool() as pool:
-    #         acts = pool.map(self._wrap_extraction, self._raw_acts)
-    #     # for value in self._raw_acts:
-
-    #         # Merge act props with standard props
-    #         # acts.append(self.add_standard_props(act))
-
-    #     return acts
-    # def _wrap_extraction(self, act_raw) -> dict:
-    #     act = {}
-    #     if self._backend == 'regex':
-    #         act = self._regex_props(act_raw)
-    #     elif self._backend == 'ner':
-    #         act = self._prediction(act_raw)
-    #     else:
-    #         raise NotImplementedError("Non-existent backend option")
-    #     return act
