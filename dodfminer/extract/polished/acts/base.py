@@ -121,7 +121,7 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             else:
                 data_frame.columns = [x.capitalize()
                                       for x in data_frame.columns]
-            self._check_cols(data_frame.columns)
+            #self._check_cols(data_frame.columns)
             return data_frame
         return pd.DataFrame()
 
