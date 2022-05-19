@@ -38,7 +38,7 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
 
     """
 
-    def __init__(self, file_name, backend='regex'):
+    def __init__(self, file_name, backend='ner'):
         self._backend = backend
         self._name = self._act_name()
         super().__init__()

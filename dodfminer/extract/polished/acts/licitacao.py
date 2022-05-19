@@ -1,4 +1,4 @@
-"""Regras regex para ato de Aposentadoria."""
+"""Regras regex para ato de Licitação."""
 
 import re
 import os
@@ -6,7 +6,7 @@ import joblib
 from dodfminer.extract.polished.acts.base import Atos
 
 
-class Retirements(Atos):
+class Licitacao(Atos):
     '''
     Classe para atos de licitação
     '''
@@ -14,8 +14,8 @@ class Retirements(Atos):
     def __init__(self, file, backend):
         super().__init__(file, backend)
 
-    def _regex_flags(self):
-        return re.IGNORECASE
+    # def _regex_flags(self):
+    #     return re.IGNORECASE
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
