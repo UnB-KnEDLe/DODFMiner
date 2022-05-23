@@ -284,8 +284,6 @@ class SemEfeitoAposentadoria(Atos):
         return match.group()
 
     def _extract_props(self):
-        if self._backend == 'ner':
-            return super()._extract_props()
         acts = []
         for raw in self._raw_acts:
             act = self._regex_props(raw)
@@ -301,8 +299,6 @@ class SemEfeitoAposentadoria(Atos):
         return found
 
     def _build_dataframe(self):
-        if self._backend == 'ner':
-            return super()._build_dataframe()
         _ = re.search(self._name, self._name)
         for dic in self._acts:
             dic["tipo_ato"] = _

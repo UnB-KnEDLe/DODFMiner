@@ -167,8 +167,6 @@ class Cessoes(Atos):
         return np.nan
 
     def _extract_props(self):
-        if self._backend == 'ner':
-            return super()._extract_props() 
         acts = []
 
         for raw in self._raw_acts:
@@ -190,8 +188,6 @@ class Cessoes(Atos):
         Returns:
             The dataframe created
         """
-        if self._backend == 'ner':
-            return super()._build_dataframe()
         self._columns = list(self._prop_rules().keys()) + self._standard_props_names(capitalize=True)
 
         return (pd.DataFrame() if not self._acts else

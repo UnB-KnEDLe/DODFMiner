@@ -118,10 +118,10 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             data_frame = pd.DataFrame(self._acts)
             if self._backend == 'regex':
                 data_frame.columns = self._columns
-                self._check_cols(data_frame.columns)
             else:
                 data_frame.columns = [x.capitalize()
                                       for x in data_frame.columns]
+            self._check_cols(data_frame.columns)
             return data_frame
         return pd.DataFrame()
 
