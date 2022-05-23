@@ -11,6 +11,8 @@ Usage Example::
 
 """
 
+import multiprocessing
+from typing import List
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
 from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados, NomeacaoEfetivos
 from dodfminer.extract.polished.acts.exoneracao import Exoneracao, ExoneracaoEfetivos
@@ -69,10 +71,32 @@ class ActsExtractor:
         """
         return _acts_ids[ato_id](file, backend)
 
+    # @staticmethod
+    # def get_all_obj(file, backend):
+    #     """
+    #     Extract all act types from a single DODF object.
+
+    #     Object format.
+
+    #     Args:
+    #         file (string): Path of the file.
+    #         backend (string): Backend of act extraction, either Regex or NER.
+
+    #     Returns:
+    #         An vector of objects of all the acts with extracted
+    #         information.
+
+    #     """
+    #     res = {}
+    #     for key, act in _acts_ids.items():
+    #         res[key] = act(file, backend)
+
+    #     return res
+
     @staticmethod
     def get_all_obj(file, backend):
-        """
-        Extract all act types from a single DODF object.
+        '''
+        Extract all act types from a single DODF object in paralel.
 
         Object format.
 
@@ -83,13 +107,30 @@ class ActsExtractor:
         Returns:
             An vector of objects of all the acts with extracted
             information.
-
-        """
+        '''
         res = {}
+        process_ref: List[multiprocessing.Process] = []
+        output = multiprocessing.Queue(len(_acts_ids))
         for key, act in _acts_ids.items():
-            res[key] = act(file, backend)
+            process = multiprocessing.Process(target = ActsExtractor.run_thread_wrap, args = (file, act, key, backend, output))
+            process_ref.append(process)
+
+        for thread in process_ref:
+            thread.start()
+
+        all_acts = [output.get() for _ in process_ref]
+
+        for thread in process_ref:
+            thread.join()
+
+        for act in all_acts:
+            res[act['tipo']] = act['ato']
 
         return res
+
+    @staticmethod
+    def run_thread_wrap(file, act, tipo: str, backend, output: multiprocessing.Queue):
+        output.put({'tipo': tipo, 'ato': act(file, backend)})
 
     @staticmethod
     def get_act_df(ato_id, file, backend):
@@ -124,11 +165,33 @@ class ActsExtractor:
             A vector of dataframes with extracted information for all acts.
 
         """
+        # res = {}
+        # for key, act in _acts_ids.items():
+        #     res[key] = act(file, backend).data_frame
+
         res = {}
+        process_ref: List[multiprocessing.Process] = []
+        output = multiprocessing.Queue(len(_acts_ids))
         for key, act in _acts_ids.items():
-            res[key] = act(file, backend).data_frame
+            process = multiprocessing.Process(target = ActsExtractor.run_thread_wrap_ent, args = (file, act, key, backend, output))
+            process_ref.append(process)
+
+        for thread in process_ref:
+            thread.start()
+
+        all_acts = [output.get() for _ in process_ref]
+
+        for thread in process_ref:
+            thread.join()
+
+        for act in all_acts:
+            res[act['tipo']] = act['dataframe']
 
         return res
+
+    @staticmethod
+    def run_thread_wrap_ent(file, act, tipo: str, backend, output: multiprocessing.Queue):
+        output.put({'tipo': tipo, 'dataframe': act(file, backend).data_frame})
 
     @staticmethod
     def get_xml(file, _, i):

@@ -14,6 +14,7 @@ Functions
 
 """
 
+from typing import List
 import multiprocessing
 import os
 import re
@@ -76,7 +77,7 @@ def extract_multiple_acts(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
-        process_ref = []
+        process_ref: List[multiprocessing.Process] = []
         output = multiprocessing.Queue(len(types))
         for act_type in types:
             process_ref.append(multiprocessing.Process(target = run_thread_wrap_multiple, args=(files, act_type, backend, output)))
