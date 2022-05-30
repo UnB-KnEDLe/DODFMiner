@@ -12,8 +12,10 @@ Usage Example::
 """
 
 import multiprocessing
-from typing import List
+from typing import List, Dict
+
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
+from dodfminer.extract.polished.acts.base import Atos
 from dodfminer.extract.polished.acts.nomeacao import NomeacaoComissionados, NomeacaoEfetivos
 from dodfminer.extract.polished.acts.exoneracao import Exoneracao, ExoneracaoEfetivos
 from dodfminer.extract.polished.acts.reversoes import Revertions
@@ -40,6 +42,28 @@ _acts_ids = {
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
+
+
+class ExtractEntDFParallelArgs():
+    """
+    Class for arguments of parallel extraction
+    """
+    act_type: str
+    file: str
+    backend: str
+    act: Atos
+
+    def __init__(self, act_type: str, file: str, backend: str, act: Atos):
+        self.act_type = act_type
+        self.file = file
+        self.act = act
+        self.backend = backend
+
+    def get_act_type(self):
+        return self.act_type
+
+    def set_act_type(self, act_type: str):
+        self.act_type = act_type
 
 
 class ActsExtractor:
@@ -71,30 +95,30 @@ class ActsExtractor:
         """
         return _acts_ids[ato_id](file, backend)
 
-    # @staticmethod
-    # def get_all_obj(file, backend):
-    #     """
-    #     Extract all act types from a single DODF object.
-
-    #     Object format.
-
-    #     Args:
-    #         file (string): Path of the file.
-    #         backend (string): Backend of act extraction, either Regex or NER.
-
-    #     Returns:
-    #         An vector of objects of all the acts with extracted
-    #         information.
-
-    #     """
-    #     res = {}
-    #     for key, act in _acts_ids.items():
-    #         res[key] = act(file, backend)
-
-    #     return res
-
     @staticmethod
     def get_all_obj(file, backend):
+        """
+        Extract all act types from a single DODF object.
+
+        Object format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either Regex or NER.
+
+        Returns:
+            An vector of objects of all the acts with extracted
+            information.
+
+        """
+        res = {}
+        for key, act in _acts_ids.items():
+            res[key] = act(file, backend)
+
+        return res
+
+    @staticmethod
+    def get_all_obj_parallel(file, backend, processes=4):
         '''
         Extract all act types from a single DODF object in paralel.
 
@@ -109,28 +133,21 @@ class ActsExtractor:
             information.
         '''
         res = {}
-        process_ref: List[multiprocessing.Process] = []
-        output = multiprocessing.Queue(len(_acts_ids))
+        args: List[ExtractEntDFParallelArgs] = []
         for key, act in _acts_ids.items():
-            process = multiprocessing.Process(target = ActsExtractor.run_thread_wrap, args = (file, act, key, backend, output))
-            process_ref.append(process)
+            argument = ExtractEntDFParallelArgs(key, file, backend, act)
+            args.append(argument)
 
-        for thread in process_ref:
-            thread.start()
-
-        all_acts = [output.get() for _ in process_ref]
-
-        for thread in process_ref:
-            thread.join()
-
-        for act in all_acts:
-            res[act['tipo']] = act['ato']
+        with multiprocessing.Pool(processes=processes) as pool:
+            response = pool.map(ActsExtractor.run_thread_wrap, args)
+            for act in response:
+                res[act['tipo']] = act['ato']
 
         return res
 
     @staticmethod
-    def run_thread_wrap(file, act, tipo: str, backend, output: multiprocessing.Queue):
-        output.put({'tipo': tipo, 'ato': act(file, backend)})
+    def run_thread_wrap(argument: ExtractEntDFParallelArgs):
+        return {'tipo': argument.act_type, 'ato': argument.act(argument.file, argument.backend)}
 
     @staticmethod
     def get_act_df(ato_id, file, backend):
@@ -165,33 +182,43 @@ class ActsExtractor:
             A vector of dataframes with extracted information for all acts.
 
         """
-        # res = {}
-        # for key, act in _acts_ids.items():
-        #     res[key] = act(file, backend).data_frame
-
         res = {}
-        process_ref: List[multiprocessing.Process] = []
-        output = multiprocessing.Queue(len(_acts_ids))
         for key, act in _acts_ids.items():
-            process = multiprocessing.Process(target = ActsExtractor.run_thread_wrap_ent, args = (file, act, key, backend, output))
-            process_ref.append(process)
-
-        for thread in process_ref:
-            thread.start()
-
-        all_acts = [output.get() for _ in process_ref]
-
-        for thread in process_ref:
-            thread.join()
-
-        for act in all_acts:
-            res[act['tipo']] = act['dataframe']
+            res[key] = act(file, backend).data_frame
 
         return res
 
     @staticmethod
-    def run_thread_wrap_ent(file, act, tipo: str, backend, output: multiprocessing.Queue):
-        output.put({'tipo': tipo, 'dataframe': act(file, backend).data_frame})
+    def get_all_df_parallel(file, backend, processes=4) -> Dict:
+        """
+        Extract all act types from a single DODF file in parallel.
+
+        Dataframe format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
+
+        Returns:
+            A vector of dataframes with extracted information for all acts.
+
+        """
+        res = {}
+        args: List[ExtractEntDFParallelArgs] = []
+        for key, act in _acts_ids.items():
+            argument = ExtractEntDFParallelArgs(key, file, backend, act)
+            args.append(argument)
+
+        with multiprocessing.Pool(processes=processes) as pool:
+            response = pool.map(ActsExtractor.run_thread_wrap_ent, args)
+            for act in response:
+                res[act['tipo']] = act['dataframe']
+
+        return res
+
+    @staticmethod
+    def run_thread_wrap_ent(arguments: ExtractEntDFParallelArgs):
+        return {'tipo': arguments.act_type, 'dataframe': arguments.act(arguments.file, arguments.backend).data_frame}
 
     @staticmethod
     def get_xml(file, _, i):

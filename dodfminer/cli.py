@@ -8,16 +8,17 @@ from argparse import ArgumentParser
 from dodfminer.__version__ import __version__
 
 act_choices = ["aposentadoria",
-                "reversoes",
-                "nomeacao",
-                "exoneracao",
-                "abono",
-                "retificacoes",
-                "substituicao",
-                "cessoes",
-                "sem_efeito_aposentadoria",
-                "efetivos_nome",
-                "efetivos_exo"]
+               "reversoes",
+               "nomeacao",
+               "exoneracao",
+               "abono",
+               "retificacoes",
+               "substituicao",
+               "cessoes",
+               "sem_efeito_aposentadoria",
+               "efetivos_nome",
+               "efetivos_exo"]
+
 
 class CLI():
     """CLI Class contains all parameters to handle arguments.
@@ -79,24 +80,25 @@ class CLI():
 
         help_text = 'Folder to output the download DODFs'
         self.download_parser.add_argument('-sp', '--save_path', dest='save_path',
-                                     default=self.save_path, type=str,
-                                     help=help_text)
+                                          default=self.save_path, type=str,
+                                          help=help_text)
 
         help_text = 'Input the date in either mm/yyyy or mm-yyyy.'
         self.download_parser.add_argument('-sd', '--start_date', dest='start_date',
-                                     default=self.def_start_date, type=str,
-                                     help=help_text)
+                                          default=self.def_start_date, type=str,
+                                          help=help_text)
 
         help_text = 'Input the date in either mm/yyyy or mm-yyyy.'
         self.download_parser.add_argument('-ed', '--end_date', dest='end_date',
-                                     default=self.def_end_date, type=str,
-                                     help=help_text)
+                                          default=self.def_end_date, type=str,
+                                          help=help_text)
 
     def _extract_content_parser(self):
         """Create parser for extraction configs."""
         self.extract_content_parser = self.subparsers.add_parser("extract")
 
-        group = self._new_group('Extraction Configs', self.extract_content_parser)
+        group = self._new_group('Extraction Configs',
+                                self.extract_content_parser)
 
         group.add_argument('-i', '--input-folder', dest='input_folder',
                            default='./', type=str,
@@ -120,10 +122,13 @@ class CLI():
                            help="The backend to be used in CSV extraction")
 
         group.add_argument('-c', '--committee', dest='committee', action='store_true',
-                            help="Use committee classification for acts")
+                           help="Use committee classification for acts")
 
         group.add_argument('-x', '--xml', dest='xml', default=False, nargs='*',
-                            type=bool, help="Generate TeamTat XML Annotations")
+                           type=bool, help="Generate TeamTat XML Annotations")
+
+        group.add_argument('-p', '--number-of-processes',
+                           type=int, help='Number os processes for extraction')
 
     def get_parser(self):
         return self.parser
