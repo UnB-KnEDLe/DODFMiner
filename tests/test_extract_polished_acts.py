@@ -14,7 +14,7 @@ from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.contrato import Contratos
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
-from dodfminer.extract.polished.acts.licitacao_abertura import AberturaLicitacao
+from dodfminer.extract.polished.acts.licitacao import AvisoLicitacao
 from dodfminer.extract.polished.acts.licitacao_suspensao import SuspensaoLicitacao
 from dodfminer.extract.polished.acts.licitacao_revogacao_anulacao import RevogacaoAnulacaoLicitacao
 from dodfminer.extract.polished.acts.licitacao_resultado import ResultadoLicitacao
@@ -28,34 +28,34 @@ file_5 = ""+os.path.dirname(__file__)+"/support/valid_5.txt"
 
 @pytest.fixture(name='act_lic_aber')
 def fixture_act_lic_aber():
-    return AberturaLicitacao(file_3, 'regex')
+    return AvisoLicitacao(file_3, 'regex')
 
 
-def test_licitacao_abertura_backend(act_lic_aber):
+def test_licitacao_backend(act_lic_aber):
     assert act_lic_aber._backend == "regex"
 
 
-def test_licitacao_abertura_name(act_lic_aber):
-    assert act_lic_aber._name == "Abertura de Licitação"
-    assert act_lic_aber.name == "Abertura de Licitação"
-    assert act_lic_aber._act_name() == "Abertura de Licitação"
+def test_licitacao_name(act_lic_aber):
+    assert act_lic_aber._name == "Aviso de Licitação"
+    assert act_lic_aber.name == "Aviso de Licitação"
+    assert act_lic_aber._act_name() == "Aviso de Licitação"
 
 
-def test_licitacao_abertura_flags(act_lic_aber):
+def test_licitacao_flags(act_lic_aber):
     assert act_lic_aber._regex_flags() == re.IGNORECASE
 
 
-def test_licitacao_abertura_prop_names(act_lic_aber):
+def test_licitacao_prop_names(act_lic_aber):
     assert act_lic_aber._props_names() == ["Tipo do Ato", "numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
                                        "processo_GDF", "valor", "data_abertura", "uasg", "sistema_compra", "tipo_objeto", "texto"]
 
 
-def test_licitacao_abertura_prop_rules_names(act_lic_aber):
+def test_licitacao_prop_rules_names(act_lic_aber):
     assert list(act_lic_aber._prop_rules()) == ["numero_licitacao", "nome_responsavel", "data_escrito", "objeto", "modalidade_licitacao", 
                                             "processo_GDF", "valor", "data_abertura", "uasg", "sistema_compra", "tipo_objeto", "texto"]
 
 
-def test_licitacao_abertura_prop_rules_rules(act_lic_aber):
+def test_licitacao_prop_rules_rules(act_lic_aber):
     assert list(act_lic_aber._prop_rules().values()) == [
         r"",
         r"",

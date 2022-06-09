@@ -1,4 +1,4 @@
-"""Regras regex para ato de Abertura de Licitação."""
+"""Regras regex para ato de Aviso de Licitação."""
 
 import re
 import os
@@ -8,9 +8,9 @@ import pandas as pd
 from dodfminer.extract.polished.acts.base import Atos
 
 
-class AberturaLicitacao(Atos):
+class AvisoLicitacao(Atos):
     '''
-    Classe para Abertura de Licitação
+    Classe para Aviso de Licitação
     '''
 
     def __init__(self, file, backend):
@@ -25,7 +25,7 @@ class AberturaLicitacao(Atos):
     #     return joblib.load(f_path)
 
     def _act_name(self):
-        return "Abertura de Licitação"
+        return "Aviso de Licitação"
 
     def get_expected_colunms(self) -> list:
         return [
@@ -99,14 +99,34 @@ class DFA: # pylint: disable=too-few-public-methods
     """ Classe que implementa um autômato finito determinístico
 
     Recebe um texto e returna uma lista com todos os atos de 
-    Abertura de Licitação encontrados no texto
+    Aviso de Licitação encontrados no texto
     """
+
+    @classmethod
+    def clean_text_by_word(cls, text):
+        a = "\n".join([l for l in text.split("\n") if l != ""])
+        words = a.replace("\n", " ").split(" ")
+        words = [w for w in words if w != ""]
+        
+        m_words = []
+
+        for i in range(len(words)):
+            word = words[i]
+
+            if (word[-1] == "-") and (i+1)<len(words):
+                word = word[:-1] + words[i+1]
+                i += 1
+
+            m_words.append(word)
+        
+        return re.sub('xxbcet ?|xxbcet ?|xxeob ?|xxbob ?|xxecet ?', '', " ".join(m_words).replace("\r", "").strip())
+
 
     @classmethod
     def extract_text(cls, txt_string):
         txt_string = txt_string.split('\n')
 
-        abertura_licitacao_text = []
+        licitacao_text = []
 
         # Atos no singular
         regex = r'(?:xxbcet\s+)?(?:AVISO\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ABERTURA|AVISO\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO)'
@@ -117,7 +137,7 @@ class DFA: # pylint: disable=too-few-public-methods
         i = 0
         while i != len(txt_string):
             if re.match(regex, txt_string[i]):
-                abertura_licitacao_text.append(txt_string[i])
+                licitacao_text.append(txt_string[i])
                 ato = True
                 while ato:
                     i += 1
@@ -127,7 +147,7 @@ class DFA: # pylint: disable=too-few-public-methods
                         i -= 2
                         break
                     else:
-                        abertura_licitacao_text[-1] += '\n' + txt_string[i]
+                        licitacao_text[-1] += '\n' + txt_string[i]
             else:
                 i+=1
 
@@ -158,11 +178,12 @@ class DFA: # pylint: disable=too-few-public-methods
         for texto in aberturas_licitacao_text:
             for ato in texto.split('xxbob'):
                 if len(ato) < 55 or (ato[0] == '\n' and not ato[1].isupper() and ato[1] != 'x'):
-                    if len(abertura_licitacao_text) > 0:
-                        abertura_licitacao_text[-1] = abertura_licitacao_text[-1] + ato
+                    if len(licitacao_text) > 0:
+                        licitacao_text[-1] = licitacao_text[-1] + ato
                 else:
-                    abertura_licitacao_text.append(ato)
+                    licitacao_text.append(ato)
 
+        for i in range(len(licitacao_text)):
+            licitacao_text[i] = cls.clean_text_by_word(licitacao_text[i])
         
-        
-        return abertura_licitacao_text
+        return licitacao_text
