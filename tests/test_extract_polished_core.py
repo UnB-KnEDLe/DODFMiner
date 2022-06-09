@@ -101,6 +101,26 @@ def test_polished_core_get_all_obj():
     assert len(objs) == len(needed)
 
 
+def test_polished_core_get_all_obj_parallel():
+    objs = ActsExtractor.get_all_obj_parallel("", "regex")
+    needed = {
+        "abono": AbonoPermanencia("", "regex"),
+        "aposentadoria": Retirements("", "regex"),
+        "efetivos_exo": ExoneracaoEfetivos("", "regex"),
+        "efetivos_nome": NomeacaoEfetivos("", "regex"),
+        "exoneracao": Exoneracao("", "regex"),
+        "nomeacao": NomeacaoComissionados("", "regex"),
+        "retificacoes": RetAposentadoria("", "regex"),
+        "reversoes": Revertions("", "regex"),
+        "substituicao": Substituicao("", "regex"),
+        "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex"),
+        "cessoes": Cessoes("", "regex"),
+        "contrato": Contratos("", "regex")
+    }
+    assert len(objs) == 12
+    assert len(objs) == len(needed)
+
+
 def test_polished_core_act_df():
     assert isinstance(ActsExtractor.get_act_df("aposentadoria", "", "regex"), type(Retirements("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("reversoes", "", "regex"), type(Revertions("", "regex").data_frame))
@@ -142,6 +162,26 @@ def test_polished_core_get_all_df():
         "licitacao_resultado": ResultadoLicitacao("", "regex").data_frame
     }
     assert len(data_frames) == 16
+    assert len(data_frames) == len(dataframes)
+
+
+def test_polished_core_get_all_df_parallel():
+    data_frames = ActsExtractor.get_all_df_parallel("", "regex")
+    dataframes = {
+        "abono": AbonoPermanencia("", "regex").data_frame,
+        "aposentadoria": Retirements("", "regex").data_frame,
+        "efetivos_exo": ExoneracaoEfetivos("", "regex").data_frame,
+        "efetivos_nome": NomeacaoEfetivos("", "regex").data_frame,
+        "exoneracao": Exoneracao("", "regex").data_frame,
+        "nomeacao": NomeacaoComissionados("", "regex").data_frame,
+        "retificacoes": RetAposentadoria("", "regex").data_frame,
+        "reversoes": Revertions("", "regex").data_frame,
+        "substituicao": Substituicao("", "regex").data_frame,
+        "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex").data_frame,
+        "cessoes": Cessoes("", "regex").data_frame,
+        "contrato": Contratos("", "regex").data_frame
+    }
+    assert len(data_frames) == 12
     assert len(data_frames) == len(dataframes)
 
 

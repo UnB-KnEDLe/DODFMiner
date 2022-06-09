@@ -14,6 +14,7 @@ Functions
 
 """
 
+from typing import List, Tuple
 import multiprocessing
 import os
 import re
@@ -76,27 +77,66 @@ def extract_multiple_acts(path, types, backend):
     else:
         ContentExtractor.extract_to_txt(path)
         files = get_files_path(path, 'txt')
-        process_ref = []
-        output = multiprocessing.Queue(len(types))
         for act_type in types:
-            process_ref.append(multiprocessing.Process(target = run_thread_wrap_multiple, args=(files, act_type, backend, output)))
+            data_frame = extract_multiple(files, act_type, backend)
+            data_frame.to_csv(os.path.join(path, act_type + ".csv"))
 
-        for process in process_ref:
-            process.start()
 
-        results = [output.get() for _ in process_ref]
-        for item in results:
-            item[1].to_csv(os.path.join(path, item[0] + ".csv"))
+def extract_multiple_acts_parallel(path: str, types: List[str], backend: str, processes = 4):
+    """Extract multple Acts from Multiple DODFs to act named CSVs in parallel.
 
-        for process in process_ref:
-            process.join()
+    Args:
+        path (str): Folder where the Dodfs are.
+        types ([str]): Types of the act, see the core class to view
+                    avaiables types.
+        backend (str): what backend will be used to extract Acts {regex, ner}
 
-def run_thread_wrap_multiple(files: list, act_type: str, backend: str, all_acts: multiprocessing.Queue) -> None:
+    Returns:
+        None
+    """
+    if len(types) == 0:
+        types = _acts_ids.keys()
+
+    if os.path.isfile(path):
+        ContentExtractor.extract_text(path, single=True)
+        extraction_arguments = []
+        for act_type in types:
+            extraction_arguments.append((path.replace('.pdf', '.txt'), act_type, backend))
+
+        with multiprocessing.Pool(processes=processes) as pool:
+            result = pool.starmap(run_extract_simple_wrap, extraction_arguments)
+
+        for act_type, (data_frame, _) in result:
+            data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
+    else:
+        ContentExtractor.extract_to_txt(path)
+        files = get_files_path(path, 'txt')
+        extraction_arguments = []
+
+        for act_type in types:
+            extraction_arguments.append((files, act_type, backend))
+
+        with multiprocessing.Pool(processes=processes) as pool:
+            result = pool.starmap(run_thread_wrap_multiple, extraction_arguments)
+
+            for item in result:
+                item[1].to_csv(os.path.join(path, item[0] + ".csv"))
+
+
+def run_extract_simple_wrap(file: str, act_type: str, backend: str) -> Tuple[str, pd.DataFrame]:
+    '''
+    Run one extractions
+    '''
+    result = extract_single(file, act_type, backend)
+    return (act_type, result)
+
+
+def run_thread_wrap_multiple(files: list, act_type: str, backend: str) -> Tuple[str, pd.DataFrame]:
     '''
     Run multiple extractions
     '''
     dataframe = extract_multiple(files, act_type, backend)
-    all_acts.put([act_type, dataframe])
+    return (act_type, dataframe)
 
 
 def extract_multiple(files, act_type, backend, txt_out=False, txt_path="./results"):
