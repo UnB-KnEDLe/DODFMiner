@@ -155,13 +155,13 @@ class DFA: # pylint: disable=too-few-public-methods
         regex = r'(?:xxbcet\s+)?(?:AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+ABERTURA|AVISOS\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][OÕ]ES|AVISOS\s+D[EO]\s+LICITA[CÇ][OÕ]ES)'
         regex_s = r'(?:xxbcet\s+)?(?:“?AVISOS?|“?EXTRATOS?|“?RESULTADOS?|“?SECRETARIA ?|“?SUBSECRETARIA ?|“?TOMADA|“?COMISS[AÃ]O|“?DIRETORIA|“?ATO|“?DEPARTAMENTO ?|“?COORDENA[CÇ][AÃ]O|“?ACADEMIA|“?CONCURSO|“?COMPANHIA|“?CONVITE|“?FUNDA[CÇ][AÃ]O|“?CONSELHO|“?SUBSCRETARIA|“?PROJETO|“?EDITAL)'
 
-        aberturas_licitacao_text = []
+        licitacoes_text = []
         ato = False
 
         i = 0
         while i != len(txt_string):
             if re.match(regex, txt_string[i]):
-                aberturas_licitacao_text.append(txt_string[i])
+                licitacoes_text.append(txt_string[i])
                 ato = True
                 while ato:
                     i += 1
@@ -171,11 +171,11 @@ class DFA: # pylint: disable=too-few-public-methods
                         i -= 2
                         break
                     else:
-                        aberturas_licitacao_text[-1] += '\n' + txt_string[i]
+                        licitacoes_text[-1] += '\n' + txt_string[i]
             else:
                 i+=1
         
-        for texto in aberturas_licitacao_text:
+        for texto in licitacoes_text:
             for ato in texto.split('xxbob'):
                 if len(ato) < 55 or (ato[0] == '\n' and not ato[1].isupper() and ato[1] != 'x'):
                     if len(licitacao_text) > 0:

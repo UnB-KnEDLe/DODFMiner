@@ -70,6 +70,26 @@ class DFA: # pylint: disable=too-few-public-methods
     """
 
     @classmethod
+    def clean_text_by_word(cls, text):
+        a = "\n".join([l for l in text.split("\n") if l != ""])
+        words = a.replace("\n", " ").split(" ")
+        words = [w for w in words if w != ""]
+        
+        m_words = []
+
+        for i in range(len(words)):
+            word = words[i]
+
+            if (word[-1] == "-") and (i+1)<len(words):
+                word = word[:-1] + words[i+1]
+                i += 1
+
+            m_words.append(word)
+        
+        return re.sub('xxbcet ?|xxbcet ?|xxeob ?|xxbob ?|xxecet ?', '', " ".join(m_words).replace("\r", "").strip())
+
+
+    @classmethod
     def extract_text(cls, txt_string):
         txt_string = txt_string.split('\n')
 
@@ -128,5 +148,8 @@ class DFA: # pylint: disable=too-few-public-methods
                         resultado_licitacao_text[-1] = resultado_licitacao_text[-1] + ato
                 else:
                     resultado_licitacao_text.append(ato)
+
+        for i in range(len(resultado_licitacao_text)):
+            resultado_licitacao_text[i] = cls.clean_text_by_word(resultado_licitacao_text[i])
         
         return resultado_licitacao_text
