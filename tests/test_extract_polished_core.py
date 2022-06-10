@@ -121,7 +121,7 @@ def test_polished_core_get_all_obj_parallel():
         "licitacao_revogacao_anulacao": RevogacaoAnulacaoLicitacao("", "regex"),
         "licitacao_resultado": ResultadoLicitacao("", "regex")
     }
-    assert len(objs) == 12
+    assert len(objs) == 16
     assert len(objs) == len(needed)
 
 
@@ -189,7 +189,7 @@ def test_polished_core_get_all_df_parallel():
         "licitacao_revogacao_anulacao": RevogacaoAnulacaoLicitacao("", "regex").data_frame,
         "licitacao_resultado": ResultadoLicitacao("", "regex").data_frame
     }
-    assert len(data_frames) == 12
+    assert len(data_frames) == 16
     assert len(data_frames) == len(dataframes)
 
 
