@@ -42,7 +42,7 @@ _acts_ids = {"aposentadoria": Retirements,
              "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
              "cessoes": Cessoes,
              "contrato": Contratos,
-             "licitacao" :AvisoLicitacao,
+             "aviso_licitacao" :AvisoLicitacao,
              "licitacao_suspensao" :SuspensaoLicitacao,
              "licitacao_revogacao_anulacao" :RevogacaoAnulacaoLicitacao,
              "licitacao_resultado" :ResultadoLicitacao}
