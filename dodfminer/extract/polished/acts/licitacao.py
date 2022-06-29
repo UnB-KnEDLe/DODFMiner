@@ -4,95 +4,218 @@ import re
 import os
 import joblib
 import pandas as pd
+import nltk
+from nltk.tokenize import word_tokenize
+import numpy as np
 
 from dodfminer.extract.polished.acts.base import Atos
+from dodfminer.extract.polished.backend.ner import ActNER
 
 
-class AvisoLicitacao(Atos):
+class AvisoLicitacao(ActNER):
     '''
     Classe para Aviso de Licitação
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, arq, backend):
+        self._acts = []
+        self._file_name = arq
+        self._model = self._load_model()
+        self.data_frame = self.process()
 
-    def _regex_flags(self):
-        return re.IGNORECASE
+    def _load_model(self):
+        f_path = os.path.dirname(__file__)
+        f_path += '/models/licitacao.pkl'
+        return joblib.load(f_path)
 
-    # def _load_model(self):
-    #     f_path = os.path.dirname(__file__)
-    #     f_path += '/models/'
-    #     return joblib.load(f_path)
+    def _load_arq(self, arq):
+        with open(arq, "r", encoding='utf-8') as file:
+            text = file.read()
+            file.close()
+        return text
 
-    def _act_name(self):
-        return "Aviso de Licitação"
+    def process(self):
+        text_list = self._load_arq(self._file_name)
+        self.sents = DFA.extract_text(text_list)   # lista de textos
+        
+        for sent in self.sents:
+            predicted = self._prediction(sent)  # lista com cada objeto predito
+            self._acts.append(self.add_standard_props(predicted))
+
+        return self._build_dataframe() 
+
+    def _prediction(self, sent):
+        """Predict classes for a single act.
+
+        Args:
+            act (string): Full act
+
+        Returns:
+            A dictionary with the proprieties and its
+            predicted value.
+        """
+        act = self._preprocess(sent)    # lista de palavras tokenizadas
+        features = self._get_features(act)  # lista de dicionarios que contem cada feature
+        pred = self._model.predict_single(features) # lista com cada objeto predito
+        self.dict_pred = self.predictions_dict(act, pred)   # dicionario com o resultado
+        return self.dict_pred
+
+    def _build_dataframe(self):
+        """Create a dataframe with the extracted proprieties.
+
+        Returns:
+            The dataframe created
+        """
+        data_frame = pd.DataFrame.from_dict(self._acts)
+        data_frame.columns = [x.capitalize()
+                              for x in data_frame.columns]
+        self._check_cols(data_frame.columns)
+        return data_frame.drop('Iob', axis=1)
+    
+    def _standard_props(self):
+        act = {}
+
+        file = self._file_name.split('/')[-1] if self._file_name else None
+        match = re.search(r'(\d+\-\d+\-\d+)',file) if file else None
+        file_split = file.split() if file else None
+
+        act['DODF_Fonte_Arquivo'] = file.replace('.txt', '.pdf') if file else None
+        act['DODF_Fonte_Data'] = match.group(1).replace('-', '/') if match else None
+        act['DODF_Fonte_Numero'] = file_split[1] if file_split and len(file_split)>=2 else None
+
+        return act
+
+    def add_standard_props(self, act, capitalize=False):
+        standard_props = self._standard_props()
+
+        if capitalize:
+            standard_props = {(key.capitalize()):val for key, val in standard_props.items()}
+
+        act = {**act, **(standard_props)}
+        return act
+
+    def _check_cols(self, columns: list) -> None:
+        '''
+            Check if dataframe columns are the expected ones
+            Raises:
+                NotImplementedError: Child class needs to overwrite this method.
+
+        '''
+        for col in self.get_expected_colunms():
+            if col not in columns:
+                raise KeyError(f'Key not present in dataframe -> {col}')
+    
+    def _preprocess(self, sentence):
+        text = word_tokenize(sentence)
+        return text
 
     def get_expected_colunms(self) -> list:
         return [
-            "Tipo do Ato",
-            "numero_licitacao",
-            "nome_responsavel",
-            "data_escrito",
-            "objeto",
-            "modalidade_licitacao",
-            "processo_GDF",
-            "valor",
-            "data_abertura",
-            "uasg",
-            "sistema_compra",
-            "tipo_objeto",
-            "texto"
+            "Modalidade_licitacao",
+            "Num_licitacao",
+            "Orgao_licitante",
+            "Sistema_compras",
+            "Obj_licitacao",
+            "Valor_estimado",
+            "Data_abertura",
+            "Processo",
+            "Nome_responsavel",
+            "Codigo_sistema_compras",
+            # "Texto" # comentar quando for usar ner
         ]
 
-    def _props_names(self):
-        return [
-            "Tipo do Ato",
-            "numero_licitacao",
-            "nome_responsavel",
-            "data_escrito",
-            "objeto",
-            "modalidade_licitacao",
-            "processo_GDF",
-            "valor",
-            "data_abertura",
-            "uasg",
-            "sistema_compra",
-            "tipo_objeto",
-            "texto"
-        ]
+    def _get_features(self, sentence):
+        """Create features for each word in act.
+        Create a list of dict of words features to be used in the predictor module.
+        Args:
+            act (list): List of words in an act.
+        Returns:
+            A list with a dictionary of features for each of the words.
+        """
+        sent_features = []
+        for i in range(len(sentence)):
+            word_feat = {
+                'word': sentence[i].lower(),
+                'word[-3:]': sentence[i][-3:],
+                'word[-2:]': sentence[i][-2:],
+                'capital_letter': sentence[i][0].isupper(),
+                'word_istitle': sentence[i].istitle(),
+                'all_capital': sentence[i].isupper(),
+                'word_isdigit': sentence[i].isdigit(),
+                # Uma palavra antes
+                'word_before': '' if i == 0 else sentence[i-1].lower(),
+                'word_before_isdigit': '' if i == 0 else sentence[i-1].isdigit(),
+                'word_before_isupper': '' if i == 0 else sentence[i-1].isupper(),
+                'word_before_istitle': '' if i == 0 else sentence[i-1].istitle(),
+                # Duas palavras antes
+                'word_before2': '' if i in [0, 1] else sentence[i-2].lower(),
+                'word_before_isdigit2': '' if i in [0, 1] else sentence[i-1].isdigit(),
+                'word_before_isupper2': '' if i in [0, 1] else sentence[i-1].isupper(),
+                'word_before_istitle2': '' if i in [0, 1] else sentence[i-1].istitle(),
+                # Uma palavra depois
+                'word_after': '' if i+1 >= len(sentence) else sentence[i+1].lower(),
+                'word_after_isdigit': '' if i+1 >= len(sentence) else sentence[i+1].isdigit(),
+                'word_after_isupper': '' if i+1 >= len(sentence) else sentence[i+1].isupper(),
+                'word_after_istitle': '' if i+1 >= len(sentence) else sentence[i+1].istitle(),
+                # Duas palavras depois
+                'word_after2': '' if i+2 >= len(sentence) else sentence[i+2].lower(),
+                'word_after_isdigit2': '' if i+2 >= len(sentence) else sentence[i+2].isdigit(),
+                'word_after_isupper2': '' if i+2 >= len(sentence) else sentence[i+2].isupper(),
+                'word_after_istitle2': '' if i+2 >= len(sentence) else sentence[i+2].istitle(),
 
-    def _rule_for_inst(self):
-        start = r""
-        body = r""
-        end = r""
+                'BOS': i == 0,
+                'EOS': i == len(sentence)-1
+            }
+            sent_features.append(word_feat)
+        return sent_features
 
-        return start + body + end
+    def predictions_dict(self, act, prediction):
+        """Create dictionary of proprieties.
 
-    def _prop_rules(self):
-        rules = {
-            "numero_licitacao": r"",
-            "nome_responsavel": r"",
-            "data_escrito": r"",
-            "objeto": r"",
-            "modalidade_licitacao": r"",
-            "processo_GDF": r"",
-            "valor": r"",
-            "data_abertura": r"",
-            "uasg": r"",
-            "sistema_compra": r"",
-            "tipo_objeto": r"",
-            "texto": r"([\s\S]+)",
-        }
-        return rules
+        Create dictionary of tags to save predicted entities.
 
-    @classmethod
-    def _preprocess(cls, text):
-        return text
+        Args:
+            sentence (list): List of words and tokens in the act.
+            prediction ([type]): The correspondent predicitons for each
+                                 word in the sentence.
 
-    def _regex_instances(self):
-        results = DFA.extract_text(self._text)
+        Returns:
+            A dictionary of the proprieties found.
 
-        return results
+        """
+        dict_ato = {}
+        for klass in self._model.classes_:
+            if klass == 'O':
+                continue
+            dict_ato[klass[2:]] = []
+
+        current = ''
+        count = 0
+        pred_start = 0
+
+        for i,_ in enumerate(prediction):
+
+            if prediction[i][0] == 'I':
+                count += 1
+
+            elif prediction[i][0] == 'B':
+                pred_start = i
+
+            elif prediction[i][0] == 'O' and pred_start:
+                current = prediction[pred_start][2:]
+                entidade = ' '.join(act[pred_start:i])
+                dict_ato[current] = entidade
+                pred_start = 0
+                count = 0
+            else:
+                continue
+           
+        for key, val in dict_ato.items():
+            if len(val) == 0:
+                dict_ato[key] = np.nan
+            elif len(val) == 1:
+                dict_ato[key] = val[0]
+        return dict_ato
 
 
 class DFA: # pylint: disable=too-few-public-methods
@@ -101,7 +224,6 @@ class DFA: # pylint: disable=too-few-public-methods
     Recebe um texto e returna uma lista com todos os atos de 
     Aviso de Licitação encontrados no texto
     """
-
     @classmethod
     def clean_text_by_word(cls, text):
         a = "\n".join([l for l in text.split("\n") if l != ""])
@@ -120,7 +242,6 @@ class DFA: # pylint: disable=too-few-public-methods
             m_words.append(word)
         
         return re.sub('xxbcet ?|xxbcet ?|xxeob ?|xxbob ?|xxecet ?', '', " ".join(m_words).replace("\r", "").strip())
-
 
     @classmethod
     def extract_text(cls, txt_string):
