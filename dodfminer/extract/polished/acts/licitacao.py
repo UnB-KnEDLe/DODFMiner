@@ -37,7 +37,9 @@ class AvisoLicitacao(ActNER):
     def process(self):
         text_list = self._load_arq(self._file_name)
         self.sents = DFA.extract_text(text_list)   # lista de textos
-        
+        if not self.sents:
+            return pd.DataFrame()
+
         for sent in self.sents:
             predicted = self._prediction(sent)  # lista com cada objeto predito
             self._acts.append(self.add_standard_props(predicted))
@@ -246,15 +248,12 @@ class DFA: # pylint: disable=too-few-public-methods
     @classmethod
     def extract_text(cls, txt_string):
         txt_string = txt_string.split('\n')
-
         licitacao_text = []
-
         # Atos no singular
         regex = r'(?:xxbcet\s+)?(?:AVISO\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ABERTURA|AVISO\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO)'
         regex_s = r'(?:xxbcet\s+)?(?:“?AVISOS?|“?EXTRATOS?|“?RESULTADOS?|“?SECRETARIA ?|“?SUBSECRETARIA ?|“?PREG[AÃ]O|“?TOMADA|“?COMISS[AÃ]O|“?DIRETORIA|“?ATO|“?DEPARTAMENTO ?|“?COORDENA[CÇ][AÃ]O|“?ACADEMIA|“?CONCURSO|“?COMPANHIA|“?CONVITE|“?FUNDA[CÇ][AÃ]O|“?CONSELHO|“?SUBSCRETARIA|“?PROJETO|“?EDITAL)'
 
         ato = False
-
         i = 0
         while i != len(txt_string):
             if re.match(regex, txt_string[i]):
@@ -306,5 +305,5 @@ class DFA: # pylint: disable=too-few-public-methods
 
         for i in range(len(licitacao_text)):
             licitacao_text[i] = cls.clean_text_by_word(licitacao_text[i])
-        
+
         return licitacao_text
