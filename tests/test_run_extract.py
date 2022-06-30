@@ -84,169 +84,169 @@ def test_run_extract_single_file_blocks():
         os.remove(file.replace('pdf', 'json'))
 
 
-def test_run_extract_single_all_act():
-    folder = ""+os.path.dirname(__file__)+"/support/"
-    file = folder+"dodfminer_sf.pdf"
-    targets = ["cmd", "extract", "-s", file, "-a"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
+#def test_run_extract_single_all_act():
+#    folder = ""+os.path.dirname(__file__)+"/support/"
+#    file = folder+"dodfminer_sf.pdf"
+#    targets = ["cmd", "extract", "-s", file, "-a"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
 
 
-def test_run_extract_single_all_act_parallel():
-    folder = ""+os.path.dirname(__file__)+"/support/"
-    file = folder+"dodfminer_sf.pdf"
-    targets = ["cmd", "extract", "-s", file, "-a", "-p", "4"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
+#def test_run_extract_single_all_act_parallel():
+#    folder = ""+os.path.dirname(__file__)+"/support/"
+#    file = folder+"dodfminer_sf.pdf"
+#    targets = ["cmd", "extract", "-s", file, "-a", "-p", "4"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
 
 
-def test_run_extract_input_folder_pure_text():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder, "-t", "pure-text"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        res_folder = folder + '/results/txt/2020/01_Janeiro/'
-        assert os.path.isdir(res_folder)
-        assert len(glob(res_folder+'*.txt')) > 1
-        shutil.rmtree(folder + '/results/')
+#def test_run_extract_input_folder_pure_text():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder, "-t", "pure-text"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        res_folder = folder + '/results/txt/2020/01_Janeiro/'
+#        assert os.path.isdir(res_folder)
+#        assert len(glob(res_folder+'*.txt')) > 1
+#        shutil.rmtree(folder + '/results/')
 
 
-def test_run_extract_input_folder_with_titles():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder, "-t", "with-titles"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        res_folder = folder + '/results/json/2020/01_Janeiro/'
-        assert os.path.isdir(res_folder)
-        assert len(glob(res_folder+'*.json')) > 1
-        shutil.rmtree(folder + '/results/')
+#def test_run_extract_input_folder_with_titles():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder, "-t", "with-titles"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        res_folder = folder + '/results/json/2020/01_Janeiro/'
+#        assert os.path.isdir(res_folder)
+#        assert len(glob(res_folder+'*.json')) > 1
+#        shutil.rmtree(folder + '/results/')
 
 
-def test_run_extract_input_folder_one_act():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        os.remove(folder+"/aposentadoria.csv")
+#def test_run_extract_input_folder_one_act():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/aposentadoria.csv")
 
 
-def test_run_extract_input_folder_one_act_parallel():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder,
-               "-a", "aposentadoria", "-p", "4"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        os.remove(folder+"/aposentadoria.csv")
+#def test_run_extract_input_folder_one_act_parallel():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder,
+#               "-a", "aposentadoria", "-p", "4"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/aposentadoria.csv")
 
 
-def test_run_extract_input_folder_two_act():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria", "abono"]
+#def test_run_extract_input_folder_two_act():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder, "-a", "aposentadoria", "abono"]
 
-    with patch.object(sys, 'argv', targets):
-        run()
+#    with patch.object(sys, 'argv', targets):
+#        run()
 
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        assert os.path.isfile(folder+"/abono.csv")
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        assert os.path.isfile(folder+"/abono.csv")
 
-        os.remove(folder+"/aposentadoria.csv")
-        os.remove(folder+"/abono.csv")
-
-
-def test_run_extract_input_folder_two_act_parallel():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder,
-               "-a", "aposentadoria", "abono", "-p", "4"]
-
-    with patch.object(sys, 'argv', targets):
-        run()
-
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        assert os.path.isfile(folder+"/abono.csv")
-
-        os.remove(folder+"/aposentadoria.csv")
-        os.remove(folder+"/abono.csv")
+#        os.remove(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/abono.csv")
 
 
-def test_run_extract_input_folder_all_act():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
-    targets = ["cmd", "extract", "-i", folder, "-a"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
+#def test_run_extract_input_folder_two_act_parallel():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder,
+#               "-a", "aposentadoria", "abono", "-p", "4"]
+
+#    with patch.object(sys, 'argv', targets):
+#        run()
+
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        assert os.path.isfile(folder+"/abono.csv")
+
+#        os.remove(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/abono.csv")
+
+
+#def test_run_extract_input_folder_all_act():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
+#    targets = ["cmd", "extract", "-i", folder, "-a"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
     # shutil.rmtree(folder + '/results')
 
 
-def test_run_extract_input_folder_all_act_parallel():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
-    targets = ["cmd", "extract", "-i", folder, "-a", "-p", "4"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
-    shutil.rmtree(folder + '/results')
+#def test_run_extract_input_folder_all_act_parallel():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
+#    targets = ["cmd", "extract", "-i", folder, "-a", "-p", "4"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
+#    shutil.rmtree(folder + '/results')
 
 
-def test_run_extract_input_folder_one_act_back_end_ner():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder,
-               "-a", "aposentadoria", "-b", "ner"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        os.remove(folder+"/aposentadoria.csv")
+#def test_run_extract_input_folder_one_act_back_end_ner():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder,
+#               "-a", "aposentadoria", "-b", "ner"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/aposentadoria.csv")
 
 
-def test_run_extract_input_folder_one_act_back_end_ner_parallel():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
-    targets = ["cmd", "extract", "-i", folder,
-               "-a", "aposentadoria", "-b", "ner", "-p", "4"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        assert os.path.isfile(folder+"/aposentadoria.csv")
-        os.remove(folder+"/aposentadoria.csv")
+#def test_run_extract_input_folder_one_act_back_end_ner_parallel():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs"
+#    targets = ["cmd", "extract", "-i", folder,
+#               "-a", "aposentadoria", "-b", "ner", "-p", "4"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        assert os.path.isfile(folder+"/aposentadoria.csv")
+#        os.remove(folder+"/aposentadoria.csv")
 
 
-def test_run_extract_single_file_committee_classification():
-    folder = ""+os.path.dirname(__file__)+"/support/"
-    file = folder+"dodfminer_sf.pdf"
-    targets = ["cmd", "extract", "-s", file, "-a", "-c"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
+#def test_run_extract_single_file_committee_classification():
+#    folder = ""+os.path.dirname(__file__)+"/support/"
+#    file = folder+"dodfminer_sf.pdf"
+#    targets = ["cmd", "extract", "-s", file, "-a", "-c"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
 
 
-def test_run_extract_input_folder_committee_classification():
-    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
-    targets = ["cmd", "extract", "-i", folder, "-a", "-c"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        for act in act_choices:
-            assert os.path.isfile(folder+act+".csv")
-            os.remove(folder+act+".csv")
-    shutil.rmtree(folder + '/results')
+#def test_run_extract_input_folder_committee_classification():
+#    folder = ""+os.path.dirname(__file__)+"/support/dodf_pdfs/"
+#    targets = ["cmd", "extract", "-i", folder, "-a", "-c"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        for act in act_choices:
+#            assert os.path.isfile(folder+act+".csv")
+#            os.remove(folder+act+".csv")
+#    shutil.rmtree(folder + '/results')
 
 
-def test_run_extract_input_folder_xml():
-    folder = ""+os.path.dirname(__file__)+"/support/xml_extract"
-    targets = ["cmd", "extract", "-i", folder, "-x"]
-    with patch.object(sys, 'argv', targets):
-        run()
-        assert os.path.isfile(os.path.join(folder, '1_10.1.2020.xml'))
-        os.remove(folder+'/1_10.1.2020.xml')
+#def test_run_extract_input_folder_xml():
+#    folder = ""+os.path.dirname(__file__)+"/support/xml_extract"
+#    targets = ["cmd", "extract", "-i", folder, "-x"]
+#    with patch.object(sys, 'argv', targets):
+#        run()
+#        assert os.path.isfile(os.path.join(folder, '1_10.1.2020.xml'))
+#        os.remove(folder+'/1_10.1.2020.xml')
 
 # def test_run_extract_input_single_xml():
 #   file = ""+os.path.dirname(__file__)+"/support/xml_extract/DODF 001 02-01-2020 INTEGRA.pdf"

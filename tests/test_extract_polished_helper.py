@@ -64,72 +64,72 @@ def test_helper_extract_single(file_path):
     assert len(texts) > 0
 
 
-@clean_extra_files(FOLDER_PATH)
-def test_helper_extract_multiple_acts(folder_path, file_path):
-    extract_multiple_acts(folder_path, ["nomeacao"], "regex")
-    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
-    extract_multiple_acts(file_path(extension="pdf"), ["nomeacao"], "regex")
-    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+#@clean_extra_files(FOLDER_PATH)
+#def test_helper_extract_multiple_acts(folder_path, file_path):
+#    extract_multiple_acts(folder_path, ["nomeacao"], "regex")
+#    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+#    extract_multiple_acts(file_path(extension="pdf"), ["nomeacao"], "regex")
+#    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
 
-    assert len(multiple_files_df) > 0
-    assert len(single_file_df) > 0
-    assert len(multiple_files_df) > len(single_file_df)
-
-
-@clean_extra_files(FOLDER_PATH)
-def test_helper_extract_multiple_acts_parallel(folder_path, file_path):
-    extract_multiple_acts_parallel(folder_path, ["nomeacao"], "regex")
-    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
-    extract_multiple_acts_parallel(
-        file_path(extension="pdf"), ["nomeacao"], "regex")
-    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
-
-    assert len(multiple_files_df) > 0
-    assert len(single_file_df) > 0
-    assert len(multiple_files_df) > len(single_file_df)
+#    assert len(multiple_files_df) > 0
+#    assert len(single_file_df) > 0
+#    assert len(multiple_files_df) > len(single_file_df)
 
 
-@clean_extra_files(FOLDER_PATH)
-def test_helper_extract_multiple_acts_with_committee(folder_path, file_path):
-    extract_multiple_acts_with_committee(folder_path, ["nomeacao"], "regex")
-    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+#@clean_extra_files(FOLDER_PATH)
+#def test_helper_extract_multiple_acts_parallel(folder_path, file_path):
+#    extract_multiple_acts_parallel(folder_path, ["nomeacao"], "regex")
+#    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+#    extract_multiple_acts_parallel(
+#        file_path(extension="pdf"), ["nomeacao"], "regex")
+#    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
 
-    extract_multiple_acts_with_committee(
-        file_path(extension="pdf"), ["nomeacao"], "regex")
-    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
-
-    assert len(multiple_files_df) > 0
-    assert len(single_file_df) > 0
-    assert len(multiple_files_df) > len(single_file_df)
-
-
-@clean_extra_files(FOLDER_PATH)
-def test_helper_committee_classification(folder_path, file_path):
-    dataframe = pd.read_csv(f"{folder_path}/nomeacao_extraida.csv")
-    dataframe = dataframe.filter(['Tipo do Ato', 'text'], axis=1)
-    dataframe.columns = ['type', 'text']
-
-    committee_classification(dataframe, file_path(
-        extension="pdf"), ["nomeacao"], "regex")
-    output_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
-
-    assert len(output_df) == len(dataframe)
+#    assert len(multiple_files_df) > 0
+#    assert len(single_file_df) > 0
+#    assert len(multiple_files_df) > len(single_file_df)
 
 
-@clean_extra_files(FOLDER_PATH)
-def test_helper_build_act_txt():
-    directory = ""+os.path.dirname(__file__)+"/support/"
-    build_act_txt(["aposentadoria"], "crioutxt", save_path=directory)
-    assert "crioutxt.txt" in os.listdir(directory)
-    os.remove(os.path.join(directory, "crioutxt.txt"))
+#@clean_extra_files(FOLDER_PATH)
+#def test_helper_extract_multiple_acts_with_committee(folder_path, file_path):
+#    extract_multiple_acts_with_committee(folder_path, ["nomeacao"], "regex")
+#    multiple_files_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+
+#    extract_multiple_acts_with_committee(
+#        file_path(extension="pdf"), ["nomeacao"], "regex")
+#    single_file_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+
+#    assert len(multiple_files_df) > 0
+#    assert len(single_file_df) > 0
+#    assert len(multiple_files_df) > len(single_file_df)
+
+
+#@clean_extra_files(FOLDER_PATH)
+#def test_helper_committee_classification(folder_path, file_path):
+#    dataframe = pd.read_csv(f"{folder_path}/nomeacao_extraida.csv")
+#    dataframe = dataframe.filter(['Tipo do Ato', 'text'], axis=1)
+#    dataframe.columns = ['type', 'text']
+
+#    committee_classification(dataframe, file_path(
+#        extension="pdf"), ["nomeacao"], "regex")
+#    output_df = pd.read_csv(f"{folder_path}/nomeacao.csv")
+
+#    assert len(output_df) == len(dataframe)
+
+
+#@clean_extra_files(FOLDER_PATH)
+#def test_helper_build_act_txt():
+#    directory = ""+os.path.dirname(__file__)+"/support/"
+#    build_act_txt(["aposentadoria"], "crioutxt", save_path=directory)
+#    assert "crioutxt.txt" in os.listdir(directory)
+#    os.remove(os.path.join(directory, "crioutxt.txt"))
 
 # def test_helper_print_dataframe():
 #     df = print_dataframe(pd.DataFrame())
 #     assert isinstance(df, pd.io.formats.style.Styler)
 
 
-def test_helper_get_files_path(folder_path):
-    files = get_files_path(folder_path, "txt")
-    assert len(files) > 0
-    files = get_files_path(folder_path, "pdf")
-    assert len(files) > 0
+#def test_helper_get_files_path(folder_path):
+#    files = get_files_path(folder_path, "txt")
+#    assert len(files) > 0
+#    files = get_files_path(folder_path, "pdf")
+#    assert len(files) > 0

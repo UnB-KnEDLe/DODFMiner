@@ -5,6 +5,7 @@ extract information from a specialized act.
 """
 
 import re
+import os
 import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
@@ -186,3 +187,46 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             acts.append(self.add_standard_props(act))
 
         return acts
+
+    def _check_model_files(self, model_files, folder_name):
+        f_path = os.path.dirname(__file__)
+        if 'prop_models' not in os.listdir(f_path):
+            msg = 'model not downloaded'
+            raise Exception(msg)
+
+        if folder_name not in os.listdir(os.path.join(f_path, 'prop_models')):
+            msg = 'model not downloaded'
+            raise Exception(msg)
+
+        path_model_files = os.listdir(os.path.join(f_path, 'prop_models', folder_name))
+        for model_file in model_files:
+            if model_file not in path_model_files:
+                msg = model_file + ' file missing in model directory'
+                raise Exception(msg)
+
+    def _check_seg_model_files(self, model_files, folder_name):
+        f_path = os.path.dirname(__file__)
+        if 'seg_models' not in os.listdir(f_path):
+            msg = 'model not downloaded'
+            raise Exception(msg)
+
+        if folder_name not in os.listdir(os.path.join(f_path, 'seg_models')):
+            msg = 'model not downloaded'
+            raise Exception(msg)
+
+        path_model_files = os.listdir(os.path.join(f_path, 'seg_models', folder_name))
+        for model_file in model_files:
+            if model_file not in path_model_files:
+                msg = model_file + ' file missing in model directory'
+                raise Exception(msg)
+
+    def _check_embedding_files(self, embedding_files):
+        f_path = os.path.dirname(__file__)
+        if 'embeddings' not in os.listdir(f_path):
+            msg = 'embedding not downloaded'
+            raise Exception(msg)
+
+        for embedding_file in embedding_files:
+            if embedding_file not in os.listdir(os.path.join(f_path, 'embeddings')):
+                msg = embedding_file + ' embedding not downloaded'
+                raise Exception(msg)

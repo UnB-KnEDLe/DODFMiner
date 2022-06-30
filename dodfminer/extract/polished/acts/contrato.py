@@ -2,9 +2,15 @@
 
 import re
 import os
-import joblib
+import itertools
 import pandas as pd
+import torch
 
+from nltk.tokenize import word_tokenize
+from torch.nn.utils.rnn import pad_sequence
+
+from dodfminer.extract.polished.acts.models.process_data import load_pkl, get_word2idx, get_char2idx, IOBES_tags
+from dodfminer.extract.polished.acts.models.cnn_cnn_lstm import CNN_CNN_LSTM
 from dodfminer.extract.polished.acts.base import Atos
 
 
@@ -20,48 +26,161 @@ class Contratos(Atos):
         return re.IGNORECASE
 
     def _load_model(self):
+        self._check_model_files(['gold_extratos_contrato-cnn_cnn_lstm.pkl', 'tag2idx.pkl', 'word2idx.pkl', 'char2idx.pkl'], 'Contrato')
+        self._check_embedding_files(['emb_cbow_s100.pkl'])
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/contratos_lbfgs.pkl'
-        #f_path += '/models/contratos_l2sgd.pkl'
-        return joblib.load(f_path)
+        emb = load_pkl(os.path.join(f_path, 'embeddings', 'emb_cbow_s100.pkl'))
+        self.tag2idx = load_pkl(os.path.join(f_path, 'prop_models', self._name, 'tag2idx.pkl'))
+        self.char2idx = load_pkl(os.path.join(f_path, 'prop_models', self._name, 'char2idx.pkl'))
+        self.word2idx = load_pkl(os.path.join(f_path, 'prop_models', self._name, 'word2idx.pkl'))
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        model = CNN_CNN_LSTM(
+            char_vocab_size=len(self.char2idx),
+            pretrained_word_emb=emb,
+            word2idx = self.word2idx,
+            num_classes=len(self.tag2idx),
+            device=device
+        )
+
+        model = model.to(device)
+        model.load_state_dict(torch.load(os.path.join(f_path, 'prop_models', self._name, 'gold_extratos_contrato-cnn_cnn_lstm.pkl')))
+
+        return model
+
+    def _process_data(self, text):
+        sentence = word_tokenize(text)
+        words = []
+
+        if sentence:
+            sentence = list(itertools.chain(['<START>'], sentence, ['<END>']))
+            words = [list(itertools.chain(['<START>'], list(word), ['<END>'])) for word in sentence]
+
+        sentence_ids = get_word2idx(sentence, self.word2idx)
+        words_ids = get_char2idx(words, self.char2idx)
+
+        return sentence, sentence_ids, words_ids
+
+    def _get_features(self, sentence):
+        words = sentence[1]
+        sentence = sentence[0]
+
+        sentence = torch.as_tensor(sentence)
+        sentence = torch.unsqueeze(sentence, 0)
+
+        words = pad_sequence([torch.as_tensor(w) for w in words], batch_first = True, padding_value=0)
+        words = torch.unsqueeze(words, 0)
+
+        mask = sentence != -1
+
+        return sentence, words, mask
+
+    def _predict_single(self, device, sentence, words, mask):
+        sentence = sentence.to(device)
+        words = words.to(device)
+        mask = mask.to(device)
+
+        pred, _ = self._model.decode(sentence, words, mask)
+        iob_tags = IOBES_tags(pred.tolist(), self.tag2idx)
+
+        return iob_tags[0]
+
+    def _predictions_dict(self, sentence, prediction):
+        sentence = sentence[1:-1]
+        prediction = prediction[1:-1]
+
+        tags_predicted = [w.split("-")[-1] for w in prediction]
+        tags_positions = {t: [] for t in set(tags_predicted)}
+
+        for i, tag_predicted in enumerate(tags_predicted):
+            tags_positions[tag_predicted].append(sentence[i])
+
+        tags_positions = {t: " ".join(tags_positions[t]) for t in tags_positions.keys()}
+        tags_positions.pop("O")
+
+        return tags_positions
+
+    def _prediction(self, act):
+        sentence, sentence_ids, words_ids = self._process_data(act)
+        sentence_feats, words_feats, mask_feats = self._get_features([sentence_ids, words_ids])
+
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        predicted = self._predict_single(device, sentence_feats, words_feats, mask_feats)
+
+        return self._predictions_dict(sentence, predicted)
 
     def _act_name(self):
         return "Contrato"
 
     def get_expected_colunms(self) -> list:
+        if self._backend == "regex":
+            return [
+                "Tipo do Ato",
+                "CONTRATO",
+                "PROCESSO",
+                "PARTES",
+                "OBJETO",
+                "VALOR",
+                "LEI_ORC.",
+                "UNI_ORC.",
+                "PROG_TRAB.",
+                "NAT_DESP.",
+                "NOTA_EMP.",
+                "DATA_ASS.",
+                "SIGNATARIOS",
+                "VIGENCIA"
+            ]
         return [
-            "CONTRATO",
-            "PROCESSO",
-            "PARTES",
-            "OBJETO",
-            "VALOR",
-            "LEI_ORC.",
-            "UNI_ORC.",
-            "PROG_TRAB.",
-            "NAT_DESP.",
-            "NOTA_EMP.",
-            "DATA_ASS.",
-            "SIGNATARIOS",
-            "VIGENCIA"
-        ]
+            "Num_licitacao",
+            "Obj_ajuste",
+            "Contratada",
+            "Contratante",
+            "Processo",
+            "Num_ajuste",
+            "Vigencia",
+            "Data_assinatura",
+            "Pt",
+            "Valor",
+            "Nd",
+            "Codigo_uo",
+            "Ne"
+            ]
 
     def _props_names(self):
+        if self._backend == "regex":
+            return [
+                "Tipo do Ato",
+                "CONTRATO",
+                "PROCESSO",
+                "PARTES",
+                "OBJETO",
+                "VALOR",
+                "LEI_ORC.",
+                "UNI_ORC.",
+                "PROG_TRAB.",
+                "NAT_DESP.",
+                "NOTA_EMP.",
+                "DATA_ASS.",
+                "SIGNATARIOS",
+                "VIGENCIA"
+            ]
         return [
-            "Tipo do Ato",
-            "CONTRATO",
-            "PROCESSO",
-            "PARTES",
-            "OBJETO",
-            "VALOR",
-            "LEI_ORC.",
-            "UNI_ORC.",
-            "PROG_TRAB.",
-            "NAT_DESP.",
-            "NOTA_EMP.",
-            "DATA_ASS.",
-            "SIGNATARIOS",
-            "VIGENCIA"
-        ]
+            "Num_licitacao",
+            "Obj_ajuste",
+            "Contratada",
+            "Contratante",
+            "Processo",
+            "Num_ajuste",
+            "Vigencia",
+            "Data_assinatura",
+            "Pt",
+            "Valor",
+            "Nd",
+            "Codigo_uo",
+            "Ne"
+            ]
 
     def _rule_for_inst(self):
         start = r"()"

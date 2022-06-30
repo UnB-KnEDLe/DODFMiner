@@ -18,13 +18,17 @@ class Retirements(Atos):
         return re.IGNORECASE
 
     def _load_model(self):
+        self._check_model_files(['aposentadoria.pkl'], 'Aposentadoria')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/aposentadoria.pkl'
+        f_path = os.path.join(f_path, 'prop_models', self._name, 'aposentadoria.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['aposentadoria.pkl'], 'Aposentadoria')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/aposentadoria.pkl'
+        f_path = os.path.join(f_path, 'seg_models', self._name, 'aposentadoria.pkl')
         return joblib.load(f_path)
 
     def _act_name(self):

@@ -18,13 +18,17 @@ class Exoneracao(Atos):
         return "Exoneração"
 
     def _load_model(self):
+        self._check_model_files(['comissionados_exo.pkl'], 'Exoneracao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/comissionados_exo.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Exoneracao', 'comissionados_exo.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['comissionados_exo.pkl'], 'Exoneracao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/comissionados_exo.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Exoneracao', 'comissionados_exo.pkl')
         return joblib.load(f_path)
 
     def get_expected_colunms(self) -> list:
@@ -89,13 +93,17 @@ class ExoneracaoEfetivos(Atos):
         return "Exoneração Efetivos"
 
     def _load_model(self):
+        self._check_model_files(['efetivos_exo.pkl'], 'Exoneracao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/efetivos_exo.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Exoneracao', 'efetivos_exo.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['efetivos_exo.pkl'], 'Exoneracao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/efetivos_exo.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Exoneracao', 'efetivos_exo.pkl')
         return joblib.load(f_path)
 
     def _find_instances(self):

@@ -21,13 +21,17 @@ class Revertions(Atos):
         return "Reversão"
 
     def _load_model(self):
+        self._check_model_files(['reversao.pkl'], 'Reversoes')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/reversao.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Reversoes', 'reversao.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['reversao.pkl'], 'Reversoes')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/reversao.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Reversoes', 'reversao.pkl')
         return joblib.load(f_path)
 
     def get_expected_colunms(self) -> list:

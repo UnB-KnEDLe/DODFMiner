@@ -21,13 +21,17 @@ class AbonoPermanencia(Atos):
         return "Abono de Permanência"
 
     def _load_model(self):
+        self._check_model_files(['abono.pkl'], 'Abono')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/abono.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Abono', 'abono.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['abono.pkl'], 'Abono')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/abono.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Abono', 'abono.pkl')
         return joblib.load(f_path)
 
     def get_expected_colunms(self) -> list:

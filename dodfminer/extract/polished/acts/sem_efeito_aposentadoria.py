@@ -90,13 +90,17 @@ class SemEfeitoAposentadoria(Atos):
         super().__init__(file, backend)
 
     def _load_model(self):
+        self._check_model_files(['sem_efeito_apo.pkl'], 'SemEfeitoAposentadoria')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/sem_efeito_apo.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'SemEfeitoAposentadoria', 'sem_efeito_apo.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['sem_efeito_apo.pkl'], 'SemEfeitoAposentadoria')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/sem_efeito_apo.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'SemEfeitoAposentadoria', 'sem_efeito_apo.pkl')
         return joblib.load(f_path)
 
     def _act_name(self):

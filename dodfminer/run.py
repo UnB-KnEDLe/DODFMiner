@@ -40,7 +40,7 @@ class Miner():
     def download(self):
         """Download PDFs with parameters from CLI."""
         downloader = Downloader(save_path=self.args.save_path)
-        downloader.pull(self.args.start_date, self.args.end_date)
+        downloader.pull(self.args.type_downloader, self.args.start_date, self.args.end_date, self.args.act_id, self.args.model_type, self.args.embedding_id)
 
     def extract_content(self):
         """Extract Content from PDFs."""

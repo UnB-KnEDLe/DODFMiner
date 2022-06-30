@@ -1,13 +1,16 @@
 # coding=utf-8
 
-"""Download DODFs from the Buriti Website and save on proper directory.
+"""Download DODFs from the Buriti Website or models and pre-trained
+   embeddings from the KnEDLe serve and save on proper directory.
 
-Download monthly pdfs of DODFs.
+Download monthly pdfs of DODFs or models and pre-trained embeddings.
 
 Usage example::
 
     downloader = Downloader()
-    downloader.pull(start_date, end_date)
+    downloader.pull(type_downloader, start_date, end_date)
+    downloader.pull(type_downloader, act_id, model_type)
+    downloader.pull(type_downloader, embedding_id)
 
 """
 
@@ -19,12 +22,32 @@ import requests
 
 from dateutil.relativedelta import relativedelta
 from dodfminer.downloader.helper import check_date, get_downloads
-
+from dodfminer.downloader.embeddings.base import Embeddings
+from dodfminer.downloader.acts.abono import AbonoPermanencia
+from dodfminer.downloader.acts.cessoes import Cessoes
+from dodfminer.downloader.acts.contrato import Contratos
+from dodfminer.downloader.acts.exoneracao import Exoneracao
+from dodfminer.downloader.acts.nomeacao import Nomeacao
+from dodfminer.downloader.acts.aposentadoria import Retirements
+from dodfminer.downloader.acts.reversoes import Revertions
+from dodfminer.downloader.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
+from dodfminer.downloader.acts.substituicao import Substituicao
 
 MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
                  "05_Maio", "06_Junho", "07_Julho", "08_Agosto",
                  "09_Setembro", "10_Outubro", "11_Novembro", "12_Dezembro"]
 
+_acts_ids = {
+    "Abono": AbonoPermanencia,
+    "Aposentadoria": Retirements,
+    "Cessoes": Cessoes,
+    "Contrato": Contratos,
+    "Exoneracao": Exoneracao,
+    "Nomeacao": Nomeacao,
+    "Reversoes": Revertions,
+    "SemEfeitoAposentadoria": SemEfeitoAposentadoria,
+    "Substituicao": Substituicao
+}
 
 class Downloader:
     """Responsible for the download of the DODFs Pdfs.
@@ -42,6 +65,15 @@ class Downloader:
         self._prog_bar = tqdm.tqdm()
         self._create_single_folder(os.path.join(save_path, 'dodfs'))
         self._download_path = os.path.join(save_path, 'dodfs')
+
+        f_path = os.path.dirname(__file__)
+        self._model_path_prop = os.path.join(f_path, '../extract/polished/acts/prop_models')
+        self._model_path_seg = os.path.join(f_path, '../extract/polished/acts/seg_models')
+        self._create_single_folder(self._model_path_prop)
+        self._create_single_folder(self._model_path_seg)
+
+        self._embedding_path = os.path.join(f_path, '../extract/polished/acts/embeddings')
+        self._create_single_folder(self._embedding_path)
 
     @classmethod
     def _string_to_date(cls, date):
@@ -111,7 +143,7 @@ class Downloader:
                   f"check if the url is online via browser: {url}"
         self._log(message)
 
-    def _file_exist(self, path):
+    def _file_exist(self, path, log=True):
         """Check if a file exists.
 
         Prevents redownloads.
@@ -124,7 +156,8 @@ class Downloader:
 
         """
         if os.path.exists(path):
-            self._log(os.path.basename(path) + " file already exist")
+            if log:
+                self._log(os.path.basename(path) + " file already exist")
             return True
 
         return False
@@ -175,7 +208,7 @@ class Downloader:
 
         return month_path
 
-    def pull(self, start_date, end_date):
+    def _pull_dodfs(self, start_date, end_date):
         """Make the download of the DODFs pdfs.
 
         All dodfs are downloaded from start_date to end_date inclusively.
@@ -221,7 +254,59 @@ class Downloader:
             self._get_dodfs(get_downloads(year_, month_), month_path)
 
         self._prog_bar.update(1)
+    
+    def _pull_models(self, act_id, model_type):
+        """Make the download of the models.
 
+        All model files are downloaded and saved inside the polished
+        extractor folder.
+
+        Args:
+            act_id (str): The ID of the act whose models must be downloaded.
+            model_type (str): The model type to be downloaded.
+
+        Note:
+            The name or the path of the save folder are hard coded and can't
+            be changed due to how the models are loaded by the extractor.
+
+        """
+        self._download_model(act_id, model_type)
+
+    def _pull_embeddings(self, embedding_id):
+        """Make the download of the pre-trained-embeddings.
+
+        All pre-trained embedding files are downloaded and saved
+        inside the polished extractor folder.
+
+        Args:
+            embedding_id (str): The id of the pre-trained embedding to be downloaded.
+
+        Note:
+            The name or the path of the save folder are hard coded and can't
+            be changed due to how the models are loaded by the extractor.
+
+        """
+        self._download_embedding(embedding_id)
+
+    def pull(self, type_downloader="dodfs", start_date="01/19", end_date="01/19", act_id="all", model_type="prop", embedding_id="all"):
+        """Make the download of the data (DODFs pdfs, models or
+           pre-trained-embeddings).
+
+        Args:
+            type_downloader (str): The type of data to be downloaded.
+            start_date (str): The start date in format mm/yyyy.
+            end_date (str): The start date in format mm/yyyy.
+            act_id (str): The ID of the act whose models must be downloaded.
+            model_type (str): The model type to be downloaded.
+            embedding_id (str): The id of the pre-trained embedding to be downloaded.
+
+        """
+        if type_downloader == "dodfs":
+            self._pull_dodfs(start_date, end_date)
+        elif type_downloader == "models":
+            self._pull_models(act_id, model_type)
+        elif type_downloader == "embeddings":
+            self._pull_embeddings(embedding_id)
 
     def _get_dodfs(self, _links_for_each_dodf, month_path):
         """Create folder and stores the DODFs pdfs.
@@ -267,6 +352,54 @@ class Downloader:
         """
         self._prog_bar.write("[DOWNLOADER] " + str(message))
 
+    def _download_model(self, act_id, model_type):
+        """Create folder and stores the models.
+
+        Args:
+            act_id (str): The ID of the act whose models must be downloaded.
+            model_type (str): The model type to be downloaded.
+
+        """
+        if act_id == "all":
+            self._download_all_models()
+        else:
+            if model_type == 'prop':
+                act_model_path = os.path.join(self._model_path_prop, act_id)
+            elif model_type == 'seg':
+                act_model_path = os.path.join(self._model_path_seg, act_id)
+
+            self._create_single_folder(act_model_path)
+
+            self._log('downloading model')
+            _acts_ids[act_id](act_model_path, model_type)
+            self._log(act_id + ' model downloaded')
+
+    def _download_embedding(self, embedding_id):
+        """Create folder and stores the pre-trained embedding files.
+
+        Args:
+            embedding_id (str): The id of the pre-trained embedding to be downloaded.
+
+        """
+        if embedding_id == "all":
+            self._download_all_embeddings()
+        else:
+            self._log('downloading pre-trained embedding')
+            Embeddings(self._embedding_path, embedding_id)
+            self._log(embedding_id + ' embedding downloaded')
+
+    def _download_all_models(self):
+        """Download all available models (of all possible types)."""
+        for ato_id in _acts_ids:
+            for model_type in ['prop', 'seg']:
+                self._download_model(ato_id, model_type)
+
+    def _download_all_embeddings(self):
+        """Download all available pre-trained embeddings."""
+        available_embeddings = Embeddings.get_ids()
+
+        for emb in available_embeddings:
+            self._download_embedding(emb)
 
 if __name__ == '__main__':
     downloader = Downloader(save_path='./')

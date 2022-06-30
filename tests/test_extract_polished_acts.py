@@ -80,9 +80,9 @@ def test_act_contrato_consistence_rule(act_cont):
     assert len(act_cont._props_names())-1 == len(act_cont._prop_rules())
 
 
-def test_act_contrato_ner():
-    act = Contratos(file, 'ner')
-    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
+#def test_act_contrato_ner():
+#    act = Contratos(file, 'ner')
+#    assert isinstance(act._load_model(), sklearn_crfsuite.estimator.CRF)
 
 #
 #

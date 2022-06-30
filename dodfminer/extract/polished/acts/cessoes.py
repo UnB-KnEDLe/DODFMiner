@@ -56,13 +56,17 @@ class Cessoes(Atos):
         super().__init__(file, backend)
 
     def _load_model(self):
+        self._check_model_files(['cessao.pkl'], 'Cessoes')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/cessao.pkl'
+        f_path = os.path.join(f_path, 'prop_models', self._name, 'cessao.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['cessao.pkl'], 'Cessoes')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/cessao.pkl'
+        f_path = os.path.join(f_path, 'seg_models', self._name, 'cessao.pkl')
         return joblib.load(f_path)
 
     def _act_name(self):

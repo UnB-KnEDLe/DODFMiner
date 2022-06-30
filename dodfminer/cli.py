@@ -29,10 +29,18 @@ class CLI():
         parser (:obj:`ArgumentParser`): An ArgumentParser object.
         subparsers: Adds subparser to the parser, each one is like a
                     standalone aplication.
+        type_downloader (str): Type of data to download using the Downloader. Default
+                              to download DODFs.
         def_start_date (str): Start date to download DODFS. Default start date
                               to download 01/19.
         def_end_date (str): End date to download DODFS. Default end date
                             to download 01/19.
+        act_id (str): Act type whose models the Downloader must download. Default
+                            is to download all types.
+        model_type (str): Model type to download, either segmentation models or
+                            entities models. Default is entities models.
+        embedding_id (str): Pre-trained embedding ID to download. Default is to
+                            download all pre-trained embeddings.
         pure_text (bool): Enable extraction in pure text mode.
                           Defaults to False.
         block (bool): Enable extraction in bloc mode.
@@ -56,6 +64,10 @@ class CLI():
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.save_path = './'
+        self.type_downloader = 'dodfs'
+        self.act_id = 'all'
+        self.model_type = 'prop'
+        self.embedding_id = 'all'
         self.download_parser = None
         self.extract_content_parser = None
 
@@ -78,6 +90,11 @@ class CLI():
         """Create parser for download configs."""
         self.download_parser = self.subparsers.add_parser("downloader")
 
+        help_text = 'Input the type of object to download: dodfs, models or embeddings.'
+        self.download_parser.add_argument('-td', '--type_downloader', dest='type_downloader',
+                                          default=self.type_downloader, type=str,
+                                          help=help_text)
+
         help_text = 'Folder to output the download DODFs'
         self.download_parser.add_argument('-sp', '--save_path', dest='save_path',
                                           default=self.save_path, type=str,
@@ -91,6 +108,21 @@ class CLI():
         help_text = 'Input the date in either mm/yyyy or mm-yyyy.'
         self.download_parser.add_argument('-ed', '--end_date', dest='end_date',
                                           default=self.def_end_date, type=str,
+                                          help=help_text)
+
+        help_text = 'Input the id of the act whose models you want to download.'
+        self.download_parser.add_argument('-ai', '--act_id', dest='act_id',
+                                          default=self.act_id, type=str,
+                                          help=help_text)
+
+        help_text = 'Input the type of the model you want do download: prop or seg.'
+        self.download_parser.add_argument('-mt', '--model_type', dest='model_type',
+                                          default=self.model_type, type=str,
+                                          help=help_text)
+
+        help_text = 'Input the id of the pre-trained embedding you want to download.'
+        self.download_parser.add_argument('-ei', '--embedding_id', dest='embedding_id',
+                                          default=self.embedding_id, type=str,
                                           help=help_text)
 
     def _extract_content_parser(self):

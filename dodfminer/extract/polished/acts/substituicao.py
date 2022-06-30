@@ -23,13 +23,17 @@ class Substituicao(Atos):
         return re.IGNORECASE
 
     def _load_model(self):
+        self._check_model_files(['substituicao.pkl'], 'Substituicao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/substituicao.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Substituicao', 'substituicao.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['substituicao.pkl'], 'Substituicao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/substituicao.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Substituicao', 'substituicao.pkl')
         return joblib.load(f_path)
 
     def _act_name(self):

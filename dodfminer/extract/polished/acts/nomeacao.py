@@ -17,13 +17,17 @@ class NomeacaoComissionados(Atos):
         return "Nomeação"
 
     def _load_model(self):
+        self._check_model_files(['comissionados_nome.pkl'], 'Nomeacao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/comissionados_nome.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Nomeacao', 'comissionados_nome.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['comissionados_nome.pkl'], 'Nomeacao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/comissionados_nome.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Nomeacao', 'comissionados_nome.pkl')
         return joblib.load(f_path)
 
     def get_expected_colunms(self) -> list:
@@ -89,13 +93,17 @@ class NomeacaoEfetivos(Atos):
         return "Nomeação de Efetivos"
 
     def _load_model(self):
+        self._check_model_files(['efetivos_nome.pkl'], 'Nomeacao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/models/efetivos_nome.pkl'
+        f_path = os.path.join(f_path, 'prop_models', 'Nomeacao', 'efetivos_nome.pkl')
         return joblib.load(f_path)
 
     def _load_seg_model(self):
+        self._check_seg_model_files(['efetivos_nome.pkl'], 'Nomeacao')
+
         f_path = os.path.dirname(__file__)
-        f_path += '/seg_models/efetivos_nome.pkl'
+        f_path = os.path.join(f_path, 'seg_models', 'Nomeacao', 'efetivos_nome.pkl')
         return joblib.load(f_path)
 
     def get_expected_colunms(self) -> list:
