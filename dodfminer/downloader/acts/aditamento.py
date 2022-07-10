@@ -15,7 +15,7 @@ class Aditamentos(Atos):
     
     def _get_files(self):
         if self._model_type == 'prop':
-            return ['aditamento-cnn_bilstm_crf.pkl', 'tag2idx.pkl', 'word2idx.pkl', 'char2idx.pkl']
+            return ['aditamento-cnn_bilstm_crf.pkl', 'aditamento-tag2idx.pkl', 'aditamento-word2idx.pkl', 'aditamento-char2idx.pkl']
         elif self._model_type == 'seg':
             raise NotImplementedError
 

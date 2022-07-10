@@ -45,7 +45,7 @@ class Aditamentos(Atos):
         )
 
         model = model.to(device)
-        model.load_state_dict(torch.load(os.path.join(f_path, 'models', self._name, 'gold_aditamento_contratual-cnn_bilstm_crf.pkl')))
+        model.load_state_dict(torch.load(os.path.join(f_path, 'prop_models', self._name, 'aditamento-cnn_bilstm_crf.pkl')))
 
         return model
 
