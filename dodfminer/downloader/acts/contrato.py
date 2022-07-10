@@ -21,6 +21,6 @@ class Contratos(Atos):
 
     def _get_dataset_path(self):
         if self._model_type == 'prop':
-            return 'http://164.41.76.30/models/contratos/v1/'
+            return 'http://164.41.76.30/models/contratos/v1/extrato/'
         elif self._model_type == 'seg':
             return 'http://164.41.76.30/models/atos_pessoal/seg_models/v1/'

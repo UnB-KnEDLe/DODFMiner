@@ -1,11 +1,9 @@
-"""Base class for an Act model.
+"""Base class for a Pre-Trained Embedding.
 
-This module contains the Atos class, which have all that is necessary to
-extract information from a specialized act.
+This module contains the Embeddings class, which have all that is necessary to
+download files of an available pre-trained embedding.
 """
 
-import re
-import pandas as pd
 import os
 import requests
 
@@ -42,49 +40,40 @@ class Embeddings:  # pylint: disable=too-many-instance-attributes
     def __init__(self, path, embedding_id):
         super().__init__()
         self._embedding_path = path
-        self._base_url = "http://164.41.76.30/models/contratos/v1/"
+        self._base_url = "http://164.41.76.30/models/contratos/v1/extrato/"
         self._download_embedding(embedding_id)
 
     def get_ids():
-        """Name of the act.
+        """IDs of the available embeddings.
 
-        Must return a single string representing the act name
-
-        Raises:
-            NotImplementedError: Child class needs to overwrite this method.
+        Returns:
+            List of all available embeddings IDs.
 
         """
+
         return list(_embeddings_ids.keys())
     
     def get_filename(embedding_id):
+        """Get the embedding file name
+        
+        Returns:
+            Pre-trained embedding file name.
+
+        """
+
         return _embeddings_ids[embedding_id]
 
     def _download_embedding(self, embedding_id):
-        """Name of the act.
+        """Download selected embedding"""
 
-        Must return a single string representing the act name
-
-        Raises:
-            NotImplementedError: Child class needs to overwrite this method.
-
-        """
         embedding_path = _embeddings_ids[embedding_id]
         url = self._base_url + embedding_path
         r = requests.get(url)
         open(os.path.join(self._embedding_path, embedding_path), 'wb').write(r.content)
 
-    def _act_name(self):
-        """Name of the act.
-
-        Must return a single string representing the act name
-
-        Raises:
-            NotImplementedError: Child class needs to overwrite this method.
-
-        """
-        raise NotImplementedError
-
     def _download_data(self):
+        """Download and save the embedding files"""
+
         for file in self._files:
             url = self._dataset_path + file
             r = requests.get(url)
