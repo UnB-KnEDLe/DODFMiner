@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 from dodfminer.downloader.helper import check_date, get_downloads
 from dodfminer.downloader.embeddings.base import Embeddings
 from dodfminer.downloader.acts.abono import AbonoPermanencia
+from dodfminer.downloader.acts.aditamento import Aditamentos
 from dodfminer.downloader.acts.cessoes import Cessoes
 from dodfminer.downloader.acts.contrato import Contratos
 from dodfminer.downloader.acts.exoneracao import Exoneracao
@@ -39,6 +40,7 @@ MONTHS_STRING = ["", "01_Janeiro", "02_Fevereiro", "03_Março", "04_Abril",
 
 _acts_ids = {
     "Abono": AbonoPermanencia,
+    "Aditamento": Aditamentos,
     "Aposentadoria": Retirements,
     "Cessoes": Cessoes,
     "Contrato": Contratos,
