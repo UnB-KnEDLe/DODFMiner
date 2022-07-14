@@ -264,7 +264,6 @@ class DFA: # pylint: disable=too-few-public-methods
                     if i == len(txt_string):
                         break
                     if re.match(regex_s, txt_string[i]) and ('xxbob' in txt_string[i-1] or('—' in txt_string[i-1] and 'xxbob' in txt_string[i-2])):
-                        i -= 2
                         break
                     else:
                         licitacao_text[-1] += '\n' + txt_string[i]
@@ -288,7 +287,6 @@ class DFA: # pylint: disable=too-few-public-methods
                     if i == len(txt_string):
                         break
                     if re.match(regex_s, txt_string[i]) and ('xxbob' in txt_string[i-1] or('—' in txt_string[i-1] and 'xxbob' in txt_string[i-2])):
-                        i -= 2
                         break
                     else:
                         licitacoes_text[-1] += '\n' + txt_string[i]
