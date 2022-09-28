@@ -27,7 +27,7 @@ from dodfminer.extract.polished.acts.contrato import Contratos
 from DODFMiner.dodfminer.extract.polished.acts.aditamento import Aditamento
 from DODFMiner.dodfminer.extract.polished.acts.licitacao import Licitacao
 from DODFMiner.dodfminer.extract.polished.acts.suspensao import Suspensao
-from DODFMiner.dodfminer.extract.polished.anulacao_revogacao import AnulacaoRevogacao
+from DODFMiner.dodfminer.extract.polished.acts.anulacao_revogacao import AnulacaoRevogacao
 from dodfminer.extract.polished.acts.contrato2 import Contratos2
 from dodfminer.extract.polished.create_xml import XMLFy
 
