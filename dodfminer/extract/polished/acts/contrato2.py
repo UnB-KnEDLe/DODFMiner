@@ -6,36 +6,32 @@ import nltk
 from nltk.tokenize import word_tokenize
 nltk.download('punkt')
 
-from dodfminer.extract.polished.acts.base import Atos
-
-class Contratos2(Atos):
+class Contratos2():
 
     def __init__(self, file, backend):
+        self.filename = file
         self.file = file
         self.backend = backend
         self.model = None
-        self.df = {'texto': [], 'IOB': []}
+        self.texts = []
+        self.preds = []
+        self.df = []
         self.flow()
-
 
     def flow(self):
         self.load()
         self.pre_process()
         self.ner_extraction()
         self.post_process()
-        return self.df
-    
     
     def load(self):
-        self.model = joblib.load('./models/contrato_convenio.pkl')
+        self.model = joblib.load('/content/contrato_convenio.pkl')
         if self.file[-5:] == '.json':
             with open(self.file, 'r') as f:
                 self.file = json.load(f)
             self.file = self.segment(self.file)
         else:
             pass
-        return
-
 
     def segment(self, file):
         atos_contrato_convenio = []
@@ -55,13 +51,10 @@ class Contratos2(Atos):
 
         return atos_contrato_convenio
 
-
     def pre_process(self):
-        self.df['texto'] = self.file
+        self.texts = self.file
         self.file = [word_tokenize(x) for x in self.file]
         self.file = [self.get_features(x) for x in self.file]
-        return
-        
 
     def get_features(self, sentence):
         
@@ -92,11 +85,58 @@ class Contratos2(Atos):
 
         return sent_features
 
-
-    def ner_extration(self):
+    #corrigir palavra extraction
+    def ner_extraction(self):
         for t in self.file:
-            self.df['IOB'].append(self.model.predict(t))
-
+          pred = self.model.predict([t])
+          pred = pred[0]
+          self.preds.append(pred)
 
     def post_process(self):
+
+        for IOB, text in zip(self.preds, self.texts):
+
+            ent_dict = {
+              'ato': '',
+              'dodf': '',
+              'treated_text': '', 
+              'IOB': ''
+            } 
+
+            ent_dict['ato'] = 'CONTRATO_CONVENIO'
+            ent_dict['dodf'] = self.filename
+            ent_dict['treated_text'] = text
+            ent_dict['IOB'] = IOB
+
+            entities = []
+
+            text_split = word_tokenize(text)
+
+            ent_concat = ('', '')
+
+            for ent, word in zip(IOB, text_split):
+              if ent[0] == 'B':
+                ent_concat = (ent[2:len(ent)], word)
+              elif ent[0] == 'I':
+                ent_concat = (ent_concat[0], ent_concat[1] + ' ' + word)
+              elif ent[0] == 'O':
+                if ent_concat[1] != '':
+                  entities.append(ent_concat)
+                  ent_concat = ('', '')
+
+            for tup in entities:
+
+              if tup[0] not in ent_dict:
+                ent_dict[tup[0]] = tup[1]
+              elif type(ent_dict[tup[0]]) != list:
+                aux = []
+                aux.append(ent_dict[tup[0]])
+                aux.append(tup[1])
+                ent_dict[tup[0]] = aux
+              else:
+                ent_dict[tup[0]].append(tup[1])
+
+            self.df.append(ent_dict)
+
         self.df = pd.DataFrame(self.df)
+        self.df.to_csv('result.csv',na_rep='NaN')
