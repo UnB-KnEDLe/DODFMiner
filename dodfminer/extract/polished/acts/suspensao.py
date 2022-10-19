@@ -6,7 +6,7 @@ import nltk
 from nltk.tokenize import word_tokenize
 nltk.download('punkt')
 
-class Licitacao():
+class Suspensao():
 
     def __init__(self, file, backend):
         self.backend = backend
