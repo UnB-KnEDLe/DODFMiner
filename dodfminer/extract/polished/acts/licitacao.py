@@ -1,149 +1,170 @@
+import warnings
+warnings.filterwarnings('ignore')
+
+import sklearn_crfsuite
 import pandas as pd
-import json
-import joblib
-import re
+import numpy as np
+import scipy.stats
+import sklearn
 import nltk
+import joblib
+import json
+import re
+import os
+
+from sklearn_crfsuite.metrics import flat_classification_report, flat_f1_score
+from sklearn.metrics import classification_report, make_scorer
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize
+from sklearn_crfsuite import scorers
+
 nltk.download('punkt')
 
+class CRF_Model_Licitacao():
+  def __init__(self):
+    self.crf = sklearn_crfsuite.CRF(
+      algorithm = 'lbfgs',
+      c1=0.071,
+      c2=0.170,
+      max_iterations=100,
+      all_possible_transitions=True
+    )
+
+  def get_features(self, sentence):
+        sent_features = []
+        for i in range(len(sentence)):
+            word_feat = {
+                # Palavra atual
+                'word': sentence[i].lower(),
+                'capital_letter': sentence[i][0].isupper(),
+                'all_capital': sentence[i].isupper(),
+                'isdigit': sentence[i].isdigit(),
+                # Uma palavra antes
+                'word_before': '' if i == 0 else sentence[i-1].lower(),
+                'word_before_isdigit': '' if i == 0 else sentence[i-1].isdigit(),
+                'word_before_isupper': '' if i == 0 else sentence[i-1].isupper(),
+                'word_before_istitle': '' if i == 0 else sentence[i-1].istitle(),
+                # Uma palavra depois
+                'word_after': '' if i+1 >= len(sentence) else sentence[i+1].lower(),
+                'word_after_isdigit': '' if i+1 >= len(sentence) else sentence[i+1].isdigit(),
+                'word_after_isupper': '' if i+1 >= len(sentence) else sentence[i+1].isupper(),
+                'word_after_istitle': '' if i+1 >= len(sentence) else sentence[i+1].istitle(),
+
+                'BOS': i == 0,
+                'EOS': i == len(sentence)-1
+            }
+            sent_features.append(word_feat)
+        return sent_features
+      
+  def predict(self, sentence):
+    # word_tokenize
+    text = word_tokenize(sentence)
+    # get_features
+    sent_features = self.get_features(text)
+    # crf precisa de um input em formato de lista mesmo que contenha só um elemento
+    # e também retorna a predição em formato de lista
+    # por isso ([sent_features])[0], pois faremos a predição de um ato por vez
+    return self.crf.predict([sent_features])[0]
+
+
 class Licitacao():
+  def __init__(self, file, backend):
+    self.backend = backend
+    self.model = None
+    self.filename = file
+    self.file = None
+    self.atos_encontrados = []
+    self.predicoes = []
+    self.df = []
+    # Inicializar fluxo
+    self.flow()
 
-    def __init__(self, file, backend):
-        self.backend = backend
-        self.model = None
-
-        self.filename = file
-        self.file = None
-        
-        self.atos_encontrados = []
-        self.predicoes = []
-
-        self.df = []
-
-        # Inicializar fluxo
-        self.flow()
-
-    def flow(self):
-        self.load()
-        # self.pre_process()
-        self.ner_extraction()
-        self.post_process()
+  def flow(self):
+    self.load()
+    self.ner_extraction()
+    self.post_process()
     
-    def load(self):
-        self.model = joblib.load('CAMINHO PARA O MODELO')
-        if self.filename[-5:] == '.json':
-            with open(self.filename, 'r') as f:
-                self.file = json.load(f)
-            self.atos_encontrados = self.segment(self.file)
-        else:
-            pass
+  def load(self):
+    self.model = joblib.load('modelo_licitacao.pkl')
+    if self.filename[-5:] == '.json':
+      with open(self.filename, 'r') as f:
+        self.file = json.load(f)
+        self.atos_encontrados = self.segment(self.file)
+    else:
+      pass
 
-    def segment(self, file):
-        atos = []
+  def segment(self, file):
+    atos_licitacao = {
+      'numero_dodf':[],
+      'titulo':[],
+      'texto':[]
+    }
+    df_atos_licitacao = None
+    regex_licitacao = regex = r'(?:AVISO\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][OÕ]ES|AVISOS?\s+D[EO]\s+LICITA[CÇ][OÕ]ES)'
+    
+    try:
+      section_3 = file['json']['INFO']['Seção III']
+      for orgao in section_3:
+        for documento in section_3[orgao]:
+          for ato in section_3[orgao][documento]:
+            if re.search(regex_licitacao, section_3[orgao][documento][ato]['titulo']) is not None:
+              atos_licitacao['numero_dodf'].append(file['json']['nu_numero'])
+              atos_licitacao['titulo'].append(section_3[orgao][documento][ato]['titulo'])
+              atos_licitacao['texto'].append(re.sub(r'<[^>]*>', '', section_3[orgao][documento][ato]['texto']))
 
-        try:
-            section_3 = file['json']['INFO']['Seção III']
+      df_atos_licitacao = pd.DataFrame(atos_licitacao)
+    except KeyError:
+      print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
+    print(f"\nForam encontrados {len(atos_licitacao['texto'])} atos de licitação")
+    return df_atos_licitacao
 
-            for orgao in section_3:
-                for documento in section_3[orgao]:
-                    for ato in section_3[orgao][documento]:
-                        if "licitação" in section_3[orgao][documento][ato]['titulo'].lower():
-                            atos.append(re.sub(r'<[^>]*>', '', section_3[orgao][documento][ato]['texto']))
+  def ner_extraction(self):
+    for t in self.atos_encontrados['texto']:
+      pred = self.model.predict(t)
+      self.predicoes.append(pred)
 
-        except KeyError:
-            print("Chave 'Seção III' não encontrada")
-            print(f"Chaves existentes: {file['json']['INFO'].keys()}")
-
-        return atos
-
-    # def pre_process(self):
-    #     self.texts = self.atos_encontrados
-    #     # Tokenize
-    #     self.texts = [word_tokenize(x) for x in self.texts]
-    #     # Get Features
-    #     self.texts = [self.get_features(x) for x in self.texts]
-
-    # def get_features(self, sentence):
-        
-    #     sent_features = []
-    #     for i in range(len(sentence)):
-    #         # print(sentence[i])
-    #         word_feat = {
-    #             # Palavra atual
-    #             'word': sentence[i].lower(),
-    #             'capital_letter': sentence[i][0].isupper(),
-    #             'all_capital': sentence[i].isupper(),
-    #             'isdigit': sentence[i].isdigit(),
-    #             # Uma palavra antes
-    #             'word_before': '' if i == 0 else sentence[i-1].lower(),
-    #             'word_before_isdigit': '' if i == 0 else sentence[i-1].isdigit(),
-    #             'word_before_isupper': '' if i == 0 else sentence[i-1].isupper(),
-    #             'word_before_istitle': '' if i == 0 else sentence[i-1].istitle(),
-    #             # Uma palavra depois
-    #             'word_after': '' if i+1 >= len(sentence) else sentence[i+1].lower(),
-    #             'word_after_isdigit': '' if i+1 >= len(sentence) else sentence[i+1].isdigit(),
-    #             'word_after_isupper': '' if i+1 >= len(sentence) else sentence[i+1].isupper(),
-    #             'word_after_istitle': '' if i+1 >= len(sentence) else sentence[i+1].istitle(),
-
-    #             'BOS': i == 0,
-    #             'EOS': i == len(sentence)-1
-    #         }
-    #         sent_features.append(word_feat)
-
-    #     return sent_features
-
-    #corrigir palavra extraction
-    def ner_extraction(self):
-        for t in self.atos_encontrados:
-          pred = self.model.predict([t])
-          self.predicoes.append(pred)
-
-    # Montar dataframe com as predições e seus IOB's
-    def post_process(self):
-
-        for IOB, text in zip(self.predicoes, self.atos_encontrados):
-
-            ent_dict = {
-              'ato': '',
-              'dodf': '',
-              'treated_text': '', 
-              'IOB': ''
-            } 
-
-            ent_dict['ato'] = 'LICITAÇÃO'
-            ent_dict['dodf'] = self.filename
-            ent_dict['treated_text'] = text
-            ent_dict['IOB'] = IOB
-
-            entities = []
-
-            text_split = word_tokenize(text)
-
+  # Montar dataframe com as predições e seus IOB's
+  def post_process(self):
+    for IOB, text, numdodf, titulo in zip(self.predicoes, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
+      ent_dict = {
+        'numero_dodf': '',
+        'titulo': '',
+        'text': '',
+        'IOB': '',
+      } 
+      ent_dict['numero_dodf'] = numdodf
+      ent_dict['titulo'] = titulo
+      ent_dict['text'] = text
+      ent_dict['IOB'] = IOB
+      entities = []
+      text_split = word_tokenize(text)
+      ent_concat = ('', '')
+      aux = 0
+      for ent, word in zip(IOB, text_split):
+        if ent[0] == 'B':
+          ent_concat = (ent[2:len(ent)], word)
+        elif ent[0] == 'I':
+          if aux != 0:
+            ent_concat = (ent_concat[0], ent_concat[1] + ' ' + word)
+          else:
+            ent_concat = (ent[2:len(ent)], word)
+        elif ent[0] == 'O':
+          if ent_concat[1] != '':
+            entities.append(ent_concat)
             ent_concat = ('', '')
+              
+        aux += 1
+      for tup in entities:
+        if tup[0] not in ent_dict:
+          ent_dict[tup[0]] = tup[1]
+        elif type(ent_dict[tup[0]]) != list:
+          aux = []
+          aux.append(ent_dict[tup[0]])
+          aux.append(tup[1])
+          ent_dict[tup[0]] = aux
+        else:
+          ent_dict[tup[0]].append(tup[1])
 
-            for ent, word in zip(IOB, text_split):
-              if ent[0] == 'B':
-                ent_concat = (ent[2:len(ent)], word)
-              elif ent[0] == 'I':
-                ent_concat = (ent_concat[0], ent_concat[1] + ' ' + word)
-              elif ent[0] == 'O':
-                if ent_concat[1] != '':
-                  entities.append(ent_concat)
-                  ent_concat = ('', '')
-
-            for tup in entities:
-
-              if tup[0] not in ent_dict:
-                ent_dict[tup[0]] = tup[1]
-              elif type(ent_dict[tup[0]]) != list:
-                aux = []
-                aux.append(ent_dict[tup[0]])
-                aux.append(tup[1])
-                ent_dict[tup[0]] = aux
-              else:
-                ent_dict[tup[0]].append(tup[1])
-
-            self.df.append(ent_dict)
-
-        self.df = pd.DataFrame(self.df)
-        # self.df.to_csv('result.csv',na_rep='NaN')
+      self.df.append(ent_dict)
+    self.df = pd.DataFrame(self.df)
