@@ -86,7 +86,9 @@ class Anulacao_Revogacao():
     self.post_process()
     
   def load(self):
-    self.model = joblib.load('modelo_anulacao_revogacao.pkl')
+    f_path = os.path.dirname(__file__)
+    f_path += '/models/modelo_anulacao_revogacao.pkl'
+    self.model = joblib.load(f_path)
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
         self.file = json.load(f)
