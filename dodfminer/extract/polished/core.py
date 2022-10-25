@@ -24,10 +24,10 @@ from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.contrato import Contratos
-from DODFMiner.dodfminer.extract.polished.acts.aditamento import Aditamento
-from DODFMiner.dodfminer.extract.polished.acts.licitacao import Licitacao
-from DODFMiner.dodfminer.extract.polished.acts.suspensao import Suspensao
-from DODFMiner.dodfminer.extract.polished.acts.anulacao_revogacao import AnulacaoRevogacao
+from dodfminer.extract.polished.acts.aditamento import Aditamento
+from dodfminer.extract.polished.acts.licitacao import Licitacao, CRF_Model_Licitacao
+from dodfminer.extract.polished.acts.suspensao import Suspensao, CRF_Model_Suspensao
+from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao, CRF_Model_Anulacao_Revogacao
 from dodfminer.extract.polished.acts.contrato2 import Contratos2
 from dodfminer.extract.polished.create_xml import XMLFy
 
@@ -44,11 +44,14 @@ _acts_ids = {
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
     "cessoes": Cessoes,
     "contrato": Contratos,
-    "contrato2": Contratos2,
-    "aditamento": Aditamento,
+}
+
+_acts_sec3 = {
+    # "contrato2": Contratos2,
+    # "aditamento": Aditamento,
     "licitacao": Licitacao,
     "suspensao": Suspensao,
-    "anulacao_revogacao": AnulacaoRevogacao
+    # "anulacao_revogacao": Anulacao_Revogacao
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
@@ -86,6 +89,29 @@ class ActsExtractor:
         This class is static.
 
     """
+
+    @staticmethod
+    def get_all_obj_sec3(file):
+        """
+        Extract a single act type from a single JSON DODF.
+
+        Object format.
+
+        Args:
+            ato_id (string): The name of the act to extract.
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either Regex or NER.
+
+        Returns:
+            An object of the desired act, already with extracted information.
+
+        """
+        res = {}
+        for key, act in _acts_sec3.items():
+            a = act(file, "ner")
+            res[key] = a.df.copy()
+
+        return res
 
     @staticmethod
     def get_act_obj(ato_id, file, backend):

@@ -18,8 +18,9 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize
 from sklearn_crfsuite import scorers
+from dodfminer.extract.polished.backend.ner import JsonNER
 
-nltk.download('punkt')
+# nltk.download('punkt')
 
 class CRF_Model_Suspensao():
   def __init__(self):
@@ -87,7 +88,7 @@ class Suspensao():
     
   def load(self):
     f_path = os.path.dirname(__file__)
-    f_path += '/models/modelo_suspensao.pkl'
+    f_path += '/models/modelo_suspensao2.pkl'
     self.model = joblib.load(f_path)
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
@@ -103,7 +104,7 @@ class Suspensao():
       'texto':[]
     }
     df_atos_suspensao = None
-    regex_suspensao = regex = r'(?:AVISO\s+D[EO]\s+SUSPENS[AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+SUSPENS[AÃ]O)'
+    regex_suspensao = r'(?:AVISO\s+D[EO]\s+SUSPENS[AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+SUSPENS[AÃ]O)'
     
     try:
       section_3 = file['json']['INFO']['Seção III']
@@ -123,7 +124,8 @@ class Suspensao():
 
   def ner_extraction(self):
     for t in self.atos_encontrados['texto']:
-      pred = self.model.predict(t)
+      pred = JsonNER.predict(t, self.model)
+      # pred = self.model.predict(t)
       self.predicoes.append(pred)
 
   # Montar dataframe com as predições e seus IOB's

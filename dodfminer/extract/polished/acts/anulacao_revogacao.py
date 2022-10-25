@@ -19,7 +19,9 @@ from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize
 from sklearn_crfsuite import scorers
 
-nltk.download('punkt')
+from dodfminer.extract.polished.backend.ner import JsonNER
+
+# nltk.download('punkt')
 
 class CRF_Model_Anulacao_Revogacao():
   def __init__(self):
@@ -103,7 +105,7 @@ class Anulacao_Revogacao():
       'texto':[]
     }
     df_atos_anulacao_revogacao = None
-    regex_anulacao_revogacao = regex = r'(?:AVISO\s+D[EO]\s+REVOGA[CÇ][AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+REVOGA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ANULA[CÇ][AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ANULA[CÇ][AÃ]O)'
+    regex_anulacao_revogacao = r'(?:AVISO\s+D[EO]\s+REVOGA[CÇ][AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+REVOGA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ANULA[CÇ][AÃ]O\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+ANULA[CÇ][AÃ]O)'
     
     try:
       section_3 = file['json']['INFO']['Seção III']
@@ -123,7 +125,8 @@ class Anulacao_Revogacao():
 
   def ner_extraction(self):
     for t in self.atos_encontrados['texto']:
-      pred = self.model.predict(t)
+      pred = JsonNER.predict(t, self.model)
+      # pred = self.model.predict(t)
       self.predicoes.append(pred)
 
   # Montar dataframe com as predições e seus IOB's

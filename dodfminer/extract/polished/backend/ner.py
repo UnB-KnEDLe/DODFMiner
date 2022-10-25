@@ -11,6 +11,45 @@ import numpy as np
 
 # pylint: disable=too-few-public-methods
 
+class JsonNER:
+    @staticmethod
+    def __get_features(sentence):
+        sent_features = []
+        for i in range(len(sentence)):
+            word_feat = {
+                # Palavra atual
+                'word': sentence[i].lower(),
+                'capital_letter': sentence[i][0].isupper(),
+                'all_capital': sentence[i].isupper(),
+                'isdigit': sentence[i].isdigit(),
+                # Uma palavra antes
+                'word_before': '' if i == 0 else sentence[i-1].lower(),
+                'word_before_isdigit': '' if i == 0 else sentence[i-1].isdigit(),
+                'word_before_isupper': '' if i == 0 else sentence[i-1].isupper(),
+                'word_before_istitle': '' if i == 0 else sentence[i-1].istitle(),
+                # Uma palavra depois
+                'word_after': '' if i+1 >= len(sentence) else sentence[i+1].lower(),
+                'word_after_isdigit': '' if i+1 >= len(sentence) else sentence[i+1].isdigit(),
+                'word_after_isupper': '' if i+1 >= len(sentence) else sentence[i+1].isupper(),
+                'word_after_istitle': '' if i+1 >= len(sentence) else sentence[i+1].istitle(),
+
+                'BOS': i == 0,
+                'EOS': i == len(sentence)-1
+            }
+            sent_features.append(word_feat)
+        return sent_features
+    
+    @staticmethod
+    def predict(sentence, model):
+        # word_tokenize
+        text = nltk.tokenize.word_tokenize(sentence)
+        # get_features
+        sent_features = JsonNER.__get_features(text)
+        # crf precisa de um input em formato de lista mesmo que contenha só um elemento
+        # e também retorna a predição em formato de lista
+        # por isso ([sent_features])[0], pois faremos a predição de um ato por vez
+        return model.predict([sent_features])[0]
+
 
 class ActNER:
     """Act NER Class.

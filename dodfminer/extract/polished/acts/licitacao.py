@@ -19,7 +19,9 @@ from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize
 from sklearn_crfsuite import scorers
 
-nltk.download('punkt')
+from dodfminer.extract.polished.backend.ner import JsonNER
+
+# nltk.download('punkt')
 
 class CRF_Model_Licitacao():
   def __init__(self):
@@ -87,7 +89,7 @@ class Licitacao():
     
   def load(self):
     f_path = os.path.dirname(__file__)
-    f_path += '/models/modelo_licitacao.pkl'
+    f_path += '/models/modelo_licitacao2.pkl'
     self.model = joblib.load(f_path)
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
@@ -103,7 +105,7 @@ class Licitacao():
       'texto':[]
     }
     df_atos_licitacao = None
-    regex_licitacao = regex = r'(?:AVISO\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][OÕ]ES|AVISOS?\s+D[EO]\s+LICITA[CÇ][OÕ]ES)'
+    regex_licitacao = r'(?:AVISO\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISO\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+LICITA[CÇ][AÃ]O|AVISOS\s+D[EO]\s+PREG[AÃ]O\s+ELETR[OÔ]NICO|AVISOS\s+D[EO]\s+ABERTURA\s+D[EO]\s+LICITA[CÇ][OÕ]ES|AVISOS?\s+D[EO]\s+LICITA[CÇ][OÕ]ES)'
     
     try:
       section_3 = file['json']['INFO']['Seção III']
@@ -123,7 +125,8 @@ class Licitacao():
 
   def ner_extraction(self):
     for t in self.atos_encontrados['texto']:
-      pred = self.model.predict(t)
+      pred = JsonNER.predict(t, self.model)
+      # pred = self.model.predict(t)
       self.predicoes.append(pred)
 
   # Montar dataframe com as predições e seus IOB's
