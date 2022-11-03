@@ -40,7 +40,7 @@ class Aditamento():
     
   def load(self):
     f_path = os.path.dirname(__file__)
-    f_path += '/models/modelo_aditamento.pkl'
+    f_path += '/models/modelo_aditamento_contratual.pkl'
     self.model = joblib.load(f_path)
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
@@ -111,12 +111,12 @@ class Aditamento():
         'numero_dodf': '',
         'titulo': '',
         'text': '',
-        'IOB': '',
+        # 'IOB': '',
       } 
       ent_dict['numero_dodf'] = numdodf
       ent_dict['titulo'] = titulo
       ent_dict['text'] = text
-      ent_dict['IOB'] = IOB
+      # ent_dict['IOB'] = IOB
       entities = []
       text_split = word_tokenize(text)
       ent_concat = ('', '')

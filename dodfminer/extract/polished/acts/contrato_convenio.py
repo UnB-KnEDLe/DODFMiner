@@ -111,12 +111,12 @@ class Contrato_Convenio():
         'numero_dodf': '',
         'titulo': '',
         'text': '',
-        'IOB': '',
+        # 'IOB': '',
       } 
       ent_dict['numero_dodf'] = numdodf
       ent_dict['titulo'] = titulo
       ent_dict['text'] = text
-      ent_dict['IOB'] = IOB
+      # ent_dict['IOB'] = IOB
       entities = []
       text_split = word_tokenize(text)
       ent_concat = ('', '')
