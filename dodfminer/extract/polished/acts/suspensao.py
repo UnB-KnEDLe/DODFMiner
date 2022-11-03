@@ -18,56 +18,8 @@ from sklearn.model_selection import RandomizedSearchCV
 from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize
 from sklearn_crfsuite import scorers
+
 from dodfminer.extract.polished.backend.ner import JsonNER
-
-# nltk.download('punkt')
-
-class CRF_Model_Suspensao():
-  def __init__(self):
-    self.crf = sklearn_crfsuite.CRF(
-      algorithm = 'lbfgs',
-      c1=0.071,
-      c2=0.170,
-      max_iterations=100,
-      all_possible_transitions=True
-    )
-
-  def get_features(self, sentence):
-        sent_features = []
-        for i in range(len(sentence)):
-            word_feat = {
-                # Palavra atual
-                'word': sentence[i].lower(),
-                'capital_letter': sentence[i][0].isupper(),
-                'all_capital': sentence[i].isupper(),
-                'isdigit': sentence[i].isdigit(),
-                # Uma palavra antes
-                'word_before': '' if i == 0 else sentence[i-1].lower(),
-                'word_before_isdigit': '' if i == 0 else sentence[i-1].isdigit(),
-                'word_before_isupper': '' if i == 0 else sentence[i-1].isupper(),
-                'word_before_istitle': '' if i == 0 else sentence[i-1].istitle(),
-                # Uma palavra depois
-                'word_after': '' if i+1 >= len(sentence) else sentence[i+1].lower(),
-                'word_after_isdigit': '' if i+1 >= len(sentence) else sentence[i+1].isdigit(),
-                'word_after_isupper': '' if i+1 >= len(sentence) else sentence[i+1].isupper(),
-                'word_after_istitle': '' if i+1 >= len(sentence) else sentence[i+1].istitle(),
-
-                'BOS': i == 0,
-                'EOS': i == len(sentence)-1
-            }
-            sent_features.append(word_feat)
-        return sent_features
-      
-  def predict(self, sentence):
-    # word_tokenize
-    text = word_tokenize(sentence)
-    # get_features
-    sent_features = self.get_features(text)
-    # crf precisa de um input em formato de lista mesmo que contenha só um elemento
-    # e também retorna a predição em formato de lista
-    # por isso ([sent_features])[0], pois faremos a predição de um ato por vez
-    return self.crf.predict([sent_features])[0]
-
 
 class Suspensao():
   def __init__(self, file, backend):
@@ -88,7 +40,7 @@ class Suspensao():
     
   def load(self):
     f_path = os.path.dirname(__file__)
-    f_path += '/models/modelo_suspensao2.pkl'
+    f_path += '/models/modelo_suspensao.pkl'
     self.model = joblib.load(f_path)
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
@@ -125,7 +77,6 @@ class Suspensao():
   def ner_extraction(self):
     for t in self.atos_encontrados['texto']:
       pred = JsonNER.predict(t, self.model)
-      # pred = self.model.predict(t)
       self.predicoes.append(pred)
 
   # Montar dataframe com as predições e seus IOB's

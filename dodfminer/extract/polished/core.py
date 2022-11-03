@@ -13,6 +13,7 @@ Usage Example::
 
 import multiprocessing
 from typing import List, Dict
+from dodfminer.extract.polished.create_xml import XMLFy
 
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
 from dodfminer.extract.polished.acts.base import Atos
@@ -24,12 +25,12 @@ from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.contrato import Contratos
+# Atos seção 3
 from dodfminer.extract.polished.acts.aditamento import Aditamento
-from dodfminer.extract.polished.acts.licitacao import Licitacao, CRF_Model_Licitacao
-from dodfminer.extract.polished.acts.suspensao import Suspensao, CRF_Model_Suspensao
-from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao, CRF_Model_Anulacao_Revogacao
-from dodfminer.extract.polished.acts.contrato2 import Contratos2
-from dodfminer.extract.polished.create_xml import XMLFy
+from dodfminer.extract.polished.acts.licitacao import Licitacao
+from dodfminer.extract.polished.acts.suspensao import Suspensao
+from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao
+from dodfminer.extract.polished.acts.contrato_convenio import Contrato_Convenio
 
 _acts_ids = {
     "aposentadoria": Retirements,
@@ -47,11 +48,11 @@ _acts_ids = {
 }
 
 _acts_sec3 = {
-    # "contrato2": Contratos2,
-    # "aditamento": Aditamento,
+    "contrato_convenio": Contrato_Convenio,
+    "aditamento": Aditamento,
     "licitacao": Licitacao,
     "suspensao": Suspensao,
-    # "anulacao_revogacao": Anulacao_Revogacao
+    "anulacao_revogacao": Anulacao_Revogacao,
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
