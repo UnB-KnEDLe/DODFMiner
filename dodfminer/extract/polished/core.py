@@ -110,7 +110,7 @@ class ActsExtractor:
         res = {}
         for key, act in _acts_sec3.items():
             a = act(file, "ner")
-            res[key] = a.df.copy()
+            res[key] = a
 
         return res
 
