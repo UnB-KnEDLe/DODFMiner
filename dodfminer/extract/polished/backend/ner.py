@@ -42,6 +42,7 @@ class JsonNER:
     @staticmethod
     def predict(sentence, model):
         # word_tokenize
+        nltk.download('punkt', quiet=True)
         text = nltk.tokenize.word_tokenize(sentence)
         # get_features
         sent_features = JsonNER.__get_features(text)
