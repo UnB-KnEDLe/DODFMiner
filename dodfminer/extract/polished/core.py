@@ -109,13 +109,13 @@ class ActsExtractor:
         """
         res = {}
         for key, act in _acts_sec3.items():
-            a = act(file, "ner")
+            a = act(file)
             res[key] = a
 
         return res
 
     @staticmethod
-    def get_act_obj(ato_id, file, backend):
+    def get_act_obj(ato_id, file, backend = None, pipeline = None):
         """
         Extract a single act type from a single DODF.
 
@@ -130,10 +130,13 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        return _acts_ids[ato_id](file, backend)
+        if file[-5:] == '.json':
+            return _acts_sec3[ato_id](file, pipeline)
+        else:
+            return _acts_ids[ato_id](file, backend)
 
     @staticmethod
-    def get_all_obj(file, backend):
+    def get_all_obj(file, backend = None):
         """
         Extract all act types from a single DODF object.
 
@@ -148,9 +151,17 @@ class ActsExtractor:
             information.
 
         """
-        res = {}
-        for key, act in _acts_ids.items():
-            res[key] = act(file, backend)
+
+        if file[-5:] == '.json':
+            res = {}
+            for key, act in _acts_sec3.items():
+                a = act(file)
+                res[key] = a
+
+        else:
+            res = {}
+            for key, act in _acts_ids.items():
+                res[key] = act(file, backend)
 
         return res
 
@@ -274,3 +285,4 @@ class ActsExtractor:
         """
         res = XMLFy(file, _acts_ids, i)
         return res
+        

@@ -1,47 +1,46 @@
 import warnings
 warnings.filterwarnings('ignore')
 
-import sklearn_crfsuite
 import pandas as pd
-import numpy as np
-import scipy.stats
-import sklearn
-import nltk
 import joblib
+import nltk
 import json
 import re
 import os
 
-from sklearn_crfsuite.metrics import flat_classification_report, flat_f1_score
-from sklearn.metrics import classification_report, make_scorer
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.model_selection import train_test_split
-from nltk.tokenize import word_tokenize
-from sklearn_crfsuite import scorers
-
-from dodfminer.extract.polished.backend.ner import JsonNER
+from sklearn.pipeline import Pipeline
+from dodfminer.extract.polished.backend.pipeline import feature_extractor, PipelineCRF
 
 class Aditamento():
-  def __init__(self, file, backend):
-    self.backend = backend
-    self.model = None
+  def __init__(self, file, pipeline = None):
+    self.pipeline = pipeline
     self.filename = file
     self.file = None
     self.atos_encontrados = []
-    self.predicoes = []
+    self.predicted = []
     self.df = []
+    self.enablePostProcess = False
+
     # Inicializar fluxo
     self.flow()
 
   def flow(self):
     self.load()
     self.ner_extraction()
-    self.post_process()
+    if self.enablePostProcess:
+      self.post_process()
     
   def load(self):
-    f_path = os.path.dirname(__file__)
-    f_path += '/models/modelo_aditamento_contratual.pkl'
-    self.model = joblib.load(f_path)
+    # Load model
+    if self.pipeline is None:
+      self.enablePostProcess = True
+      f_path = os.path.dirname(__file__)
+      f_path += '/models/modelo_aditamento_contratual.pkl'
+      aditamento_model = joblib.load(f_path)
+      pipeline_CRF_default = Pipeline([('feat', feature_extractor()), ('crf', PipelineCRF(aditamento_model))])
+      self.pipeline = pipeline_CRF_default
+
+    # Segmentation
     if self.filename[-5:] == '.json':
       with open(self.filename, 'r') as f:
         self.file = json.load(f)
@@ -55,6 +54,7 @@ class Aditamento():
       'titulo':[],
       'texto':[]
     }
+
     df_atos_aditamento = None
 
     principal_aditivo = r'(?:ADITIVO)'
@@ -73,52 +73,48 @@ class Aditamento():
     ]
     
     try:
-
       section_3 = file['json']['INFO']['Seção III']
 
       for orgao in section_3:
         for documento in section_3[orgao]:
           for ato in section_3[orgao][documento]:
 
-            if re.search(principal_aditivo, section_3[orgao][documento][ato]['titulo']) is not None:
+            titulo = section_3[orgao][documento][ato]['titulo']
 
-              if re.search(regex_titulo_aditivo, section_3[orgao][documento][ato]['titulo']) is not None:
+            if re.search(principal_aditivo, titulo) is not None:
+              if re.search(regex_titulo_aditivo, titulo) is not None:
                 atos_aditamento['numero_dodf'].append(file['json']['nu_numero'])
-                atos_aditamento['titulo'].append(section_3[orgao][documento][ato]['titulo'])
-                atos_aditamento['texto'].append(re.sub(r'<[^>]*>', '', section_3[orgao][documento][ato]['texto']))
-
-              elif section_3[orgao][documento][ato]['titulo'] in titulos_termo_aditivo:
+                atos_aditamento['titulo'].append(titulo)
+                atos_aditamento['texto'].append(re.sub(r'<[^>]*>', '', titulo + " " + section_3[orgao][documento][ato]['texto']))
+              elif titulo in titulos_termo_aditivo:
                 if re.search(regex_texto_aditivo, section_3[orgao][documento][ato]['texto'].lower()) is not None:
                   atos_aditamento['numero_dodf'].append(file['json']['nu_numero'])
-                  atos_aditamento['titulo'].append(section_3[orgao][documento][ato]['titulo'])
-                  atos_aditamento['texto'].append(re.sub(r'<[^>]*>', '', section_3[orgao][documento][ato]['texto']))
+                  atos_aditamento['titulo'].append(titulo)
+                  atos_aditamento['texto'].append(re.sub(r'<[^>]*>', '', titulo + " " + section_3[orgao][documento][ato]['texto']))
 
       df_atos_aditamento = pd.DataFrame(atos_aditamento)
     except KeyError:
       print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
-    print(f"\nForam encontrados {len(atos_aditamento['texto'])} atos de aditamento")
+    print(f"Foram encontrados {len(atos_aditamento['texto'])} atos de aditamento")
     return df_atos_aditamento
 
   def ner_extraction(self):
-    for t in self.atos_encontrados['texto']:
-      pred = JsonNER.predict(t, self.model)
-      self.predicoes.append(pred)
+    pred = self.pipeline.predict(self.atos_encontrados['texto'])
+    self.predicted = pred
 
   # Montar dataframe com as predições e seus IOB's
   def post_process(self):
-    for IOB, text, numdodf, titulo in zip(self.predicoes, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
+    for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
       ent_dict = {
         'numero_dodf': '',
         'titulo': '',
         'text': '',
-        # 'IOB': '',
       } 
       ent_dict['numero_dodf'] = numdodf
       ent_dict['titulo'] = titulo
       ent_dict['text'] = text
-      # ent_dict['IOB'] = IOB
       entities = []
-      text_split = word_tokenize(text)
+      text_split = nltk.word_tokenize(text)
       ent_concat = ('', '')
       aux = 0
       for ent, word in zip(IOB, text_split):
