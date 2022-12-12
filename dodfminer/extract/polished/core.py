@@ -92,29 +92,6 @@ class ActsExtractor:
     """
 
     @staticmethod
-    def get_all_obj_sec3(file):
-        """
-        Extract a single act type from a single JSON DODF.
-
-        Object format.
-
-        Args:
-            ato_id (string): The name of the act to extract.
-            file (string): Path of the file.
-            backend (string): Backend of act extraction, either Regex or NER.
-
-        Returns:
-            An object of the desired act, already with extracted information.
-
-        """
-        res = {}
-        for key, act in _acts_sec3.items():
-            a = act(file)
-            res[key] = a
-
-        return res
-
-    @staticmethod
     def get_act_obj(ato_id, file, backend = None, pipeline = None):
         """
         Extract a single act type from a single DODF.
