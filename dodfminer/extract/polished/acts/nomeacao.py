@@ -16,6 +16,10 @@ class NomeacaoComissionados(Atos):
     def _act_name(self):
         return "Nomeação"
 
+    @classmethod
+    def _section(cls):
+        return "Seção II"
+
     def _load_model(self):
         f_path = os.path.dirname(__file__)
         f_path += '/models/comissionados_nome.pkl'
@@ -87,6 +91,10 @@ class NomeacaoEfetivos(Atos):
 
     def _act_name(self):
         return "Nomeação de Efetivos"
+
+    @classmethod
+    def _section(cls):
+        return "Seção II"
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)

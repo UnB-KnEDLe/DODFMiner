@@ -70,7 +70,8 @@ def extract_multiple_acts(path, types, backend):
         types = _acts_ids.keys()
 
     if os.path.isfile(path):
-        ContentExtractor.extract_text(path, single=True)
+        if path[-4:] == '.pdf':
+            ContentExtractor.extract_text(path, single=True)
         for act_type in types:
             data_frame, _= extract_single(path.replace('.pdf', '.txt'), act_type, backend=backend)
             data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))

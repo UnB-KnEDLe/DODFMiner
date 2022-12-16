@@ -17,6 +17,10 @@ class Exoneracao(Atos):
     def _act_name(self):
         return "Exoneração"
 
+    @classmethod
+    def _section(cls):
+        return "Seção II"
+
     def _load_model(self):
         f_path = os.path.dirname(__file__)
         f_path += '/models/comissionados_exo.pkl'
@@ -87,6 +91,10 @@ class ExoneracaoEfetivos(Atos):
 
     def _act_name(self):
         return "Exoneração Efetivos"
+
+    @classmethod
+    def _section(cls):
+        return "Seção II"
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)
