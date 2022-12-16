@@ -199,7 +199,7 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
     def read_json(self, file_name):
         """Reads a .json file of a DODF.
 
-        A single string with all the relevant text from section 2 is extracted.
+        A single string with all the relevant text from the act section is extracted.
         """
         try:
             with open(file_name, 'r', encoding='utf-8') as file:
@@ -215,7 +215,7 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
                         txt = section[agency][document][subdoc]['texto']
                         txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
                         all_txt.append(txt)
-            self._text = ' '.join(all_txt)
+            self._text = ''.join(all_txt)
 
         except IOError:
             self._text = file_name
