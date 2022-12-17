@@ -5,6 +5,7 @@ extract information from a specialized act.
 """
 
 import re
+import json
 import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
@@ -43,14 +44,10 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
         self._name = self._act_name()
         super().__init__()
 
-        try:
-            with open(file_name, "r", encoding='utf-8') as file:
-                self._text = file.read()
-                file.close()
-                self._file_name = file_name
-        except IOError:
-            self._text = file_name
-            self._file_name = None
+        if file_name[-5:] == '.json':
+            self.read_json(file_name)
+        else:
+            self.read_txt(file_name)
 
         self._acts_str = []
         self._columns = self._props_names() + self._standard_props_names()
@@ -78,6 +75,18 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
         """Name of the act.
 
         Must return a single string representing the act name
+
+        Raises:
+            NotImplementedError: Child class needs to overwrite this method.
+
+        """
+        raise NotImplementedError
+
+    @classmethod
+    def _section(cls):
+        """Section of the act.
+
+        Must return a single string representing the act section
 
         Raises:
             NotImplementedError: Child class needs to overwrite this method.
@@ -186,3 +195,42 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             acts.append(self.add_standard_props(act))
 
         return acts
+
+    def read_json(self, file_name):
+        """Reads a .json file of a DODF.
+
+        A single string with all the relevant text from the act section is extracted.
+        """
+        try:
+            with open(file_name, 'r', encoding='utf-8') as file:
+                self._json = json.load(file)
+                self._file_name = file_name
+
+            section = self._json['json']['INFO'][self._section()]
+
+            all_txt = []
+            for agency in section:
+                for document in section[agency]:
+                    for subdoc in section[agency][document]:
+                        txt = section[agency][document][subdoc]['texto']
+                        txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
+                        all_txt.append(txt)
+            self._text = ''.join(all_txt)
+
+        except IOError:
+            self._text = file_name
+            self._file_name = None
+
+    def read_txt(self, file_name):
+        """Reads a .txt file of a DODF.
+
+        A single string with all the text of the file is extracted.
+        """
+
+        try:
+            with open(file_name, 'r', encoding='utf-8') as file:
+                self._text = file.read()
+                self._file_name = file_name
+        except IOError:
+            self._text = file_name
+            self._file_name = None

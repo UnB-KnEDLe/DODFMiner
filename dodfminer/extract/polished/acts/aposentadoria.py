@@ -30,6 +30,10 @@ class Retirements(Atos):
     def _act_name(self):
         return "Aposentadoria"
 
+    @classmethod
+    def _section(cls):
+        return "Seção II"
+
     def get_expected_colunms(self) -> list:
         return [
             'Ato',
@@ -103,6 +107,10 @@ class RetAposentadoria(Atos):
 
     def _act_name(self):
         return "Retificações de Aposentadoria"
+
+    @classmethod
+    def _section(cls):
+        return "Seção II"
 
     def get_expected_colunms(self) -> list:
         return [

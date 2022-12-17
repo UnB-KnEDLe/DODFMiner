@@ -35,6 +35,10 @@ class Substituicao(Atos):
     def _act_name(self):
         return "Substituição de Funções"
 
+    @classmethod
+    def _section(cls):
+        return "Seção II"
+
     def get_expected_colunms(self) -> list:
         return [
             'Nome_substituto',

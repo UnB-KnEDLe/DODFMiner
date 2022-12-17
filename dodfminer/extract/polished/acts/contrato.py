@@ -28,6 +28,10 @@ class Contratos(Atos):
     def _act_name(self):
         return "Contrato"
 
+    @classmethod
+    def _section(cls):
+        return "Seção III"
+
     def get_expected_colunms(self) -> list:
         return [
             "CONTRATO",

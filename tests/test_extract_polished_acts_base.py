@@ -53,6 +53,13 @@ def test_act_base_invalid_file(*_):
     assert atos._file_name is None
     assert atos._text == file
 
+@patch.object(Atos, '_act_name', return_value="Aposentadoria")
+@patch.object(Atos, '_props_names', return_value=props)
+@patch.object(Atos, '_rule_for_inst', return_value=RULE_PROP)
+@patch.object(Atos, '_prop_rules', return_value=rule_dict)
+def test_act_base_read_json(*_):
+    atos = Atos(""+os.path.dirname(__file__) + 'dodf.json')
+    assert isinstance(atos._text, str)
 
 @patch.object(Atos, '_act_name', return_value="Aposentadoria")
 @patch.object(Atos, '_props_names', return_value=props)
@@ -132,7 +139,6 @@ def fixture_act_base_regex(*_):
     atos._check_cols = _check_cols
     atos._name = "Aposentadoria"
     return atos
-
 
 def test_act_base_name(act_base_regex):
     assert act_base_regex.name == "Aposentadoria"

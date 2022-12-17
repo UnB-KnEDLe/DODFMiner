@@ -20,6 +20,10 @@ class Revertions(Atos):
     def _act_name(self):
         return "Reversão"
 
+    @classmethod
+    def _section(cls):
+        return "Seção II"
+
     def _load_model(self):
         f_path = os.path.dirname(__file__)
         f_path += '/models/reversao.pkl'
