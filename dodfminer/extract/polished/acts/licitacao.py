@@ -17,9 +17,10 @@ class Licitacao():
     self.filename = file
     self.file = None
     self.atos_encontrados = []
-    self.predicoes = []
+    self.predicted = []
     self.df = []
-    self.enablePostProcess = False
+    self.enablePostProcess = True
+    self.useDefault = True
 
     # Inicializar fluxo
     self.flow()
@@ -27,18 +28,25 @@ class Licitacao():
   def flow(self):
     self.load()
     self.ner_extraction()
-    if self.enablePostProcess:
+    if self.enablePostProcess: 
       self.post_process()
+    else:
+      self.df = pd.DataFrame(self.predicted)
     
   def load(self):
     # Load model
     if self.pipeline is None:
-      self.enablePostProcess = True
       f_path = os.path.dirname(__file__)
       f_path += '/models/modelo_licitacao.pkl'
       aditamento_model = joblib.load(f_path)
       pipeline_CRF_default = Pipeline([('feat', feature_extractor()), ('crf', PipelineCRF(aditamento_model))])
       self.pipeline = pipeline_CRF_default
+    else:
+      self.useDefault = False
+      try:
+        self.pipeline['pre-processing'].transform(["test test"])
+      except KeyError:
+        self.enablePostProcess = False
 
     # Segmentation
     if self.filename[-5:] == '.json':
@@ -79,11 +87,11 @@ class Licitacao():
 
   def ner_extraction(self):
     pred = self.pipeline.predict(self.atos_encontrados['texto'])
-    self.predicoes = pred
+    self.predicted = pred
 
   # Montar dataframe com as predições e seus IOB's
   def post_process(self):
-    for IOB, text, numdodf, titulo in zip(self.predicoes, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
+    for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
       ent_dict = {
         'numero_dodf': '',
         'titulo': '',
@@ -93,7 +101,12 @@ class Licitacao():
       ent_dict['titulo'] = titulo
       ent_dict['text'] = text
       entities = []
-      text_split = nltk.word_tokenize(text)
+
+      if self.useDefault:
+        text_split = nltk.word_tokenize(text)
+      else:
+        text_split = self.pipeline['pre-processing'].transform([text])[0]
+
       ent_concat = ('', '')
       aux = 0
       for ent, word in zip(IOB, text_split):
