@@ -44,7 +44,7 @@ class Aditamento():
     else:
       self.useDefault = False
       try:
-        self.pipeline['processing'].transform([""])
+        self.pipeline['pre-processing'].transform(["test test"])
       except KeyError:
         self.enablePostProcess = False
 
@@ -126,7 +126,7 @@ class Aditamento():
       if self.useDefault:
         text_split = nltk.word_tokenize(text)
       else:
-        text_split = self.pipeline['processing'].transform([text])[0]
+        text_split = self.pipeline['pre-processing'].transform([text])[0]
 
       ent_concat = ('', '')
       aux = 0
