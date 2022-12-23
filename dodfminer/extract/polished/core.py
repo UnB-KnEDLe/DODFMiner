@@ -124,7 +124,7 @@ class ActsExtractor:
             backend (string): Backend of act extraction, either Regex or NER.
 
         Returns:
-            An vector of objects of all the acts with extracted
+            A vector of objects of all the acts with extracted
             information.
 
         """
