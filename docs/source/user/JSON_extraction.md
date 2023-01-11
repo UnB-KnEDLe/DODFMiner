@@ -16,11 +16,59 @@ The first step to do is importing the DODFMiner `ActsExtractor` class in order t
 from dodfminer.extract.polished.core import ActsExtractor
 ```
 
-Each of the 5 types of acts have their own class that manages the whole process of extraction from the JSON file. There are two ways to do so: extract all acts from a specific type or extract all of them at once. 
+Each of the 5 types of acts have their own class that manages the whole process of extraction from the JSON file. There are two ways to do so: extract all acts of a specific type or extract all types of acts at once. 
 
 ## Extracting a specific type of act
 
-[text]
+The `get_act_obj` method will be used to extract one type of act from the JSON file.
+
+```Python
+ActsExtractor.get_act_obj(ato_id="ID", file="PATH/TO/JSON/FILE.json")
+```
+
+- Parameteres:
+    - **ato_id** (string) - Act ID restricted to the following keys:
+        - `aditamento`
+        - `licitacao`
+        - `suspensao`
+        - `anulacao_revogacao`
+        - `contrato_convenio`
+    - **file** (string): Path of the JSON file.
+    - **pipeline** (object): Scikit-learn pipeline object (optional).
+
+- Returns:
+    
+    - An object of the desired act, already with extracted information.
+
+### Using a specific model with Scikit-learn Pipeline
+If you want to use a different model you can do so by passing a scikit-learn pipeline object as a parameter of the `get_act_obj` method. There are a few things you have to do:
+- Specify the pipeline parameter when calling the method.
+- There has to be an element in your pipeline with key `pre-processing` wich will be responsable for pre-processing and tokenization. This process has to be called by the method `Pipeline['pre-processing'].transform(X)` where X is a list with the input data.
+- The model that extends the BaseEstimator class must present its output in IOB tag format.
+
+In case of not following these requirements, the dataframe will not be correct.
+
+Example step-by-step:
+
+1. Creating pipeline as required.
+
+`pipeline_obj = Pipeline([('pre-processing', Processing()), ('feature-extraction', FeatureExtractor()), ('model', Model())])`
+
+2. Pre-processing and tokenizing input data. 
+
+`pipeline_obj['pre-processing'].transform(X)`
+
+3. Training model.
+
+`pipeline_obj.fit(X, y)`
+
+4. Calling method.
+
+`result = get_act_obj("aditamento", "PATH/TO/JSON/FILE.json", pipeline=pipeline_obj)`
+
+5. Accessing data extracted.
+
+`dataframe = result.df`
 
 ## Extracting all acts
 
