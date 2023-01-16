@@ -10,6 +10,7 @@ Welcome to DODFMiner's documentation!
   user/intro
   user/install
   user/usage
+  user/JSON_extraction.md
   user/ARCH.md
   user/CODE_OF_CONDUCT.md
   user/CONTRIBUTING.md
