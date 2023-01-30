@@ -129,16 +129,14 @@ class ActsExtractor:
 
         """
 
+        res = {}
         if file[-5:] == '.json':
-            res = {}
             for key, act in _acts_sec3.items():
                 a = act(file)
                 res[key] = a
 
-        else:
-            res = {}
-            for key, act in _acts_ids.items():
-                res[key] = act(file, backend)
+        for key, act in _acts_ids.items():
+            res[key] = act(file, backend)
 
         return res
 
@@ -208,6 +206,11 @@ class ActsExtractor:
 
         """
         res = {}
+        if file[-5:] == '.json':
+            for key, act in _acts_sec3.items():
+                a = act(file)   
+                res[key] = a.data_frame
+        
         for key, act in _acts_ids.items():
             res[key] = act(file, backend).data_frame
 

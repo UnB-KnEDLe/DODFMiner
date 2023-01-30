@@ -12,13 +12,18 @@ from sklearn.pipeline import Pipeline
 from dodfminer.extract.polished.backend.pipeline import feature_extractor, PipelineCRF
 
 class Contrato_Convenio():
+
+  @property
+  def acts_str(self):
+    return self.atos_encontrados['texto']
+
   def __init__(self, file, pipeline = None):
     self.pipeline = pipeline
     self.filename = file
     self.file = None
     self.atos_encontrados = []
     self.predicted = []
-    self.df = []
+    self.data_frame = []
     self.enablePostProcess = True
     self.useDefault = True
 
@@ -31,7 +36,7 @@ class Contrato_Convenio():
     if self.enablePostProcess: 
       self.post_process()
     else:
-      self.df = pd.DataFrame(self.predicted)
+      self.data_frame = pd.DataFrame(self.predicted)
 
   def load(self):
     # Load model
@@ -157,5 +162,5 @@ class Contrato_Convenio():
         else:
           ent_dict[tup[0]].append(tup[1])
 
-      self.df.append(ent_dict)
-    self.df = pd.DataFrame(self.df)
+      self.data_frame.append(ent_dict)
+    self.data_frame = pd.DataFrame(self.data_frame)
