@@ -45,3 +45,8 @@ Welcome to DODFMiner's documentation!
   etc/ack
   etc/about
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Tutorials
+
+  tutorials/JSON_extraction

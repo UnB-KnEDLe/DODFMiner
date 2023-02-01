@@ -1,4 +1,4 @@
-# JSON acts extraction tutorial 
+# JSON Acts Extraction Tutorial
 
 This tutorial is meant to help in the process of extracting acts from the section 3 of the DODF JSON files manually. These are the types of acts extracted from the section 3:
 
@@ -16,9 +16,11 @@ The first step to do is importing the DODFMiner `ActsExtractor` class in order t
 from dodfminer.extract.polished.core import ActsExtractor
 ```
 
-Each of the 5 types of acts have their own class that manages the whole process of extraction from the JSON file. There are two ways to do so: extract all acts of a specific type or extract all types of acts at once. 
+Each of the 5 types of acts have their own class that manages the whole process of extraction from the JSON file.
 
-## Extracting a specific type of act
+There are two ways to do so: extracting all acts of a specific type or extracting all acts at once. The default model of extraction used is CRF, but you may [use your own trained model](#using-a-specific-model-with-scikit-learn-pipeline).
+
+## Extracting a Specific Type of Act
 
 The `get_act_obj` method will be used to extract one type of act from the JSON file.
 
@@ -27,50 +29,55 @@ ActsExtractor.get_act_obj(ato_id="ID", file="PATH/TO/JSON/FILE.json")
 ```
 
 - Parameteres:
-    - **ato_id** (string) - Act ID restricted to the following keys:
-        - `aditamento`
-        - `licitacao`
-        - `suspensao`
-        - `anulacao_revogacao`
-        - `contrato_convenio`
-    - **file** (string): Path of the JSON file.
-    - **pipeline** (object): Scikit-learn pipeline object (optional).
+  - **ato_id** (string) - Act ID restricted to the following keys:
+    - `aditamento`
+    - `licitacao`
+    - `suspensao`
+    - `anulacao_revogacao`
+    - `contrato_convenio`
+  - **file** (string): Path of the JSON file.
+  - **pipeline** (object): Scikit-learn pipeline object (optional).
 
 - Returns:
-    
-    - An object of the desired act, already with extracted information.
+  - An object of the desired act, already with extracted information.
 
-### Using a specific model with Scikit-learn Pipeline
+## Using a Specific Model with Scikit-learn Pipeline
+
+If you're not familiar with Scikit-learn Pipeline, you can <a href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html" target="_blank">learn more</a>.
+
 If you want to use a different model you can do so by passing a scikit-learn pipeline object as a parameter of the `get_act_obj` method. There are a few things you have to do:
-- Specify the pipeline parameter when calling the method.
-- There has to be an element in your pipeline with key `pre-processing` wich will be responsable for pre-processing and tokenization. This process has to be called by the method `Pipeline['pre-processing'].transform(X)` where X is a list with the input data.
-- The model that extends the BaseEstimator class must present its output in IOB tag format.
 
-In case of not following these requirements, the dataframe will not be correct.
+- Specify the pipeline parameter when calling the method. Ex: `get_act_obj(pipeline=pipeline_obj)`.
+- Set an element in your pipeline with key `pre-processing` wich will be responsable for pre-processing and tokenization. This process has to be called by the method `Pipeline['pre-processing'].transform(X)` where `X` is a list with the input data.
+- The model that extends the `BaseEstimator` class must return its output in IOB tag format.
 
-Example step-by-step:
+In case of not following these requirements, the generated dataframe will not be correct.
 
-1. Creating pipeline as required.
+Here's an example step-by-step:
 
-`pipeline_obj = Pipeline([('pre-processing', Processing()), ('feature-extraction', FeatureExtractor()), ('model', Model())])`
+```Python
+# 1. Creating pipeline as required.
 
-2. Pre-processing and tokenizing input data. 
+pipeline_obj = Pipeline([('pre-processing', Processing()), ('feature-extraction', FeatureExtractor()), ('model', Model())])
 
-`pipeline_obj['pre-processing'].transform(X)`
+# 2. Pre-processing and tokenizing input data.
 
-3. Training model.
+pipeline_obj['pre-processing'].transform(X)
 
-`pipeline_obj.fit(X, y)`
+# 3. Training model.
 
-4. Calling method.
+pipeline_obj.fit(X, y)
 
-`result = get_act_obj("aditamento", "PATH/TO/JSON/FILE.json", pipeline=pipeline_obj)`
+# 4. Calling method.
 
-5. Accessing data extracted.
+result = get_act_obj("aditamento", "PATH/TO/JSON/FILE.json", pipeline=pipeline_obj)
 
-`dataframe = result.df`
+# 5. Accessing data extracted.
 
-## Extracting all acts
+dataframe = result.df
+```
+
+## Extracting All Acts
 
 In order to extract all acts at once, you have to use the `get_all_obj` method.
 
@@ -79,14 +86,14 @@ ActsExtractor.get_all_obj(file="PATH/TO/JSON/FILE.json")
 ```
 
 - Parameters:
-    - **file** (string) - Path to JSON file.
+  - **file** (string) - Path to JSON file.
 
 - Returns:
-    - Dictionary containing the class objects correspondent to each type of act found.
+  - Dictionary containing the class objects correspondent to each type of act found.
 
 ## Returned object details
 
-Within each class object in the returned dictionary, there's a pandas dataframe attribute (`df`) containing all the entities from that act type.
+If you extract all acts at once, the returned object will be a dictionary with a key to each type of act. The value of each key is the respective act object.
 
 You can access them by the following keys:
 
@@ -96,7 +103,9 @@ You can access them by the following keys:
 - `anulacao_revogacao`
 - `contrato_convenio`
 
-Here's an example accessing the dataframe of `contrato_convenio` 
+In case you extract only one type of act, the respective act object will be returned. The act objects have a pandas dataframe attribute `df` containing all acts extracted and their entities.
+
+Here's an example of accessing the dataframe of `contrato_convenio`:
 
 ```Python
 df = d['contrato_convenio'].df
@@ -120,8 +129,8 @@ Here's an example of the acts within the dataframe:
 
 | **numero_dodf** |                     **titulo**                    |                      **text**                     |  **NUM_ADITIVO** | **CONTRATANTE** |                  **OBJ_ADITIVO**                  | **PROCESSO** | **NUM_AJUSTE** | **DATA_ESCRITO** |
 |:---------------:|:-------------------------------------------------:|:-------------------------------------------------:|:----------------:|:---------------:|:-------------------------------------------------:|:------------:|:--------------:|:----------------:|
-|       233       |      I TERMO ADITIVO AO CONTRATO BRB 011/2022     | I TERMO ADITIVO AO CONTRATO BRB 011/2022 Contr... |  I TERMO ADITIVO | [BRB, BRB, BRB] |        prorrogação 12 meses até 19/01/2024        |  1.096/2021  |       NaN      |        NaN       |
-|       233       | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | 1º TERMO ADITIVO |  [SEEDF, SEEDF] | a ) Alterar a razão social da Contratada , de ... |      NaN     |     19/2022    |    14/12/2022    |
+|       233       |      I TERMO ADITIVO AO CONTRATO BRB 011/2022     | I TERMO ADITIVO AO CONTRATO BRB 011/2022 Contr... |  I TERMO ADITIVO | [BRB, BRB, BRB] |        prorrogação 12 meses até 19/01/2024        |  1.096/2021  |       06/2021      |        19/12/2022       |
+|       233       | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | 1º TERMO ADITIVO |  [SEEDF, SEEDF] | a ) Alterar a razão social da Contratada , de ... |      19/2022     |     19/2022    |    14/12/2022    |
 
 ### Licitação
 
@@ -142,8 +151,8 @@ These are the entities captured in `licitacao` acts:
 
 | **numero_dodf** |           **titulo**           |                      **text**                     | MODALIDADE_LICITACAO |            NUM_LICITACAO           |         ORGAO_LICITANTE         |                   OBJ_LICITACAO                   | VALOR_ESTIMADO |                  SISTEMA_COMPRAS                  | PROCESSO         | DATA_ABERTURA | CODIGO_SISTEMA_COMPRAS |
 |:---------------:|:------------------------------:|:-------------------------------------------------:|:--------------------:|:----------------------------------:|:-------------------------------:|:-------------------------------------------------:|:--------------:|:-------------------------------------------------:|------------------|---------------|------------------------|
-|       233       | AVISO DE ABERTURA DE LICITAÇÃO | AVISO DE ABERTURA DE LICITAÇÃO PREGÃO ELETRÔNI... |   PREGÃO ELETRÔNICO  |               26/2022              | Fundação Hemocentro de Brasília | aquisição de Materiais Médico-Hospitalares par... |       6.686,20 |                 www.gov.br/compras                |              NaN | NaN           | NaN                    |
-|       233       |       AVISO DE LICITAÇÃO       |  AVISO DE LICITAÇÃO PREGÃO ELETRÔNICO PE Nº 274.. |    PREGÃO ELETRÔNICO | [274/2022, 00092-00055194.2022-84] |              Caesb              | Aquisição de materiais de ferro fundido para r... |       NaN      | [https : //www.gov.br/compras/pt-br, https : /... | 21.205.100.020-2 |    04/01/2023 | 974200                 |
+|       233       | AVISO DE ABERTURA DE LICITAÇÃO | AVISO DE ABERTURA DE LICITAÇÃO PREGÃO ELETRÔNI... |   PREGÃO ELETRÔNICO  |               26/2022              | Fundação Hemocentro de Brasília | aquisição de Materiais Médico-Hospitalares par... |       6.686,20 |                 www.gov.br/compras                |              35/2022 | 22/12/2022           | www.comprasgovernamentais.gov.br                  |
+|       233       |       AVISO DE LICITAÇÃO       |  AVISO DE LICITAÇÃO PREGÃO ELETRÔNICO PE Nº 274.. |    PREGÃO ELETRÔNICO | [274/2022, 00092-00055194.2022-84] |              Caesb              | Aquisição de materiais de ferro fundido para r... |       3.835.600,90      | [https : //www.gov.br/compras/pt-br, https : /... | 21.205.100.020-2 |    04/01/2023 | 974200                 |
 
 ### Suspensão
 
