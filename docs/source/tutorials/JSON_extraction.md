@@ -8,7 +8,7 @@ This tutorial is meant to help in the process of extracting acts from the sectio
 - Anulação / Revogação
 - Suspensão
 
-*Requirements: in this tutorial, it is assumed that you have already installed the [DODFMiner requirements](./../../../../requirements.txt)*
+*Requirements: in this tutorial, it is assumed that you have already installed the [DODFMiner requirements](./../../../../requirements.txt) and that you have got DODF JSON files, in case you don't, [this is where you can find them](#obtaining-json-files).*
 
 The first step to do is importing the DODFMiner `ActsExtractor` class in order to extract the acts from a JSON file:
 
@@ -129,8 +129,8 @@ Here's an example of the acts within the dataframe:
 
 | **numero_dodf** |                     **titulo**                    |                      **text**                     |  **NUM_ADITIVO** | **CONTRATANTE** |                  **OBJ_ADITIVO**                  | **PROCESSO** | **NUM_AJUSTE** | **DATA_ESCRITO** |
 |:---------------:|:-------------------------------------------------:|:-------------------------------------------------:|:----------------:|:---------------:|:-------------------------------------------------:|:------------:|:--------------:|:----------------:|
-|       233       |      I TERMO ADITIVO AO CONTRATO BRB 011/2022     | I TERMO ADITIVO AO CONTRATO BRB 011/2022 Contr... |  I TERMO ADITIVO | [BRB, BRB, BRB] |        prorrogação 12 meses até 19/01/2024        |  1.096/2021  |       06/2021      |        19/12/2022       |
-|       233       | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | 1º TERMO ADITIVO |  [SEEDF, SEEDF] | a ) Alterar a razão social da Contratada , de ... |      19/2022     |     19/2022    |    14/12/2022    |
+|       233       |      I TERMO ADITIVO AO CONTRATO BRB 011/2022     | I TERMO ADITIVO AO CONTRATO BRB 011/2022 Contr... |  I TERMO ADITIVO | [BRB, BRB, BRB] |        prorrogação 12 meses até 19/01/2024        |  1.096/2021  |    06/2021     |    19/12/2022    |
+|       233       | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | EXTRATO DO 1º TERMO ADITIVO AO CONTRATO Nº 19/... | 1º TERMO ADITIVO |  [SEEDF, SEEDF] | a ) Alterar a razão social da Contratada , de ... |      19/2022 |     19/2022    |    14/12/2022    |
 
 ### Licitação
 
@@ -149,10 +149,10 @@ These are the entities captured in `licitacao` acts:
 - DATA_ABERTURA
 - CODIGO_SISTEMA_COMPRAS
 
-| **numero_dodf** |           **titulo**           |                      **text**                     | MODALIDADE_LICITACAO |            NUM_LICITACAO           |         ORGAO_LICITANTE         |                   OBJ_LICITACAO                   | VALOR_ESTIMADO |                  SISTEMA_COMPRAS                  | PROCESSO         | DATA_ABERTURA | CODIGO_SISTEMA_COMPRAS |
-|:---------------:|:------------------------------:|:-------------------------------------------------:|:--------------------:|:----------------------------------:|:-------------------------------:|:-------------------------------------------------:|:--------------:|:-------------------------------------------------:|------------------|---------------|------------------------|
-|       233       | AVISO DE ABERTURA DE LICITAÇÃO | AVISO DE ABERTURA DE LICITAÇÃO PREGÃO ELETRÔNI... |   PREGÃO ELETRÔNICO  |               26/2022              | Fundação Hemocentro de Brasília | aquisição de Materiais Médico-Hospitalares par... |       6.686,20 |                 www.gov.br/compras                |              35/2022 | 22/12/2022           | www.comprasgovernamentais.gov.br                  |
-|       233       |       AVISO DE LICITAÇÃO       |  AVISO DE LICITAÇÃO PREGÃO ELETRÔNICO PE Nº 274.. |    PREGÃO ELETRÔNICO | [274/2022, 00092-00055194.2022-84] |              Caesb              | Aquisição de materiais de ferro fundido para r... |       3.835.600,90      | [https : //www.gov.br/compras/pt-br, https : /... | 21.205.100.020-2 |    04/01/2023 | 974200                 |
+| **numero_dodf** |           **titulo**           |                      **text**                     | MODALIDADE_LICITACAO |            NUM_LICITACAO           |         ORGAO_LICITANTE         |                   OBJ_LICITACAO                   | VALOR_ESTIMADO |                  SISTEMA_COMPRAS                  |     PROCESSO     | DATA_ABERTURA  | CODIGO_SISTEMA_COMPRAS |
+|:---------------:|:------------------------------:|:-------------------------------------------------:|:--------------------:|:----------------------------------:|:-------------------------------:|:-------------------------------------------------:|:--------------:|:-------------------------------------------------:|------------------|----------------|------------------------|
+|       233       | AVISO DE ABERTURA DE LICITAÇÃO | AVISO DE ABERTURA DE LICITAÇÃO PREGÃO ELETRÔNI... |   PREGÃO ELETRÔNICO  |               26/2022              | Fundação Hemocentro de Brasília | aquisição de Materiais Médico-Hospitalares par... |   6.686,20     |                 www.gov.br/compras                |     35/2022      |   22/12/2022   |         925008         |
+|       233       |       AVISO DE LICITAÇÃO       |  AVISO DE LICITAÇÃO PREGÃO ELETRÔNICO PE Nº 274.. |    PREGÃO ELETRÔNICO | [274/2022, 00092-00055194.2022-84] |              Caesb              | Aquisição de materiais de ferro fundido para r... |  3.835.600,90  | [https:/www.gov.br/compras/pt-br, https:/...      | 21.205.100.020-2 |   04/01/2023   |         974200         |
 
 ### Suspensão
 
@@ -167,10 +167,10 @@ These are the entities captured in `suspensao` acts:
 
 Here's an example of the acts in a dataframe:
 
-| **numero_dodf** |                     **titulo**                    |                      **text**                     |      **PROCESSO**      |                  **OBJ_ADITIVO**                  |                  **CONTRATANTE**                  | **NUM_AJUSTE** | **NUM_ADITIVO** | **DATA_ESCRITO** |
-|:---------------:|:-------------------------------------------------:|:-------------------------------------------------:|:----------------------:|:-------------------------------------------------:|:-------------------------------------------------:|:--------------:|:---------------:|:----------------:|
-|       215       |                 AVISO DE SUSPENSÃO                | AVISO DE SUSPENSÃO PREGÃO ELETRÔNICO POR SRP N... | 00055-00045741/2020-54 | a suspensão da licitação supracitada , a qual ... | Secretaria de Estado de Saúde do Distrito Federal |       NaN      |       NaN       |        NaN       |
-|       118       | AVISO DE SUSPENSÃO DO PREGÃO ELETRÔNICO Nº 49/... | AVISO DE SUSPENSÃO DO PREGÃO ELETRÔNICO Nº 49/... |           NaN          |    a suspensão de realização do PE nº 049/2022    |                        BRB                        |       NaN      |       NaN       |        NaN       |
+| **numero_dodf** |                     **titulo**                    |                      **text**                     |      **PROCESSO**      |                  **OBJ_ADITIVO**                  |                  **CONTRATANTE**                  | **NUM_AJUSTE** | **NUM_ADITIVO** |     **DATA_ESCRITO**    |
+|:---------------:|:-------------------------------------------------:|:-------------------------------------------------:|:----------------------:|:-------------------------------------------------:|:-------------------------------------------------:|:--------------:|:---------------:|:-----------------------:|
+|       215       |                 AVISO DE SUSPENSÃO                | AVISO DE SUSPENSÃO PREGÃO ELETRÔNICO POR SRP N... | 00055-00045741/2020-54 | a suspensão da licitação supracitada , a qual ... | Secretaria de Estado de Saúde do Distrito Federal |    14/2021     |     03/2021     | 11 de novembro de 2021  |
+|       118       | AVISO DE SUSPENSÃO DO PREGÃO ELETRÔNICO Nº 49/... | AVISO DE SUSPENSÃO DO PREGÃO ELETRÔNICO Nº 49/... | 00050-00002711/2021-75 |    a suspensão de realização do PE nº 049/2022    |                        BRB                        |    21/2022     |     58/2021     |       07/10/2021        |
 
 ### Anulação e Revogação
 
@@ -215,7 +215,13 @@ These are the entities captured in `contrato_convenio` acts:
 
 Here's an example of the acts in a dataframe:
 
-| **numero_dodf** |             **titulo**             |                      **text**                     |      **PROCESSO**      | **NUM_AJUSTE** |           **CONTRATANTE_ou_CONCEDENTE**           | **CONTRATADA_ou_CONVENENTE** | **CNPJ_CONTRATADA_ou_CONVENENTE** |                   **OBJ_AJUSTE**                  |        **VALOR**       | **CODIGO_UO** | **FONTE_RECURSO** | **NATUREZA_DESPESA** | **NOTA_EMPENHO** |                    **VIGENCIA**                   | **DATA_ASSINATURA** | **PROGRAMA_TRABALHO** | **NOME_RESPONSAVEL** | **CNPJ_CONTRATANTE_ou_CONCEDENTE** |
-|:---------------:|:----------------------------------:|:-------------------------------------------------:|:----------------------:|:--------------:|:-------------------------------------------------:|:----------------------------:|:---------------------------------:|:-------------------------------------------------:|:----------------------:|:-------------:|:-----------------:|:--------------------:|:----------------:|:-------------------------------------------------:|:-------------------:|:---------------------:|:--------------------:|:----------------------------------:|
-|        38       |         EXTRATO DE CONTRATO        | EXTRATO DE CONTRATO Contrato nº 9441. Assinatu... |           NaN          |       NaN      |                       CAESB                       |              NaN             |                NaN                | Fornecimento de acesso à sistema informatizado... | [23.722,14, 23.722,14] |     22.202    |  11.101.000.000-3 |          NaN         |        NaN       | 12 ( doze ) e 12 ( doze ) mês ( es ) , respect... |      21/02/2022     |          NaN          |          NaN         |                 NaN                |
-|        38       | EXTRATO DE CONTRATO Nº 045723/2022 | EXTRATO DE CONTRATO Nº 045723/2022 Processo: 0... | 00366-00000136/2022-11 |   045723/2022  | ADMINISTRAÇÃO REGIONAL DE VICENTE PIRES/RA-VP ... |           OURO GÁS           |                NaN                | Aquisição de gás liquefeito de petróleo , boti... |        1.991,20        |     09133     |        100        |        339030        |    2022NE00016   | O contrato terá vigência do contrato será a pa... |      21/02/2022     | 04.122.6001.8517.0095 |          NaN         |                 NaN                |
+| **numero_dodf** |             **titulo**             |                      **text**                     |      **PROCESSO**        | **NUM_AJUSTE**  |           **CONTRATANTE_ou_CONCEDENTE**           | **CONTRATADA_ou_CONVENENTE** | **CNPJ_CONTRATADA_ou_CONVENENTE** |                   **OBJ_AJUSTE**                  |        **VALOR**       | **CODIGO_UO** | **FONTE_RECURSO** | **NATUREZA_DESPESA** | **NOTA_EMPENHO** |                    **VIGENCIA**                   | **DATA_ASSINATURA** | **PROGRAMA_TRABALHO** |   **NOME_RESPONSAVEL**   | **CNPJ_CONTRATANTE_ou_CONCEDENTE** |
+|:---------------:|:----------------------------------:|:-------------------------------------------------:|:------------------------:|:---------------:|:-------------------------------------------------:|:----------------------------:|:---------------------------------:|:-------------------------------------------------:|:----------------------:|:-------------:|:-----------------:|:--------------------:|:----------------:|:-------------------------------------------------:|:-------------------:|:---------------------:|:------------------------:|:----------------------------------:|
+|        38       |         EXTRATO DE CONTRATO        | EXTRATO DE CONTRATO Contrato nº 9441. Assinatu... | 00146-0000000457/2021-01 |   37/2021       |                       CAESB                       |       L2A UNIAO LTDA         |        90.180.605/0001-02         | Fornecimento de acesso à sistema informatizado... | [23.722,14, 23.722,14] |     22.202    |  11.101.000.000-3 |       4.4.90.51      |    2021NE00764   | 12 ( doze ) e 12 ( doze ) mês ( es ) , respect... |      21/02/2022     | 28.845.0903.00NR.0053 |     Bruno Costa Nunes    |          23.791.169/0001-02        |
+|        38       | EXTRATO DE CONTRATO Nº 045723/2022 | EXTRATO DE CONTRATO Nº 045723/2022 Processo: 0... |  00366-00000136/2022-11  |   045723/2022   | ADMINISTRAÇÃO REGIONAL DE VICENTE PIRES/RA-VP ... |           OURO GÁS           |        27.983.951/0001-84         | Aquisição de gás liquefeito de petróleo , boti... |        1.991,20        |     09133     |        100        |        339030        |    2022NE00016   | O contrato terá vigência do contrato será a pa... |      21/02/2022     | 04.122.6001.8517.0095 |  THIAGO H. M. DOS SANTOS |          16.615.705/0001-53        |
+
+## Obtaining JSON Files
+
+If you do not have any JSON file to extract data from, you can find them in <a href="https://www.dodf.df.gov.br/index/jornal-json" target="_blank">this page</a>. In your web browser, just right click on the page, click on "save as" and select json file.
+
+The page is updated everyday with the DODF of the day. Unfortunatelly there's not a database available of previous DODFs.
