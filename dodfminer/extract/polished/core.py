@@ -13,6 +13,7 @@ Usage Example::
 
 import multiprocessing
 from typing import List, Dict
+from dodfminer.extract.polished.create_xml import XMLFy
 
 from dodfminer.extract.polished.acts.aposentadoria import Retirements, RetAposentadoria
 from dodfminer.extract.polished.acts.base import Atos
@@ -24,7 +25,12 @@ from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.contrato import Contratos
-from dodfminer.extract.polished.create_xml import XMLFy
+# Atos seção 3
+from dodfminer.extract.polished.acts.aditamento import Aditamento
+from dodfminer.extract.polished.acts.licitacao import Licitacao
+from dodfminer.extract.polished.acts.suspensao import Suspensao
+from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao
+from dodfminer.extract.polished.acts.contrato_convenio import Contrato_Convenio
 
 _acts_ids = {
     "aposentadoria": Retirements,
@@ -38,7 +44,15 @@ _acts_ids = {
     "efetivos_exo": ExoneracaoEfetivos,
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
     "cessoes": Cessoes,
-    "contrato": Contratos
+    "contrato": Contratos,
+}
+
+_acts_sec3 = {
+    "contrato_convenio": Contrato_Convenio,
+    "aditamento": Aditamento,
+    "licitacao": Licitacao,
+    "suspensao": Suspensao,
+    "anulacao_revogacao": Anulacao_Revogacao,
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
@@ -78,7 +92,7 @@ class ActsExtractor:
     """
 
     @staticmethod
-    def get_act_obj(ato_id, file, backend):
+    def get_act_obj(ato_id, file, backend = None, pipeline = None):
         """
         Extract a single act type from a single DODF.
 
@@ -93,10 +107,13 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        return _acts_ids[ato_id](file, backend)
+        if file[-5:] == '.json':
+            return _acts_sec3[ato_id](file, pipeline)
+        else:
+            return _acts_ids[ato_id](file, backend)
 
     @staticmethod
-    def get_all_obj(file, backend):
+    def get_all_obj(file, backend = None):
         """
         Extract all act types from a single DODF object.
 
@@ -107,11 +124,17 @@ class ActsExtractor:
             backend (string): Backend of act extraction, either Regex or NER.
 
         Returns:
-            An vector of objects of all the acts with extracted
+            A vector of objects of all the acts with extracted
             information.
 
         """
+
         res = {}
+        if file[-5:] == '.json':
+            for key, act in _acts_sec3.items():
+                a = act(file)
+                res[key] = a
+
         for key, act in _acts_ids.items():
             res[key] = act(file, backend)
 
@@ -183,6 +206,11 @@ class ActsExtractor:
 
         """
         res = {}
+        if file[-5:] == '.json':
+            for key, act in _acts_sec3.items():
+                a = act(file)   
+                res[key] = a.data_frame
+        
         for key, act in _acts_ids.items():
             res[key] = act(file, backend).data_frame
 
@@ -237,3 +265,4 @@ class ActsExtractor:
         """
         res = XMLFy(file, _acts_ids, i)
         return res
+        

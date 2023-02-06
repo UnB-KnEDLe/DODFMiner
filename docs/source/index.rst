@@ -10,6 +10,7 @@ Welcome to DODFMiner's documentation!
   user/intro
   user/install
   user/usage
+  user/JSON_extraction.md
   user/ARCH.md
   user/CODE_OF_CONDUCT.md
   user/CONTRIBUTING.md
@@ -44,3 +45,8 @@ Welcome to DODFMiner's documentation!
   etc/ack
   etc/about
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Tutorials
+
+  tutorials/JSON_extraction
