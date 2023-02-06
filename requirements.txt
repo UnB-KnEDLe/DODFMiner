@@ -9,7 +9,7 @@ python-dateutil==2.8.1
 pytz==2020.1
 requests==2.26.0
 tqdm==4.46.1
-joblib==0.16.0
+joblib==1.2.0
 sklearn_crfsuite==0.3.6
 lxml==4.6.5
 pytest==6.0.2
