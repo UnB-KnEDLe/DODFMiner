@@ -12,18 +12,13 @@ from sklearn.pipeline import Pipeline
 from dodfminer.extract.polished.backend.pipeline import feature_extractor, PipelineCRF
 
 class Licitacao():
-
-  @property
-  def acts_str(self):
-    return self.atos_encontrados['texto']
-
   def __init__(self, file, pipeline = None):
     self.pipeline = pipeline
     self.filename = file
     self.file = None
     self.atos_encontrados = []
     self.predicted = []
-    self.data_frame = []
+    self.df = []
     self.enablePostProcess = True
     self.useDefault = True
 
@@ -36,7 +31,7 @@ class Licitacao():
     if self.enablePostProcess: 
       self.post_process()
     else:
-      self.data_frame = pd.DataFrame(self.predicted)
+      self.df = pd.DataFrame(self.predicted)
     
   def load(self):
     # Load model
@@ -109,6 +104,7 @@ class Licitacao():
 
       if self.useDefault:
         text_split = nltk.word_tokenize(text)
+        ent_dict['text'] = " ".join(text_split)
       else:
         text_split = self.pipeline['pre-processing'].transform([text])[0]
 
@@ -139,5 +135,45 @@ class Licitacao():
         else:
           ent_dict[tup[0]].append(tup[1])
 
-      self.data_frame.append(ent_dict)
-    self.data_frame = pd.DataFrame(self.data_frame)
+      ent_dict['text'] = re.sub(r'[\（\）\(\)]', '', ent_dict['text'])
+      for e in ent_dict:
+
+        if e != "numero_dodf" and e != 'titulo' and e != 'text':
+
+          if type(ent_dict[e]) is not list:
+            ent_dict[e] = re.sub(r'[\（\）\(\)]', '', ent_dict[e])
+            idx = re.search(ent_dict[e], ent_dict['text'])
+
+            if idx is not None:
+              ent_dict[e] = {
+                    "entity":ent_dict[e],
+                    "start":idx.start(),
+                    "end":idx.end()
+                  }
+
+            else:
+              ent_dict[e] = ent_dict[e]
+
+          else:
+            new_list = []
+
+            for word in ent_dict[e]:
+              new_word = re.sub(r'[\（\）\(\)]', '', word)
+              idx = re.search(new_word, ent_dict['text'])
+
+              if idx is not None:
+                new_list.append(
+                  {
+                    "entity":new_word,
+                    "start":idx.start(),
+                    "end":idx.end()
+                  }
+                )
+
+              else:
+                new_list.append(new_word)
+            
+            ent_dict[e] = new_list
+
+      self.df.append(ent_dict)
+    self.df = pd.DataFrame(self.df)
