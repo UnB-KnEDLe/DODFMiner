@@ -11,13 +11,13 @@ Considering the module has been installed using pip, you should be able to use D
 
     $ dodfminer --help
 
-A help screen of the program should appear. The helper sould show two positional arguments: *downloader* and *extract*.
+A help screen of the program should appear. The helper should show two positional arguments: *downloader* and *extract*.
 Each of those arguments can be considered as a subprogram and work independently, you can choose the one you desire using::
 
     $ dodfminer downloader --help
     $ dodfminer extract --help
 
-Depending which module you choose the execution parameters will change.
+Depending on which module you choose the execution parameters will change.
 
 Downloader Module
 -----------------
@@ -72,7 +72,7 @@ Polished Extraction
 ^^^^^^^^^^^^^^^^^^^
 
 Using the -a or --act flag, you can extract the dodf in a polished way. The usage of the -a will extract all types
-of act in the DODF. Additionaly, if desired, the flag can followed by a list of specific acts types which you want to extract.
+of act in the DODF. Additionaly, if desired, the flag can be followed by a list of specific acts types which you want to extract.
 The extraction is done using the backend specified in the -b flag, which can be either regex or ner.
 
 Available Act Types:
@@ -125,7 +125,7 @@ Usage Example::
 
 .. note::
 
-    The DODFMiner act extraction needs the text data from DODFs to correct extract the acts
+    The DODFMiner act extraction needs the text data from DODFs to correctly extract the acts
     from DODF, therefore the -a option generates first txt files before the act extraction.
 
 Library Usage

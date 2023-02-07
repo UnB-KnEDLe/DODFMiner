@@ -56,6 +56,7 @@ class CLI():
         self.def_start_date = '01/19'
         self.def_end_date = '01/19'
         self.save_path = './'
+        self.file_type = "pdf"
         self.download_parser = None
         self.extract_content_parser = None
 
@@ -77,6 +78,11 @@ class CLI():
     def _download_parser(self):
         """Create parser for download configs."""
         self.download_parser = self.subparsers.add_parser("downloader")
+
+        help_text = 'File type to download.'
+        self.download_parser.add_argument('-f', '--file_type', dest='file_type',
+                                          default=self.file_type, type=str,
+                                          choices=['pdf', 'json'], help=help_text)
 
         help_text = 'Folder to output the download DODFs'
         self.download_parser.add_argument('-sp', '--save_path', dest='save_path',

@@ -16,6 +16,7 @@ from pathlib import Path
 from datetime import datetime
 import tqdm
 import requests
+import json
 
 from dateutil.relativedelta import relativedelta
 from dodfminer.downloader.helper import check_date, get_downloads
@@ -221,6 +222,33 @@ class Downloader:
             self._get_dodfs(get_downloads(year_, month_), month_path)
 
         self._prog_bar.update(1)
+
+  
+    def pull_json(self):
+        """Download the DODF JSON file available on the current day.
+
+        The file is saved either in the path provided or in the default 'dodf' directory.
+
+        Note:
+            There is no way of downloading JSON files from
+            past days because they are not provided.
+        """
+
+        JSON_URL = 'https://www.dodf.df.gov.br/index/jornal-json'
+        try:
+            response = requests.get(JSON_URL)
+            if response.status_code == 200:
+                # Creates and saves the JSON file
+                json_data = response.json()
+                json_title = json_data['lstJornalDia'][0][:-4] + '.json'
+                json_path = os.path.join(self._download_path, json_title)
+                with open(json_path, "w") as file:
+                    json.dump(json_data, file)
+                print("\nThe JSON file has been downloaded successfully.")
+        except requests.exceptions.HTTPError as error:
+            self._fail_request_message(JSON_URL, error)
+        except requests.exceptions.RequestException as error:
+            self._fail_request_message(JSON_URL, error)
 
 
     def _get_dodfs(self, _links_for_each_dodf, month_path):
