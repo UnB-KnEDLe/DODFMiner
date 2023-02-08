@@ -44,7 +44,7 @@ _acts_ids = {
     "efetivos_exo": ExoneracaoEfetivos,
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
     "cessoes": Cessoes,
-    "contrato": Contratos,
+    # "contrato": Contratos,
     
     # Atos seção 3
     "contrato_convenio": Contrato_Convenio,

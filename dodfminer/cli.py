@@ -17,7 +17,13 @@ act_choices = ["aposentadoria",
                "cessoes",
                "sem_efeito_aposentadoria",
                "efetivos_nome",
-               "efetivos_exo"]
+               "efetivos_exo",
+
+               "contrato_convenio",
+               "aditamento",
+               "licitacao",
+               "suspensao",
+               "anulacao_revogacao"]
 
 
 class CLI():
