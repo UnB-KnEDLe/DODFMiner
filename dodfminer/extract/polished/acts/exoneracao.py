@@ -11,8 +11,8 @@ class Exoneracao(Atos):
         Classe para atos de exoneração não-efetivos
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _act_name(self):
         return "Exoneração"
@@ -86,8 +86,8 @@ class ExoneracaoEfetivos(Atos):
         Classe para atos de exoneração efetivos
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _act_name(self):
         return "Exoneração Efetivos"

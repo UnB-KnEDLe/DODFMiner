@@ -80,14 +80,14 @@ class SemEfeitoAposentadoria(Atos):
 
     # pylint: disable=too-many-arguments
     def __init__(self, file, backend, debug=False, extra_search=True,
-                 nlp=None, max_length=2000):
+                 nlp=None, max_length=2000, pipeline = None):
         self._max_length = max_length
         self._debug = debug
         self._extra_search = extra_search
         # self._processed_text = self._pre_process_text(open(file).read())
         self._raw_matches = []
         self._nlp = nlp
-        super().__init__(file, backend)
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)

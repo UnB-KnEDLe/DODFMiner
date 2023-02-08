@@ -15,15 +15,16 @@ class Anulacao_Revogacao():
 
   @property
   def acts_str(self):
+    if len(self.atos_encontrados) == 0: return []
     return self.atos_encontrados['texto']
 
-  def __init__(self, file, pipeline = None):
+  def __init__(self, file, backend = None, pipeline = None):
     self.pipeline = pipeline
     self.filename = file
     self.file = None
     self.atos_encontrados = []
     self.predicted = []
-    self.data_frame = []
+    self.data_frame = pd.DataFrame()
     self.enablePostProcess = True
     self.useDefault = True
 
@@ -32,6 +33,7 @@ class Anulacao_Revogacao():
 
   def flow(self):
     self.load()
+    if len(self.atos_encontrados) == 0: return 
     self.ner_extraction()
     if self.enablePostProcess: 
       self.post_process()
@@ -95,6 +97,7 @@ class Anulacao_Revogacao():
 
   # Montar dataframe com as predições e seus IOB's
   def post_process(self):
+    column_list = []
     for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
       ent_dict = {
         'numero_dodf': '',
@@ -138,5 +141,5 @@ class Anulacao_Revogacao():
         else:
           ent_dict[tup[0]].append(tup[1])
 
-      self.data_frame.append(ent_dict)
-    self.data_frame = pd.DataFrame(self.data_frame)
+      column_list.append(ent_dict)
+    self.data_frame = pd.DataFrame(column_list)
