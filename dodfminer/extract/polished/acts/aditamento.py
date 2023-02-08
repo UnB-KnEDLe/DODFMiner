@@ -24,7 +24,7 @@ class Aditamento():
     self.file = None
     self.atos_encontrados = []
     self.predicted = []
-    self.data_frame = pd.DataFrame()
+    self.data_frame = []
     self.enablePostProcess = True
     self.useDefault = True
 
@@ -119,7 +119,6 @@ class Aditamento():
 
   # Montar dataframe com as predições e seus IOB's
   def post_process(self):
-    column_list = []
     for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
       ent_dict = {
         'numero_dodf': '',
@@ -163,5 +162,5 @@ class Aditamento():
         else:
           ent_dict[tup[0]].append(tup[1])
 
-      column_list.append(ent_dict)
-    self.data_frame = pd.DataFrame(column_list)
+      self.data_frame.append(ent_dict)
+    self.data_frame = pd.DataFrame(self.data_frame)
