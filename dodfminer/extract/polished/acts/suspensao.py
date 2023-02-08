@@ -24,7 +24,7 @@ class Suspensao():
     self.file = None
     self.atos_encontrados = []
     self.predicted = []
-    self.df = []
+    self.data_frame = []
     self.enablePostProcess = True
     self.useDefault = True
 
@@ -33,12 +33,14 @@ class Suspensao():
 
   def flow(self):
     self.load()
-    if len(self.atos_encontrados) == 0: return 
+    if len(self.atos_encontrados) == 0: 
+      self.data_frame = pd.DataFrame()
+      return 
     self.ner_extraction()
     if self.enablePostProcess: 
       self.post_process()
     else:
-      self.df = pd.DataFrame(self.predicted)
+      self.data_frame = pd.DataFrame(self.predicted)
     
   def load(self):
     # Load model
@@ -181,5 +183,5 @@ class Suspensao():
             
             ent_dict[e] = new_list
 
-      self.df.append(ent_dict)
-    self.df = pd.DataFrame(self.df)
+      self.data_frame.append(ent_dict)
+    self.data_frame = pd.DataFrame(self.data_frame)
