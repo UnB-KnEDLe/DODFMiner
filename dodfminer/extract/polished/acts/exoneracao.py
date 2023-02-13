@@ -140,12 +140,7 @@ class ExoneracaoEfetivos(Atos):
         return ['tipo'] + self.get_expected_colunms()
 
     def _rule_for_inst(self):
-        start = r"(EXONERAR,\s?)"
-        # body = r"((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.-])+)[,\sa-zA-Z0-9\\\/-]*)"
-        body = r'((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.,X-])+)\s' + \
-            r'(?!.*\n?.*Cargo\sem\s+Comissao,|.*\n?.*Natureza\sEspecial,)[,\sa-zA-Z0-9\\\/-]*)'
-        end = ""
-        return start + body + end
+        return r"(EXONERAR)(?:(?!.*Comissao|.*\n.*Comissao|.*Especial|.*\n.*Especial ))"
 
     def _prop_rules(self):
         rules = {
