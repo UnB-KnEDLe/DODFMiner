@@ -31,7 +31,7 @@ class RetificacaoComissionados(Atos):
         return joblib.load(f_path)
 
     def _rule_for_inst(self):
-        return r"^((?!matr[ií]cula).|\n)*?ONDE(\s+)SE(\s+)L[EÊ]:"
+        return r"(No Decreto de)((.|\n)*?)(^((?!matr[ií]cula).|\n))*?((.|\n)*?)LEIA-?SE: \"?(\.\.\.)?.*(\.\.\.)?\"?\."
 
     def _prop_rules(self):
         return {} # regex para entidades não implementado
@@ -68,7 +68,7 @@ class RetificacaoEfetivos(Atos):
         return joblib.load(f_path)
 
     def _rule_for_inst(self):
-        return r"matr[ií]cula((.|\n)*?)ONDE(\s+)SE(\s+)L[EÊ]"
+        return r"(Na Ordem de S|RETIFICAR)((.|\n)*?)(matricula)((.|\n)*?)LEIA-?SE: \"?(\.\.\.)?.*(\.\.\.)?\"?\."
 
     def _prop_rules(self):
         return {} # regex para entidades não implementado
