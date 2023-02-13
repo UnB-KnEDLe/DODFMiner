@@ -205,21 +205,25 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             with open(file_name, 'r', encoding='utf-8') as file:
                 self._json = json.load(file)
                 self._file_name = file_name
-
-            section = self._json['json']['INFO'][self._section()]
-
-            all_txt = []
-            for agency in section:
-                for document in section[agency]:
-                    for subdoc in section[agency][document]:
-                        txt = section[agency][document][subdoc]['texto']
-                        txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
-                        all_txt.append(txt)
-            self._text = ''.join(all_txt)
-
         except IOError:
             self._text = file_name
             self._file_name = None
+            return
+
+        try:
+            section = self._json['json']['INFO'][self._section()]
+        except KeyError:
+            self._text = 'X'
+            return
+
+        all_txt = []
+        for agency in section:
+            for document in section[agency]:
+                for subdoc in section[agency][document]:
+                    txt = section[agency][document][subdoc]['texto']
+                    txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
+                    all_txt.append(txt)
+        self._text = ''.join(all_txt)
 
     def read_txt(self, file_name):
         """Reads a .txt file of a DODF.
