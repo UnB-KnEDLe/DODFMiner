@@ -107,10 +107,10 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        if file[-5:] == '.json':
+        if file[-5:] == '.json' and ato_id in _acts_sec3.keys():
             return _acts_sec3[ato_id](file, pipeline)
-        else:
-            return _acts_ids[ato_id](file, backend)
+        
+        return _acts_ids[ato_id](file, backend)
 
     @staticmethod
     def get_all_obj(file, backend = None):
