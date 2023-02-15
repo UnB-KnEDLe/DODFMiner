@@ -224,7 +224,7 @@ class Downloader:
         self._prog_bar.update(1)
 
   
-    def pull_json(self):
+    def pull_json(self, JSON_URL):
         """Download the DODF JSON file available on the current day.
 
         The file is saved either in the path provided or in the default 'dodf' directory.
@@ -234,7 +234,6 @@ class Downloader:
             past days because they are not provided.
         """
 
-        JSON_URL = 'https://www.dodf.df.gov.br/index/jornal-json'
         try:
             response = requests.get(JSON_URL)
             if response.status_code == 200:
@@ -244,7 +243,7 @@ class Downloader:
                 json_path = os.path.join(self._download_path, json_title)
                 with open(json_path, "w") as file:
                     json.dump(json_data, file)
-                print("\nThe JSON file has been downloaded successfully.")
+                print('\nThe JSON file has been downloaded successfully from ' + JSON_URL + '.')
         except requests.exceptions.HTTPError as error:
             self._fail_request_message(JSON_URL, error)
         except requests.exceptions.RequestException as error:

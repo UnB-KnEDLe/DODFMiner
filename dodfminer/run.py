@@ -44,7 +44,8 @@ class Miner():
         if(self.args.file_type == 'pdf'):
             downloader.pull(self.args.start_date, self.args.end_date)
         else:
-            downloader.pull_json()
+            downloader._prog_bar.disable = True
+            downloader.pull_json(self.args.url)
 
 
     def extract_content(self):

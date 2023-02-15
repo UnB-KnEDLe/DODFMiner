@@ -53,12 +53,13 @@ class CLI():
         self.parser = ArgumentParser(prog="DODFMiner", description=desc,
                                      epilog=epilog)
         self.subparsers = self.parser.add_subparsers(dest='subparser_name')
-        self.def_start_date = '01/19'
-        self.def_end_date = '01/19'
+        self.def_start_date = '01/2019'
+        self.def_end_date = '01/2019'
         self.save_path = './'
         self.file_type = "pdf"
         self.download_parser = None
         self.extract_content_parser = None
+        self.url = 'https://www.dodf.df.gov.br/index/jornal-json'
 
     @classmethod
     def _new_group(cls, name, subparser):
@@ -98,6 +99,10 @@ class CLI():
         self.download_parser.add_argument('-ed', '--end_date', dest='end_date',
                                           default=self.def_end_date, type=str,
                                           help=help_text)
+
+        help_text = 'URL to download JSON file from.'
+        self.download_parser.add_argument('-url', dest='url', default=self.url,
+                                          type=str, help=help_text)
 
     def _extract_content_parser(self):
         """Create parser for extraction configs."""
