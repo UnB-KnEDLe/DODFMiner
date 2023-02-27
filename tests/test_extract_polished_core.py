@@ -11,6 +11,8 @@ from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.contrato import Contratos
+from dodfminer.extract.polished.acts.sem_efeito_exo_nom import SemEfeitoExoNom
+from dodfminer.extract.polished.acts.retificacao import RetificacaoEfetivos, RetificacaoComissionados
 
 
 from dodfminer.extract.polished.create_xml import XMLFy
@@ -29,7 +31,10 @@ def test_polished_core_acts():
         "efetivos_exo": ExoneracaoEfetivos,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
         "cessoes": Cessoes,
-        "contrato": Contratos
+        "contrato": Contratos,
+        "sem_efeito_exo_nom": SemEfeitoExoNom,
+        "efetivos_ret": RetificacaoEfetivos,
+        "comissionados_ret": RetificacaoComissionados,
     }
 
 
@@ -58,7 +63,13 @@ def test_polished_core_act_obj():
         "cessoes", "", "regex"), Cessoes)
     assert isinstance(ActsExtractor.get_act_obj(
         "contrato", "", "regex"), Contratos)
-    assert len(_acts_ids) == 12
+    assert isinstance(ActsExtractor.get_act_obj(
+        "efetivos_ret", "", "regex"), RetificacaoEfetivos)
+    assert isinstance(ActsExtractor.get_act_obj(
+        "comissionados_ret", "", "regex"), RetificacaoComissionados)
+    assert isinstance(ActsExtractor.get_act_obj(
+        "sem_efeito_exo_nom", "", "regex"), SemEfeitoExoNom)
+    assert len(_acts_ids) == 15
 
 
 def test_polished_core_get_all_obj():
@@ -75,9 +86,12 @@ def test_polished_core_get_all_obj():
         "substituicao": Substituicao("", "regex"),
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex"),
         "cessoes": Cessoes("", "regex"),
-        "contrato": Contratos("", "regex")
+        "contrato": Contratos("", "regex"),
+        "sem_efeito_exo_nom": SemEfeitoExoNom("", "regex"),
+        "efetivos_ret": RetificacaoEfetivos("", "regex"),
+        "comissionados_ret": RetificacaoComissionados("", "regex"),
     }
-    assert len(objs) == 12
+    assert len(objs) == 15
     assert len(objs) == len(needed)
 
 
@@ -95,9 +109,12 @@ def test_polished_core_get_all_obj_parallel():
         "substituicao": Substituicao("", "regex"),
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex"),
         "cessoes": Cessoes("", "regex"),
-        "contrato": Contratos("", "regex")
+        "contrato": Contratos("", "regex"),
+        "sem_efeito_exo_nom": SemEfeitoExoNom("", "regex"),
+        "efetivos_ret": RetificacaoEfetivos("", "regex"),
+        "comissionados_ret": RetificacaoComissionados("", "regex"),
     }
-    assert len(objs) == 12
+    assert len(objs) == 15
     assert len(objs) == len(needed)
 
 
@@ -114,7 +131,10 @@ def test_polished_core_act_df():
     assert isinstance(ActsExtractor.get_act_df("sem_efeito_aposentadoria", "", "regex"), type(SemEfeitoAposentadoria("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("cessoes", "", "regex"), type(Cessoes("", "regex").data_frame))
     assert isinstance(ActsExtractor.get_act_df("contrato", "", "regex"), type(Contratos("", "regex").data_frame))
-    assert len(_acts_ids) == 12
+    assert isinstance(ActsExtractor.get_act_df("sem_efeito_exo_nom", "", "regex"), type(SemEfeitoExoNom("", "regex").data_frame))
+    assert isinstance(ActsExtractor.get_act_df("efetivos_ret", "", "regex"), type(RetificacaoEfetivos("", "regex").data_frame))
+    assert isinstance(ActsExtractor.get_act_df("comissionados_ret", "", "regex"), type(RetificacaoComissionados("", "regex").data_frame))
+    assert len(_acts_ids) == 15
 
 
 def test_polished_core_get_all_df():
@@ -131,9 +151,12 @@ def test_polished_core_get_all_df():
         "substituicao": Substituicao("", "regex").data_frame,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex").data_frame,
         "cessoes": Cessoes("", "regex").data_frame,
-        "contrato": Contratos("", "regex").data_frame
+        "contrato": Contratos("", "regex").data_frame,
+        "sem_efeito_exo_nom": SemEfeitoExoNom("", "regex").data_frame,
+        "efetivos_ret": RetificacaoEfetivos("", "regex").data_frame,
+        "comissionados_ret": RetificacaoComissionados("", "regex").data_frame,
     }
-    assert len(data_frames) == 12
+    assert len(data_frames) == 15
     assert len(data_frames) == len(dataframes)
 
 
@@ -151,9 +174,12 @@ def test_polished_core_get_all_df_parallel():
         "substituicao": Substituicao("", "regex").data_frame,
         "sem_efeito_aposentadoria": SemEfeitoAposentadoria("", "regex").data_frame,
         "cessoes": Cessoes("", "regex").data_frame,
-        "contrato": Contratos("", "regex").data_frame
+        "contrato": Contratos("", "regex").data_frame,
+        "sem_efeito_exo_nom": SemEfeitoExoNom("", "regex").data_frame,
+        "efetivos_ret": RetificacaoEfetivos("", "regex").data_frame,
+        "comissionados_ret": RetificacaoComissionados("", "regex").data_frame,
     }
-    assert len(data_frames) == 12
+    assert len(data_frames) == 15
     assert len(data_frames) == len(dataframes)
 
 

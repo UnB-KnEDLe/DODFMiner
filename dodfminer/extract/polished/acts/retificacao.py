@@ -68,7 +68,7 @@ class RetificacaoEfetivos(Atos):
         return joblib.load(f_path)
 
     def _rule_for_inst(self):
-        return r"(Na Ordem de S|RETIFICAR)((.|\n)*?)(matricula)((.|\n)*?)LEIA-?SE: \"?(\.\.\.)?.*(\.\.\.)?\"?\."
+        return r"(Na Ordem de S|RETIFICAR)(((.|\n)*?)(matr[ií]cula)((.|\n)*?)LEIA-?SE: \"?(\.\.\.)?.*(\.\.\.)?\"?\.)"
 
     def _prop_rules(self):
         return {} # regex para entidades não implementado
