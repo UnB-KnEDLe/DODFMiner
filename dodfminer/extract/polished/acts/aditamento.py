@@ -119,6 +119,7 @@ class Aditamento():
     pred = self.pipeline.predict(self.atos_encontrados['texto'])
     self.predicted = pred
 
+
   # Montar dataframe com as predições e seus IOB's
   def post_process(self):
     for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
@@ -129,81 +130,61 @@ class Aditamento():
       } 
       ent_dict['numero_dodf'] = numdodf
       ent_dict['titulo'] = titulo
-      ent_dict['text'] = text
-      entities = []
+      ent_dict['text'] = ""
 
       if self.useDefault:
         text_split = nltk.word_tokenize(text)
-        ent_dict['text'] = " ".join(text_split)
       else:
         text_split = self.pipeline['pre-processing'].transform([text])[0]
 
-      ent_concat = ('', '')
-      aux = 0
-      for ent, word in zip(IOB, text_split):
-        if ent[0] == 'B':
-          ent_concat = (ent[2:len(ent)], word)
-        elif ent[0] == 'I':
-          if aux != 0:
-            ent_concat = (ent_concat[0], ent_concat[1] + ' ' + word)
-          else:
-            ent_concat = (ent[2:len(ent)], word)
-        elif ent[0] == 'O':
-          if ent_concat[1] != '':
-            entities.append(ent_concat)
-            ent_concat = ('', '')
-              
-        aux += 1
-      for tup in entities:
-        if tup[0] not in ent_dict:
-          ent_dict[tup[0]] = tup[1]
-        elif type(ent_dict[tup[0]]) != list:
-          aux = []
-          aux.append(ent_dict[tup[0]])
-          aux.append(tup[1])
-          ent_dict[tup[0]] = aux
-        else:
-          ent_dict[tup[0]].append(tup[1])
+      ent_list = []
 
-      ent_dict['text'] = re.sub(r'[\（\）\(\)]', '', ent_dict['text'])
-      for e in ent_dict:
+      aux_text_token = []
+      aux_text_string = ""
 
-        if e != "numero_dodf" and e != 'titulo' and e != 'text':
+      i = 0
+      while i < len(IOB):
+          current_ent = {
+              "name": [],
+              "start": None,
+              "end": None
+          }
 
-          if type(ent_dict[e]) is not list:
-            ent_dict[e] = re.sub(r'[\（\）\(\)]', '', ent_dict[e])
-            idx = re.search(ent_dict[e], ent_dict['text'])
+          if "B-" in IOB[i]:
+              entity_name = IOB[i].replace("B-", "")
+              aux_text_string = " ".join(aux_text_token).strip()
+              aux_text_token.append(text_split[i])
 
-            if idx is not None:
-              ent_dict[e] = {
-                    "entity":ent_dict[e],
-                    "start":idx.start(),
-                    "end":idx.end()
-                  }
+              current_ent["start"] = len(aux_text_string) + 1
+              current_ent["name"].append(text_split[i])
 
-            else:
-              ent_dict[e] = ent_dict[e]
+              i += 1
 
-          else:
-            new_list = []
+              while (i < len(IOB)) and ("I-" in IOB[i]):
+                  current_ent["name"].append(text_split[i])
+                  aux_text_token.append(text_split[i])
 
-            for word in ent_dict[e]:
-              new_word = re.sub(r'[\（\）\(\)]', '', word)
-              idx = re.search(new_word, ent_dict['text'])
+                  i += 1
 
-              if idx is not None:
-                new_list.append(
-                  {
-                    "entity":new_word,
-                    "start":idx.start(),
-                    "end":idx.end()
-                  }
-                )
-
+              aux_text_string = " ".join(aux_text_token)
+              current_ent["end"] = len(aux_text_string)
+              current_ent["name"] = " ".join(current_ent["name"]).strip()
+              ent_list.append(current_ent)
+              if entity_name in ent_dict:
+          
+                new_list = [ent_dict[entity_name]]
+     
+                new_list.append(current_ent)
+                ent_dict[entity_name] = new_list
               else:
-                new_list.append(new_word)
-            
-            ent_dict[e] = new_list
+                ent_dict[entity_name] = current_ent
+          
+          elif IOB[i] == 'O':
+              aux_text_token.append(text_split[i])
+              aux_text_string = " ".join(aux_text_token).strip()
 
+          i += 1
+
+      ent_dict['text'] = aux_text_string
       self.data_frame.append(ent_dict)
     self.data_frame = pd.DataFrame(self.data_frame)

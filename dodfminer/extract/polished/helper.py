@@ -65,7 +65,6 @@ def extract_multiple_acts(path, types, backend):
     Returns:
         None
     """
-    print(types)
     if len(types) == 0:
         types = _acts_ids.keys()
 
@@ -81,7 +80,7 @@ def extract_multiple_acts(path, types, backend):
             data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
-        files = get_files_path(path, 'txt') + get_files_path(path, "json")
+        files = get_files_path(path, 'json') + get_files_path(path, 'txt')
         for act_type in types:
             data_frame = extract_multiple(files, act_type, backend)
             data_frame.to_csv(os.path.join(path, act_type + ".csv"))
@@ -120,7 +119,7 @@ def extract_multiple_acts_parallel(path: str, types: List[str], backend: str, pr
             data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
-        files = get_files_path(path, 'txt') + get_files_path(path, 'json')
+        files = get_files_path(path, 'json') + get_files_path(path, 'txt')
         extraction_arguments = []
 
         for act_type in types:
