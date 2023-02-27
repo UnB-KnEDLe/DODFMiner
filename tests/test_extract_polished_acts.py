@@ -497,8 +497,7 @@ def test_exo_efet_prop_names(act_exo_efet):
 
 def test_exo_efet_rule(act_exo_efet):
     assert act_exo_efet._rule_for_inst(
-    ) == r"(EXONERAR,\s?)((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.,X-])+)\s" + \
-        r"(?!.*\n?.*Cargo\sem\s+Comissao,|.*\n?.*Natureza\sEspecial,)[,\sa-zA-Z0-9\\\/-]*)"
+    ) == r"(EXONERAR)((?:(?!.*Comiss[ãa]o|.*\n.*Comiss[ãa]o|.*Especial|.*\n.*Especial))[\s\S]*?(?:\.\n|NOMEAR|\d+\-\d+\/\d+\-\d+\.))"
 
 
 def test_exo_efet_prop_rules_names(act_exo_efet):
