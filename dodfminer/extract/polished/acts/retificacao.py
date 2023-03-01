@@ -10,8 +10,8 @@ class RetificacaoComissionados(Atos):
         Classe para atos de retificação de comissionados
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend = backend, pipeline = pipeline)
 
     def _act_name(self):
         return "Retificação de Comissionados"
@@ -47,8 +47,8 @@ class RetificacaoEfetivos(Atos):
     Classe para atos de retificação de efetivos
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _act_name(self):
         return "Retificação de Efetivos"

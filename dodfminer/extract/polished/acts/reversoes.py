@@ -11,8 +11,8 @@ class Revertions(Atos):
         Classe com atos de reversão
     '''
 
-    def __init__(self, text, backend):
-        super().__init__(text, backend)
+    def __init__(self, text, backend, pipeline = None):
+        super().__init__(text, backend, pipeline=pipeline)
 
     def _regex_flags(self):
         return re.IGNORECASE

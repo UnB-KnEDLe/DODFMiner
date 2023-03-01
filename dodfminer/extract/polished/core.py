@@ -45,14 +45,13 @@ _acts_ids = {
     "efetivos_nome": NomeacaoEfetivos,
     "efetivos_exo": ExoneracaoEfetivos,
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-    "cessoes": Cessoes,
-    "contrato": Contratos,
+    "cessoes": Cessoes,    
     "sem_efeito_exo_nom": SemEfeitoExoNom,
     "efetivos_ret": RetificacaoEfetivos,
     "comissionados_ret": RetificacaoComissionados,
-}
+    # "contrato": Contratos,
 
-_acts_sec3 = {
+    # Atos seção 3
     "contrato_convenio": Contrato_Convenio,
     "aditamento": Aditamento,
     "licitacao": Licitacao,
@@ -112,13 +111,10 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        if file[-5:] == '.json' and ato_id in _acts_sec3.keys():
-            return _acts_sec3[ato_id](file, pipeline)
-        
-        return _acts_ids[ato_id](file, backend)
+        return _acts_ids[ato_id](file, backend=backend, pipeline=pipeline)
 
     @staticmethod
-    def get_all_obj(file, backend = None):
+    def get_all_obj(file, backend = None, pipeline = None):
         """
         Extract all act types from a single DODF object.
 
@@ -133,15 +129,9 @@ class ActsExtractor:
             information.
 
         """
-
         res = {}
-        if file[-5:] == '.json':
-            for key, act in _acts_sec3.items():
-                a = act(file)
-                res[key] = a
-
         for key, act in _acts_ids.items():
-            res[key] = act(file, backend)
+            res[key] = act(file, backend=backend, pipeline=pipeline)
 
         return res
 
@@ -211,10 +201,6 @@ class ActsExtractor:
 
         """
         res = {}
-        if file[-5:] == '.json':
-            for key, act in _acts_sec3.items():
-                a = act(file)   
-                res[key] = a.data_frame
         
         for key, act in _acts_ids.items():
             res[key] = act(file, backend).data_frame

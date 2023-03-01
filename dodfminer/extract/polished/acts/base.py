@@ -39,7 +39,9 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
 
     """
 
-    def __init__(self, file_name, backend='regex'):
+    def __init__(self, file_name, backend='regex', pipeline=None):
+        if pipeline is not None:
+            print("Personal acts does not support pipeline")
         self._backend = backend
         self._name = self._act_name()
         super().__init__()

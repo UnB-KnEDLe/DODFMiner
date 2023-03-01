@@ -11,8 +11,8 @@ class Retirements(Atos):
     Classe para atos de aposentadoria
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _regex_flags(self):
         return re.IGNORECASE
@@ -99,8 +99,8 @@ class RetAposentadoria(Atos):
     Classe para atos de retificação de aposentadoria
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _regex_flags(self):
         return re.IGNORECASE

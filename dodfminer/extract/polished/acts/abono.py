@@ -11,8 +11,8 @@ class AbonoPermanencia(Atos):
     Classe para atos de abono
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _regex_flags(self):
         return re.IGNORECASE | re.MULTILINE

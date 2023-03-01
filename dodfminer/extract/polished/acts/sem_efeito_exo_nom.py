@@ -9,8 +9,8 @@ class SemEfeitoExoNom(Atos):
         Classe para atos de sem efeito exoneração/nomeação
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend = backend, pipeline = pipeline)
 
     def _act_name(self):
         return "Sem Efeito Exoneração/Nomeação"
