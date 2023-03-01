@@ -23,8 +23,10 @@ from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.retificacao import RetificacaoEfetivos, RetificacaoComissionados
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.contrato import Contratos
+from dodfminer.extract.polished.acts.sem_efeito_exo_nom import SemEfeitoExoNom
 # Atos seção 3
 from dodfminer.extract.polished.acts.aditamento import Aditamento
 from dodfminer.extract.polished.acts.licitacao import Licitacao
@@ -43,9 +45,12 @@ _acts_ids = {
     "efetivos_nome": NomeacaoEfetivos,
     "efetivos_exo": ExoneracaoEfetivos,
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-    "cessoes": Cessoes,
+    "cessoes": Cessoes,    
+    "sem_efeito_exo_nom": SemEfeitoExoNom,
+    "efetivos_ret": RetificacaoEfetivos,
+    "comissionados_ret": RetificacaoComissionados,
     # "contrato": Contratos,
-    
+
     # Atos seção 3
     "contrato_convenio": Contrato_Convenio,
     "aditamento": Aditamento,
