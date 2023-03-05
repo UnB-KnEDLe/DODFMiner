@@ -134,6 +134,30 @@ class ActsExtractor:
             res[key] = act(file, backend=backend, pipeline=pipeline)
 
         return res
+    
+    @staticmethod
+    def get_all_obj_highlight(file, backend = None, pipeline = None):
+        """
+        Extract all act types from a single DODF object.
+
+        Object format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either Regex or NER.
+
+        Returns:
+            A vector of objects of all the acts with extracted
+            information.
+
+        """
+        res = {}
+        for key, act in _acts_ids.items():
+            obj = act(file, backend=backend, pipeline=pipeline)
+            obj.highlight_dataframe()
+            res[key] = obj
+
+        return res
 
     @staticmethod
     def get_all_obj_parallel(file, backend, processes=4):
@@ -204,6 +228,30 @@ class ActsExtractor:
         
         for key, act in _acts_ids.items():
             res[key] = act(file, backend).data_frame
+
+        return res
+    
+    @staticmethod
+    def get_all_df_highlight(file, backend):
+        """
+        Extract all act types from a single DODF file.
+
+        Dataframe format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
+
+        Returns:
+            A vector of dataframes with extracted information for all acts.
+
+        """
+        res = {}
+        
+        for key, act in _acts_ids.items():
+            obj = act(file, backend)
+            obj.highlight_dataframe()            
+            res[key] = obj.data_frame
 
         return res
 
