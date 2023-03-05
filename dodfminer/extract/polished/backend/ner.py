@@ -32,6 +32,7 @@ class ActNER:
 
         # pylint: disable=assignment-from-no-return
         self._model = self._load_model()
+        self._preds = []
 
     def _load_model(self):
         """Load Model from models/folder.
@@ -63,6 +64,7 @@ class ActNER:
         act = self._preprocess(act)
         feats = self._get_features(self._split_sentence(act))
         pred = self._model.predict_single(feats)
+        self._preds.append(pred)
         return self._predictions_dict(act, pred)
 
     @classmethod
