@@ -2,43 +2,14 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import pandas as pd
-import joblib
-import json
 import re
-import os
 
 from dodfminer.extract.polished.acts.base_contratos import AtosContrato
-
-from sklearn.pipeline import Pipeline
-from dodfminer.extract.polished.backend.pipeline import feature_extractor, PipelineCRF
 
 class Contrato_Convenio(AtosContrato):
 
   def __init__(self, file, backend = None, pipeline = None):
-    super().__init__(file, backend=backend, pipeline=pipeline)
-
-  def load(self):
-    # Load model
-    if self.pipeline is None:
-      f_path = os.path.dirname(__file__)
-      f_path += '/models/modelo_contrato_convenio.pkl'
-      contrato_convenio_model = joblib.load(f_path)
-      pipeline_CRF_default = Pipeline([('feat', feature_extractor()), ('crf', PipelineCRF(contrato_convenio_model))])
-      self.pipeline = pipeline_CRF_default
-    else:
-      self.useDefault = False
-      try:
-        self.pipeline['pre-processing'].transform(["test test"])
-      except KeyError:
-        self.enablePostProcess = False
-
-    # Segmentation
-    if self.filename[-5:] == '.json':
-      with open(self.filename, 'r') as f:
-        self.file = json.load(f)
-        self.atos_encontrados = self.segment(self.file)
-    else:
-      pass
+    super().__init__(file, backend=backend, pipeline=pipeline, model_path = '/models/modelo_contrato_convenio.pkl')
 
   def segment(self, file):
     atos_contrato_convenio = {

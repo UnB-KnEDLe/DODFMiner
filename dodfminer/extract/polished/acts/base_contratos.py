@@ -2,7 +2,13 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import pandas as pd
+import joblib
+import json
 import nltk
+import os
+
+from sklearn.pipeline import Pipeline
+from dodfminer.extract.polished.backend.pipeline import feature_extractor, PipelineCRF
 
 class AtosContrato:
   
@@ -11,7 +17,7 @@ class AtosContrato:
     if len(self.atos_encontrados) == 0: return []
     return self.atos_encontrados['texto'].tolist()
 
-  def __init__(self, file, backend = None, pipeline = None):
+  def __init__(self, file, model_path, backend = None, pipeline = None):
     self.pipeline = pipeline
     self.filename = file
     self.file = None
@@ -20,6 +26,7 @@ class AtosContrato:
     self.data_frame = []
     self.enablePostProcess = True
     self.useDefault = True
+    self.model_path = model_path
 
     # Inicializar fluxo
     self.flow()
@@ -36,7 +43,27 @@ class AtosContrato:
       self.data_frame = pd.DataFrame(self.predicted)
     
   def load(self):
-    raise NotImplementedError
+    # Load model
+    if self.pipeline is None:
+      f_path = os.path.dirname(__file__)
+      f_path += self.model_path
+      model = joblib.load(f_path)
+      pipeline_CRF_default = Pipeline([('feat', feature_extractor()), ('crf', PipelineCRF(model))])
+      self.pipeline = pipeline_CRF_default
+    else:
+      self.useDefault = False
+      try:
+        self.pipeline['pre-processing'].transform(["test test"])
+      except KeyError:
+        self.enablePostProcess = False
+
+    # Segmentation
+    if self.filename[-5:] == '.json':
+      with open(self.filename, 'r') as f:
+        self.file = json.load(f)
+        self.atos_encontrados = self.segment(self.file)
+    else:
+      pass
 
   def segment(self, file):
     raise NotImplementedError
