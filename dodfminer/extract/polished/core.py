@@ -59,7 +59,7 @@ _acts_ids = {
     "licitacao": Licitacao,
     "suspensao": Suspensao,
     "anulacao_revogacao": Anulacao_Revogacao,
-    "contrato2": Contrato2,
+    "contrato": Contrato2,
     "convenio": Convenio,
 }
 
