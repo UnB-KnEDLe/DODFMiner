@@ -26,7 +26,9 @@ act_choices = ["aposentadoria",
                "aditamento",
                "licitacao",
                "suspensao",
-               "anulacao_revogacao"]
+               "anulacao_revogacao",
+               "contrato",
+               "convenio"]
 
 
 class CLI():

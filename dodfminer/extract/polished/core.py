@@ -33,6 +33,8 @@ from dodfminer.extract.polished.acts.licitacao import Licitacao
 from dodfminer.extract.polished.acts.suspensao import Suspensao
 from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao
 from dodfminer.extract.polished.acts.contrato_convenio import Contrato_Convenio
+from dodfminer.extract.polished.acts.convenio import Convenio
+from dodfminer.extract.polished.acts.contrato2 import Contrato as Contrato2
 
 _acts_ids = {
     "aposentadoria": Retirements,
@@ -57,6 +59,8 @@ _acts_ids = {
     "licitacao": Licitacao,
     "suspensao": Suspensao,
     "anulacao_revogacao": Anulacao_Revogacao,
+    "contrato": Contrato2,
+    "convenio": Convenio,
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
