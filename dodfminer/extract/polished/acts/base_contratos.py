@@ -124,13 +124,9 @@ class AtosContrato:
     if len(self.atos_encontrados) == 0:
       return
     self.data_frame = []
-    for IOB, text, numdodf, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
-      ent_dict = {
-        'numero_dodf': '',
-        'titulo': '',
-        'text': '',
-      } 
-      ent_dict['numero_dodf'] = numdodf
+    for IOB, text, _, titulo in zip(self.predicted, self.atos_encontrados['texto'], self.atos_encontrados['numero_dodf'], self.atos_encontrados['titulo']):
+      ent_dict = dict() 
+      # ent_dict['numero_dodf'] = numdodf
       ent_dict['titulo'] = titulo
       ent_dict['text'] = ""
 
