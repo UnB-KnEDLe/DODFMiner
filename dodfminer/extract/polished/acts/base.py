@@ -6,6 +6,7 @@ extract information from a specialized act.
 
 import re
 import json
+import unicodedata
 import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
@@ -204,9 +205,8 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             return
         self._data_frame = []
         for IOB, text in zip(self._preds, self._acts_str):
-            ent_dict = {
-                'text': '',
-            } 
+            ent_dict = dict()
+            ent_dict['titulo'] = None
             ent_dict['text'] = ""
 
             text_split = self._split_sentence(text) + ["O"]
@@ -295,6 +295,8 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
                     txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
                     all_txt.append(txt)
         self._text = ''.join(all_txt)
+        self._text = unicodedata.normalize('NFKD', self._text).encode(
+            'ascii', 'ignore').decode('utf8')
 
     def read_txt(self, file_name):
         """Reads a .txt file of a DODF.
