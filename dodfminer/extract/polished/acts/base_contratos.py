@@ -149,7 +149,8 @@ class AtosContrato:
           current_ent = {
               "name": [],
               "start": None,
-              "end": None
+              "end": None,
+              "type": None
           }
 
           if "B-" in IOB[i]:
@@ -159,6 +160,7 @@ class AtosContrato:
 
               current_ent["start"] = len(aux_text_string) + 1
               current_ent["name"].append(text_split[i])
+              current_ent["type"] = entity_name
 
               i += 1
 
