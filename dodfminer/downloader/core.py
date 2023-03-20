@@ -239,7 +239,7 @@ class Downloader:
             if response.status_code == 200:
                 # Creates and saves the JSON file
                 json_data = response.json()
-                json_title = json_data['lstJornalDia'][0][:-4] + '.json'
+                json_title = json_data['lstJornalDia'][0][:-5] + '.json'
                 json_path = os.path.join(self._download_path, json_title)
                 with open(json_path, "w") as file:
                     json.dump(json_data, file)
