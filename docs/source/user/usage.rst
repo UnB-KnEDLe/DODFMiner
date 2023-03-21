@@ -11,25 +11,28 @@ Considering the module has been installed using pip, you should be able to use D
 
     $ dodfminer --help
 
-A help screen of the program should appear. The helper sould show two positional arguments: *downloader* and *extract*.
+A help screen of the program should appear. The helper should show two positional arguments: *downloader* and *extract*.
 Each of those arguments can be considered as a subprogram and work independently, you can choose the one you desire using::
 
     $ dodfminer downloader --help
     $ dodfminer extract --help
 
-Depending which module you choose the execution parameters will change.
+Depending on which module you choose the execution parameters will change.
 
 Downloader Module
 -----------------
 
-The downloader module is responsible for downloading DODF PDFs from the website.
-It allows you to choose the start and end date of the files you want to download.
-Also, you can choose where to save them.
+The downloader module is responsible for downloading DODF PDFs and JSONs from the website.
+
+If you want to download the PDFs, it allows you to choose the start and end date of the files you want to download.
+On the other hand, if you want to download the JSONs, you can specify from which URL your download will be done.
+
+Also, you can choose where to save the downloaded files.
 Following are the list of avaiable parameters, their description and the default value.
 
 .. note::
     This module relies on internet connection and can fail if internet is not working properly.
-    Also, the execution might take a while if there are a huge ammount of pdfs to download.
+    Also, the execution might take a while if there are a huge ammount of PDFs to download.
 
 Parameters Table
 ^^^^^^^^^^^^^^^^
@@ -43,18 +46,29 @@ Parameters Table
 +------------------+---------------------------------------------+---------+
 | -ed --end_date   | Input the date in either mm/yyyy or mm-yyyy | 01/2019 |
 +------------------+---------------------------------------------+---------+
+| -f --file_type   | File type to download                       | pdf     |
++------------------+---------------------------------------------+---------+
+| -url             | URL to download JSON file from              | dodf_   |
++------------------+---------------------------------------------+---------+
+
+.. _dodf: https://www.dodf.df.gov.br/index/jornal-json
 
 Usage Example::
 
     $ dodfminer downloader -sd 01/2003 -ed 05/2004
+    $ dodfminer downloader -f json
+
+.. note::
+    If you want to download a JSON file, the start date and end date will be ignored.
+    The only downloaded file will be the current available JSON in the URL. 
 
 Extractor Module
 ----------------
 
-The extractor module is responsible for extracting information from DODF PDFs and save it
+The extractor module is responsible for extracting information from DODF JSONs and PDFs and save it
 in a desirable format.
 
-The extraction can be made, to a pure text content, where a DODF will be converted to TXT or JSON. Or,
+The extraction can be made, to a pure text content, where a DODF PDF will be converted to TXT or JSON. Or,
 additionaly, the extraction can be done in a polished way, where from the DODF will be extracted to acts and
 its given proprieties in a CSV format.
 
@@ -72,7 +86,7 @@ Polished Extraction
 ^^^^^^^^^^^^^^^^^^^
 
 Using the -a or --act flag, you can extract the dodf in a polished way. The usage of the -a will extract all types
-of act in the DODF. Additionaly, if desired, the flag can followed by a list of specific acts types which you want to extract.
+of act in the DODF. Additionaly, if desired, the flag can be followed by a list of specific acts types which you want to extract.
 The extraction is done using the backend specified in the -b flag, which can be either regex or ner.
 
 Available Act Types:
@@ -88,6 +102,11 @@ Available Act Types:
     - sem_efeito_aposentadoria
     - efetivos_nome
     - efetivos_exo
+    - contrato_convenio
+    - aditamento
+    - licitacao
+    - suspensao
+    - anulacao_revogacao
 
 
 
@@ -99,9 +118,9 @@ Following are the list of avaiable parameters, their description and the default
 +-------------------------+------------------------------------------+------------+
 | Argument                | Description                              | Default    |
 +=========================+==========================================+============+
-| -i --input_folder       | Path to the PDFs folder                  | ./         |
+| -i --input_folder       | Path to the PDF/JSONs folder             | ./         |
 +-------------------------+------------------------------------------+------------+
-| -s --single-file        | Path to a single PDF                     | None       |
+| -s --single-file        | Path to a single PDF/JSON                | None       |
 +-------------------------+------------------------------------------+------------+
 | -t --type-of-extraction | Type of text extraction                  | None       |
 +-------------------------+------------------------------------------+------------+
@@ -115,6 +134,7 @@ Usage Example::
 
     $ dodfminer extract -i path/to/pdf/folder -t with-titles
     $ dodfminer extract -s path/to/dodf.pdf -t pure-text
+    $ dodfminer extract -i path/to/json/folder -a anulacao_revogacao
     $ dodfminer extract -s path/to/dodf.pdf -a nomeacao
     $ dodfminer extract -s path/to/dodf.pdf -a nomeacao cessoes -b ner
 
@@ -125,7 +145,7 @@ Usage Example::
 
 .. note::
 
-    The DODFMiner act extraction needs the text data from DODFs to correct extract the acts
+    The DODFMiner act extraction needs the text data from DODFs to correctly extract the acts
     from DODF, therefore the -a option generates first txt files before the act extraction.
 
 Library Usage

@@ -1,4 +1,4 @@
-version_info = (1, 4, 6)
+version_info = (1, 4, 7)
 # format:
 # ('dodf_major', 'dodf_minor', 'dodf_patch')
 
