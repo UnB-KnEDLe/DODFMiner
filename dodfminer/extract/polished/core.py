@@ -23,14 +23,18 @@ from dodfminer.extract.polished.acts.reversoes import Revertions
 from dodfminer.extract.polished.acts.abono import AbonoPermanencia
 from dodfminer.extract.polished.acts.substituicao import Substituicao
 from dodfminer.extract.polished.acts.cessoes import Cessoes
+from dodfminer.extract.polished.acts.retificacao import RetificacaoEfetivos, RetificacaoComissionados
 from dodfminer.extract.polished.acts.sem_efeito_aposentadoria import SemEfeitoAposentadoria
 from dodfminer.extract.polished.acts.contrato import Contratos
+from dodfminer.extract.polished.acts.sem_efeito_exo_nom import SemEfeitoExoNom
 # Atos seção 3
 from dodfminer.extract.polished.acts.aditamento import Aditamento
 from dodfminer.extract.polished.acts.licitacao import Licitacao
 from dodfminer.extract.polished.acts.suspensao import Suspensao
 from dodfminer.extract.polished.acts.anulacao_revogacao import Anulacao_Revogacao
 from dodfminer.extract.polished.acts.contrato_convenio import Contrato_Convenio
+from dodfminer.extract.polished.acts.convenio import Convenio
+from dodfminer.extract.polished.acts.contrato2 import Contrato as Contrato2
 
 _acts_ids = {
     "aposentadoria": Retirements,
@@ -43,16 +47,20 @@ _acts_ids = {
     "efetivos_nome": NomeacaoEfetivos,
     "efetivos_exo": ExoneracaoEfetivos,
     "sem_efeito_aposentadoria": SemEfeitoAposentadoria,
-    "cessoes": Cessoes,
-    "contrato": Contratos,
-}
+    "cessoes": Cessoes,    
+    "sem_efeito_exo_nom": SemEfeitoExoNom,
+    "efetivos_ret": RetificacaoEfetivos,
+    "comissionados_ret": RetificacaoComissionados,
+    # "contrato": Contratos,
 
-_acts_sec3 = {
+    # Atos seção 3
     "contrato_convenio": Contrato_Convenio,
     "aditamento": Aditamento,
     "licitacao": Licitacao,
     "suspensao": Suspensao,
     "anulacao_revogacao": Anulacao_Revogacao,
+    "contrato": Contrato2,
+    "convenio": Convenio,
 }
 
 """_acts_ids: All avaiable acts classes indexed by a given string name."""
@@ -107,13 +115,10 @@ class ActsExtractor:
             An object of the desired act, already with extracted information.
 
         """
-        if file[-5:] == '.json':
-            return _acts_sec3[ato_id](file, pipeline)
-        else:
-            return _acts_ids[ato_id](file, backend)
+        return _acts_ids[ato_id](file, backend=backend, pipeline=pipeline)
 
     @staticmethod
-    def get_all_obj(file, backend = None):
+    def get_all_obj(file, backend = None, pipeline = None):
         """
         Extract all act types from a single DODF object.
 
@@ -128,15 +133,33 @@ class ActsExtractor:
             information.
 
         """
-
         res = {}
-        if file[-5:] == '.json':
-            for key, act in _acts_sec3.items():
-                a = act(file)
-                res[key] = a
-
         for key, act in _acts_ids.items():
-            res[key] = act(file, backend)
+            res[key] = act(file, backend=backend, pipeline=pipeline)
+
+        return res
+    
+    @staticmethod
+    def get_all_obj_highlight(file, backend = None, pipeline = None):
+        """
+        Extract all act types from a single DODF object.
+
+        Object format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either Regex or NER.
+
+        Returns:
+            A vector of objects of all the acts with extracted
+            information.
+
+        """
+        res = {}
+        for key, act in _acts_ids.items():
+            obj = act(file, backend=backend, pipeline=pipeline)
+            obj.highlight_dataframe()
+            res[key] = obj
 
         return res
 
@@ -206,13 +229,33 @@ class ActsExtractor:
 
         """
         res = {}
-        if file[-5:] == '.json':
-            for key, act in _acts_sec3.items():
-                a = act(file)   
-                res[key] = a.data_frame
         
         for key, act in _acts_ids.items():
             res[key] = act(file, backend).data_frame
+
+        return res
+    
+    @staticmethod
+    def get_all_df_highlight(file, backend):
+        """
+        Extract all act types from a single DODF file.
+
+        Dataframe format.
+
+        Args:
+            file (string): Path of the file.
+            backend (string): Backend of act extraction, either regex or ner.
+
+        Returns:
+            A vector of dataframes with extracted information for all acts.
+
+        """
+        res = {}
+        
+        for key, act in _acts_ids.items():
+            obj = act(file, backend)
+            obj.highlight_dataframe()            
+            res[key] = obj.data_frame
 
         return res
 

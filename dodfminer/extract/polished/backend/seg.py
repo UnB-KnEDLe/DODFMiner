@@ -71,6 +71,11 @@ class ActSeg: # pylint: disable=too-few-public-methods
             self._acts_str.append(head+body)
             results.append(body)
 
+        #if len(results) > 0:
+        #    print(f'self._inst_rule: {self._inst_rule}')
+        #    print(f'found[0]: {found[0]}')
+        #    raise Exception('lol')
+
         return results
 
     def _crf_instances(self):

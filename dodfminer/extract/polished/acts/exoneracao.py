@@ -11,8 +11,8 @@ class Exoneracao(Atos):
         Classe para atos de exoneração não-efetivos
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _act_name(self):
         return "Exoneração"
@@ -86,8 +86,8 @@ class ExoneracaoEfetivos(Atos):
         Classe para atos de exoneração efetivos
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _act_name(self):
         return "Exoneração Efetivos"
@@ -140,11 +140,9 @@ class ExoneracaoEfetivos(Atos):
         return ['tipo'] + self.get_expected_colunms()
 
     def _rule_for_inst(self):
-        start = r"(EXONERAR,\s?)"
-        # body = r"((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.-])+)[,\sa-zA-Z0-9\\\/-]*)"
-        body = r'((?:a\spedido,)?\s(?:[A-Z\\n\s]+),\s(?:matr[ií]cula\s(?:[0-9\.,X-])+)\s' + \
-            r'(?!.*\n?.*Cargo\sem\s+Comissao,|.*\n?.*Natureza\sEspecial,)[,\sa-zA-Z0-9\\\/-]*)'
-        end = ""
+        start = r"(EXONERAR)"
+        body = r'((?:(?!.*Comiss[ãa]o|.*\n.*Comiss[ãa]o|.*Especial|.*\n.*Especial))[\s\S]*?'
+        end = r"(?:\.\n|NOMEAR|\d+\-\d+\/\d+\-\d+\.))"
         return start + body + end
 
     def _prop_rules(self):

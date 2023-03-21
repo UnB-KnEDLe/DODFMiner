@@ -11,8 +11,8 @@ class Substituicao(Atos):
     Classe para atos de substituição
     '''
 
-    def __init__(self, file, backend):
-        super().__init__(file, backend)
+    def __init__(self, file, backend, pipeline = None):
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     # def _load_model(self):
     #     f_path = os.path.dirname(__file__)

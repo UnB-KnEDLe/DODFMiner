@@ -6,6 +6,7 @@ extract information from a specialized act.
 
 import re
 import json
+import unicodedata
 import pandas as pd
 
 from dodfminer.extract.polished.backend.regex import ActRegex
@@ -39,9 +40,12 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
 
     """
 
-    def __init__(self, file_name, backend='regex'):
+    def __init__(self, file_name, backend='regex', pipeline=None):
+        if pipeline is not None:
+            print("Personal acts does not support pipeline")
         self._backend = backend
         self._name = self._act_name()
+        self._pred = None
         super().__init__()
 
         if file_name[-5:] == '.json':
@@ -196,6 +200,73 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
 
         return acts
 
+    def highlight_dataframe(self):
+        if self._preds is None:
+            return
+        self._data_frame = []
+        for IOB, text in zip(self._preds, self._acts_str):
+            ent_dict = dict()
+            ent_dict['titulo'] = None
+            ent_dict['text'] = ""
+
+            text_split = self._split_sentence(text) + ["O"]
+            # print(len(text_split))
+            # print(len(IOB))
+
+            ent_list = []
+
+            aux_text_token = []
+            aux_text_string = ""
+
+            i = 0
+            while i < len(IOB):
+                current_ent = {
+                    "name": [],
+                    "start": None,
+                    "end": None,
+                    "type": None
+                }
+
+                if "B-" in IOB[i]:
+                    entity_name = IOB[i].replace("B-", "")
+                    aux_text_string = " ".join(aux_text_token).strip()
+                    aux_text_token.append(text_split[i])
+
+                    current_ent["start"] = len(aux_text_string) + 1
+                    current_ent["name"].append(text_split[i])
+                    current_ent["type"] = entity_name
+
+                    i += 1
+
+                    while (i < len(IOB)) and ("I-" in IOB[i]):
+                        current_ent["name"].append(text_split[i])
+                        aux_text_token.append(text_split[i])
+
+                        i += 1
+
+                    aux_text_string = " ".join(aux_text_token)
+                    current_ent["end"] = len(aux_text_string)
+                    current_ent["name"] = " ".join(current_ent["name"]).strip()
+                    ent_list.append(current_ent)
+                    if entity_name in ent_dict:
+                
+                        new_list = [ent_dict[entity_name]]
+            
+                        new_list.append(current_ent)
+                        ent_dict[entity_name] = new_list
+                    else:
+                        ent_dict[entity_name] = current_ent
+                
+                elif IOB[i] == 'O':
+                    aux_text_token.append(text_split[i])
+                    aux_text_string = " ".join(aux_text_token).strip()
+
+                i += 1
+
+            ent_dict['text'] = aux_text_string
+            self._data_frame.append(ent_dict)
+        self._data_frame = pd.DataFrame(self._data_frame)
+
     def read_json(self, file_name):
         """Reads a .json file of a DODF.
 
@@ -205,21 +276,27 @@ class Atos(ActRegex, ActNER, ActSeg):  # pylint: disable=too-many-instance-attri
             with open(file_name, 'r', encoding='utf-8') as file:
                 self._json = json.load(file)
                 self._file_name = file_name
-
-            section = self._json['json']['INFO'][self._section()]
-
-            all_txt = []
-            for agency in section:
-                for document in section[agency]:
-                    for subdoc in section[agency][document]:
-                        txt = section[agency][document][subdoc]['texto']
-                        txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
-                        all_txt.append(txt)
-            self._text = ''.join(all_txt)
-
         except IOError:
             self._text = file_name
             self._file_name = None
+            return
+
+        try:
+            section = self._json['json']['INFO'][self._section()]
+        except KeyError:
+            self._text = 'X'
+            return
+
+        all_txt = []
+        for agency in section:
+            for document in section[agency]:
+                for subdoc in section[agency][document]:
+                    txt = section[agency][document][subdoc]['texto']
+                    txt = re.sub('<[^<]+?>', ' ', txt).replace('&nbsp', ' ')
+                    all_txt.append(txt)
+        self._text = ''.join(all_txt)
+        self._text = unicodedata.normalize('NFKD', self._text).encode(
+            'ascii', 'ignore').decode('utf8')
 
     def read_txt(self, file_name):
         """Reads a .txt file of a DODF.

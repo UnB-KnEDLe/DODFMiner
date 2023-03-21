@@ -48,12 +48,12 @@ class Cessoes(Atos):
 
     _special_acts = ['matricula', 'cargo']
 
-    def __init__(self, file, backend, debug=False, extra_search=True):
+    def __init__(self, file, backend, debug=False, extra_search=True, pipeline = None):
         self._debug = debug
         self._extra_search = extra_search
         # self._processed_text = remove_crossed_words(open(file).read())
         self._raw_matches = []
-        super().__init__(file, backend)
+        super().__init__(file, backend=backend, pipeline=pipeline)
 
     def _load_model(self):
         f_path = os.path.dirname(__file__)

@@ -214,6 +214,8 @@ class ContentExtractor:
         txt_path_list = cls._get_txt_list(folder)
 
         for file in pdfs_path_list:
+            if file[-5:] == '.json':
+                continue
             pdf_name = os.path.splitext(os.path.basename(file))[0]
             if pdf_name not in txt_path_list:
                 cls._log(pdf_name)

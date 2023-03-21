@@ -65,19 +65,22 @@ def extract_multiple_acts(path, types, backend):
     Returns:
         None
     """
-    print(types)
     if len(types) == 0:
         types = _acts_ids.keys()
 
     if os.path.isfile(path):
         if path[-4:] == '.pdf':
             ContentExtractor.extract_text(path, single=True)
+            extract_path = path.replace('.pdf', '.txt')
+        elif path[-5:] == '.json':
+            extract_path = path
+
         for act_type in types:
-            data_frame, _= extract_single(path.replace('.pdf', '.txt'), act_type, backend=backend)
+            data_frame, _= extract_single(extract_path, act_type, backend=backend)
             data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
-        files = get_files_path(path, 'txt')
+        files = get_files_path(path, 'json') + get_files_path(path, 'txt')
         for act_type in types:
             data_frame = extract_multiple(files, act_type, backend)
             data_frame.to_csv(os.path.join(path, act_type + ".csv"))
@@ -99,10 +102,15 @@ def extract_multiple_acts_parallel(path: str, types: List[str], backend: str, pr
         types = _acts_ids.keys()
 
     if os.path.isfile(path):
-        ContentExtractor.extract_text(path, single=True)
+        if path[-4:] == '.pdf':
+            ContentExtractor.extract_text(path, single=True)
+            extract_path = path.replace('.pdf', '.txt')
+        elif path[-5:] == '.json':
+            extract_path = path
+
         extraction_arguments = []
         for act_type in types:
-            extraction_arguments.append((path.replace('.pdf', '.txt'), act_type, backend))
+            extraction_arguments.append((extract_path, act_type, backend))
 
         with multiprocessing.Pool(processes=processes) as pool:
             result = pool.starmap(run_extract_simple_wrap, extraction_arguments)
@@ -111,7 +119,7 @@ def extract_multiple_acts_parallel(path: str, types: List[str], backend: str, pr
             data_frame.to_csv(os.path.join(os.path.dirname(path), act_type+'.csv'))
     else:
         ContentExtractor.extract_to_txt(path)
-        files = get_files_path(path, 'txt')
+        files = get_files_path(path, 'json') + get_files_path(path, 'txt')
         extraction_arguments = []
 
         for act_type in types:
@@ -199,14 +207,20 @@ def extract_multiple_acts_with_committee(path, types, backend):
     all_acts = []
 
     if os.path.isfile(path):
+        if path[-4:] == '.pdf':
+            ContentExtractor.extract_text(path, single=True)
+            extract_path = path.replace('.pdf', '.txt')
+        elif path[-5:] == '.json':
+            extract_path = path
+
         ContentExtractor.extract_text(path, single=True)
         for act_type in types:
-            dataframe, _= extract_single(path.replace('.pdf', '.txt'), act_type, backend=backend)
+            dataframe, _= extract_single(extract_path, act_type, backend=backend)
             dataframe['type'] = act_type
             all_acts.append(dataframe.filter(['text', 'type'], axis = 1))
     else:
         ContentExtractor.extract_to_txt(path)
-        files = get_files_path(path, 'txt')
+        files = get_files_path(path, 'txt') + get_files_path(path, "json")
         process_ref = []
         output = multiprocessing.Queue(len(types))
         for act_type in types:
