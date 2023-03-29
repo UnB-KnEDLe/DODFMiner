@@ -36,5 +36,4 @@ class Anulacao_Revogacao(AtosContrato):
       df_atos_anulacao_revogacao = pd.DataFrame(atos_anulacao_revogacao)
     except KeyError:
       print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
-    print(f"Foram encontrados {len(atos_anulacao_revogacao['texto'])} atos de anulação/revogação")
     return df_atos_anulacao_revogacao

@@ -28,6 +28,9 @@ class AtosContrato:
     self.useDefault = True
     self.model_path = model_path
 
+    #download punkt 
+    nltk.download('punkt', quiet=True)
+
     # Inicializar fluxo
     self.flow()
 

@@ -38,6 +38,5 @@ class Contrato(AtosContrato):
       df_atos_contrato = pd.DataFrame(atos_contrato)
     except KeyError:
       print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
-    print(f"Foram encontrados {len(atos_contrato['texto'])} atos de contrato")
     return df_atos_contrato
   

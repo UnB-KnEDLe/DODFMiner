@@ -36,5 +36,4 @@ class Suspensao(AtosContrato):
       df_atos_suspensao = pd.DataFrame(atos_suspensao)
     except KeyError:
       print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
-    print(f"Foram encontrados {len(atos_suspensao['texto'])} atos de suspensão")
     return df_atos_suspensao

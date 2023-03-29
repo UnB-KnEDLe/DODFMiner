@@ -58,5 +58,4 @@ class Aditamento(AtosContrato):
       df_atos_aditamento = pd.DataFrame(atos_aditamento)
     except KeyError:
       print(f"Chave 'Seção III' não encontrada no DODF {file['lstJornalDia']}!")
-    print(f"Foram encontrados {len(atos_aditamento['texto'])} atos de aditamento")
     return df_atos_aditamento
