@@ -67,7 +67,7 @@ html_theme_options = {
     'display_version': True
 }
 
-autodoc_mock_imports = ['fitz', 'pandas', 'numpy', 'joblib', 'nltk', 'lxml']
+autodoc_mock_imports = ['fitz', 'pandas', 'numpy', 'joblib', 'nltk', 'lxml', 'sklearn']
 
 
 def setup(app):
